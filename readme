@@ -1,0 +1,83 @@
+
+---- xx ----
+============
+
+
+general info
+============
+
+A source-based Linux distro with emphasis on console, security, and simplicity.
+
+WARNING: xx is in early stages of development. Everything should work, but not
+necessarily. The documentation is also not guaranteed to be updated.
+
+
+
+features
+========
+
+* Linux console as the main working environment
+
+* security
+  - minimizing attack-surface by compiling only needed features in programs
+    and in kernel
+  - programs transparently executed in separate containers with restricted
+    network access
+  - designed for a single user - limited use of suid binaries
+  - hardened compiler flags
+
+* flexibility
+  - git compatible configuration of all the components for multiple machines:
+    kernels, programs, permissions, etc.
+  - designed for easy and reproducible deployments
+  - available binary packages from alpine and arch Linux
+  - quickly available reproducible build environments
+
+* clean system
+  - minimal system without many widely used packages (sudo, nls, pam etc.)
+  - complex software deployed to containers
+  - designed for relatively low maintenance 
+
+* self-reliance
+  - keeping all the source code and packages locally
+  - builds without network connection
+
+
+
+support
+=======
+
+Unfortunately there is no support available for this distro. Users are expected
+to investigate and fix issues with their setup by themselves.
+
+Documentation requests and git patches are very much welcomed. Contact via irc
+on linuxconsole.net.
+
+
+
+inspiration
+===========
+
+* ms-dos
+  - text-based user interface
+  - each program is self-contained
+  - graphical programs taking over the whole screen
+
+* gentoo
+  - compile flags and dependency info on package-flag combinations
+  - recipes for package compilation
+
+* linux from scratch
+  - cross compilation of initial toolchain and the final system afterwards
+  - a lot of good info for many packages
+
+* oasis, sabotage
+  - musl recipes for package compilation
+  - general idea for a low maintenance distro
+
+* qubes
+  - radical process separation
+
+* openBSD, suckless, musl
+  - simplicity and elegance
+

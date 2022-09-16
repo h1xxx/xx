@@ -1,0 +1,17 @@
+[ src ]
+
+url = "https://github.com/asciidoc-py/asciidoc-py/releases/download/<ver>/asciidoc-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure --prefix=/usr --sysconfdir=/etc"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/etc/asciidoc/{doc*-xsl,images,java*,style*,themes}/ &&
+	rm <pkg_dir>/etc/asciidoc/lang-{[a-c],el,es,[f-n],pt,[r-s],zh}*.conf"

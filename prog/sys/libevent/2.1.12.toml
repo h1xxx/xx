@@ -1,0 +1,24 @@
+[ src ]
+
+url = "https://github.com/libevent/libevent/releases/download/release-<ver>-stable/libevent-<ver>-stable.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>-stable"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-gcc-hardening
+	--disable-clock-gettime
+	--disable-dependency-tracking
+	--disable-openssl
+	--disable-debug-mode
+	--disable-samples
+	--disable-static"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

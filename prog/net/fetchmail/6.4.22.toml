@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://sourceforge.net/projects/fetchmail/files/branch_<ver_short>/fetchmail-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--disable-nls
+	--disable-POP3
+	--disable-ETRN
+	--disable-ODMR"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

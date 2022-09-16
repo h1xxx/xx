@@ -1,0 +1,16 @@
+[ src ]
+
+url = "https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files/archive/refs/tags/microcode-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "Intel-Linux-Processor-Microcode-Data-Files-microcode-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = ""
+pkg_create = "mkdir -p <pkg_dir>/usr/lib/firmware &&
+	cp -av intel-ucode/ <pkg_dir>/usr/lib/firmware/"

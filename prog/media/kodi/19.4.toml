@@ -1,0 +1,61 @@
+[ src ]
+
+url = "https://github.com/xbmc/xbmc/archive/refs/tags/<ver>-Matrix.tar.gz
+	https://mirrors.kodi.tv/build-deps/sources/crossguid-8f399e8bd4.tar.gz
+	libdvdread-6.0.0-Leia-Alpha-3.tar.gz::https://github.com/xbmc/libdvdread/archive/6.0.0-Leia-Alpha-3.tar.gz
+	libdvdnav-6.0.0-Leia-Alpha-3.tar.gz::https://github.com/xbmc/libdvdnav/archive/6.0.0-Leia-Alpha-3.tar.gz"
+
+src_type = "tar"
+src_dirname = "xbmc-<ver>-Matrix"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build/download && cd build &&
+	cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CORE_PLATFORM_NAME=gbm
+	-D APP_RENDER_SYSTEM=gles
+
+	-D ENABLE_EGL=ON
+	-D ENABLE_LIBDRM=ON
+	-D ENABLE_OPENGLES=ON
+	-D ENABLE_PYTHON=ON
+	-D ENABLE_ALSA=ON
+	-D ENABLE_VAAPI=ON
+	-D ENABLE_LIRCCLIENT=ON
+
+	-D ENABLE_AIRTUNES=OFF
+	-D ENABLE_AVAHI=OFF
+	-D ENABLE_BLURAY=OFF
+	-D ENABLE_DAV1D=OFF
+	-D ENABLE_DBUS=OFF
+	-D ENABLE_DVDCSS=OFF
+	-D ENABLE_MARIADBCLIENT=OFF
+	-D ENABLE_MDNS=OFF
+	-D ENABLE_MICROHTTPD=OFF
+	-D ENABLE_MYSQLCLIENT=OFF
+	-D ENABLE_NFS=OFF
+	-D ENABLE_OPTICAL=OFF
+	-D ENABLE_PULSEAUDIO=OFF
+	-D ENABLE_SMBCLIENT=OFF
+	-D ENABLE_TESTING=OFF
+	-D ENABLE_UDFREAD=OFF
+	-D ENABLE_UPNP=OFF
+	-D ENABLE_VDPAU=OFF
+	-D ENABLE_ISO9660PP=OFF
+
+	-D ENABLE_INTERNAL_CROSSGUID=ON
+	-D CROSSGUID_URL=<src_dir>/crossguid-8f399e8bd4.tar.gz
+	-D libdvdread_URL=<src_dir>/libdvdread-6.0.0-Leia-Alpha-3.tar.gz
+	-D libdvdnav_URL=<src_dir>/libdvdnav-6.0.0-Leia-Alpha-3.tar.gz
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	rm -rv <pkg_dir>/usr/lib/ &&
+	rm -rv <pkg_dir>/usr/share/{applications,icons,metainfo,xsessions}/ &&
+	mv -v <pkg_dir>/usr/{lib64,lib}"

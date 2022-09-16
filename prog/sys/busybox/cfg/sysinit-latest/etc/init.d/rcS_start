@@ -1,0 +1,21 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+rc_d="$(ls -A /etc/rc.d/*start 2>/dev/null)"
+[ -n "${rc_d}" ] && msg "running start scripts..."
+
+for f in ${rc_d}; do
+	name="$(basename "${f}")"
+	${BB} printf '%s\n' "${name}"
+	${BB} sh ${f}
+done
+
+
+
+[ -n "${SERVICES}" ] && msg "starting services..."
+for s in ${SERVICES}; do
+	/etc/init.d/${s} start
+done
+

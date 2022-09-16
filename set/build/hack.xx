@@ -1,0 +1,14 @@
+sys/linux			source			latest
+sys/nvidia			std			latest
+sys/cuda			std			latest
+sys/clinfo			std			latest
+hack/hashcat			std			latest
+hack/hashcat-utils		std			latest
+
+
+# https://github.com/alufers/mitmproxy2swagger
+# https://github.com/DominicBreuker/pspy
+
+# osint
+# https://github.com/megadose/toutatis
+# https://github.com/megadose/holehe

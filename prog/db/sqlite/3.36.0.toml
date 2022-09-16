@@ -1,0 +1,36 @@
+[ src ]
+
+url = "https://www.sqlite.org/2021/sqlite-autoconf-<ver_pkgspec>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-autoconf-<ver_pkgspec>"
+
+
+
+[ std ]
+
+env = [ "CFLAGS+=
+	-DSQLITE_ENABLE_COLUMN_METADATA=1
+	-DSQLITE_ENABLE_DBSTAT_VTAB=1
+	-DSQLITE_ENABLE_FTS3=1
+	-DSQLITE_ENABLE_FTS4=1
+	-DSQLITE_ENABLE_FTS3_TOKENIZER=1
+	-DSQLITE_ENABLE_STMTVTAB
+	-DSQLITE_ENABLE_MATH_FUNCTIONS
+	-DSQLITE_ENABLE_UNLOCK_NOTIFY=1
+	-DSQLITE_MAX_VARIABLE_NUMBER=250000
+	-DSQLITE_MAX_EXPR_DEPTH=10000
+	-DSQLITE_SECURE_DELETE=1" ]
+
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking
+	--enable-fts3
+	--enable-fts4
+	--enable-fts5 
+	--enable-rtree
+	--enable-json1"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

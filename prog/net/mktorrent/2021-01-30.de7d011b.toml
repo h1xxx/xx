@@ -1,0 +1,15 @@
+[ src ]
+
+url = "https://github.com/pobrn/mktorrent"
+src_type = "git"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = ""
+build = "make"
+pkg_create = "mkdir -p <pkg_dir>/usr/bin && cp -a mktorrent <pkg_dir>/usr/bin/"

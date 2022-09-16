@@ -1,0 +1,6 @@
+# partitions - efi
+# ================
+
+CONFIG_EFI_PARTITION=y
+
+

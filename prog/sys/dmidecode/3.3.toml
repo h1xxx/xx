@@ -1,0 +1,16 @@
+[ src ]
+
+url = "https://download.savannah.nongnu.org/releases/dmidecode/dmidecode-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i 's|sbin|bin|g' Makefile"
+build = "make prefix=/usr"
+pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"

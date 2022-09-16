@@ -1,0 +1,15 @@
+[ src ]
+
+url = "https://mirrors.edge.kernel.org/pub/software/network/iw/iw-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

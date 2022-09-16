@@ -1,0 +1,28 @@
+[ src ]
+
+url = "https://github.com/linux-pam/linux-pam/releases/download/v<ver>/Linux-PAM-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "Linux-PAM-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--libdir=/usr/lib
+	--sbindir=/usr/bin
+	--disable-db
+	--disable-doc
+	--disable-audit
+	--disable-nis
+	--disable-selinux
+	--disable-econf
+	--disable-nls
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

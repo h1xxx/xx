@@ -1,0 +1,49 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-xattr
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--host=${TARGET_TRI}
+	--build=$(build-aux/config.guess)
+	--disable-xattr
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-xattr
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

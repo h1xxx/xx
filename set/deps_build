@@ -1,0 +1,611 @@
+# build-time dependencies
+
+dev/readline				std			latest
+	dev/ncurses			std			latest
+
+sys/iproute2				std			latest
+	sys/iptables			std			latest
+
+sys/iptables				std			latest
+	net/libnetfilter_conntrack	std			latest
+	net/libnfnetlink		std			latest
+	net/libpcap			std			latest
+
+net/libnetfilter_conntrack		std			latest
+	net/libmnl			std			latest
+
+text/man-db				std			latest
+	dev/libpipeline			std			latest
+
+sys/eudev				std			latest
+	sys/util-linux			std			latest
+	sys/kmod			std			latest
+	dev/gperf			std			latest
+	lang/perl			std			latest
+
+sys/rsyslog				std			latest
+	text/libestr			std			latest
+	text/libfastjson		std			latest
+	crypt/libgcrypt			std			latest
+	crypt/openssl			std			latest
+
+crypt/libgcrypt				std			latest
+	crypt/libgpg-error		std			latest
+
+text/man-db				std			latest
+	text/groff			std			latest
+
+dev/ncurses				std			latest
+	dev/pkgconf			std			latest
+
+lang/python				std			latest
+	dev/libffi			std			latest
+	crypt/openssl			std			latest
+
+sys/syslinux				std			latest
+	lang/nasm			std			latest
+
+net/curl				std			latest
+	crypt/openssl			std			latest
+
+dev/git					std			latest
+	net/curl			std			latest
+	crypt/openssl			std			latest
+
+dev/popt				std			latest
+	dev/autoconf			std			latest
+
+sys/tmux				std			latest
+	sys/libevent			std			latest
+
+sys/cryptsetup				std			latest
+	text/json-c			std			latest
+	sys/lvm2			std			latest
+	dev/popt			std			latest
+	crypt/argon2			std			latest
+
+sys/lvm2				std			latest
+	dev/libaio			std			latest
+
+emu/lxc					std			latest
+	sys/libseccomp			std			latest
+	sys/libcap			std			latest
+
+sys/libseccomp				std			latest
+	dev/gperf			std			latest
+
+net/arping				std			latest
+	dev/autoconf			std			latest
+
+net/mtr					std			latest
+	dev/autoconf			std			latest
+
+dev/popt				std			latest
+	dev/autoconf			std			latest
+
+sys/hwids				std			latest
+	sys/eudev			std			latest
+
+sys/gptfdisk				std			latest
+	dev/popt			std			latest
+
+net/bind				std			latest
+	dev/libuv			std			latest
+	net/nghttp2			std			latest
+
+net/wpa_supplicant			std			latest
+	net/libnl			std			latest
+
+net/mutt				std			latest
+	db/sqlite			std			latest
+	crypt/cyrus-sasl		std			latest
+	sys/gnupg			std			latest
+	crypt/gpgme			std			latest
+
+sys/gnupg				std			latest
+	dev/npth			std			latest
+	crypt/gnutls			std			latest
+	dev/libassuan			std			latest
+	crypt/libksba			std			latest
+
+dev/libassuan				std			latest
+	crypt/libgpg-error		std			latest
+
+crypt/gnutls				std			latest
+	crypt/nettle			std			latest
+	dev/libtasn1			std			latest
+	crypt/p11-kit			std			latest
+
+crypt/p11-kit				std			latest
+	dev/libtasn1			std			latest
+
+net/nmap				std			latest
+	text/libpcre			std			latest
+	lang/lua			std			5.2.4
+	net/libpcap			std			latest
+
+net/prosody				std			latest
+	lang/lua			std			5.2.4
+	net/libidn			std			latest
+
+sys/usbutils				std			latest
+	sys/libusb			std			latest
+
+sys/ntfs3g				std			latest
+	sys/fuse2			std			latest
+
+sys/testdisk				std			latest
+	sys/ntfs3g			std			latest
+
+emu/qemu				std			latest
+	dev/glib			std			latest
+	dev/libaio			std			latest
+	net/libslirp			std			latest
+	sys/liburing			std			latest
+	sys/libcap-ng			std			latest
+	sys/attr			std			latest
+	x11/pixman			std			latest
+	emu/spice			std			latest
+
+emu/spice				std			latest
+	arch/lz4			std			latest
+	media/libjpeg-turbo		std			latest
+	media/opus			std			latest
+	emu/spice-protocol		std			latest
+
+x11/atk					std			latest
+	sys/dbus			std			latest
+	dev/gobject-introspection	std			latest
+
+x11/pango				std			latest
+	text/fribidi			std			latest
+	media/harfbuzz			std			latest
+	x11/cairo			std			latest
+	media/fontconfig		std			latest
+
+x11/cairo				std			latest
+	media/libpng			std			latest
+	x11/pixman			std			latest
+
+x11/gdk-pixbuf				std			latest
+	x11/shared-mime-info		std			latest
+	dev/itstool			std			latest
+	text/docbook-xml		std			4.3
+	media/libjpeg-turbo		std			latest
+	media/libpng			std			latest
+
+x11/shared-mime-info			std			latest
+	text/xmlto			std			latest
+	dev/glib			std			latest
+	dev/itstool			std			latest
+
+# these are really run-time dependencies, and are included here just beacause
+# they are required to build gtk+
+text/xmlto				std			latest
+	text/docbook-xml		std			4.1.2
+	text/docbook-xml		std			4.2
+	text/docbook-xml		std			4.5
+	text/docbook-xsl		std			latest
+	text/libxslt			std			latest
+	text/catalog-xml		std			latest
+
+text/catalog-xml			std			latest
+	text/libxml2			std			latest
+
+text/docbook-xml			std			latest
+	arch/unzip			std			latest
+
+x11/at-spi2-atk				std			latest
+	x11/at-spi2-core		std			latest
+	x11/atk				std			latest
+
+x11/at-spi2-core			std			latest
+	sys/dbus			std			latest
+	x11/libXtst			std			latest
+
+x11/gtk+				std			latest
+	x11/atk				std			latest
+	x11/pango			std			latest
+	x11/cairo			std			latest
+	x11/gdk-pixbuf			std			latest
+	x11/libXi			std			latest
+	x11/at-spi2-atk			std			latest
+	x11/adwaita-icon-theme		std			latest
+	x11/hicolor-icon-theme		std			latest
+	dev/glib			std			latest
+
+net/remmina				std			latest
+	x11/gtk+			std			latest
+	dev/json-glib			std			latest
+	crypt/libsodium			std			latest
+	net/libsoup			std			latest
+	net/freerdp			std			latest
+	emu/spice-gtk			std			latest
+
+net/libsoup				std			latest
+	net/libpsl			std			latest
+	net/glib-networking		std			latest
+
+net/glib-networking			std			latest
+	crypt/gnutls			std			latest
+
+dev/glib				std			latest
+	text/libxslt			std			latest
+
+text/libxslt				std			latest
+	text/libxml2			std			latest
+
+media/libepoxy				std			latest
+	media/mesa			x11			latest
+
+x11/xorg-server				std			latest
+	media/mesa			x11			latest
+	media/libepoxy			std			latest
+	x11/pixman			std			latest
+	x11/libdrm			std			latest
+	x11/xorg-proto			std			latest
+	x11/libxshmfence		std			latest
+	x11/libX11			std			latest
+	x11/libxkbfile			std			latest
+	x11/libXfont2			std			latest
+
+x11/libdrm				std			latest
+	x11/libpciaccess		std			latest
+
+x11/libX11				std			latest
+	x11/libxcb			std			latest
+	x11/xtrans			std			latest
+
+x11/libxcb				std			latest
+	x11/xcb-proto			std			latest
+	x11/libXau			std			latest
+
+x11/libXfont2				std			latest
+	x11/util-macros			std			latest
+	media/freetype			std			latest
+	x11/libfontenc			std			latest
+	x11/xtrans			std			latest
+
+x11/libfontenc				std			latest
+	x11/xcb-proto			std			latest
+
+media/mesa				std			latest
+	media/mako			std			latest
+	dev/llvm			std			latest
+	x11/libva			std			latest
+	x11/libva-intel-driver		std			latest
+
+x11/libva				std			latest
+	x11/libdrm			std			latest
+
+media/mesa				x11			latest
+	x11/libdrm			std			latest
+	x11/libXext			std			latest
+	x11/libXfixes			std			latest
+	x11/libXxf86vm			std			latest
+	x11/libXrandr			std			latest
+	media/mako			std			latest
+	dev/llvm			std			latest
+
+x11/libXext				std			latest
+	x11/xorg-proto			std			latest
+	x11/libX11			std			latest
+
+x11/libXrandr				std			latest
+	x11/libXrender			std			latest
+
+media/fontconfig			std			latest
+	media/freetype			std			latest
+	media/libpng			std			latest
+
+x11/st					std			latest
+	media/fontconfig		std			latest
+
+x11/dwm					std			latest
+	x11/libXft			std			latest
+	x11/libXinerama			std			latest
+
+sys/linux				api_headers		latest
+	dev/git				std			latest
+
+sys/flashrom				std			latest
+	sys/dmidecode			std			latest
+	sys/libftdi			std			latest
+
+sys/hplip				std			latest
+	sys/cups			std			latest
+	sys/libusb			std			latest
+	media/libjpeg-turbo		std			latest
+
+media/sane-backends			std			latest
+	dev/autoconf-archive		std			latest
+	dev/gettext			std			latest
+
+sys/android-tools			std			latest
+	sys/libunwind			std			latest
+	dev/protobuf			std			latest
+	dev/gtest			std			latest
+	arch/brotli			std			latest
+	arch/lz4			std			latest
+	libgo/crypto			std	20200622213623-75b288015ac9
+
+sys/hwinfo				std			latest
+	dev/libx86emu			std			latest
+
+net/wireshark				std			latest
+	net/c-ares			std			latest
+	net/libpcap			std			latest
+	dev/glib			std			latest
+
+net/bettercap				std			2.31.1
+	libgo/bettercap			std	20210417153115-568c166fe1c9
+	libgo/gatt			std	20210514133428-df6e615f2f67
+	libgo/sys			std	20210514084401-e8d321eab015
+
+net/openvpn				std			latest
+	arch/lzo			std			latest
+
+media/kodi				std			latest
+	arch/lzo			std			latest
+
+media/chromaprint			std			latest
+	media/ffmpeg			std			latest
+
+media/libvorbis				std			latest
+	media/libogg			std			latest
+
+media/imlib2				std			latest
+	media/giflib			std			latest
+	media/libpng			std			latest
+	media/libjpeg-turbo		std			latest
+	media/tiff			std			latest
+	media/libwebp			std			latest
+
+media/tiff				std			latest
+	media/libwebp			std			latest
+
+net/w3m					std			latest
+	media/imlib2			std			latest
+	dev/boehm-gc			std			latest
+
+media/libass				std			latest
+	text/fribidi			std			latest
+	media/harfbuzz			std			latest
+
+media/harfbuzz				std			latest
+	dev/glib			std			latest
+	dev/gobject-introspection	std			latest
+
+text/tesseract				std			latest
+	media/leptonica			std			latest
+
+media/leptonica				std			latest
+	media/giflib			std			latest
+	media/libwebp			std			latest
+	media/libpng			std			latest
+	media/libjpeg-turbo		std			latest
+	media/tiff			std			latest
+
+sys/alsa-lib				std			latest
+	sys/alsa-ucm-conf		std			latest
+	sys/alsa-topology-conf		std			latest
+
+sys/alsa-utils				std			latest
+	media/libsamplerate		std			latest
+
+media/snapcast				std			latest
+	dev/boost			std			latest
+
+media/libdvdnav				std			latest
+	media/libdvdread		std			latest
+
+media/mpv				std			latest
+	dev/waf				std			latest
+	media/libdvdnav			std			latest
+
+media/mediainfo				std			latest
+	media/libmediainfo		std			latest
+
+media/libmediainfo			std			latest
+	media/libzen			std			latest
+
+text/poppler				std			latest
+	dev/boost			std			latest
+	media/libpng			std			latest
+	media/freetype			std			latest
+	media/fontconfig		std			latest
+	media/libjpeg-turbo		std			latest
+	media/tiff			std			latest
+	media/openjpeg			std			latest
+
+text/fbpdf				std			latest
+	text/djvu			std			latest
+
+text/ebook-tools			std			latest
+	arch/libzip			std			latest
+	text/libxml2			std			latest
+
+media/libexif				std			latest
+	dev/gettext			std			latest
+
+x11/xf86-input-libinput			std			latest
+	sys/mtdev			std			latest
+	sys/libevdev			std			latest
+
+media/fontforge				std			latest
+	dev/glib			std			latest
+	text/libxml2			std			latest
+	dev/gettext			std			latest
+
+media/dejavu				std			latest
+	libperl/Font-TTF		std			latest
+
+libperl/Font-TTF			std			latest
+	libperl/IO-String		std			latest
+
+media/liberation-fonts			std			latest
+	media/fonttools			std			latest
+
+media/cdrdao				std			latest
+	media/libao			std			latest
+
+dev/gcc-libgcc_s			std			latest
+	dev/gcc				std			latest
+
+net/tigervnc				std			latest
+	media/libjpeg-turbo		std			latest
+	x11/fltk			std			latest
+	sys/pam				std			latest
+
+x11/fltk				std			latest
+	media/libpng			std			latest
+	x11/libXi			std			latest
+
+media/id3ted				std			latest
+	sys/file			std			latest
+
+emu/spice-gtk				std			latest
+	dev/six				std			latest
+	text/pyparsing			std			latest
+	media/libjpeg-turbo		std			latest
+	media/gst-plugins-base		std			latest
+	media/gst-plugins-good		std			latest
+	media/gst-plugins-bad		std			latest
+	media/gstreamer			std			latest
+	media/opus			std			latest
+	dev/json-glib			std			latest
+	x11/gtk+			std			latest
+	emu/spice-protocol		std			latest
+
+media/gst-plugins-base			std			latest
+	sys/alsa-lib			std			latest
+	media/opus			std			latest
+	media/libjpeg-turbo		std			latest
+	media/gstreamer			std			latest
+
+net/freerdp				std			latest
+	media/lame			std			latest
+	media/libjpeg-turbo		std			latest
+	sys/alsa-lib			std			latest
+
+net/tor					std			latest
+	sys/libevent			std			latest
+
+# cpio needs to use /usr/libexec/rmt from tar, not build its own
+arch/cpio				std			latest
+	arch/tar			std			latest
+
+sys/ca-certificates			std			latest
+	crypt/cryptography		std			latest
+
+crypt/cryptography			std			latest
+	dev/cffi			std			latest
+
+dev/cffi				std			latest
+        dev/pycparser			std			latest
+
+sys/nvidia				std			latest
+	sys/linux			source			latest
+
+net/yt-dlp				std			latest
+	arch/zip			std			latest
+
+media/lirc				std			latest
+	text/libxslt			std			latest
+
+media/kodi				std			latest
+	db/sqlite			std			latest
+	dev/swig			std			latest
+	lang/openjdk-bin		std			latest
+	media/taglib			std			latest
+	media/libxkbcommon		std			latest
+	dev/fstrcmp			std			latest
+	arch/lzo			std			latest
+	sys/libinput			std			latest
+	text/libpcre			cpp			latest
+	dev/flatbuffers			std			latest
+	dev/rapidjson			std			latest
+	dev/fmt				std			latest
+	dev/spdlog			std			latest
+	dev/tinyxml			std			latest
+	media/lirc			std			latest
+	x11/xkbcomp			std			latest
+
+sys/efivar				std			latest
+	text/mandoc			std			latest
+
+sys/efibootmgr				std			latest
+	sys/efivar			std			latest
+
+sys/efitools				std			latest
+	sys/gnu-efi			std			latest
+
+net/irssi				std			latest
+	crypt/libotr			std			latest
+
+sys/unifont				std			latest
+	libperl/GD			std			latest
+	media/bdftopcf			std			latest
+
+media/bdftopcf				std			latest
+	x11/libXfont2			std			latest
+	x11/xorg-proto			std			latest
+
+sys/unifont				std			latest
+	libperl/ExtUtils-PkgConfig	std			latest
+	libperl/GD			std			latest
+	media/libgd			std			latest
+
+media/libgd				std			latest
+	media/libpng			std			latest
+	media/freetype			std			latest
+	media/libjpeg-turbo		std			latest
+
+arch/cabextract				std			latest
+	dev/libmspack			std			latest
+
+media/msttcorefonts			std			latest
+	arch/cabextract			std			latest
+
+emu/dosbox-staging			std			latest
+	media/opusfile			std			latest
+	media/libpng			std			latest
+
+media/opusfile				std			latest
+	media/opus			std			latest
+	media/libogg			std			latest
+
+dev/llvm				std			latest
+	lang/ocaml			std			latest
+
+x11/openbox				std			latest
+	media/harfbuzz			std			latest
+	text/fribidi			std			latest
+	x11/cairo			std			latest
+	x11/pango			std			latest
+
+net/chrony				std			latest
+	sys/libcap			std			latest
+
+
+### deprecated
+
+#net/libidn2				std			latest
+#	text/libunistring		std			latest
+
+#x11/libappindicator			std			latest
+#	x11/libdbusmenu			std			latest
+
+#text/mupdf				std			latest
+#	net/gumbo			std			latest
+
+#x11/libxmu				std			latest
+#	x11/libxt			std			latest
+
+#x11/libxt				std			latest
+#	x11/libsm			std			latest
+
+#x11/libsm				std			latest
+#	x11/libice			std			latest
+
+

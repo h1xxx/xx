@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/traviscross/mtr/archive/refs/tags/v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "LIBS=-ltinfow" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./bootstrap.sh && ./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--without-gtk"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/bash-completion"

@@ -1,0 +1,19 @@
+[ src ]
+
+url = "https://xorg.freedesktop.org/archive/individual/driver/<prog>-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "LDFLAGS=", "CFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

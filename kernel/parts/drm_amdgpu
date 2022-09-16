@@ -1,0 +1,6 @@
+# drivers -> graphics -> amd gpu
+# ==============================
+
+CONFIG_DRM_AMDGPU=y
+CONFIG_DRM_AMD_DC=y
+CONFIG_HSA_AMD=y

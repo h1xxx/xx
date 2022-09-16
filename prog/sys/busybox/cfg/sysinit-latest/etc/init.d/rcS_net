@@ -1,0 +1,22 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+if [ "${NET_LO}" == 'true' ]; then
+	msg 'setting lo device up...'
+	${BB} ip link set dev lo up
+fi
+
+if [ "${NET_CMD}" != '' ]; then
+	msg 'configuring network...'
+	${BB} sh -c "${NET_CMD}"
+fi
+
+if [ "${LXC_NET}" == 'true' ]; then
+	msg 'configuring lxc bridge...'
+	${BB} ip link add lxc-br0 type bridge
+	${BB} ip address add 10.64.64.1/24 dev lxc-br0
+	${BB} ip link set lxc-br0 up
+fi
+

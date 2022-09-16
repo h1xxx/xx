@@ -1,0 +1,62 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "MAKEFLAGS=-j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--docdir=/usr/share/doc/bash
+	--without-curses
+	--without-bash-malloc
+	--disable-nls
+	--with-installed-readline"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -f <pkg_dir>/usr/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
+	rm -r <pkg_dir>/usr/share/{doc,info}/"
+
+
+
+[ init_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--build=$(support/config.guess)
+	--host=${TARGET_TRI}
+	--enable-minimal-config
+	--without-curses
+	--without-bash-malloc"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	ln -sfv bash <pkg_dir>/usr/bin/sh &&
+	rm -f <pkg_dir>/usr/bin/bashbug"
+
+
+
+[ init ]
+
+env = [ "MAKEFLAGS=-j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--docdir=/usr/share/doc/bash
+	--enable-minimal-config
+	--without-curses
+	--without-bash-malloc
+	--disable-nls
+	--with-installed-readline"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -vf <pkg_dir>/usr/bin/bashbug"

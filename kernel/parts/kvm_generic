@@ -1,0 +1,20 @@
+# virtualization -> kvm amd
+# =========================
+
+CONFIG_VIRTUALIZATION=y
+CONFIG_KVM=y
+CONFIG_KVM_AMD=y
+CONFIG_KVM_WERROR=y
+
+CONFIG_AMD_IOMMU=y
+CONFIG_IOMMU_SUPPORT=y
+
+# virtualization -> kvm intel
+# ===========================
+
+CONFIG_KVM_INTEL=y
+
+CONFIG_PCI_MSI=y
+CONFIG_INTEL_IOMMU=y
+CONFIG_INTEL_IOMMU_DEFAULT_ON=y
+

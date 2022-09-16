@@ -1,0 +1,32 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/enlightenment/imlib2-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc/imlib2
+	--x-libraries=/usr/lib
+	--enable-amd64
+	--disable-static
+	--disable-dependency-tracking
+	--with-jpeg
+	--with-png
+	--with-webp
+	--with-tiff
+	--with-gif
+	--with-zlib
+	--with-bzip2
+	--without-id3
+	--without-x
+	--without-x-shm-fd"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

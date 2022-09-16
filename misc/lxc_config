@@ -1,0 +1,34 @@
+lxc.uts.name = xx
+lxc.arch = x86_64
+
+lxc.idmap = u 0 <user_id> 1
+lxc.idmap = g 0 <group_id> 1
+
+lxc.init.uid = 0
+lxc.init.gid = 0
+
+lxc.tty.max = 4
+lxc.pty.max = 128
+
+lxc.net.0.type = empty
+
+lc.signal.halt = SIGUSR1
+lxc.signal.reboot = SIGTERM
+
+lxc.rootfs.path = dir:<root_dir>
+lxc.mount.auto = cgroup:rw proc:rw sys:rw
+lxc.autodev = 1
+
+lxc.mount.entry = /dev/null dev/null none bind,optional,create=file 0 0
+lxc.mount.entry = /dev/urandom dev/urandom none bind,optional,create=file 0 0
+lxc.mount.entry = /dev/zero dev/zero none bind,optional,create=file 0 0
+
+lxc.mount.entry = /home/xx home/xx none bind 0 0
+lxc.mount.entry = /tmp tmp none bind 0 0
+
+lxc.environment = TERM=linux
+lxc.environment = SHELL=/bin/bash
+
+lxc.cgroup.devices.allow =
+lxc.cgroup.devices.deny =
+

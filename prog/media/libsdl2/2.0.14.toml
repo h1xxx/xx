@@ -1,0 +1,48 @@
+[ src ]
+
+url = "https://www.libsdl.org/release/SDL2-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "SDL2-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=/usr/lib
+	-D CMAKE_BUILD_TYPE='Release'
+
+	-D ARTS=OFF
+	-D DUMMYAUDIO=OFF
+	-D ESD=OFF
+	-D JACK=OFF
+	-D NAS=OFF
+	-D OSS=OFF
+	-D PULSEAUDIO=OFF
+	-D RPATH=OFF
+	-D SDL_SENSOR=OFF
+	-D SDL_STATIC=OFF
+	-D SNDIO=OFF
+	-D VIDEO_DUMMY=OFF
+	-D VIDEO_RPI=OFF
+	-D VIDEO_VIVANTE=OFF
+	-D VIDEO_VULKAN=OFF
+	-D VIDEO_WAYLAND=OFF
+	-D VIDEO_X11=OFF
+
+	-D ALSA=ON
+	-D CLOCK_GETTIME=ON
+	-D HIDAPI=ON
+	-D SDL_DLOPEN=ON
+	-D VIDEO_KMSDRM=ON
+	-D VIDEO_OPENGL=ON
+	-D VIDEO_OPENGLES=ON
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libSDL2main.a"

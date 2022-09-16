@@ -1,0 +1,6 @@
+# io schedulers
+# =============
+
+CONFIG_MQ_IOSCHED_DEADLINE=y
+CONFIG_MQ_IOSCHED_KYBER=y
+

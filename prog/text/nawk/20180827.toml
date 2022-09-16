@@ -1,0 +1,18 @@
+[ src ]
+
+url = "https://codeload.github.com/onetrueawk/awk/tar.gz/<ver>"
+src_type = "tar"
+src_dirname = "awk-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "mkdir -pv <pkg_dir>/usr/bin &&
+	mkdir -pv <pkg_dir>/usr/share/man/man1/ &&
+	cp a.out <pkg_dir>/usr/bin/awk &&
+	cp awk.1 <pkg_dir>/usr/share/man/man1/"

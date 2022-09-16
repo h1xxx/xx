@@ -1,0 +1,113 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/glibc/glibc-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+# --enable-cet is x86 only
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && ../configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--enable-kernel=5.10.0
+	--enable-stack-protector=strong
+	--enable-stackguard-randomization
+	--enable-static-pie
+	--enable-bind-now
+	--enable-cet
+	--disable-nscd
+	--disable-build-nscd
+	--disable-werror
+	--disable-profile
+	--with-headers=/usr/include
+	--without-selinux
+	libc_cv_slibdir=/usr/lib
+	libc_cv_include_x86_isa_level=no"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/sbin/* <pkg_dir>/usr/sbin/ &&
+	rmdir -v <pkg_dir>/sbin/ &&
+
+	mkdir -pv <pkg_dir>/usr/lib/locale &&
+	prefix=--prefix=<pkg_dir> &&
+	localedef -i POSIX -f UTF-8 C.UTF-8 ${prefix} || : &&
+	localedef -i de_CH -f UTF-8 de_CH.UTF-8 ${prefix} &&
+	localedef -i de_DE -f ISO-8859-1 de_DE ${prefix} &&
+	localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro ${prefix} &&
+	localedef -i de_DE -f UTF-8 de_DE.UTF-8 ${prefix} &&
+	localedef -i en_GB -f UTF-8 en_GB.UTF-8 ${prefix} &&
+	localedef -i en_US -f ISO-8859-1 en_US ${prefix} &&
+	localedef -i en_US -f UTF-8 en_US.UTF-8 ${prefix} &&
+	localedef -i pl_PL -f UTF-8 pl_PL.UTF-8 ${prefix} &&
+
+	rm <pkg_dir>/var/db/Makefile &&
+	rmdir <pkg_dir>/var/db <pkg_dir>/var
+		<pkg_dir>/usr/share/locale/*/*/
+		<pkg_dir>/usr/share/locale/*/"
+
+
+
+[ init_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+configure = "mkdir build && cd build && ../configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--host=${TARGET_TRI}
+	--enable-kernel=5.10.0
+	--build=$(../scripts/config.guess)
+	--with-headers=<root_dir>/usr/include
+	libc_cv_slibdir=/usr/lib
+	libc_cv_include_x86_isa_level=no"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/sbin/* <pkg_dir>/usr/sbin/ &&
+	rmdir -v <pkg_dir>/sbin/"
+
+# fix limits.h
+deploy = "<root_dir>/tools/libexec/gcc/${TARGET_TRI}/*/install-tools/mkheaders
+		-v -v <root_dir>/tools"
+
+
+
+[ init ]
+
+env = [ "CFLAGS=", "LDFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && ../configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--disable-werror
+	--enable-kernel=5.10.0
+	--enable-stack-protector=strong
+	--enable-static-pie
+	--enable-bind-now
+	--with-headers=/usr/include
+	libc_cv_slibdir=/usr/lib
+	libc_cv_include_x86_isa_level=no"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/sbin/* <pkg_dir>/usr/sbin/ &&
+	rmdir -v <pkg_dir>/sbin/ &&
+
+	mkdir -pv <pkg_dir>/usr/lib/locale &&
+	prefix=\"--prefix=<pkg_dir>\" &&
+	localedef -i POSIX -f UTF-8 C.UTF-8 \"${prefix}\" || : &&
+	localedef -i de_DE -f ISO-8859-1 de_DE \"${prefix}\" &&
+	localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro \"${prefix}\" &&
+	localedef -i de_DE -f UTF-8 de_DE.UTF-8 \"${prefix}\" &&
+	localedef -i en_GB -f UTF-8 en_GB.UTF-8 \"${prefix}\" &&
+	localedef -i en_US -f ISO-8859-1 en_US \"${prefix}\" &&
+	localedef -i en_US -f UTF-8 en_US.UTF-8 \"${prefix}\" &&
+	localedef -i pl_PL -f UTF-8 pl_PL.UTF-8 \"${prefix}\""

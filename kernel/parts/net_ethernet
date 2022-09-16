@@ -1,0 +1,7 @@
+# drivers -> net -> ethernet
+# ==========================
+
+CONFIG_ETHERNET=y
+CONFIG_NET_CORE=y
+CONFIG_NETDEVICES=y
+

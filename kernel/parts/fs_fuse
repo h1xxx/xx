@@ -1,0 +1,8 @@
+# filesystems -> fuse
+# ===================
+
+CONFIG_FUSE_FS=y
+
+# possible deps
+#CONFIG_FS_POSIX_ACL=y
+

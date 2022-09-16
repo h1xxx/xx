@@ -1,0 +1,24 @@
+dev/checksec			std			latest
+
+#arch/svntogit-community/staticcheck/trunk/PKGBUILD
+#dev-util/ltrace
+#dev+='dev-util/ctags '                  # tag files for code browsing
+#dev+='dev-lang/tcc '                    # tiny c compiler
+#dev+='app-editors/hexedit '             # hex editor
+#dev+='dev-python/virtualenv '           # python venv
+#dev+='dev-vcs/subversion '             # version control system
+#oth+='app-misc/jq '                     # json processor
+#sci-visualization/gnuplot
+
+# shellcheck https://github.com/koalaman/shellcheck
+# shfmt https://github.com/patrickvane/shfmt
+
+#dev-go/go-sqlite3
+#dev-go/golint
+#dev-python/bpython
+#dev-python/matplotlib
+#dev-python/pandas
+#dev-python/terminaltables
+#dev-python/virtualenv
+#dev-util/ctags
+#bvi binary editor

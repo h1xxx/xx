@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://www.kernel.org/pub/software/network/ethtool/ethtool-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--mandir=/usr/share/man
+	--sbindir=/usr/bin
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && 
+	rm -r <pkg_dir>/usr/share/bash-completion"

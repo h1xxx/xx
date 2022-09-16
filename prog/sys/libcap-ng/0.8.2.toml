@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://github.com/stevegrubb/libcap-ng/archive/v<ver>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "autoreconf -fiv && ./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--enable-static=no
+	--without-python"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/man/man3/"

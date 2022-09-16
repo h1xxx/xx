@@ -1,0 +1,25 @@
+[ src ]
+
+url = "https://download.tuxfamily.org/chrony/chrony-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-readline
+	--disable-nts
+	--disable-cmdmon
+	--disable-privdrop
+	--without-libcap
+	--without-editline
+	--without-nss
+	--without-gnutls"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,21 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf
+
+msg "unmounting filesystems..."
+for mpoint in $(mpoints); do
+	${BB} echo ${mpoint}
+	${BB} umount ${mpoint}
+done
+
+# double check if all is unmounted incl. lazy unmount of /var or /var/log
+# if they're mounted, as /var/log/init.log is opened for rw at this point
+# (needs testing)
+${BB} sleep 1
+for mpoint in $(mpoints); do
+	msg "lazy unmount..."
+	${BB} echo ${mpoint}
+	${BB} umount -l ${mpoint}
+done
+

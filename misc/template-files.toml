@@ -1,0 +1,26 @@
+[ src ]
+
+url = ""
+src_type = "files"
+src_dirname = ""
+
+
+
+[ std ]
+
+env = []
+prepare = ""
+configure = ""
+build = ""
+pkg_create = ""
+
+
+
+[ init ]
+
+env = []
+prepare = ""
+configure = ""
+build = ""
+pkg_create = ""
+

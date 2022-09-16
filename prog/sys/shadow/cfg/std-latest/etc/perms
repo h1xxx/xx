@@ -1,0 +1,174 @@
+# ownership
+
+root:root	/boot
+root:root	/boot/
+root:root	/etc
+root:root	/etc/
+root:root	/root
+root:root	/usr
+root:root	/usr/
+root:root	/var
+root:root	/var/
+root:log	/var/log
+root:log	/var/log/
+xx:xx		/var/xx
+xx:xx		/var/xx/
+root:wtmp	/var/log/wtmp
+dhcpcd:dhcpcd	/var/lib/dhcpcd
+dhcpcd:dhcpcd	/var/lib/dhcpcd/
+
+x:x		/home/x
+x:x		/home/x/.irssi
+x:x		/home/x/.irssi/
+x:x		/home/x/.ssh
+x:x		/home/x/.ssh/
+x:x		/home/x/.profile
+xx:xx		/home/xx
+xx:xx		/home/xx/
+xx:xx		/home/xx/conf
+xx:xx		/home/xx/conf/kernel
+xx:xx		/home/xx/conf/kernel/setup
+xx:xx		/home/xx/conf/.keep
+root:root	/home/xx/conf/
+
+root:lxc	/usr/bin/newuidmap
+root:lxc	/usr/bin/newgidmap
+
+
+
+# dir permissions
+
+0700	d:/boot
+0755	d:/etc
+0755	d:/etc/
+0700	d:/etc/acpi
+0755	d:/mnt
+0755	d:/usr
+0755	d:/usr/
+0755	d:/var
+0755	d:/var/
+
+0750	d:/var/log
+0750	d:/var/log/
+0700	d:/var/xx
+0700	d:/var/lib/dhcpcd
+0777	d:/var/tmp
+
+0700	d:/root
+0700	d:/root/.ssh
+0755	d:/home
+0700	d:/home/x
+0700	d:/home/x/.ssh
+0700	d:/home/xx
+0700	d:/home/xx/conf
+0700	d:/home/xx/conf/
+
+0777	d:/mnt/shared
+
+0755	d:/usr/cnt
+0755	d:/usr/cnt/
+
+0777	d:/usr/cnt/exiftool/files
+0777	d:/usr/cnt/fbpdf/files
+0777	d:/usr/cnt/fim/files
+0777	d:/usr/cnt/mpv/files
+0777	d:/usr/cnt/mutt/files
+0777	d:/usr/cnt/w3m/files
+0777	d:/usr/cnt/vim/files
+
+0777	d:/var/lib/dosbox-x
+0777	d:/var/lib/dosbox-x/
+0777	d:/var/lib/dosbox-staging
+0777	d:/var/lib/dosbox-staging/
+0777	d:/var/lib/mednafen
+0777	d:/var/lib/mednafen/
+0777	d:/var/lib/mpv
+0777	d:/var/lib/mpv/
+0777	d:/var/lib/mutt
+0777	d:/var/lib/mutt/
+0777	d:/var/lib/w3m
+0777	d:/var/lib/w3m/
+0777	d:/var/lib/xorg-server
+0777	d:/var/lib/xorg-server/
+
+
+
+# file permissions
+
+0600	f:/boot/
+0440	f:/boot/syslinux/ldlinux.sys
+0600	f:/root/.ssh/
+0644	f:/etc/
+0600	f:/etc/shadow
+0700	f:/etc/rc.d/
+0700	f:/etc/acpi/
+0600	f:/etc/acpid.conf
+0600	f:/etc/acpi.map
+
+0600	f:/etc/inittab
+0600	f:/etc/rc.conf
+0755	f:/etc/init.d/
+0700	f:/etc/init.d/rcK
+0700	f:/etc/init.d/rcS
+0600	f:/etc/init.d/functions
+0444	f:/etc/mtab
+
+0755	f:/etc/udev/rules.d/
+0755	f:/usr/bin/
+0755	f:/usr/sbin/
+0700	f:/usr/sbin/busybox-sysinit
+0755	f:/usr/libexec/
+0755	f:/usr/lib/
+0755	f:/usr/include/
+0755	f:/usr/share/
+0640	f:/var/log/
+
+0600	f:/etc/ssh/ssh_host_ed25519_key
+
+4755	f:/usr/bin/newuidmap
+4755	f:/usr/bin/newgidmap
+4755	f:/usr/libexec/lxc/lxc-user-nic
+0755	f:/usr/cnt/w3m/usr/libexec
+
+0755	f:/usr/cnt/bin/
+
+0666	f:/var/lib/dosbox-x/
+0666	f:/var/lib/dosbox-staging/
+0666	f:/var/lib/mpv/
+0666	f:/var/lib/mutt/
+0666	f:/var/lib/w3m/
+
+
+
+# permissions for for /usr/cnt
+x:x	c:/home
+x:x	c:/config
+
+0755	dc:/etc
+0755	dc:/etc/
+0755	dc:/mnt
+0755	dc:/mnt/
+0755	dc:/run
+0755	dc:/run/
+0755	dc:/usr
+0755	dc:/usr/
+0755	dc:/var
+0755	dc:/var/
+
+0777	dc:/home
+0777	dc:/var/cache/fontconfig
+0777	dc:/var/cache/fontconfig/
+0777	dc:/tmp
+0777	dc:/run
+0777	dc:/var/log
+
+0644	fc:/etc/
+0444	fc:/etc/mtab
+0755	fc:/usr/bin/
+0755	fc:/usr/lib/
+0755	fc:/usr/sbin/
+0755	fc:/usr/share/
+0755	fc:/usr/libexec/
+0755	fc:/usr/share/
+0644	fc:/var/
+

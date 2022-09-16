@@ -1,0 +1,15 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/glew/glew-<ver>.tgz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "patch -Np1 -i <prog_dir>/patch/glew-install.patch"
+build = "make LIBDIR=/usr/lib"
+pkg_create = "make install.all LIBDIR=/usr/lib DESTDIR=<pkg_dir>"

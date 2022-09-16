@@ -1,0 +1,10 @@
+sys/pkgsrc			std			latest
+
+# failed attempt to build pkgin outside of pkgsrc
+# not needed tbh
+#dev/libarchive			std			latest
+#net/libfetch			std			latest
+#crypt/libmd			std			latest
+#dev/libbsd			std			latest
+#sys/pkgin			std			latest
+

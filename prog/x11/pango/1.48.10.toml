@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://download.gnome.org/sources/pango/1.48/pango-1.48.10.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "meson
+	--prefix=/usr
+	--libdir=lib
+	--wrap-mode=nofallback
+	--buildtype=release
+	build"
+
+build = "ninja -C build all"
+pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"

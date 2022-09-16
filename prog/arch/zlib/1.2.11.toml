@@ -1,0 +1,25 @@
+[ src ]
+
+url = "https://zlib.net/zlib-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure --prefix=/usr"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure --prefix=/usr"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a"

@@ -1,0 +1,70 @@
+#!/bin/bash
+set -euo pipefail
+
+KPATH=/usr/src/linux
+[ $# -gt 0 ] && KPATH="${1}"
+MACHINES="/home/xx/kernel/generic $(find /home/xx/conf/kernel/ -type f)"
+cd "${KPATH}"
+KVER="$(make kernelversion)"
+
+make defconfig > /dev/null
+mkdir -p build
+
+for setup_file in ${MACHINES}; do
+	grep -q '^processor_' "${setup_file}" || continue
+
+	if printf "${setup_file}" | grep -q '-'; then
+		>&2 printf "machine names can't have dashes (-)"
+		exit 1
+	fi
+
+	machine="$(basename "${setup_file}")"
+	setup_parts="${KPATH}/build/setup-parts-${machine}"
+	setup_dir="$(dirname "${setup_file}")"
+	out_dir="$(dirname "${setup_dir}")/config"
+
+	printf "\n* ${machine}\n"
+
+	printf 'creating config...\n'
+	> "${setup_parts}"
+
+	# create partial kernel config
+	grep -v -e '^$' -e '^#' ${setup_file} | while read -r line; do
+		if echo "${line}" | grep -q '='; then
+			echo "${line}" >> "${setup_parts}"
+			continue
+		fi
+		cat "/home/xx/kernel/parts/${line}" >> "${setup_parts}"
+	done
+
+	# create final config
+	err_warn="$(make KCONFIG_ALLCONFIG="${setup_parts}" allnoconfig 2>&1 |
+		grep -ve '^# No change to .config$' |
+		grep -ve '^# configuration written to .config$' |
+		grep -ve '^#$' || :)"
+
+	if [ -n "${err_warn}" ]; then
+		>&2 printf 'ERROR: errors/warnings:\n%s\n' "${err_warn}"
+		exit 1
+	fi
+
+	cp "${KPATH}/.config" "${KPATH}/build/config-${machine}-${KVER}"
+
+	# check if all requested settings are visible in final kernel config
+	grep -v -e '^$' -e '^#' -e CONFIG_EMBEDDED ${setup_parts} |
+		sort -u > xx-checklist
+
+	grep -v -e '^$' -e '^#' -e CONFIG_EMBEDDED "${KPATH}/.config" |
+		sort -u > xx-config
+
+	not_set="$(comm -23 xx-checklist xx-config)"
+	if [ -n "${not_set}" ]; then
+		>&2 printf 'ERROR: settings not set for %s:\n%s\n' \
+			"${machine}" "${not_set}"
+		exit 1
+	fi
+	rm xx-checklist xx-config
+
+	printf "done.\n"
+done
+

@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://www.intra2net.com/en/developer/libftdi/download/<prog>1-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>1-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build"
+build = "cd build && cmake ..
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D LIB_SUFFIX=''
+	-D CMAKE_SKIP_BUILD_RPATH=ON
+	-D CMAKE_BUILD_TYPE=Release
+	-D EXAMPLES=OFF
+	-D STATICLIBS=OFF
+	-D FTDI_EEPROM=OFF
+        -D FTDIPP=OFF
+	-D PYTHON_BINDINGS=OFF
+	-D LINK_PYTHON_LIBRARY=OFF"
+
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

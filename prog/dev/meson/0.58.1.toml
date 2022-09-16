@@ -1,0 +1,18 @@
+[ src ]
+
+url = "https://github.com/mesonbuild/meson/releases/download/<ver>/meson-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "python3 setup.py build"
+pkg_create = "python3 setup.py install --root=<pkg_dir> &&
+	find <pkg_dir> -depth -type f -name '*.py[co]' -delete
+		-o -type d -name __pycache__ -delete &&
+	rm -r <pkg_dir>/usr/share/polkit-1/"

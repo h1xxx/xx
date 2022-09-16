@@ -1,0 +1,24 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/sourceforge/libpng/libpng-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "patch -Np1 -i <prog_dir>/files/libpng-1.6.37-apng.patch &&
+	./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	cd contrib/pngminus &&
+	make PNGLIB_SHARED='-L<pkg_dir>/usr/lib -lpng' CFLAGS=\"${CFLAGS}\"
+		LDFLAGS=\"${LDFLAGS}\" png2pnm pnm2png &&
+	install -m0755 png2pnm pnm2png <pkg_dir>/usr/bin/"

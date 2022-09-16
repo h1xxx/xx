@@ -1,0 +1,57 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf
+
+echo
+msg "sending SIGHUP to login shells..."
+${BB} pkill -1 -f -- -bash
+${BB} pkill -1 -f -- -sh
+
+# to prepare processes for a kill
+msg "syncing disks..."
+${BB} sync
+
+if [ "${UDEV}" == 'true' ]; then
+	msg "stopping udev..."
+	udevadm control --exit
+fi
+
+rc_d="$(ls -A /etc/rc.d/*stop 2>/dev/null)"
+[ -n "${rc_d}" ] && msg "running stop scripts..."
+for f in ${rc_d}; do
+	${BB} printf '%s\n' "${f}"
+	${BB} sh ${f}
+done
+
+[ -n "${SERVICES}" ] && msg "stopping services..."
+for s in ${SERVICES}; do
+	/etc/init.d/${s} stop
+done
+
+msg "sending TERM signal to all processes..."
+${BB} pkill -15 -v -s 0
+
+# wait for processes to terminate
+t=0
+while [ "$(ps_count)" -gt 0 ]; do
+	${BB} sleep 0.01
+	t="$((t+1))"
+	if [ "${t}" -gt 1500 ]; then
+		msg "process count: $(ps_count)"
+		${BB} echo "processess not terminated:"
+		ps_print
+		break
+	fi
+done
+
+if [ "$(ps_count)" -gt 0 ]; then
+	msg "sending KILL signal to all leftover processes..."
+	${BB} pkill -9 -v -s 0
+
+	${BB} sleep 5
+	msg "process count: $(ps_count)"
+	${BB} echo "processess not terminated:"
+	ps_print
+fi
+

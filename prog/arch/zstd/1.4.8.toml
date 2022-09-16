@@ -1,0 +1,38 @@
+[ src ]
+
+url = "https://github.com/facebook/zstd/releases/download/v<ver>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a"
+
+
+
+[ init_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a"

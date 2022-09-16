@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://github.com/commonmark/cmark/archive/refs/tags/<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build &&
+	cmake	-D CMAKE_INSTALL_PREFIX=/usr
+		-D CMAKE_INSTALL_LIBDIR=/usr/lib
+		-D CMAKE_BUILD_TYPE='Release'
+		-D CMARK_TESTS=OFF
+		-D CMARK_STATIC=OFF
+		.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

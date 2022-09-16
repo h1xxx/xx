@@ -1,0 +1,29 @@
+[ src ]
+
+url = "https://linuxcontainers.org/downloads/lxc/lxc-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-seccomp
+	--enable-openssl
+	--disable-capabilities
+	--disable-doc
+	--disable-dependency-tracking
+	--disable-static
+	--disable-apparmor
+	--disable-selinux
+	--disable-pam
+	--disable-bash
+	--with-pamdir=none"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/usr/etc/ <pkg_dir>/"

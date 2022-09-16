@@ -1,0 +1,20 @@
+[ src ]
+
+url = ""
+src_type = "git"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking
+	"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

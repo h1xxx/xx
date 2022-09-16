@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://download.gnome.org/sources/at-spi2-atk/<ver_short>/at-spi2-atk-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "meson
+	--prefix=/usr
+	--libdir=lib
+	--buildtype=release
+	-D tests=false
+	build"
+
+build = "ninja -C build all"
+pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"

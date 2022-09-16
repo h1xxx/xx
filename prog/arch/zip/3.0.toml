@@ -1,0 +1,30 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/infozip/zip<ver_pkgspec>.tar.gz
+https://src.fedoraproject.org/rpms/zip/raw/rawhide/f/zip-<ver>-currdir.patch
+https://src.fedoraproject.org/rpms/zip/raw/rawhide/f/zip-<ver>-exec-shield.patch
+https://src.fedoraproject.org/rpms/zip/raw/rawhide/f/zip-<ver>-format-security.patch
+https://src.fedoraproject.org/rpms/zip/raw/rawhide/f/zipnote.patch"
+
+src_type = "tar"
+src_dirname = "<prog><ver_pkgspec>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -e \"/^CFLAGS_NOOPT =/s/\\$/ ${CPPFLAGS} ${CFLAGS}/\" -i unix/Makefile &&
+	sed -e \"s/^LFLAGS1=''/LFLAGS1=${LDFLAGS}/\" -i unix/configure &&
+	patch -p1 -i <src_dir>/zip-3.0-currdir.patch &&
+	patch -p1 -i <src_dir>/zip-3.0-exec-shield.patch &&
+	patch -p1 -i <src_dir>/zip-3.0-format-security.patch &&
+	patch -p1 -i <src_dir>/zipnote.patch"
+
+build = "make -f unix/Makefile prefix=/usr generic_gcc"
+pkg_create = "mkdir -p <pkg_dir>/usr/share/man/man1 &&
+	make -f unix/Makefile
+		prefix=<pkg_dir>/usr
+		MANDIR=<pkg_dir>/usr/share/man/man1
+		install"

@@ -1,0 +1,45 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/project/expect/Expect/<ver>/expect<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog><ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-tcl=/usr/lib
+	--enable-shared
+	--mandir=/usr/share/man
+	--with-tclinclude=/usr/include"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -pv <pkg_dir>/usr/lib/ &&
+	rm <pkg_dir>/usr/bin/mkpasswd
+		<pkg_dir>/usr/share/man/man1/mkpasswd.1 &&
+	ln -svf expect<ver>/libexpect<ver>.so <pkg_dir>/usr/lib/"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-tcl=/usr/lib
+	--enable-shared
+	--mandir=/usr/share/man
+	--with-tclinclude=/usr/include"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -pv <pkg_dir>/usr/lib/ &&
+	rm <pkg_dir>/usr/bin/mkpasswd
+		<pkg_dir>/usr/share/man/man1/mkpasswd.1 &&
+	ln -svf expect<ver>/libexpect<ver>.so <pkg_dir>/usr/lib/"

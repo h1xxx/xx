@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://roy.marples.name/downloads/<prog>/<prog>-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--libexecdir=/usr/lib/dhcpcd
+	--dbdir=/var/lib/dhcpcd
+	--sanitize
+	--enable-privsep
+	--privsepuser=dhcpcd
+	--disable-auth"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/etc/ <pkg_dir>/usr/share/ &&
+	chmod -Rv u+w <pkg_dir>/usr/"

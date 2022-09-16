@@ -1,0 +1,25 @@
+[ src ]
+
+url = "http://downloads.sourceforge.net/cdrtools/cdrtools-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver_pkgspec>"
+
+
+
+[ std ]
+
+env = [ "MAKEFLAGS=-j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i 's|/opt/schily|/usr|g' DEFAULTS/Defaults.linux &&
+	sed -i 's|DEFINSGRP=.*|DEFINSGRP=root|' DEFAULTS/Defaults.linux &&
+	sed -i 's|INSDIR=.*|INSDIR=bin|' rscsi/Makefile"
+
+build = "export GMAKE_NOWARN=true &&
+	make INS_BASE=/usr INS_RBASE=/"
+
+pkg_create = "make INS_BASE=/usr INS_RBASE=/ DESTDIR=<pkg_dir> install &&
+	chmod -Rv u+w <pkg_dir>/usr/ || : &&
+	rm -r <pkg_dir>/usr/include &&
+	rm -r <pkg_dir>/usr/lib/{*.a,profiled} &&
+	rm -r <pkg_dir>/usr/share/doc/ &&
+	rm -r <pkg_dir>/usr/share/man/man3"

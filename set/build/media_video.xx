@@ -1,0 +1,82 @@
+# font/text libraries for subtitles in mpv
+media/freetype			std			latest
+media/fontconfig		std			latest
+text/fribidi			std			latest
+dev/glib			std			latest
+dev/gobject-introspection	std			latest
+media/harfbuzz			std			latest
+media/libass			std			latest
+
+# audio libraries
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+media/fdk-aac			std			latest
+media/flac			std			latest
+media/libao			std			latest
+media/libmodplug		std			latest
+media/libogg			std			latest
+media/libvorbis			std			latest
+media/opus			std			latest
+media/lame			std			latest
+media/wavpack			std			latest
+
+# video libraries
+media/dav1d			std			latest
+media/x264			std			latest
+media/xvid			std			latest
+media/v4l-utils			std			latest
+
+# image libraries
+media/libwebp			std			latest
+media/libraw			std			latest
+media/giflib			std			latest
+media/jbig2dec			std			latest
+media/libpng			std			latest
+media/libjpeg-turbo		std			latest
+media/openjpeg			std			latest
+media/tiff			std			latest
+media/imlib2			std			latest
+media/leptonica			std			latest
+
+# cd/dvd/bluray utils and libraries
+media/libcdio			std			latest
+media/libcdio-paranoia		std			latest
+media/libdvdread		std			latest
+media/libdvdnav			std			latest
+media/libbluray			std			latest
+
+# intel and nouveau hw accel
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+x11/libva			std			latest
+x11/libva-intel-driver		std			latest
+media/libva-utils		std			latest
+
+# mesa
+media/mako			std			latest
+lang/ocaml			std			latest
+dev/llvm			std			latest
+media/mesa			std			latest
+
+# mpv et al
+media/ffmpeg			std			latest
+sys/alsa-plugins		std			latest
+media/libsamplerate		std			latest
+sys/alsa-utils			std			latest
+arch/zip			std			latest
+net/yt-dlp			std			latest
+dev/waf				std			latest
+lang/lua			std			5.2.4
+media/mpv			std			latest
+
+# misc
+net/mps-youtube			std			latest
+media/subdl			std			latest
+media/subliminal		std			latest
+
+dev/gettext			std			latest
+media/zbar			std			latest
+
+# audio fingerprinting, requires ffmpeg hence its place in this category
+media/chromaprint		std			latest

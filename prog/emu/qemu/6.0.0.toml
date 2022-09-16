@@ -1,0 +1,73 @@
+[ src ]
+
+url = "https://download.qemu.org/qemu-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+# slirp is for 'user' networking support
+# virtfs is for 9p support between host and guest
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--localstatedir=/var
+	--docdir=/usr/share/doc/qemu
+
+	--without-default-features
+	--disable-dependency-tracking
+	--disable-docs
+
+	--target-list=x86_64-softmmu,aarch64-softmmu,arm-softmmu,ppc64-softmmu
+	--enable-malloc-trim
+	--enable-pie
+	--enable-system
+
+	--enable-kvm
+	--enable-vhost-net
+	--enable-vhost-scsi
+	--enable-seccomp
+	--enable-coroutine-pool
+	--enable-tools
+
+	--enable-curses
+	--enable-vnc
+	--enable-vnc-sasl
+	--enable-vnc-png
+	--disable-gtk
+	--enable-spice
+	--enable-slirp=system
+	--enable-qcow1
+	--enable-vdi
+	--enable-qed
+	--enable-dmg
+	--enable-vvfat
+	--enable-bochs
+	--enable-libusb
+	--enable-virtfs
+	--audio-drv-list=alsa
+	--disable-lzo
+	--enable-bzip2
+	--enable-zstd
+
+	--disable-linux-io-uring
+	--disable-linux-aio
+	--disable-lto
+	--disable-cfi
+	--disable-plugins
+	--disable-libudev
+	--disable-vhost-crypto
+	--disable-vhost-user
+	--disable-user
+	--disable-linux-user
+	--disable-bsd-user"
+
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{applications,icons}/"

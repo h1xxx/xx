@@ -1,0 +1,14 @@
+# this is a scetch of a file to be implemented
+
+kvm-amd
+	general_taskstats
+
+kvm-intel
+	general_taskstats
+
+io-accounting
+	general_taskstats
+
+# processor-microcode-{amd,intel} depends on FIRMWARE=
+# FIRMWARE= depends on drivers-firmware
+

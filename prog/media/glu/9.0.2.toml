@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://mesa.freedesktop.org/archive/glu/glu-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

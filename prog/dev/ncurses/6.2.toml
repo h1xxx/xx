@@ -1,0 +1,66 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+configure = "./configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--libdir=/usr/lib
+	--mandir=/usr/share/man
+	--enable-pc-files
+	--enable-widec
+	--enable-symlinks
+	--with-termlib
+	--with-shared
+	--with-manpage-format=normal
+	--disable-home-terminfo
+	--without-ada
+	--without-profile
+	--without-libtool
+	--without-ticlib
+	--without-cxx
+	--without-debug
+	--without-tests
+	--without-sysmouse
+	--without-normal"
+
+build = "make"
+
+# create links to names w/o 'w' at the end
+# also, keep only mostly used terminfos
+# also, create a link from the old curses name (libcurses.so)
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	
+	mkdir -pv <pkg_dir>/usr/lib/pkgconfig/ &&
+	mv -v <pkg_dir>/lib/pkgconfig <pkg_dir>/usr/lib/ &&
+	rmdir -v <pkg_dir>/lib &&
+
+	for lib in form menu ncurses panel tinfo; do
+		echo \"INPUT(-l${lib}w)\" > <pkg_dir>/usr/lib/lib${lib}.so &&
+		ln -sv ${lib}w.pc <pkg_dir>/usr/lib/pkgconfig/${lib}.pc;
+	done &&
+
+	mv <pkg_dir>/usr/share/terminfo <tmp_dir>/ &&
+	mkdir -p <pkg_dir>/usr/share/terminfo/{a,d,l,s,v,x} &&
+	cd <tmp_dir>/terminfo &&
+	mv a/ansi <pkg_dir>/usr/share/terminfo/a/ &&
+	mv d/dumb <pkg_dir>/usr/share/terminfo/d/ &&
+	mv l/linux <pkg_dir>/usr/share/terminfo/l/ &&
+	mv s/{screen,screen-256color,screen.xterm-256color}
+		<pkg_dir>/usr/share/terminfo/s/ &&
+	mv v/{vt52,vt100,vt102,vt200,vt220} <pkg_dir>/usr/share/terminfo/v/ &&
+	mv x/{xterm,xterm-color,xterm-256color}
+		<pkg_dir>/usr/share/terminfo/x/ &&
+
+	ln -sv libncurses.so <pkg_dir>/usr/lib/libcurses.so &&
+	rm -r <pkg_dir>/usr/share/man/man3/"
+

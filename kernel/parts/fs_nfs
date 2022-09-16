@@ -1,0 +1,5 @@
+# filesystems -> nfs
+# ==================
+
+CONFIG_NFS_FS=y
+

@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://github.com/rocky/libcdio-paranoia/archive/release-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-release-<ver_pkgspec>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./autogen.sh && ./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--disable-cpp-progs
+	--disable-static
+	--disable-example-progs"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/man/jp/"

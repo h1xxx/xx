@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/cdrdao/cdrdao-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--mandir=/usr/share/man
+	--sysconfdir=/etc
+	--with-lame
+	--with-ogg-support
+	--with-mp3-support
+	--without-xdao
+	--without-gcdmaster
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,5 @@
+# drivers -> net -> wireless -> atheros
+# =====================================
+
+CONFIG_CARL9170=y
+CONFIG_CARL9170_LEDS=y

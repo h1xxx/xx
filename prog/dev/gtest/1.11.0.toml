@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://github.com/google/googletest/archive/release-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "googletest-release-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=lib
+	-D BUILD_SHARED_LIBS=ON
+	-D BUILD_STATIC_LIBS=OFF
+	-D gtest_build_tests=OFF
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

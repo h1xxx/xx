@@ -1,0 +1,25 @@
+[ src ]
+
+url = "https://github.com/docbook/xslt10-stylesheets/releases/download/release/1.79.2/docbook-xsl-nons-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-nons-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "patch -Np1 -i
+		<prog_dir>/files/docbook-xsl-nons-<ver>-stack_fix-1.patch"
+
+build = ""
+pkg_create = "install -v -m755 -d
+		<pkg_dir>/usr/share/xml/docbook/xsl-stylesheets-nons-<ver> &&
+	cp -v -R VERSION assembly common eclipse epub epub3 extensions fo
+		highlighting html htmlhelp images javahelp lib manpages params
+		profiling roundtrip slides template tests tools webhelp website
+		xhtml xhtml-1_1 xhtml5
+		<pkg_dir>/usr/share/xml/docbook/xsl-stylesheets-nons-<ver> &&
+	ln -s VERSION
+		<pkg_dir>/usr/share/xml/docbook/xsl-stylesheets-nons-<ver>/VERSION.xsl"

@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://github.com/json-c/json-c/archive/refs/tags/json-c-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir json-c-build && cd json-c-build &&
+	cmake	-D CMAKE_INSTALL_PREFIX=/usr
+		-D CMAKE_INSTALL_LIBDIR=/usr/lib
+		-D CMAKE_BUILD_TYPE='Release'
+		-D BUILD_STATIC_LIBS=OFF
+		.."
+
+build = "cd json-c-build && make"
+pkg_create = "cd json-c-build && make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,65 @@
+PATH='/bin:/sbin:/usr/bin:/usr/sbin' 
+BB='/bin/busybox'
+
+msg() {
+	${BB} printf '+ %s\n' "${@}"
+}
+
+run() {
+	${BB} sh "/etc/init.d/rcS_${1}" 2>&1 | ${BB} tee -a /tmp/init.log
+}
+
+stop() {
+	${BB} sh "/etc/init.d/rcK_${1}" 2>&1 | ${BB} tee -a /var/log/init.log
+}
+
+ps_count() {
+	f='/tmp/ps_s0.lst'
+	${BB} pgrep -s 0 > ${f}
+	${BB} ps -l |
+		${BB} grep -v -e ']$' \
+			-e '^PID' \
+			-e '1 root' \
+			-e 'busybox ps -l' \
+			-e 'busybox pgrep' \
+			-e 'busybox grep' \
+			-e 'busybox wc' \
+			-f ${f} |
+		${BB} wc -l
+}
+
+ps_print() {
+	f='/tmp/ps_s0.lst'
+	${BB} pgrep -s 0 > ${f}
+	${BB} ps -l |
+		${BB} grep -v -e ']$' \
+			-e '^PID' \
+			-e '1 root' \
+			-e 'busybox ps -l' \
+			-e 'busybox pgrep' \
+			-e 'busybox grep' \
+			-f ${f}
+}
+
+mpoints() { ${BB} mount | ${BB} tac | ${BB} fgrep -v \
+		-e ' on / ' \
+		-e 'type proc' \
+		-e 'type sysfs' \
+		-e 'type tmpfs' \
+		-e 'type devtmpfs' \
+		-e 'type devpts' \
+		-e 'type cgroup' \
+		-e 'type cgroup2' \
+		-e 'type securityfs' \
+		-e 'type hugetlbfs' |
+	${BB} cut -d ' ' -f 3
+}
+
+# emergency shell
+err() {
+	${BB} printf '%s\n\n' "ERROR: ${1}"
+	${BB} printf '%s\n' "Can't continue due to errors, starting emergency shell."
+	${BB} printf '%s\n' 'When ready exit the shell to continue booting.'
+
+	${BB} setsid ${BB} sh -c 'exec /bin/busybox sh </dev/tty1 >/dev/tty1 2>&1'
+}

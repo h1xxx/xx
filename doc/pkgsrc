@@ -1,0 +1,47 @@
+xx i -t / sys/pkgsrc
+
+to use pkgsrc also gcc and binutils are needed
+
+PATH=/usr/pkg/bin/:/usr/pkg/sbin/:$PATH
+
+cd /usr/pkg/pkgsrc/pkgtools/pkgin
+bmake package
+
+pkg_add -u /usr/pkg/pkgsrc/packages/All/pkgin-21.7.0.tgz
+
+echo https://pkgsrc.joyent.com/packages/Linux/el7/trunk/x86_64/All >> /usr/pkg/etc/pkgin/repositories.conf
+
+using gpg keyring in legacy format
+
+mkdir tmp && cd tmp
+wget https://pkgsrc.joyent.com/packages/Linux/el7/bootstrap/bootstrap-el7-trunk-x86_64-20200724.tar.gz
+tar xf *tar.gz
+cp ./usr/pkg/etc/gnupg/pkgsrc.gpg ~/.gnupg/pubring.gpg
+
+pkgin update
+pkgin install clang
+pkg_add /var/db/pkgin/cache/clang-12.0.1.tgz
+
+
+
+cheatsheet:
+
+list available packages:
+	pkgin avail
+
+list installed packages:
+	pkgin list
+
+search for a regular expression in the database:
+	pkgin search foo.*bar
+
+remove orphan dependencies:
+	pkgin autoremove
+
+mark a package as "keepable", i.e. a package that probably has not been
+installed by pkgin but that is not an orphan dependency
+	pkgin keep foo
+
+mark a package as "non-keepable"
+	pkgin unkeep foo
+

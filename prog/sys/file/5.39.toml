@@ -1,0 +1,57 @@
+[ src ]
+
+url = "http://ftp.astron.com/pub/<prog>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-libseccomp
+	--enable-zlib
+	--enable-bzlib
+	--enable-xzlib
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init_cross ]
+
+env = []
+
+# creating signature file from existing file installation
+# installed file version needs to be the same as the one being built
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+	cd <build_dir> && mkdir build && cd build &&
+	../configure --disable-bzlib
+	--disable-libseccomp
+	--disable-xzlib	\
+	--disable-zlib &&
+	make"
+
+configure = "./configure
+	--prefix=/usr
+	--host=${TARGET_TRI}
+	--build=$(./config.guess)
+	--disable-dependency-tracking"
+
+build = "make FILE_COMPILE=$(pwd)/build/src/file"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure --prefix=/usr --disable-dependency-tracking"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

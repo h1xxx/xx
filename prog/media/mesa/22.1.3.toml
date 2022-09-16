@@ -1,0 +1,75 @@
+[ src ]
+
+url = "https://mesa.freedesktop.org/archive/mesa-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D buildtype=release
+	-D platforms=
+	-D gallium-drivers=i915,nouveau,radeonsi,swrast,svga,virgl,kmsro
+	-D gallium-d3d10umd=false
+	-D gallium-nine=true
+	-D glx=disabled
+	-D osmesa=false
+	-D valgrind=disabled
+	-D libunwind=disabled
+	-D dri3=enabled
+	-D egl=enabled
+	-D gbm=enabled
+	-D osmesa=true
+	-D opengl=true
+	-D gles1=disabled
+	-D gles2=enabled
+	-D shared-glapi=enabled
+	-D llvm=enabled
+	-D lmsensors=disabled
+	-D vulkan-drivers=amd,intel,swrast
+	-D vulkan-layers=
+	-D microsoft-clc=disabled"
+
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+
+
+
+[ x11 ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D buildtype=release
+	-D platforms=x11
+	-D gallium-drivers=i915,nouveau,radeonsi,swrast,svga,virgl,kmsro
+	-D gallium-d3d10umd=false
+	-D gallium-nine=true
+	-D glx=dri
+	-D glx-direct=true
+	-D osmesa=false
+	-D valgrind=disabled
+	-D libunwind=disabled
+	-D dri3=enabled
+	-D egl=enabled
+	-D gbm=enabled
+	-D osmesa=true
+	-D opengl=true
+	-D gles1=disabled
+	-D gles2=enabled
+	-D shared-glapi=enabled
+	-D llvm=enabled
+	-D lmsensors=disabled
+	-D vulkan-drivers=amd,intel,swrast
+	-D vulkan-layers=
+	-D microsoft-clc=disabled"
+
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+

@@ -1,0 +1,31 @@
+[ src ]
+
+url = "https://download.gnome.org/sources/gtk+/<ver_short>/gtk+-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--enable-x11-backend
+	--enable-man
+	--enable-introspection
+	--disable-modules
+	--disable-static
+	--disable-cups
+	--disable-gtk-doc-html
+	--disable-nls
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -p <pkg_dir>/usr/lib/gtk-3.0/3.0.0/ &&
+	touch <pkg_dir>/usr/lib/gtk-3.0/3.0.0/immodules.cache &&
+	/usr/bin/glib-compile-schemas
+		<pkg_dir>/usr/share/glib-2.0/schemas"

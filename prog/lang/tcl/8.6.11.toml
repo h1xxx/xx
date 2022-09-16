@@ -1,0 +1,49 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/tcl/tcl<ver>-src.tar.gz"
+src_type = "tar"
+src_dirname = "<prog><ver>/unix"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i '/chmod/s|555|755|g' Makefile.in &&
+	./configure
+	--prefix=/usr
+	--mandir=/usr/share/man
+	--enable-64bit
+	--disable-corefoundation"
+
+build = "rm -rf ../pkgs/* && make binaries libraries"
+
+pkg_create = "sed -i 's|$(INSTALL_DOC_TARGETS)||g' Makefile &&
+	make DESTDIR=<pkg_dir> install &&
+	make DESTDIR=<pkg_dir> install-private-headers &&
+	ln -sfv tclsh<ver_short> <pkg_dir>/usr/bin/tclsh &&
+	mkdir -p <pkg_dir>/usr/share/man/man1/ &&
+	cp ../doc/tclsh.1 <pkg_dir>/usr/share/man/man1/"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i '/chmod/s|555|755|g' Makefile.in &&
+	./configure
+	--prefix=/usr
+	--mandir=/usr/share/man
+	--enable-64bit
+	--disable-corefoundation"
+
+build = "rm -rf ../pkgs/* && make binaries libraries"
+
+pkg_create = "sed -i 's|$(INSTALL_DOC_TARGETS)||g' Makefile &&
+	make DESTDIR=<pkg_dir> install &&
+	make DESTDIR=<pkg_dir> install-private-headers &&
+	ln -sfv tclsh<ver_short> <pkg_dir>/usr/bin/tclsh &&
+	mkdir -p <pkg_dir>/usr/share/man/man1/ &&
+	cp ../doc/tclsh.1 <pkg_dir>/usr/share/man/man1/"

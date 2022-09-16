@@ -1,0 +1,40 @@
+[ src ]
+
+url = "https://gitlab.com/Remmina/Remmina/-/archive/v<ver>/<prog>-v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "."
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "cd Remmina-v<ver>-* && mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=/usr/lib
+	-D CMAKE_BUILD_TYPE='Release'
+	-D WITH_APPINDICATOR=OFF
+	-D WITH_LIBSECRET=OFF
+	-D WITH_GETTEXT=OFF
+	-D WITH_NEWS=OFF
+	-D WITH_KF5WALLET=OFF
+	-D WITH_AVAHI=OFF
+	-D WITH_ICON_CACHE=OFF
+	-D WITH_LIBSSH=OFF
+	-D WITH_VTE=OFF
+	-D WITH_TRANSLATIONS=OFF
+	-D WITH_PYTHON=OFF
+	-D WITH_CUPS=OFF
+	-D WITH_TELEPATHY=OFF
+	-D WITH_WWW=OFF
+	-D WITH_UPDATE_DESKTOP_DB=OFF
+	-D WITH_LIBVNCSERVER=OFF
+
+	-D WITH_SPICE=ON
+	-D WITH_FREERDP=ON
+	-D WITH_FREERDP3=OFF
+	.."
+
+build = "cd Remmina-v<ver>-* && cd build && make"
+pkg_create = "cd Remmina-v<ver>-* && cd build && make DESTDIR=<pkg_dir> install"

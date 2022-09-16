@@ -1,0 +1,28 @@
+[ src ]
+
+url = "https://prdownloads.sourceforge.net/vifm/vifm-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--disable-dependency-tracking
+	--disable-desktop-files
+	--disable-extended-keys
+	--with-libmagic
+	--with-sanitize=leak
+	--without-X11
+	--without-gtk"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/vifm/ &&
+	cp <prog_dir>/files/vifmrc <pkg_dir>/usr/share/vifm/ &&
+	rm -r <pkg_dir>/usr/share/{app,bash,doc,pix,zsh}*/"

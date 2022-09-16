@@ -1,0 +1,40 @@
+[ src ]
+
+url = "https://gitlab.com/sane-project/backends/-/archive/<ver>/backends-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "backends-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./autogen.sh &&
+	sed -i 's|UNKNOWN|<ver>|g' configure &&
+	./configure BACKENDS='pixma'
+	--prefix=/usr
+	--docdir=/usr/share/doc/sane
+	--localstatedir=/var
+	--sbindir=/usr/bin
+	--sysconfdir=/etc
+	--enable-pthread
+	--with-usb
+	--with-pic
+	--without-poppler-glib
+	--without-libcurl
+	--without-avahi
+	--without-v4l
+	--without-gphoto2
+	--without-snmp
+	--without-systemd
+	--without-usb-record-replay
+	--disable-preload
+	--disable-dynamic
+	--disable-locking
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,locale}/"

@@ -1,0 +1,6 @@
+# filesystems -> pseudo fs -> sysfs
+# =================================
+
+CONFIG_SYSFS=y
+CONFIG_SYSCTL=y
+

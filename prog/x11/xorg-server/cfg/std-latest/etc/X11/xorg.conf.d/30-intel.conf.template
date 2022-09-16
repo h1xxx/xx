@@ -1,0 +1,18 @@
+# settings for integrated intel graphics
+Section "Device"
+	Identifier	"Intel Graphics"
+	Driver		"intel"
+	Option		"TearFree"		"true"
+	Option  	"TripleBuffer" 		"true" 
+EndSection
+
+
+
+# other options:
+
+#	Option		"NoAccel"		"true"
+#	Option		"DRI"			"true"
+#	Option		"DRI"			"2"
+# sna is default, change to uxa when you encounter issues
+#	Option		"AccelMethod"		"sna"
+#	Option		"AccelMethod"		"uxa"

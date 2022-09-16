@@ -1,0 +1,15 @@
+[ src ]
+
+url = "https://gitlab.freedesktop.org/slirp/libslirp/-/archive/v<ver>/libslirp-v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-v<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson --prefix=/usr"
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"

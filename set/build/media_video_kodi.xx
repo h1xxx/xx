@@ -1,0 +1,84 @@
+# font/text libraries for subtitles in mpv
+media/freetype			std			latest
+media/fontconfig		std			latest
+text/fribidi			std			latest
+dev/glib			std			latest
+dev/gobject-introspection	std			latest
+media/harfbuzz			std			latest
+media/libass			std			latest
+
+# audio libraries
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+media/fdk-aac			std			latest
+media/flac			std			latest
+media/libao			std			latest
+media/libmodplug		std			latest
+media/libogg			std			latest
+media/libvorbis			std			latest
+media/opus			std			latest
+media/lame			std			latest
+media/wavpack			std			latest
+
+# video libraries
+media/dav1d			std			latest
+media/x264			std			latest
+media/xvid			std			latest
+media/v4l-utils			std			latest
+
+# image libraries
+media/libwebp			std			latest
+media/libraw			std			latest
+media/giflib			std			latest
+media/jbig2dec			std			latest
+media/libpng			std			latest
+media/libjpeg-turbo		std			latest
+media/openjpeg			std			latest
+media/tiff			std			latest
+media/imlib2			std			latest
+media/leptonica			std			latest
+
+# intel and nouveau hw accel
+x11/libva			std			latest
+x11/libva-intel-driver		std			latest
+media/libva-utils		std			latest
+
+# mesa
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+media/mako			std			latest
+media/mesa			std			latest
+
+# misc
+media/ffmpeg			std			latest
+sys/alsa-plugins		std			latest
+media/libsamplerate		std			latest
+sys/alsa-utils			std			latest
+arch/zip			std			latest
+net/yt-dlp			std			latest
+net/mps-youtube			std			latest
+media/subdl			std			latest
+media/subliminal		std			latest
+media/libcdio			std			latest
+
+text/libxslt			std			latest
+media/lirc			std			latest
+
+# kodi
+db/sqlite			std			latest
+dev/swig			std			latest
+lang/openjdk-bin		std			latest
+media/taglib			std			latest
+media/libxkbcommon		std			latest
+dev/fstrcmp			std			latest
+arch/lzo			std			latest
+sys/libinput			std			latest
+text/libpcre			cpp			latest
+dev/flatbuffers			std			latest
+dev/rapidjson			std			latest
+dev/fmt				std			latest
+dev/spdlog			std			latest
+dev/tinyxml			std			latest
+x11/xkbcomp			std			latest
+media/kodi			std			latest

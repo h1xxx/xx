@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://dist.torproject.org/tor-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--disable-unittests
+	--enable-zstd"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/ &&
+	mv <pkg_dir>/usr/etc/ <pkg_dir>/usr/share/"

@@ -1,0 +1,52 @@
+[ src ]
+
+url = "https://busybox.net/downloads/busybox-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "make defconfig &&
+	sed -i 's|# CONFIG_STATIC is not set|CONFIG_STATIC=y|g' .config"
+
+build = "make"
+pkg_create = "mkdir -pv <pkg_dir>/usr/bin/ &&
+	cp -v busybox <pkg_dir>/usr/bin/ &&
+	ln -sv busybox <pkg_dir>/usr/bin/sh &&
+	ln -sv busybox <pkg_dir>/usr/bin/vi"
+
+
+
+[ sysinit ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "cp <prog_dir>/files/sysinit-<ver_short>.config .config &&
+	make oldconfig"
+
+build = "make"
+pkg_create = "mkdir -pv <pkg_dir>/usr/sbin/ &&
+	cp -v busybox <pkg_dir>/usr/sbin/busybox-sysinit &&
+	for l in init poweroff reboot; do
+		ln -sv busybox-sysinit <pkg_dir>/usr/sbin/${l};
+	done"
+
+
+
+[ xx_tools_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "make defconfig &&
+	sed -i 's|# CONFIG_STATIC is not set|CONFIG_STATIC=y|g' .config &&
+	sed -i 's|# CONFIG_PIE is not set|CONFIG_PIE=y|g'       .config"
+
+build = "make"
+pkg_create = "mkdir -pv /home/xx/tools/ &&
+	echo 'program installed in /home/xx/tools/' >> <pkg_dir>/info.txt &&
+	cp -v busybox /home/xx/tools/"
+

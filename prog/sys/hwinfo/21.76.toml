@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/openSUSE/hwinfo/archive/refs/tags/<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "CFLAGS+=-I./src/hd" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i 's|GIT2LOG :=.*|GIT2LOG := echo|g' Makefile && 
+	sed -i 's|\\./check_hd --check|\\./check_hd|g' src/ids/Makefile"
+
+build = "make HWINFO_VERSION=<ver> LIBDIR=/usr/lib ||
+	make HWINFO_VERSION=<ver> LIBDIR=/usr/lib "
+
+pkg_create = "make DESTDIR=<pkg_dir> LIBDIR=/usr/lib install &&
+	rmdir -v <pkg_dir>/sbin/"

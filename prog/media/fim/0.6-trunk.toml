@@ -1,0 +1,47 @@
+[ src ]
+
+url = "https://download.savannah.nongnu.org/releases/fbi-improved/fim-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i -e 's/#define FIM_WANT_BACKGROUND_LOAD.*//' src/fim.h &&
+	sed -i -e 's/void exit/FIM_NORETURN void exit/' src/CommandConsole.h &&
+	sed -i -e 's/°//g' src/fim.cpp &&
+
+	./autogen.sh && ./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking
+
+	--enable-poppler
+	--enable-pdf
+	--enable-png
+	--enable-framebuffer
+	--enable-output-console
+	--enable-screen
+	--enable-gif
+	--enable-tiff
+	--enable-djvu
+	--enable-exif
+	--enable-long-int-vars
+	--enable-pushdir
+
+	--enable-unicode
+	--enable-seek-magic
+	--enable-stdin-image-reading
+
+	--disable-aa
+	--disable-sdl
+	--disable-imlib2
+	--disable-history
+	--disable-cacalib"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"

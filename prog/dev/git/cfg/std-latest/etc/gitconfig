@@ -1,0 +1,33 @@
+[user]
+
+email = empty
+name = empty
+
+
+[alias]
+
+co = checkout
+br = branch
+ci = commit
+st = status
+
+last = log -3 HEAD
+logf = log --graph --pretty='format:%C(red)%d%C(reset) %C(yellow)%h%C(reset) %ar %C(green)%aN%C(reset) %s'
+logg = log --oneline --graph --decorate --all
+rank = shortlog -sn --no-merges
+alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+
+
+[core]
+
+pager = less -F -X
+
+
+[pack]
+
+windowMemory = 64m
+
+
+[init]
+
+defaultBranch = master

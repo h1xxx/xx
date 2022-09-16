@@ -1,0 +1,3 @@
+alpine/pandoc			std			latest
+alpine/firefox			std			latest
+alpine/xorg-server		std			latest

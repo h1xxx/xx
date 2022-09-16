@@ -1,0 +1,5 @@
+# partitions - ms-dos
+# ===================
+
+CONFIG_MSDOS_PARTITION=y
+

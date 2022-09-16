@@ -1,0 +1,35 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v<ver>/e2fsprogs-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--libdir=/usr/lib
+	--sbindir=/usr/sbin
+	--with-root-prefix=''
+	--enable-relative-symlinks
+	--enable-elf-shlibs
+	--disable-libblkid
+	--disable-libuuid
+	--disable-uuidd
+	--disable-fsck
+	--disable-nls &&
+	sed -i '/$(MAKE) docs/d' Makefile &&
+	sed -i 's|&& cd doc &&.*| |g' Makefile"
+
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	chmod u+w <pkg_dir>/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
+	rm <pkg_dir>/usr/lib/lib{com_err,e2p,ext2fs,ss}.a &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+

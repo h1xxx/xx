@@ -1,0 +1,28 @@
+[ src ]
+
+url = "https://developer.download.nvidia.com/compute/cuda/<ver>/local_installers/cuda_<ver>_495.29.05_linux.run"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "DRV_VER=495.29.05", "SETUP_NOCHECK=1" ]
+prepare = "mkdir -pv <tmp_dir>/<prog>-<ver> &&
+	cp -v <src_path> <tmp_dir>/<prog>-<ver>"
+
+configure = "sh cuda_<ver>_${DRV_VER}_linux.run --tar mxvf --no-same-owner"
+build = ""
+pkg_create = "mkdir -pv <pkg_dir>/usr/{bin,include,lib} &&
+	cp -av builds/cuda_cudart/include/*	<pkg_dir>/usr/include/ &&
+	cp -av builds/cuda_nvrtc/include/*	<pkg_dir>/usr/include/ &&
+	cp -av builds/lib*/include/*		<pkg_dir>/usr/include/ &&
+
+	cp -av builds/cuda_cudart/lib64/lib*so*	<pkg_dir>/usr/lib/ &&
+	cp -av builds/cuda_nvrtc/lib64/lib*so*	<pkg_dir>/usr/lib/ &&
+	cp -av builds/lib*/lib64/lib*so*	<pkg_dir>/usr/lib/ &&
+
+	cp -avn builds/cuda_cudart/lib64/stubs/lib*so*	<pkg_dir>/usr/lib/ &&
+	cp -avn builds/cuda_nvrtc/lib64/stubs/lib*so*	<pkg_dir>/usr/lib/ &&
+	cp -avn builds/lib*/lib64/stubs/lib*so*		<pkg_dir>/usr/lib/"

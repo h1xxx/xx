@@ -1,0 +1,175 @@
+#!/bin/sh
+
+/bin/busybox --install -s
+mkdir -p /mnt/root /mnt/boot
+
+msg() {
+	printf '+ %s\n' "${@}"
+}
+
+get_dev_mapper() {
+	luks_dev="$(basename "${1}")"
+	virt_dev="$(find /sys/devices/virtual/block/ -name "${luks_dev}" | cut -d'/' -f6)"
+	if [ -z "${virt_dev}" ]; then
+		printf ''
+	else
+		name="$(cat "/sys/devices/virtual/block/${virt_dev}/dm/name")"
+		printf '/dev/mapper/%s' "${name}"
+	fi
+}
+
+err() {
+	printf '%s\n\n' "ERROR: ${@}"
+	printf '%s\n' "Can't continue due to errors, starting emergency shell."
+	printf '%s\n' 'When ready type exit to continue booting.'
+
+	setsid sh -c 'exec sh </dev/tty1 >/dev/tty1 2>&1'
+}
+
+msg 'starting initramfs...'
+msg 'mounting pseudo filesystems...'
+mount -o rw,nosuid,noexec,relatime -t devtmpfs none /dev
+mkdir -p /dev/pts /run
+mount -t devpts devpts /dev/pts
+mount -t proc proc /proc
+mount -t sysfs sys /sys
+mount -o mode=0755,nosuid,nodev -t tmpfs run /run
+
+# wait for dev, proc and sys
+t=0
+while [ ! -e /dev/pts/ptmx ] || [ ! -e /proc/sys ] || [ ! -e /sys/dev ]; do 
+	sleep 0.01
+	t="$((t+1))"
+	[ "${t}" -gt 500 ] && err '/dev, /proc or /sys not mounted'
+done
+
+# set console font
+setfont -C /dev/console /usr/share/consolefonts/unifont-apl8x16.psf.gz
+
+# disable kernel messages
+echo 0 > /proc/sys/kernel/printk
+
+# create /dev/disk/by-uuid/ dirs
+mkdir -p /dev/disk/by-uuid
+for dev in /dev/[sv]d* /dev/nvme[0-9]*; do
+	uuid="$(blkid ${dev} | cut -d'"' -f2)"
+	[ -z "${uuid}" ] && continue
+	ln -s "${dev}" "/dev/disk/by-uuid/${uuid}"
+done
+
+msg 'getting initramfs config...'
+bootdev="$(sed 's| |\n|g' /proc/cmdline | grep bootdev= | cut -d'=' -f2)"
+[ -z "${bootdev}" ] &&  err 'bootdev= not declared in /proc/cmdline'
+conf=/mnt/boot/boot.conf
+
+# mount boot partition
+t=0
+while ! mount UUID="${bootdev}" /mnt/boot/; do
+	sleep 0.01
+	t="$((t+1))" && [ "${t}" -gt 500 ] &&
+		err "${bootdev} not mounted"
+done
+
+# read boot.conf from boot partition and unmount
+t=0
+while [ ! -e ${conf} ]; do
+	sleep 0.01
+	t="$((t+1))" && [ "${t}" -gt 500 ] &&
+		err "${conf} not loaded"
+done
+. ${conf} && umount /mnt/boot || err "${conf} not loaded"
+
+# check if boot.conf variables exist
+if [ -z "${NET}" ] || [ -z "${ENC}" ] || [ -z "${MACHINE}" ]; then
+	err "error: incorrect ${conf}"
+fi
+
+# network configuration
+if [ "${NET}" == 'static' ]; then
+	msg 'setting static network config...'
+	sh -c "${NET_STATIC_CMD}"
+
+elif [ "${NET}" == 'dhcp' ]; then
+	msg 'getting network config through dhcp...'
+	ip link set "${NET_DHCP_IFACE}" up
+	dhcpcd -1 -4 --waitip=4 -B "${NET_DHCP_IFACE}"
+fi
+
+if [ "${SSHD}" == 'true' ]; then
+	msg 'starting ssh server...'
+	/usr/sbin/sshd -f /etc/ssh/sshd_config \
+		-o 'AuthorizedKeysFile=/mnt/boot/authorized_keys'
+
+	msg 'waiting for decrypting from net...'
+	echo "press 'q' to cancel"
+	while [ ! -e /dev/mapper/root ]; do
+		read -n 1 -t 0.10 key_press
+		if [ "${key_press}" == "q" ]; then
+			break
+		fi
+		sleep 0.1
+	done
+fi
+
+if [ "${ENC}" == 'true' ] && [ ! -e /dev/mapper/root ]; then
+	msg 'decrypting locally...'
+	uuid="$(sed 's| |\n|g' /proc/cmdline | grep cryptdev= | cut -d'=' -f2)"
+	cryptsetup --tries 5 --allow-discards luksOpen UUID=${uuid} root ||
+		err "device ${uuid} not decrypted"
+	unset uuid
+fi
+
+msg 'checking filesystems...'
+for dev in /dev/[sv]d* /dev/nvme[0-9]*; do
+	[ -e "${dev}" ] || continue
+	cryptsetup isLuks "${dev}" && dev="$(get_dev_mapper "${dev}")"
+	[ -z "${dev}" ] && continue
+	blkid "${dev}" | grep -q ext4 || continue
+	fsck.ext4 -p "${dev}" || err "errors in "${dev}" filesystem"
+done
+
+msg 'mounting the root filesystem...'
+if [ "${ENC}" == 'true' ]; then
+	mount -o ro /dev/mapper/root /mnt/root ||
+		err 'encrypted root on /dev/mapper/root not mounted'
+else
+	uuid="$(sed 's| |\n|g' /proc/cmdline | grep root=UUID= | cut -d'=' -f3)"
+	[ -z "${uuid}" ] && uuid="$(sed 's| |\n|g' /proc/cmdline |
+			grep root= | cut -d'=' -f2)"
+	mount -o ro UUID=${uuid} /mnt/root ||
+		err "root on ${uuid} not mounted"
+fi
+
+# cleanup
+if [ "${SSHD}" == 'true' ]; then
+	msg 'killing ssh server...'
+	killall -TERM sshd
+	sleep 0.5
+fi
+
+if [ "${NET}" != 'none' ]; then
+	msg 'flushing network interfaces...'
+	for iface in $(ls /sys/class/net/); do
+		ip addr flush "${iface}"
+		ip link set "${iface}" down
+	done 
+fi
+
+# bring back kernel messages
+if [ -f /proc/sys/kernel/printk ]; then
+	echo '5 4 1 4' > /proc/sys/kernel/printk
+fi
+
+# start the debug shell
+# ash.rc exits the shell within 3 seconds if there's no action from the user
+if [ "${DEBUG}" == 'true' ]; then
+	export ENV='/root/ash.rc'
+	setsid sh -c 'exec sh </dev/tty1 >/dev/tty1 2>&1'
+fi
+
+msg 'unmounting /dev /proc and /sys...'
+umount /dev/pts /dev /proc /sys
+
+msg 'starting main init...'
+mount -o rw,nosuid,noexec -t devtmpfs devtmpfs /dev
+exec switch_root /mnt/root /sbin/init

@@ -1,0 +1,30 @@
+[ src ]
+
+url = "https://dev.gentoo.org/~blueness/eudev/eudev-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--exec-prefix=/usr
+	--libdir=/usr/lib
+	--bindir=/usr/sbin
+	--sbindir=/usr/sbin
+	--sysconfdir=/etc
+	--with-rootlibdir=/usr/lib
+	--enable-manpages
+	--disable-selinux
+	--disable-kmod
+	--disable-mtd_probe
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"

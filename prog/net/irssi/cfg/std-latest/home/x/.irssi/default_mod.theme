@@ -1,0 +1,56 @@
+abstracts = {
+
+  ### color codes
+
+  #           text         text       background
+  # %k %K %0 black   dark grey        black
+  # %r %R %1 red     bold red         red
+  # %g %G %2 green   bold green       green
+  # %y %Y %3 yellow  bold yellow      yellow
+  # %b %B %4 blue    bold blue        blue
+  # %m %M %5 magenta bold magenta     magenta
+  # %p %P    magenta (think: purple)   
+  # %c %C %6 cyan    bold cyan        cyan
+  # %w %W %7 white   bold white       white
+
+  ### statusbar
+
+  #sb_background = "%4%w";
+  sb_background = "%0";
+
+  prompt = "%w$*%n%B:%W ";
+
+  sb = " %B[%W$*%B]%n";
+
+  # text to insert at the beginning of each non-message line
+  line_start = "%K-!-%n ";
+
+  # highlighted nick/host is printed (joins)
+  channick_hilight = "%K$*";
+  chanhost_hilight = "{nickhost %K$*}";
+
+  # nick/host is printed (parts, quits, etc.)
+  channick = "%K$*";
+  chanhost = "{nickhost $*}";
+
+};
+formats = {
+  "fe-common/core" = {
+    own_msg = "{ownmsgnick $nickalign$2 {ownnick $nickcolor$[.7]0$nicktrunc}}$1";
+    own_msg_channel = "{ownmsgnick $nickalign$3 {ownnick $nickcolor$[.7]0$nicktrunc}{msgchannel $1}}$2";
+    own_msg_private_query = "{ownprivmsgnick $nickalign{ownprivnick $nickcolor$2$nicktrunc}}$1";
+    pubmsg_me = "{pubmsgmenick $nickalign$2 {menick $[.16]0$nicktrunc}}$1";
+    pubmsg_me_channel = "{pubmsgmenick $nickalign$3 {menick $[.16]0$nicktrunc}{msgchannel $1}}$2";
+    pubmsg_hilight = "{pubmsghinick $0 $nickalign$3 $[.16]1$nicktrunc}$2";
+    pubmsg_hilight_channel = "{pubmsghinick $0 $nickalign$4 $[.16]1$nicktrunc{msgchannel $2}}$3";
+    pubmsg = "{pubmsgnick $nickalign$2 {pubnick $nickcolor$[.16]0$nicktrunc}}$1";
+    pubmsg_channel = "{pubmsgnick $nickalign$3 {pubnick $nickcolor$[.16]0$nicktrunc}{msgchannel $1}}$2";
+    msg_private_query = "{privmsgnick $nickalign$nickcolor$0$nicktrunc}$2";
+  };
+  "fe-common/irc" = {
+    own_action = "$nickalign{ownaction $0$nicktrunc}$1";
+    action_private = "$nickalign{pvtaction $[.13]0$nicktrunc}$2";
+    action_private_query = "$nickalign{pvtaction_query $[.13]0$nicktrunc}$2";
+    action_public = "$nickalign{pubaction $[.13]0$nicktrunc}$1";
+  };
+};

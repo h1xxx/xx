@@ -1,0 +1,15 @@
+[ src ]
+
+url = ""
+src_type = "git"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = "mkdir -p <pkg_dir>/usr/lib/go-src/src/github.com/golang/<prog>"
+build = ""
+pkg_create = "cp -a * <pkg_dir>/usr/lib/go-src/src/github.com/golang/<prog>/"

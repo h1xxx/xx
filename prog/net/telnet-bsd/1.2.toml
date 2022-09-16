@@ -1,0 +1,18 @@
+[ src ]
+
+url = "https://dev.gentoo.org/~mschiff/distfiles/telnet-bsd-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "LIBS=-ltinfow" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,33 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf
+
+stop process
+
+# write a wtmp record
+${BB} halt -w
+
+stop mount
+
+# force unmount and filesystems left
+${BB} sleep 1
+for mpoint in $(mpoints); do
+	msg "force unmount..."
+	${BB} echo ${mpoint}
+	${BB} umount -f ${mpoint}
+done
+
+msg "remounting rootfs read-only..."
+${BB} mount -o remount,ro /
+${BB} mount | ${BB} fgrep ' on / ' | ${BB} fgrep '(rw' &&
+	${BB} echo 'WARNING! root is still mounted rw.' &&
+	${BB} sync && ${BB} sleep 5 &&  ${BB} sync
+
+# just in case...
+msg "syncing root..."
+${BB} sync
+
+msg 'shutdown complete.'
+${BB} sleep 1
+

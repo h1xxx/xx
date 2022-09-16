@@ -1,0 +1,59 @@
+# processor -> supported cpu vendors -> intel
+# ===========================================
+
+CONFIG_PROCESSOR_SELECT=y
+CONFIG_CPU_SUP_INTEL=y
+
+CONFIG_X86_PLATFORM_DEVICES=y
+
+# intel mce features
+CONFIG_X86_MCE_INTEL=y
+CONFIG_X86_MCE_THRESHOLD=y
+CONFIG_X86_THERMAL_VECTOR=y
+CONFIG_X86_PKG_TEMP_THERMAL=y
+
+# processor -> performance monitoring
+# intel/amd rapl performance events
+CONFIG_PERF_EVENTS_INTEL_RAPL=y
+CONFIG_PERF_EVENTS_INTEL_UNCORE=y
+
+# smp for intel
+CONFIG_SCHED_MC_PRIO=y
+
+# cpufreq
+CONFIG_CPU_FREQ=y
+CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
+CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+CONFIG_CPU_FREQ_GOV_COMMON=y
+CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+CONFIG_CPU_IDLE=y
+CONFIG_CPU_IDLE_GOV_MENU=y
+
+
+CONFIG_X86_INTEL_PSTATE=y
+
+
+
+# processor -> supported cpu vendors -> amd
+# =========================================
+
+CONFIG_CPU_SUP_AMD=y
+
+# amd_acpi2platform
+CONFIG_X86_AMD_PLATFORM_DEVICE=y
+#CONFIG_PINCTRL=y
+
+# amd mce features
+CONFIG_X86_MCE_AMD=y
+
+# amd processor power reporting mechanism
+CONFIG_PERF_EVENTS_AMD_POWER=y
+
+CONFIG_PERF_EVENTS_AMD_UNCORE=y
+
+
+# power management -> cpu frequency scaling / cpu idle
+# ====================================================
+
+CONFIG_X86_ACPI_CPUFREQ=y
+

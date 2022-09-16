@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://www.libraw.org/data/LibRaw-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "LibRaw-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "autoreconf -fi && ./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/"

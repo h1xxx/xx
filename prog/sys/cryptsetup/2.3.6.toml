@@ -1,0 +1,37 @@
+[ src ]
+
+url = "https://www.kernel.org/pub/linux/utils/cryptsetup/v<ver_short>/cryptsetup-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "PKG_CONFIG_PATH=/usr/lib64/pkgconfig" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--with-default-luks-format=LUKS2
+	--disable-dependency-tracking
+	--disable-nls
+	--disable-pwquality
+	--disable-passwdqc
+	--disable-veritysetup
+	--disable-cryptsetup-reencrypt
+	--disable-integritysetup
+	--disable-selinux
+	--disable-udev
+
+	--enable-libargon2
+	--enable-internal-sse-argon2
+	--disable-veritysetup
+	--disable-cryptsetup-reencrypt
+	--disable-integritysetup
+	--disable-gcrypt-pbkdf2
+
+	--with-crypto_backend=openssl
+	--with-luks2-pbkdf=argon2id
+	--with-luks2-parallel-threads=8"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

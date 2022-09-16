@@ -1,0 +1,40 @@
+# font/text libraries
+media/freetype			std			latest
+media/fontconfig		std			latest
+
+dev/libmspack			std			latest
+arch/cabextract			std			latest
+media/msttcorefonts		std			latest
+
+# image libraries
+media/libwebp			std			latest
+media/giflib			std			latest
+media/libpng			std			latest
+media/libjpeg-turbo		std			latest
+media/openjpeg			std			latest
+media/tiff			std			latest
+media/leptonica			std			latest
+
+# misc libs
+dev/boost			std			latest
+
+# media info utils and libs
+media/libzen			std			latest
+media/libmediainfo		std			latest
+media/mediainfo			std			latest
+dev/gettext			std			latest
+media/libexif			std			latest
+media/exiftool			std			latest
+media/taglib			std			latest
+sys/file			std			latest
+media/id3ted			std			latest
+
+# utils
+text/tesseract			std			latest
+text/poppler			std			latest
+arch/libzip			std			latest
+text/ebook-tools		std			latest
+text/chmlib			std			latest
+text/djvu			std			latest
+text/fbpdf			std			latest
+text/cmark			std			latest

@@ -1,0 +1,18 @@
+
+# potential deps from arch:
+# python-jinja" "python-pyqt5" "python-yaml" "qt5-base" "python-pyqtwebengine"
+# pdfjs
+# better to check requirements.txt tho
+
+
+
+#sys/alsa-ucm-conf		std			latest
+#sys/alsa-topology-conf		std			latest
+#sys/alsa-lib			std			latest
+
+#x11/libdrm			std			latest
+#sys/which			std			latest
+#dev_media/qt5-everywhere	std			latest
+
+#net/qutebrowser		std			latest_f
+

@@ -1,0 +1,5 @@
+sys/busybox			std			latest
+sys/cryptsetup			std			latest
+sys/openssh			std			latest
+sys/e2fsprogs			std			latest
+net/dhcpcd			std			latest

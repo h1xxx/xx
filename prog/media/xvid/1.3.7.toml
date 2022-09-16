@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://downloads.xvid.com/downloads/xvidcore-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "xvidcore/build/generic"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--disable-static"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libxvidcore.a"

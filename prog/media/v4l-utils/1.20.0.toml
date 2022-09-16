@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://linuxtv.org/downloads/v4l-utils/v4l-utils-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-dependency-tracking
+	--sysconfdir=/etc
+	--sbindir=/usr/bin
+	--disable-static"
+
+build = "make"
+pkg_create = "MAKEFLAGS='-j1' make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/etc/ &&
+	rm -r <pkg_dir>/usr/share/locale/"

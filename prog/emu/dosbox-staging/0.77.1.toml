@@ -1,0 +1,24 @@
+[ src ]
+
+url = "https://github.com/dosbox-staging/dosbox-staging/archive/refs/tags/v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "meson
+	--prefix=/usr
+	--libdir=lib
+	--buildtype=release
+	-D use_sdl2_net=false
+	-D use_mt32emu=false
+	-D use_fluidsynth=false
+	-D use_opengl=false
+	-D use_alsa=true
+	build"
+build = "ninja -C build all"
+pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"

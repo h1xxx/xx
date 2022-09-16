@@ -1,0 +1,113 @@
+
+build sets
+
+- name packages to be built or deployed
+- located in /home/xx/set/
+- 3 tab separated columns: <category>/<program name>, <mode> and <ver>
+- ver latest gets the latest version of the package
+- ver containing "_f" suffix forces rebuilding of the pkg
+- mode must be defined in pkg .toml file in square brackets
+
+
+boot process 
+
+sysconfig loads kernel and optionally initramfs
+initramfs executes
+decrypts the drive
+init script: /etc/runit/1
+	configures system
+	starts getty services
+	uses /etc/rc.d/*.start and /etc/rc.conf for config
+init script: /etc/runit/2
+shutdown/restart with init 0 / init 6
+init script: /etc/runit/3
+	uses /etc/rc.d/*.stop and /etc/rc.conf for config
+
+
+
+variable info
+
+ver	- latest version is detected based on .toml files in program dir
+
+env	- empty env var is removed from the environment; to keep it empty in the
+	environment put space as a value
+	- '+=' assignment adds variables to the default env value
+
+pkgID   - defined based on latest pkgID in pkg dir
+
+
+special values
+
+mode
+- section in pkg toml file
+- can't contain dash (-)
+- values:
+	init...		detected if 'init' is a prefix for the mode, build is
+			done as stage0 if mode is also 'cross', and then in
+			a container, when necessary tools are built
+	..._cross	detected if '_cross' is a suffix to the mode, build is
+			using host system build tools, unless they exist in xx
+			system
+	base		self-contained system for compiling other packages
+
+src_type
+- describes the way source code is packaged
+- values:
+	tar		tarball with prepared release
+	files		files to be copied to xx system w/o building
+	git		git repo, source code is used from commit/tag included
+			in toml filename
+
+
+pkg toml
+
+- url variable can contain multiple urls separated by space
+- url can contain output file denoted by <output_file.tar.gz>::<url>
+- multiline strings can't have new lines escaped with a backslash - xx program
+  escapes them automatically for each build step (prepare, configure, build,
+  install and deploy) and for url
+- mode can be defined as exact copy of another one by specying only variable
+  needed for that - "mode" e.g. mode = "base"
+
+
+adding container in /usr/cnt/bin
+- /etc/cnt.conf
+
+
+lxc-execute to build alpine is not done in /tmp/xx/media, but in /tmp/xx/build/pandoc-edge_build-04//
+
+autologin example for user 'x' on tty2
+/etc/sv/getty-2/run:
+	exec /bin/busybox getty -l /sbin/login-x -n 38400 tty2 linux
+
+
+location where username 'x' is stored and can be changed
+files:
+	/etc/passwd
+	/etc/group
+	/etc/subuid
+	/etc/subgid
+	/etc/lxc/lxc-usernet
+	/etc/perms from shadow pkg
+	/sbin/login-x
+dirs:
+	prog/x11/dwm/cfg/std-latest/home/x
+
+
+adding 4th tty
+	- prog/sys/runit/cfg/std-latest/etc/sv/getty-4
+	add runit service
+
+	- prog/sys/runit/cfg/std-latest/etc/runit/1
+	add 'ln -s /etc/sv/getty-4 /var/service/'
+	add tty4 in 'for t in tty1 tty2 tty3; do'
+	don't remove tty5 in 'rm -f /dev/tty[5-9] /dev/tty[1-7]?'
+
+	- xx/cntrun/cntrun.go
+	change vt4 to vt5 in following lines:
+	case prog == "startx":
+		cmdLine += "-- vt4"
+
+	- xx/cntrun/cntrun.go
+	change cfgTty4 to cfgTty5 and tty4 to tty5 everywhere
+

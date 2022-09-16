@@ -1,0 +1,8 @@
+# device drivers -> block devices
+# ===============================
+
+CONFIG_BLK_DEV=y
+CONFIG_BLOCK=y
+CONFIG_PARTITION_ADVANCED=y
+
+

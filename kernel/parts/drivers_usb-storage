@@ -1,0 +1,6 @@
+# drivers -> usb mass storage
+# ===========================
+
+CONFIG_USB_STORAGE=y
+
+

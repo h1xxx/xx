@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://xorg.freedesktop.org/archive/individual/app/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-xinitdir=/etc/X11/xinit
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	sed -i -e '/twm/d' -e '/xterm/d' -e '/xclock/d'
+		<pkg_dir>/etc/X11/xinit/xinitrc &&
+	echo 'exec dwm' >> <pkg_dir>/etc/X11/xinit/xinitrc"

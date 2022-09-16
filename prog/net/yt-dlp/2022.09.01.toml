@@ -1,0 +1,25 @@
+[ src ]
+
+url = "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/<ver>.tar.gz
+https://github.com/yt-dlp/yt-dlp/releases/download/<ver>/yt-dlp.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make PREFIX=/usr yt-dlp"
+
+# doc requires pandoc, which is difficult to build, so as a dirty workaround
+# we extract the manpage from a binary release
+pkg_create = "mkdir -p <pkg_dir>/usr/share/man/man1 <pkg_dir>/usr/bin &&
+	mv yt-dlp <pkg_dir>/usr/bin/ && 
+	ln -s yt-dlp <pkg_dir>/usr/bin/youtube-dl &&
+	[ -e <src_dir>/yt-dlp.tar.gz ] &&
+	mv -v <src_dir>/yt-dlp.tar.gz <src_dir>/yt-dlp_bin_<ver>.tar.gz ||: ;
+	tar xf <src_dir>/yt-dlp_bin_<ver>.tar.gz yt-dlp/yt-dlp.1
+		-O > <pkg_dir>/usr/share/man/man1/yt-dlp.1"

@@ -1,0 +1,45 @@
+[ src ]
+
+url = "https://bitbucket.org/mutt/mutt/downloads/mutt-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--enable-autocrypt
+	--enable-gpgme
+	--enable-pgp
+	--enable-imap
+	--enable-smtp
+	--enable-smime
+	--enable-hcache
+	--disable-pop
+	--disable-sidebar
+	--disable-debug
+	--disable-nfs-fix
+	--disable-mailtool
+	--disable-locales-fix
+	--disable-exact-address
+	--disable-iconv
+	--disable-nls
+	--disable-dependency-tracking
+	--with-homespool=maildir
+	--with-sqlite3
+	--with-curses
+	--with-ssl
+	--with-sasl
+	--without-gss
+	--without-idn2"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir <pkg_dir>/usr/share/mutt/ &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/mutt/ &&
+	rm -r <pkg_dir>/usr/share/{doc,info}/"

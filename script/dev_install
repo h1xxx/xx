@@ -1,0 +1,350 @@
+#!/bin/ksh
+set -e
+
+usage() {
+	printf 'usage: dev_install [ARGS]\n'
+	printf ''
+	printf '-t, --target <path>  path to target device or file\n'
+	printf '-s, --set <path>     path to xx set file\n'
+	printf '-c, --config <path>  path to xx system config dir\n'
+	printf '-e, --encrypt        (optional) encrypt root partition\n'
+	printf '-i, --initramfs      (optional) include initramfs\n'
+	printf '-l, --lxc-net        (optional) set LXC_NET in rc.conf\n'
+	printf '-n, --conf           (optional) config only from conf/\n'
+	printf '-u, --uefi           (optional) create uefi parition/\n'
+	exit 0
+}
+
+unmount()
+{
+	umount ${root_dir}/boot/
+	umount ${root_dir}
+
+	[ ${encrypt} == 'true' ] && cryptsetup luksClose ${map_dev}
+	[ ${dev_type} == 'file' ] && losetup -d ${loop_dev}
+
+	find /home/xx -type f -name '*.log' -exec chown xx: {} \+
+	chown xx: /tmp/xx /tmp/xx/config /mnt/xx
+}
+
+vm_size=8G
+
+encrypt=false
+initramfs=false
+lxc_net=false
+conf_only=false
+uefi=false
+while [[ ${#} -gt 0 ]]; do
+	key="${1}"
+	case ${key} in
+	-t|--target)
+		dev="${2}"
+		shift
+		shift
+		;;
+	-s|--set)
+		xx_set="${2}"
+		shift
+		shift
+		;;
+	-c|--config)
+		cfg_dir="${2}"
+		cfg_name="$(basename "${cfg_dir}")"
+		cfg_arg="-c ${2}"
+		shift
+		shift
+		;;
+	-e|--encrypt)
+		encrypt=true
+		initramfs=true
+		map_dev=xx_part_enc
+		part_enc=/dev/mapper/${map_dev}
+		shift
+		;;
+	-i|--initramfs)
+		initramfs=true
+		shift
+		;;
+	-l|--lxc-net)
+		lxc_net=true
+		shift
+		;;
+	-n|--conf)
+		conf_only=true
+		shift
+		;;
+	-u|--uefi)
+		uefi=true
+		shift
+		;;
+	-h|--help)
+		usage
+		;;
+	*)
+		printf "error: unknown option '${key}'\n"
+		exit 1
+		;;
+	esac
+done
+
+[ -z "${dev}" ] || [ -z "${xx_set}" ] && usage
+
+initramfs_file='/home/xx/initramfs/build/initramfs.cpio.zst'
+if [ ${initramfs} == true ] && [ -z "${cfg_arg}" ] && [ ! -f "${initramfs_file}" ]; then
+	printf "error: initramfs arg requires a path to system config dir\n"
+	printf "or ${initramfs_file} must exist\n\n"
+	usage
+	exit 1
+fi
+
+root_dir=/mnt/xx
+xx_bin=/home/xx/xx/xx
+[[ "${dev}" == /dev/* ]] && dev_type=dev || dev_type=file
+
+if [ ${dev_type} == 'file' ] && [ ${uefi} == 'true' ] ; then
+	printf "error: uefi install is available only for /dev file\n\n"
+	usage
+	exit 1
+fi
+
+mbr=/usr/share/syslinux/gptmbr.bin
+[ ! -f ${mbr} ] && mbr=/home/xx/prog/sys/syslinux/pkg/std-6.04-pre1-00${mbr}
+[ ! -f ${mbr} ] && printf "error: can't find gptmbr.bin file\n" && exit 1
+
+findmnt ${root_dir} && printf "error: ${root_dir} already mounted\n" && exit 1
+[ ${root_dir} == '' ] && printf "error: root_dir is empty\n" && exit 1
+[ ${root_dir} == '/' ] && printf "error: root_dir is root\n" && exit 1
+mkdir -p ${root_dir}
+
+printf "\ntarget device/file:   ${dev}\n"
+printf "xx set:               ${xx_set}\n"
+printf "system config dir:    ${cfg_arg}\n"
+printf "encryption:           ${encrypt}\n"
+printf "initramfs:            ${initramfs}\n"
+printf "lxc network:          ${lxc_net}\n"
+printf "config from ./conf:   ${conf_only}\n"
+
+printf '\nThis device/file is going to be wiped:\n'
+printf "${dev}\n\n"
+lsblk -o NAME,SIZE,FSUSED,TYPE,FSTYPE,MOUNTPOINT ${dev} ||:
+printf "\nPress 'Ctrl+c' to abort or 'Enter' to continue..."
+read 
+
+
+
+printf '\n* preparing disk/file...\n'
+
+if [ ${dev_type} == 'dev' ]; then
+	sgdisk --zap-all ${dev} &&
+	dd if=/dev/zero of=${dev} bs=1M count=256
+elif [ ${dev_type} == 'file' ]; then
+	qemu-img create -f raw ${dev} ${vm_size}
+fi
+sgdisk -g ${dev}
+
+
+
+printf '\n* creating partitions...\n'
+
+sgdisk --new 1:+1M:+128M ${dev}
+sgdisk --new 2::-0 ${dev}
+
+[ ${uefi} == 'false' ] && sgdisk -t 1:ef02 ${dev}
+[ ${uefi} == 'true' ]  && sgdisk -t 1:ef00 ${dev}
+sgdisk -t 2:8300 ${dev}
+sgdisk --attributes 1:set:2 ${dev}
+
+
+if [ ${dev_type} == 'file' ]; then
+	loop_dev="$(losetup --find)"
+	losetup -Pf ${dev}
+	sleep 0.1
+fi
+
+
+
+printf '\n* making filesystems...\n'
+
+if [ ${dev_type} == 'dev' ]; then
+	boot_part="${dev}1"
+	root_part="${dev}2"
+elif [ ${dev_type} == 'file' ]; then
+	boot_part="${loop_dev}p1"
+	root_part="${loop_dev}p2"
+fi
+
+
+if [ ${uefi} == 'false' ]; then
+	mkfs.ext4 -I 256 ${boot_part}
+	resize2fs -s ${boot_part}
+elif [ ${uefi} == 'true' ]; then
+	mkfs.fat -F32 ${boot_part}
+fi
+
+if [ ${encrypt} == 'true' ]; then
+	cryptsetup -v \
+		--type luks2 \
+		--cipher aes-xts-plain64 \
+		--key-size 512 \
+		--pbkdf argon2id \
+		--iter-time 5000 \
+		--batch-mode \
+		luksFormat ${root_part}
+	printf 'Enter the password again to mount the encrypted partition...\n'
+	cryptsetup luksOpen --allow-discards ${root_part} ${map_dev}
+	mkfs.ext4 ${part_enc}
+else
+	mkfs.ext4 ${root_part}
+fi
+dd bs=440 conv=notrunc count=1 if=${mbr} of=${dev}
+
+
+
+printf '\n* mounting filesystems...\n'
+
+if [ ${encrypt} == 'true' ]; then
+	mount ${part_enc} ${root_dir}
+else
+	mount ${root_part} ${root_dir}
+fi
+
+mkdir -p ${root_dir}/boot
+mount ${boot_part} ${root_dir}/boot
+
+
+
+printf '\n* installing...\n'
+
+${xx_bin} install ${cfg_arg} -r ${root_dir} ${xx_set}
+
+
+
+printf '\n* installing bootloader...\n'
+
+if [ ${uefi} == 'false' ]; then
+	mkdir -p ${root_dir}/boot/syslinux
+	extlinux --install ${root_dir}/boot/syslinux/
+	cp /usr/share/syslinux/{menu.c32,libutil.c32} ${root_dir}/boot/syslinux/
+elif [ ${uefi} == 'true' ]; then
+	mkdir -p ${root_dir}/boot/efi/boot ${root_dir}/boot/syslinux
+	umount ${root_dir}/boot
+	syslinux --directory syslinux --install ${boot_part}
+	mount ${boot_part} ${root_dir}/boot
+fi
+
+if [ "${conf_only}" == 'true' ]; then
+	unmount
+	exit 0
+fi
+
+
+printf '\n* configuring...\n'
+
+# getting fresh copies of xx config files
+cp /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/syslinux/syslinux.cfg \
+	${root_dir}/boot/syslinux/
+cp /home/xx/prog/sys/busybox/cfg/sysinit-latest/etc/rc.conf ${root_dir}/etc/
+cp /home/xx/prog/sys/util-linux/cfg/std-latest/etc/fstab ${root_dir}/etc/
+cp /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/boot.conf ${root_dir}/boot/
+
+# setting rc.conf vars
+if [ "${cfg_name}" != '' ]; then
+	sed -i "s|^HOSTNAME=.*|HOSTNAME=${cfg_name}|g" ${root_dir}/etc/rc.conf
+fi
+if [ "${lxc_net}" == 'true' ]; then
+	sed -i "s|LXC_NET=.*|LXC_NET='true'|g" ${root_dir}/etc/rc.conf
+fi
+
+
+
+printf '\n* setting UUIDs...\n'
+
+uuid_p1="$(blkid -s UUID -o value ${boot_part})"
+uuid_p2="$(blkid -s UUID -o value ${root_part})"
+partuuid_p2="$(blkid -s PARTUUID -o value ${root_part})"
+
+sed -i "s|/dev/sda1|UUID=${uuid_p1}|g" ${root_dir}/etc/fstab
+if [ ${encrypt} == 'true' ]; then
+	map_root=/dev/mapper/root
+
+	sed -i "s|/dev/sda2|${map_root}|g" ${root_dir}/etc/fstab
+	sed -i -e 's|ENC=false|ENC=true|g' ${root_dir}/boot/boot.conf
+
+	sed -i "s|root=/dev/sda2|cryptdev=${uuid_p2} root=${map_root}|g" \
+		${root_dir}/boot/syslinux/syslinux.cfg
+
+elif [ ${encrypt} == 'false' ] && [ ${initramfs} == 'false' ]; then
+	sed -i "s|/dev/sda2|UUID=${uuid_p2}|g" ${root_dir}/etc/fstab
+
+	sed -i "s|root=/dev/sda2|root=PARTUUID=${partuuid_p2}|g" \
+		${root_dir}/boot/syslinux/syslinux.cfg
+
+	sed -i -e 's| ro$| rw rootdelay=2|g' -e 's| ro | rw rootdelay=2 |g' \
+		${root_dir}/boot/syslinux/syslinux.cfg
+
+elif [ ${encrypt} == 'false' ] && [ ${initramfs} == 'true' ]; then
+	sed -i "s|root=/dev/sda2|root=UUID=${uuid_p2}|g" \
+		${root_dir}/boot/syslinux/syslinux.cfg
+fi
+
+if [ ${initramfs} == 'true' ]; then
+	sed -i "/APPEND/ s|$| bootdev=${uuid_p1}|g" \
+		${root_dir}/boot/syslinux/syslinux.cfg
+
+	printf '\tINITRD ../initramfs.cpio.zst\n' >> \
+		${root_dir}/boot/syslinux/syslinux.cfg
+
+	cp -n ${initramfs_file} ${root_dir}/boot/
+fi
+
+if [ ${uefi} == 'true' ]; then
+	cp /usr/share/syslinux/efi64/syslinux.efi \
+		${root_dir}/boot/efi/boot/bootx64.efi
+	cp /usr/share/syslinux/efi64/{ldlinux.e64,menu.c32,libutil.c32} \
+		${root_dir}/boot/efi/boot/
+	cp ${root_dir}/boot/syslinux/syslinux.cfg \
+		${root_dir}/boot/efi/boot/
+	sed -i 's|\.\./|../../|g' ${root_dir}/boot/efi/boot/syslinux.cfg
+	sed -i "/\/boot/ s|ext4|vfat|g" ${root_dir}/etc/fstab
+fi
+
+
+if [ -n "${cfg_dir}" ]; then 
+	printf '\n* saving config files...\n'
+
+	mkdir -p "${cfg_dir}/busybox/sysinit-latest/etc/"
+	cp -vb "${root_dir}/etc/rc.conf" "${cfg_dir}/busybox/sysinit-latest/etc/"
+
+	mkdir -p "${cfg_dir}/util-linux/std-latest/etc/"
+	cp -vb "${root_dir}/etc/fstab" "${cfg_dir}/util-linux/std-latest/etc/"
+
+	mkdir -p "${cfg_dir}/syslinux/std-latest/boot/syslinux/"
+	cp -vb "${root_dir}/boot/boot.conf" "${cfg_dir}/syslinux/std-latest/boot/"
+	cp -vb "${root_dir}/boot/syslinux/syslinux.cfg" \
+		"${cfg_dir}/syslinux/std-latest/boot/syslinux/"
+
+	if [ ${initramfs} == 'true' ]; then
+		cp -vn "${root_dir}/boot/initramfs.cpio.zst" \
+			"${cfg_dir}/syslinux/std-latest/boot/"
+	fi
+
+	if [ ${uefi} == 'true' ]; then
+		mkdir -p "${cfg_dir}/syslinux/std-latest/boot/efi/boot/"
+		cp -vb "${root_dir}/boot/efi/boot/syslinux.cfg" \
+			"${cfg_dir}/syslinux/std-latest/boot/efi/boot/"
+	fi
+fi
+
+
+
+printf '\n* unmounting...\n'
+unmount
+
+printf '\n* done\n'
+
+
+
+if [ ${uefi} == 'true' ]; then
+	printf '%s\n' "don't forget to manually add uefi entries, e.g.:"
+	printf '%s\n' 'efibootmgr -v -c -d /dev/sda -p 1 -l \\efi\\boot\\bootx64.efi -L "xx syslinux"'
+fi

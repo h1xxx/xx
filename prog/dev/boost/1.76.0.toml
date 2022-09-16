@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://boostorg.jfrog.io/artifactory/main/release/<ver>/source/boost_<ver_pkgspec>.tar.gz"
+src_type = "tar"
+src_dirname = "boost_<ver_pkgspec>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./bootstrap.sh"
+build = "./b2 install
+	variant=release
+	debug-symbols=off
+	threading=multi
+	runtime-link=shared
+	link=shared,static
+	cflags=\"${CPPFLAGS} ${CFLAGS} -fPIC -O3\"
+	cxxflags=\"${CPPFLAGS} ${CXXFLAGS} -fPIC -O3\"
+	linkflags=\"${LDFLAGS}\"
+	--layout=system
+	--prefix=<pkg_dir>/usr"
+
+pkg_create = "rm -r <pkg_dir>/usr/lib/*.a"

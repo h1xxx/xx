@@ -1,0 +1,193 @@
+x11/xorg-server				std			latest
+	sys/kbd				std			latest
+	sys/bash			std			latest
+	sys/oksh			std			latest
+	sys/busybox			std			latest
+	sys/util-linux			std			latest
+	sys/coreutils			std			latest
+	sys/eudev			std			latest
+	text/sed			std			latest
+	text/grep			std			latest
+	x11/xauth			std			latest
+	x11/xkeyboard-config		std			latest
+	x11/util-macros			std			latest
+	x11/xrandr			std			latest
+	x11/xf86-video-nouveau		std			latest
+	x11/xf86-video-intel		std			latest
+	x11/xf86-video-amdgpu		std			latest
+	x11/xf86-input-libinput		std			latest
+	x11/st				std			latest
+	x11/dwm				std			latest
+	x11/xinit			std			latest
+	x11/xkbcomp			std			latest
+	crypt/nettle			std			latest
+	x11/xcb-proto			std			latest
+	x11/xorg-proto			std			latest
+	x11/xtrans			std			latest
+	sys/mime-types			std			latest
+	emu/spice-gtk			std			latest
+	net/tigervnc			std			latest
+
+sys/eudev				std			latest
+	sys/shadow			std			latest
+
+x11/dwm					std			latest
+	media/liberation-fonts		std			latest
+	media/dejavu			std			latest
+
+emu/spice-gtk				std			latest
+	x11/gtk+			std			latest
+
+#emu/qemu				std			latest
+#	emu/spice			std			latest
+
+#emu/spice				std			latest
+#	emu/spice-protocol		std			latest
+#	x11/gtk+			std			latest
+#	emu/spice-gtk			std			latest
+
+x11/gtk+				std			latest
+	x11/xorg-server			std			latest
+	x11/adwaita-icon-theme		std			latest
+	x11/hicolor-icon-theme		std			latest
+	x11/shared-mime-info		std			latest
+	x11/gdk-pixbuf			std			latest
+
+sys/vifm				std			latest
+	sys/fdupes			std			latest
+	sys/which			std			latest
+	sys/oksh			std			latest
+
+sys/cryptsetup				std			latest
+	dev/gcc-libgcc_s		std			latest
+
+sys/ca-certificates			std			latest
+	crypt/openssl			std			latest
+	text/sed			std			latest
+
+media/mpv				std			latest
+	sys/alsa-utils			std			latest
+	sys/shadow			std			latest
+	media/dejavu			std			latest
+	net/yt-dlp			std			latest
+
+net/yt-dlp				std			latest
+	sys/coreutils			std			latest
+	sys/oksh			std			latest
+	lang/python			std			latest
+	crypt/openssl			std			latest
+
+crypt/openssl				std			latest
+	sys/ca-certificates		std			latest
+
+text/vim				std			latest
+	sys/oksh			std			latest
+
+sys/syslinux				std			latest
+	sys/e2fsprogs			std			latest
+
+text/man-db				std			latest
+	text/groff			std			latest
+
+dev/gcc					std			latest
+	dev/binutils			std			latest
+	dev/flex			std			latest
+	dev/mpc				std			latest
+	dev/mpfr			std			latest
+	sys/linux			api_headers		latest
+
+sys/alsa-utils				std			latest
+	sys/alsa-lib			std			latest
+	sys/alsa-plugins		std			latest
+	sys/alsa-ucm-conf		std			latest
+	sys/alsa-topology-conf		std			latest
+
+net/w3m					std			latest
+	sys/busybox			std			latest
+	arch/gzip			std			latest
+	media/fim			std			latest
+	media/mpv			std			latest
+	sys/alsa-utils			std			latest
+	sys/shadow			std			latest
+	media/dejavu			std			latest
+	sys/mime-types			std			latest
+	sys/ca-certificates		std			latest
+	crypt/libressl 			cert_pem		latest
+	sys/tzdata			std			latest
+	sys/oksh			std			latest
+	sys/coreutils			std			latest
+	net/privoxy			std			latest
+	net/tor				std			latest
+
+sys/kbd					std			latest
+	arch/gzip			std			latest
+
+media/exiftool				std			latest
+	lang/perl			std			latest
+
+hack/hashcat				std			latest
+	sys/nvidia			std			latest
+	sys/cuda			std			latest
+
+hack/hashcat-utils			std			latest
+	lang/perl			std			latest
+
+net/mutt				std			latest
+	net/w3m				std			latest
+	text/vim			std			latest
+
+emu/dosbox-x				std			latest
+	media/mesa			std			latest
+	sys/alsa-utils			std			latest
+	sys/shadow			std			latest
+	sys/eudev			std			latest
+	sys/busybox			std			latest
+	sys/bash			std			latest
+	x11/xorg-server			std			latest
+	arch/zstd			std			latest
+
+emu/dosbox-x				x11			latest
+	media/libsdl2			x11			latest
+	media/mesa			x11			latest
+	media/mesa-demos		std			latest
+	sys/alsa-utils			std			latest
+	sys/shadow			std			latest
+	sys/eudev			std			latest
+	sys/busybox			std			latest
+	sys/bash			std			latest
+	x11/xorg-server			std			latest
+	net/libpcap			std			latest
+	sys/oksh			std			latest
+	dev/gcc-libstdc++		std			latest
+	x11/openbox			std			latest
+	media/harfbuzz			std			latest
+	text/fribidi			std			latest
+	x11/cairo			std			latest
+	x11/pango			std			latest
+	text/libxml2			std			latest
+	dev/glew			std			latest
+	media/glu			std			latest
+	x11/libXi			std			latest
+	media/freeglut			std			latest
+
+emu/dosbox-staging			std			latest
+	sys/alsa-utils			std			latest
+	sys/shadow			std			latest
+	sys/eudev			std			latest
+	media/libsdl2			std			latest
+	media/opus			std			latest
+	media/opusfile			std			latest
+	media/libpng			std			latest
+	media/libogg			std			latest
+	sys/busybox			std			latest
+	sys/bash			std			latest
+	dev/gcc-libstdc++		std			latest
+
+text/fbpdf				std			latest
+	media/msttcorefonts		std			latest
+
+media/mesa				std			latest
+	dev/llvm			std			latest
+
+media/mesa				x11			latest
+	dev/llvm			std			latest

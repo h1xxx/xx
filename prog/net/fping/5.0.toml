@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://github.com/schweikert/fping/releases/download/v<ver>/fping-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-safe-limits
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/usr/sbin <pkg_dir>/usr/bin &&
+	ln -sv fping <pkg_dir>/usr/bin/ping"

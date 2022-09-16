@@ -1,0 +1,61 @@
+[ src ]
+
+url = "https://mesa.freedesktop.org/archive/demos/mesa-demos-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking
+
+	--enable-egl
+	--enable-gles1
+	--enable-gles2
+	--enable-osmesa
+	--enable-libdrm
+	--enable-gbm
+	--enable-freetype2
+
+	--disable-x11
+	--disable-vg
+	--disable-wayland "
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ x11 ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking
+
+	--enable-egl
+	--enable-gles1
+	--enable-gles2
+	--enable-osmesa
+	--enable-libdrm
+	--enable-x11
+	--enable-gbm
+	--enable-freetype2
+
+	--disable-vg
+	--disable-wayland "
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

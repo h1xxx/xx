@@ -1,0 +1,54 @@
+[ src ]
+
+url = "https://curl.haxx.se/download/curl-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-ca-path=/etc/ssl/certs
+	--disable-static
+	--enable-threaded-resolver
+	--enable-ftp
+	--enable-gopher
+	--enable-crypto-auth
+	--enable-cookies
+	--enable-http-auth
+	--enable-mime
+	--disable-ares
+	--disable-ldap
+	--disable-ldaps
+	--disable-rtsp
+	--disable-file
+	--disable-dict
+	--disable-telnet
+	--disable-pop3
+	--disable-imap
+	--disable-smb
+	--disable-smtp
+	--disable-mqtt
+	--disable-manual
+	--disable-sspi
+	--disable-ntlm-wb
+	--disable-unix-sockets
+	--disable-socketpair
+	--disable-doh
+	--disable-dateparse
+	--disable-netrc
+	--disable-progress-meter
+	--disable-dnsshuffle
+	--disable-dependency-tracking
+	--with-openssl=/usr
+	--without-libssh
+	--without-libssh2
+	--without-gnutls"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/man/man3"

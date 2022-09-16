@@ -1,0 +1,43 @@
+[ src ]
+
+url = "https://github.com/freerdp/freerdp/archive/<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "FreeRDP-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=lib
+	-D CMAKE_BUILD_TYPE='Release'
+	-D PROXY_PLUGINDIR='/usr/lib/freerdp2/server/proxy/plugins'
+
+	-D WITH_CLIENT=ON
+	-D WITH_ALSA=ON
+	-D WITH_CAIRO=ON
+	-D WITH_JPEG=ON
+	-D WITH_LAME=ON
+	-D WITH_CHANNELS=ON
+	-D WITH_CLIENT_CHANNELS=ON
+
+
+	-D WITH_SERVER=OFF
+	-D WITH_SERVER_INTERFACE=OFF
+	-D WITH_SERVER_CHANNELS=OFF
+	-D WITH_DSP_FFMPEG=OFF
+	-D WITH_FFMPEG=OFF
+	-D WITH_SWSCALE=OFF
+	-D WITH_PULSE=OFF
+	-D WITH_PCSC=OFF
+	-D WITH_OSS=OFF
+	-D WITH_CUPS=OFF
+	-D CHANNEL_URBDRC_CLIENT=OFF
+	-Wno-dev
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,162 @@
+# base set of pkgs build from init toolchain or from existing base set
+
+# libc and a compiler
+dev/glibc			std			latest
+dev/gcc				std			latest
+dev/gcc-libgcc_s		std			latest
+dev/gcc-libgomp			std			latest
+dev/gcc-libstdc++		std			latest
+
+# some sys libs and tools
+sys/busybox			std			latest
+sys/coreutils			std			latest
+dev/pkgconf			std			latest
+arch/zlib			std			latest
+dev/ncurses			std			latest
+dev/readline			std			latest
+
+# archiving programs
+arch/gzip			std			latest
+arch/bzip2			std			latest
+arch/xz				std			latest
+arch/zstd			std			latest
+arch/tar			std			latest
+arch/cpio			std			latest
+
+# dev tools and libs
+dev/gmp				std			latest
+dev/mpfr			std			latest
+dev/mpc				std			latest
+dev/expat			std			latest
+dev/libpipeline			std			latest
+dev/elfutils			std			latest
+dev/libffi			std			latest
+dev/check			std			latest
+dev/dejagnu			std			latest
+dev/gperf			std			latest
+lang/bc				std			latest
+text/texinfo			std			latest
+dev/binutils			std			latest
+dev/bison			std			latest
+dev/flex			std			latest
+dev/m4				std			latest
+
+# shells
+sys/oksh			std			latest
+sys/bash			base			latest
+
+# /etc, /usr/share
+sys/iana-etc			std			latest
+sys/tzdata			std			latest
+sys/mime-types			std			latest
+
+# sys libs
+sys/linux			api_headers		latest
+sys/gdbm			std			latest
+sys/libseccomp			std			latest
+crypt/openssl			std			latest
+
+# core system tools
+sys/diffutils			std			latest
+sys/findutils			std			latest
+text/gawk			std			latest
+text/grep			std			latest
+text/sed			std			latest
+sys/shadow			std			latest
+sys/util-linux			std			latest
+sys/kmod			std			latest
+text/groff			std			latest
+
+# languages
+lang/tcl			std			latest
+dev/expect			std			latest
+lang/perl			std			latest
+libperl/XML-Parser		std			latest
+lang/python			std			latest
+lang/python-docs-html		std			latest
+lang/nasm			std			latest
+lang/go				std			latest
+
+# network tools and libs
+dev/pycparser			std			latest
+dev/cffi			std			latest
+crypt/cryptography		std			latest
+sys/ca-certificates		std			latest
+crypt/libressl 			cert_pem		latest
+net/libpcap			std			latest
+net/libnfnetlink		std			latest
+net/libmnl			std			latest
+net/libnetfilter_conntrack	std			latest
+net/libnet			std			latest
+sys/iptables			std			latest
+sys/openssh			std			latest
+sys/iproute2			std			latest
+
+# dev tools
+text/asciidoc			std			latest
+dev/make			std			latest
+dev/patch			std			latest
+dev/libtool			std			latest
+dev/autoconf			std			latest
+dev/automake			std			latest
+dev/ninja			std			latest
+dev/meson			std			latest
+dev/cmake			std			latest
+dev/strace			std			latest
+text/doxygen			std			latest
+net/curl			std			latest
+dev/git				std			latest
+
+# system tools
+sys/kbd				std			latest
+sys/syslinux			std			6.04-pre1
+text/json-c			std			latest
+text/libxml2			std			latest
+dev/libaio			std			latest
+dev/popt			std			latest
+sys/gptfdisk			std			latest
+sys/lvm2			std			latest
+crypt/argon2			std			latest
+sys/cryptsetup			std			latest
+sys/dosfstools			std			latest
+sys/e2fsprogs			std			latest
+sys/eudev			std			latest
+sys/file			std			latest
+sys/hwids			std			latest
+sys/mtools			std			latest
+sys/psmisc			std			latest
+sys/procps-ng			std			latest
+sys/busybox			sysinit			latest
+
+# misc libs
+crypt/cyrus-sasl		std			latest
+crypt/libgpg-error		std			latest
+dev/libassuan			std			latest
+text/libestr			std			latest
+text/libfastjson		std			latest
+crypt/libgcrypt			std			latest
+crypt/libksba			std			latest
+net/libnl			std			latest
+text/libpcre			std			latest
+text/libpcre2			std			latest
+dev/libtasn1			std			latest
+sys/libusb			std			latest
+dev/libuv			std			latest
+crypt/nettle			std			latest
+dev/npth			std			latest
+net/nghttp2			std			latest
+crypt/p11-kit			std			latest
+crypt/gnutls			std			latest
+
+# db
+db/sqlite			std			latest
+
+# python libs			std			latest
+text/docutils			std			latest
+
+# misc
+sys/pinentry			std			latest
+sys/gnupg			std			latest
+crypt/gpgme			std			latest
+sys/usbutils			std			latest
+sys/pciutils			std			latest

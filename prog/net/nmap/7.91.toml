@@ -1,0 +1,27 @@
+[ src ]
+
+url = "https://nmap.org/dist/nmap-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-openssl=/usr
+	--with-libpcap=/usr
+	--with-libpcre=/usr
+	--with-liblinear=included
+	--with-liblua=/usr
+	--with-zlib=/usr
+	--without-libssh2
+	--without-zenmap
+	--with-liblua=/usr"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/man/{[a-l],[n-z]}*/"

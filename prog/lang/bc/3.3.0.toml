@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://github.com/gavinhoward/bc/releases/download/<ver>/bc-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "PREFIX=/usr", "CC=gcc" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure -G -O3"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/locale/"
+
+
+
+[ init ]
+
+env = [ "PREFIX=/usr", "CC=gcc" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure -G -O3"
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,64 @@
+text/task			std			latest
+
+#
+## misc
+#hxx=''
+#hxx+='app-crypt/johntheripper '         # password cracker
+##hxx+='app-crypt/hashcat '              # password cracker
+##hxx+='app-crypt/hashcat-utils '                # password cracking utils
+#oth+='net-misc/electrum '               # bitcoin client
+#https://github.com/andmarti1424/sc-im
+#https://github.com/jrnl-org/jrnl
+#text/nawk                   std                     latest
+#app-misc/figlet
+#gpsd
+# http://search.cpan.org/~tels/Graph-Easy/bin/graph-easy
+#app-crypt/ccid
+
+#https://github.com/jedisct1/minisign
+#https://github.com/aperezdc/signify
+#https://github.com/FiloSottile/age
+#https://github.com/meganz/MEGAcmd
+
+
+# bluez
+# bluehydra
+
+# asciinema
+
+#qutebrowser
+
+#cpuid2cpuflags
+#latex
+#cgit web interface
+#unifont
+#goimports
+#latex
+#replace tcl with jim.tcl.tk
+#check what replacements is oasis using
+#qemu with samba and gtk
+#app-cdr/bchunk
+#app-cdr/bin2iso
+#vine
+#https://github.com/Spotifyd/spotifyd - rust required
+#spotify-tui - rust required
+#https://github.com/kkdai/youtube
+#https://github.com/cve-search/cve-search
+#netsurf framebuffer
+#x11-apps/xset
+#https://github.com/ndilieto/uacme
+#https://github.com/amule-project/amule
+#app-cdr/cuetools
+#https://github.com/burrowers/garble
+#eix with gentoo database
+#pacman with arch database with aur
+#https://github.com/hpjansson/chafa
+#gimp
+#
+# github.com/ageitgey/face_recognition
+# github.com/valhalla/valhalla
+# spiderlabs/responder.py
+
+
+# voice 2 text
+# https://github.com/ideasman42/nerd-dictation

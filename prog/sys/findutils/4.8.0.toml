@@ -1,0 +1,52 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-nls
+	--disable-dependency-tracking
+	--localstatedir=/var/lib/locate"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/info/ <pkg_dir>/var/"
+
+
+
+[ init_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-nls
+	--disable-dependency-tracking
+	--host=${TARGET_TRI}
+	--build=$(build-aux/config.guess)"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-nls
+	--disable-dependency-tracking
+	--localstatedir=/var/lib/locate"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,58 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+msg "configuring system..."
+${BB} hostname "${HOSTNAME}"
+
+${BB} install -m 0660 -o root -g utmp /dev/null /run/utmp
+[ ! -f /var/log/wtmp ] && ${BB} install -m 0660 -o root -g wtmp /dev/null /var/log/wtmp
+
+# configuring regional settings
+if command -v loadkesys > /dev/null; then
+	loadkeys -u "${KEYMAP}"
+fi
+
+if [ -d /usr/share/zoneinfo ]; then
+	${BB} ln -sf "/usr/share/zoneinfo/${TIMEZONE}" /etc/localtime
+fi
+
+# configuring with sysctl
+if [ -f /etc/sysctl.conf ]; then
+	${BB} sysctl -q -p /etc/sysctl.conf || err "incorrect /etc/sysctl.conf"
+fi
+
+if [ -d /etc/sysctl.d ]; then
+	for f in /etc/sysctl.d/*.conf; do
+		${BB} sysctl -q -p "${f}" || err "incorrect ${f}"
+	done
+fi
+
+# configuring console
+if command -v setterm > /dev/null; then
+	setterm -blank 5
+fi
+
+if [ -f /sys/devices/virtual/graphics/fbcon/cursor_blink ]; then
+	${BB} printf 0 > /sys/devices/virtual/graphics/fbcon/cursor_blink
+fi
+
+if [ -f /proc/sys/kernel/printk ]; then
+	${BB} printf '5 4 1 4' > /proc/sys/kernel/printk
+fi
+
+for tty in tty1 tty2 tty3; do
+	if command -v tput > /dev/null; then
+		tput cvvis >> /dev/${tty}
+	fi
+
+	if [ -d /usr/share/consolefonts ]; then
+		${BB} setfont -C /dev/${tty} /usr/share/consolefonts/${FONT}
+	fi
+done
+
+# removing unused tty devices and virtual console capture devices
+${BB} rm -f /dev/tty[5-9] /dev/tty[1-7]?
+${BB} rm -f /dev/vcs*
+

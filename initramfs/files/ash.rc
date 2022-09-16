@@ -1,0 +1,18 @@
+cleanup() {
+        echo -e "\ncaught INT signal... starting the shell"
+        break
+}
+trap "cleanup" INT
+
+echo -n 'Press ctrl+c to start shell in next 3s...'
+SEC=4
+
+while [ ${SEC} -ne 0 ]; do
+        sleep 1
+
+        SEC=$((${SEC}-1))
+        echo -en "\033[5D${SEC}s..."
+
+        if [ ${SEC} -eq 0 ]; then echo; exit 0; fi
+done
+

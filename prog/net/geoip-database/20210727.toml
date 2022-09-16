@@ -1,0 +1,26 @@
+[ src ]
+
+url = "https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIP.dat.gz
+https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIPv6.dat.gz
+https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIPCity.dat.gz
+https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIPCityv6.dat.gz
+https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIPASNum.dat.gz
+https://sources.archlinux.org/other/packages/geoip-database/<ver>/GeoIPASNumv6.dat.gz"
+
+src_type = "tar"
+src_dirname = ""
+
+
+
+[ std ]
+
+env = []
+prepare = "[ ! -f <src_dir>/<ver>/GeoIPASNumv6.dat.gz ] &&
+	mkdir <src_dir>/<ver> &&
+	mv -f <src_dir>/*.dat.gz <src_dir>/<ver>/ ||:"
+
+configure = ""
+build = ""
+pkg_create = "mkdir -p <pkg_dir>/usr/share/GeoIP &&
+	cp -a <src_dir>/<ver>/*.dat.gz <pkg_dir>/usr/share/GeoIP/ &&
+	gzip -d <pkg_dir>/usr/share/GeoIP/*.dat.gz"

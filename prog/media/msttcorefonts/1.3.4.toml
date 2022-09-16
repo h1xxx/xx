@@ -1,0 +1,29 @@
+[ src ]
+
+url = "wd97vwr32_<ver>.exe::https://downloads.sourceforge.net/corefonts/wd97vwr32.exe
+webdin32_<ver>.exe::https://downloads.sourceforge.net/corefonts/webdin32.exe
+verdan32_<ver>.exe::https://downloads.sourceforge.net/corefonts/verdan32.exe
+trebuc32_<ver>.exe::https://downloads.sourceforge.net/corefonts/trebuc32.exe
+times32_<ver>.exe::https://downloads.sourceforge.net/corefonts/times32.exe
+impact32_<ver>.exe::https://downloads.sourceforge.net/corefonts/impact32.exe
+georgi32_<ver>.exe::https://downloads.sourceforge.net/corefonts/georgi32.exe
+courie32_<ver>.exe::https://downloads.sourceforge.net/corefonts/courie32.exe
+comic32_<ver>.exe::https://downloads.sourceforge.net/corefonts/comic32.exe
+arialb32_<ver>.exe::https://downloads.sourceforge.net/corefonts/arialb32.exe
+arial32_<ver>.exe::https://downloads.sourceforge.net/corefonts/arial32.exe
+andale32_<ver>.exe::https://downloads.sourceforge.net/corefonts/andale32.exe"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "mkdir <tmp_dir>/<prog>-<ver>"
+configure = ""
+build = "for f in <src_dir>/*_<ver>.exe; do cabextract ${f}; done &&
+	cabextract Viewer1.cab"
+
+pkg_create = "mkdir -p <pkg_dir>/usr/share/fonts/TTF &&
+	cp *.ttf *.TTF <pkg_dir>/usr/share/fonts/TTF/"

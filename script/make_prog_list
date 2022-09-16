@@ -1,0 +1,54 @@
+#!/bin/ksh
+
+
+all_file='/home/xx/set/install/all.xx'
+xx_files="$(find /home/xx/set/build/ -type f | grep -v init)"
+
+exceptions='text/nawk alpine/firefox alpine/pandoc alpine/xorg-server
+	libc_text/libpcre.*cpp'
+
+top='sys/oksh\t\t\tstd\t\t\tlatest
+	sys/coreutils\t\t\tstd\t\t\tlatest
+	sys/shadow\t\t\tstd\t\t\tlatest
+	text/grep\t\t\tstd\t\t\tlatest'
+
+bottom='sys/ca-certificates\t\tstd\t\t\tlatest'
+
+
+> ${all_file}
+> ${all_file}.tmp
+
+
+# get all the programs from xx set files
+for file in ${xx_files}; do
+	grep -v '^#' ${file} >> ${all_file}.tmp
+done
+sort -uo ${all_file}.tmp ${all_file}.tmp
+
+
+# remove not needed or duplicated programs included in the exceptions list
+for prog in ${exceptions}; do
+	prog="$(echo ${prog} | cut -f1)"
+	grep_v="${grep_v}""-e ${prog} "
+done
+
+
+# remove programs to be placed on top and bottom of the file
+top_bottom="${top} ${bottom}"
+for prog in ${top_bottom}; do
+	prog="$(echo ${prog} | cut -f1)"
+	grep_v="${grep_v}""-e ${prog} "
+done
+
+
+# create the final result
+for prog in ${top}; do
+	echo ${prog} >> ${all_file}
+done
+
+cat ${all_file}.tmp | grep -v ${grep_v} >> ${all_file}
+rm ${all_file}.tmp
+
+for prog in ${bottom}; do
+	echo ${prog} >> ${all_file}
+done

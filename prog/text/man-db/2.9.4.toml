@@ -1,0 +1,31 @@
+[ src ]
+
+url = "http://download.savannah.gnu.org/releases/man-db/man-db-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--docdir=/usr/share/doc/man-db
+	--sysconfdir=/etc
+	--disable-setuid
+	--disable-nls
+	--disable-automatic-update
+	--disable-cats
+	--disable-cache-owner
+	--disable-dependency-tracking
+	--with-browser=/usr/bin/w3m
+	--with-vgrind=/usr/bin/vgrind
+	--with-grap=/usr/bin/grap
+	--with-systemdtmpfilesdir=no
+	--with-systemdsystemunitdir=no"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"

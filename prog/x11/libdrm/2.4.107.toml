@@ -1,0 +1,30 @@
+[ src ]
+
+url = "https://dri.freedesktop.org/libdrm/libdrm-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D udev=true
+
+	-D cairo-tests=false
+	-D freedreno=false
+	-D man-pages=false
+	-D valgrind=false
+	-D vc4=false
+	-D vmwgfx=false
+
+	-D amdgpu=false
+	-D radeon=false
+	-D intel=true
+	-D nouveau=true"
+
+build = "ninja -C build"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"

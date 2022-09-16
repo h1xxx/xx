@@ -1,0 +1,42 @@
+[ src ]
+
+url = "https://www.python.org/ftp/python/<ver>/Python-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "Python-<ver>"
+
+
+
+[ std ]
+
+env = [ "CFLAGS+=-fPIC" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-shared
+	--with-system-expat
+	--with-system-ffi
+	--with-ensurepip=yes"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	chmod 755 <pkg_dir>/usr/lib/libpython<ver_short>.so &&
+	chmod 755 <pkg_dir>/usr/lib/libpython3.so &&
+	ln -sv python3 <pkg_dir>/usr/bin/python &&
+	find <pkg_dir> -depth -type f -name '*.py[co]' -delete
+		-o -type d -name __pycache__ -delete"
+
+
+
+[ init ]
+
+env = [ "CFLAGS=", "LDFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-shared
+	--without-ensurepip"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	find <pkg_dir> -depth -type f -name '*.py[co]' -delete
+		-o -type d -name __pycache__ -delete"

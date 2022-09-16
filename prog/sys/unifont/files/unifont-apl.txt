@@ -1,0 +1,684 @@
+# commands
+
+# initial file was prepared with following commands:
+# sed 's|   #|\t#|' unifont-apl.txt > unifont-apl.tmp
+# awk -F'    ' 'FNR==NR{a[$1]=$2;next}{if($1 in a){print $1 "  " tolower($2) " " a[$1];} else {print;}}' unicode_list.txt unifont-apl.tmp > unifont-apl.txt
+
+# check the number of glyphs in the file
+# grep -v -e '^#' -e '^$' unifont-apl.txt  | wc
+
+
+# ascii
+
+U+0020  # space
+U+0021  # exclamation mark !
+U+0022  # quotation mark "
+U+0023  # number sign #
+U+0024  # dollar sign $
+U+0025  # percent sign %
+U+0026  # ampersand &
+U+0027  # apostrophe '
+U+0028  # left parenthesis (
+U+0029  # right parenthesis )
+U+002A  # asterisk *
+U+002B  # plus sign +
+U+002C  # comma ,
+U+002D  # hyphen-minus -
+U+002E  # full stop .
+U+002F  # solidus /
+U+0030  # digit zero 0
+U+0031  # digit one 1
+U+0032  # digit two 2
+U+0033  # digit three 3
+U+0034  # digit four 4
+U+0035  # digit five 5
+U+0036  # digit six 6
+U+0037  # digit seven 7
+U+0038  # digit eight 8
+U+0039  # digit nine 9
+U+003A  # colon :
+U+003B  # semicolon ;
+U+003C  # less-than sign <
+U+003D  # equals sign =
+U+003E  # greater-than sign >
+U+003F  # question mark ?
+U+0040  # commercial at @
+U+0041  # latin capital letter a A
+U+0042  # latin capital letter b B
+U+0043  # latin capital letter c C
+U+0044  # latin capital letter d D
+U+0045  # latin capital letter e E
+U+0046  # latin capital letter f F
+U+0047  # latin capital letter g G
+U+0048  # latin capital letter h H
+U+0049  # latin capital letter i I
+U+004A  # latin capital letter j J
+U+004B  # latin capital letter k K
+U+004C  # latin capital letter l L
+U+004D  # latin capital letter m M
+U+004E  # latin capital letter n N
+U+004F  # latin capital letter o O
+U+0050  # latin capital letter p P
+U+0051  # latin capital letter q Q
+U+0052  # latin capital letter r R
+U+0053  # latin capital letter s S
+U+0054  # latin capital letter t T
+U+0055  # latin capital letter u U
+U+0056  # latin capital letter v V
+U+0057  # latin capital letter w W
+U+0058  # latin capital letter x X
+U+0059  # latin capital letter y Y
+U+005A  # latin capital letter z Z
+U+005B  # left square bracket [
+U+005C  # reverse solidus \
+U+005D  # right square bracket ]
+U+005E  # circumflex accent ^
+U+005F  # low line _
+U+0060  # grave accent `
+U+0061  # latin small letter a a
+U+0062  # latin small letter b b
+U+0063  # latin small letter c c
+U+0064  # latin small letter d d
+U+0065  # latin small letter e e
+U+0066  # latin small letter f f
+U+0067  # latin small letter g g
+U+0068  # latin small letter h h
+U+0069  # latin small letter i i
+U+006A  # latin small letter j j
+U+006B  # latin small letter k k
+U+006C  # latin small letter l l
+U+006D  # latin small letter m m
+U+006E  # latin small letter n n
+U+006F  # latin small letter o o
+U+0070  # latin small letter p p
+U+0071  # latin small letter q q
+U+0072  # latin small letter r r
+U+0073  # latin small letter s s
+U+0074  # latin small letter t t
+U+0075  # latin small letter u u
+U+0076  # latin small letter v v
+U+0077  # latin small letter w w
+U+0078  # latin small letter x x
+U+0079  # latin small letter y y
+U+007A  # latin small letter z z
+U+007B  # left curly bracket {
+U+007C  # vertical line |
+U+007D  # right curly bracket }
+U+007E  # tilde ~
+
+# latin-1
+
+U+00A0  # no-break space  
+U+00A1  # inverted exclamation mark ¡
+U+00A2  # cent sign ¢
+U+00A3  # pound sign £
+U+00A4  # currency sign ¤
+U+00A5  # yen sign ¥
+U+00A6  # broken bar ¦
+U+00A7  # section sign §
+U+00A8  # diaeresis ¨
+U+00A9  # copyright sign ©
+U+00AB  # left-pointing double angle quotation mark «
+U+00AC  # not sign ¬
+U+00AE  # registered sign ®
+U+00AF  # macron ¯
+U+00B0  # degree sign °
+U+00B1  # plus-minus sign ±
+U+00B2  # superscript two ²
+U+00B3  # superscript three ³
+U+00B4  # acute accent ´
+U+00B5  # micro sign µ
+U+00B6  # pilcrow sign ¶
+U+00B7  # middle dot ·
+U+00B8  # cedilla ¸
+U+00B9  # superscript one ¹
+U+00BA  # masculine ordinal indicator º
+U+00BB  # right-pointing double angle quotation mark »
+U+00BC  # vulgar fraction one quarter ¼
+U+00BD  # vulgar fraction one half ½
+U+00BE  # vulgar fraction three quarters ¾
+U+00BF  # inverted question mark ¿
+U+00C0  # latin capital letter a with grave À
+U+00C1  # latin capital letter a with acute Á
+U+00C2  # latin capital letter a with circumflex Â
+U+00C3  # latin capital letter a with tilde Ã
+U+00C4  # latin capital letter a with diaeresis Ä
+U+00C5  # latin capital letter a with ring above Å
+U+00C6  # latin capital letter ae Æ
+U+00C7  # latin capital letter c with cedilla Ç
+U+00C8  # latin capital letter e with grave È
+U+00C9  # latin capital letter e with acute É
+U+00CA  # latin capital letter e with circumflex Ê
+U+00CB  # latin capital letter e with diaeresis Ë
+U+00CC  # latin capital letter i with grave Ì
+U+00CD  # latin capital letter i with acute Í
+U+00CE  # latin capital letter i with circumflex Î
+U+00CF  # latin capital letter i with diaeresis Ï
+U+00D1  # latin capital letter n with tilde Ñ
+U+00D2  # latin capital letter o with grave Ò
+U+00D4  # latin capital letter o with circumflex Ô
+U+00D5  # latin capital letter o with tilde Õ
+U+00D6  # latin capital letter o with diaeresis Ö
+U+00D7  # multiplication sign ×
+U+00D8  # latin capital letter o with stroke Ø
+U+00D9  # latin capital letter u with grave Ù
+U+00DA  # latin capital letter u with acute Ú
+U+00DB  # latin capital letter u with circumflex Û
+U+00DC  # latin capital letter u with diaeresis Ü
+U+00DF  # latin small letter sharp s ß
+U+00E0  # latin small letter a with grave à
+U+00E1  # latin small letter a with acute á
+U+00E2  # latin small letter a with circumflex â
+U+00E3  # latin small letter a with tilde ã
+U+00E4  # latin small letter a with diaeresis ä
+U+00E5  # latin small letter a with ring above å
+U+00E6  # latin small letter ae æ
+U+00E7  # latin small letter c with cedilla ç
+U+00E8  # latin small letter e with grave è
+U+00E9  # latin small letter e with acute é
+U+00EA  # latin small letter e with circumflex ê
+U+00EB  # latin small letter e with diaeresis ë
+U+00EC  # latin small letter i with grave ì
+U+00ED  # latin small letter i with acute í
+U+00EE  # latin small letter i with circumflex î
+U+00EF  # latin small letter i with diaeresis ï
+U+00F1  # latin small letter n with tilde ñ
+U+00F2  # latin small letter o with grave ò
+U+00F4  # latin small letter o with circumflex ô
+U+00F5  # latin small letter o with tilde õ
+U+00F6  # latin small letter o with diaeresis ö
+U+00F7  # division sign ÷
+U+00F8  # latin small letter o with stroke ø
+U+00F9  # latin small letter u with grave ù
+U+00FA  # latin small letter u with acute ú
+U+00FB  # latin small letter u with circumflex û
+U+00FC  # latin small letter u with diaeresis ü
+U+00FF  # latin small letter y with diaeresis ÿ
+
+# polish
+
+U+0104  # latin capital letter a with ogonek Ą
+U+0105  # latin small letter a with ogonek ą
+U+0106  # latin capital letter c with acute Ć
+U+0107  # latin small letter c with acute ć
+U+0118  # latin capital letter e with ogonek Ę
+U+0119  # latin small letter e with ogonek ę
+U+0141  # latin capital letter l with stroke Ł
+U+0142  # latin small letter l with stroke ł
+U+0143  # latin capital letter n with acute Ń
+U+0144  # latin small letter n with acute ń
+U+015A  # latin capital letter s with acute Ś
+U+015B  # latin small letter s with acute ś
+U+0179  # latin capital letter z with acute Ź
+U+017A  # latin small letter z with acute ź
+U+017B  # latin capital letter z with dot above Ż
+U+017C  # latin small letter z with dot above ż
+U+00D3  # letter o with acute Ó
+U+00F3  # letter o with acute ó
+
+# other letters
+
+U+1E26  # latin capital letter h with diaeresis ḧ
+U+1E27  # latin small letter h with diaeresis ḧ
+
+# cyryllic
+
+U+0401  # cyrillic capital letter io Ё
+U+0410  # cyrillic capital letter a А
+U+0411  # cyrillic capital letter be Б
+U+0412  # cyrillic capital letter ve В
+U+0413  # cyrillic capital letter ghe Г
+U+0414  # cyrillic capital letter de Д
+U+0415  # cyrillic capital letter ie Е
+U+0416  # cyrillic capital letter zhe Ж
+U+0417  # cyrillic capital letter ze З
+U+0418  # cyrillic capital letter i И
+U+0419  # cyrillic capital letter short i Й
+U+041A  # cyrillic capital letter ka К
+U+041B  # cyrillic capital letter el Л
+U+041C  # cyrillic capital letter em М
+U+041D  # cyrillic capital letter en Н
+U+041E  # cyrillic capital letter o О
+U+041F  # cyrillic capital letter pe П
+U+0420  # cyrillic capital letter er Р
+U+0421  # cyrillic capital letter es С
+U+0422  # cyrillic capital letter te Т
+U+0423  # cyrillic capital letter u У
+U+0424  # cyrillic capital letter ef Ф
+U+0425  # cyrillic capital letter ha Х
+U+0426  # cyrillic capital letter tse Ц
+U+0427  # cyrillic capital letter che Ч
+U+0428  # cyrillic capital letter sha Ш
+U+0429  # cyrillic capital letter shcha Щ
+U+042A  # cyrillic capital letter hard sign Ъ
+U+042B  # cyrillic capital letter yeru Ы
+U+042C  # cyrillic capital letter soft sign Ь
+U+042D  # cyrillic capital letter e Э
+U+042E  # cyrillic capital letter yu Ю
+U+042F  # cyrillic capital letter ya Я
+
+U+0451  # cyrillic small letter io ё
+U+0430  # cyrillic small letter a а
+U+0431  # cyrillic small letter be б
+U+0432  # cyrillic small letter ve в
+U+0433  # cyrillic small letter ghe г
+U+0434  # cyrillic small letter de д
+U+0435  # cyrillic small letter ie е
+U+0436  # cyrillic small letter zhe ж
+U+0437  # cyrillic small letter ze з
+U+0438  # cyrillic small letter i и
+U+0439  # cyrillic small letter short i й
+U+043A  # cyrillic small letter ka к
+U+043B  # cyrillic small letter el л
+U+043C  # cyrillic small letter em м
+U+043D  # cyrillic small letter en н
+U+043E  # cyrillic small letter o о
+U+043F  # cyrillic small letter pe п
+U+0440  # cyrillic small letter er р
+U+0441  # cyrillic small letter es с
+U+0442  # cyrillic small letter te т
+U+0443  # cyrillic small letter u у
+U+0444  # cyrillic small letter ef ф
+U+0445  # cyrillic small letter ha х
+U+0446  # cyrillic small letter tse ц
+U+0447  # cyrillic small letter che ч
+U+0448  # cyrillic small letter sha ш
+U+0449  # cyrillic small letter shcha щ
+U+044A  # cyrillic small letter hard sign ъ
+U+044B  # cyrillic small letter yeru ы
+U+044C  # cyrillic small letter soft sign ь
+U+044D  # cyrillic small letter e э
+U+044E  # cyrillic small letter yu ю
+U+044F  # cyrillic small letter ya я
+
+# box drawing
+
+U+2500  # box drawings light horizontal ─
+U+2501  # box drawings heavy horizontal ━
+U+2502  # box drawings light vertical │
+U+2503  # box drawings heavy vertical ┃
+U+2504  # box drawings light triple dash horizontal ┄
+U+2505  # box drawings heavy triple dash horizontal ┅
+U+2506  # box drawings light triple dash vertical ┆
+U+2507  # box drawings heavy triple dash vertical ┇
+U+2508  # box drawings light quadruple dash horizontal ┈
+U+2509  # box drawings heavy quadruple dash horizontal ┉
+U+250A  # box drawings light quadruple dash vertical ┊
+U+250B  # box drawings heavy quadruple dash vertical ┋
+U+250C  # box drawings light down and right ┌
+U+250D  # box drawings down light and right heavy ┍
+U+250E  # box drawings down heavy and right light ┎
+U+250F  # box drawings heavy down and right ┏
+U+2510  # box drawings light down and left ┐
+U+2511  # box drawings down light and left heavy ┑
+U+2512  # box drawings down heavy and left light ┒
+U+2513  # box drawings heavy down and left ┓
+U+2514  # box drawings light up and right └
+U+2515  # box drawings up light and right heavy ┕
+U+2516  # box drawings up heavy and right light ┖
+U+2517  # box drawings heavy up and right ┗
+U+2518  # box drawings light up and left ┘
+U+2519  # box drawings up light and left heavy ┙
+U+251A  # box drawings up heavy and left light ┚
+U+251B  # box drawings heavy up and left ┛
+U+251C  # box drawings light vertical and right ├
+U+251D  # box drawings vertical light and right heavy ┝
+U+251E  # box drawings up heavy and right down light ┞
+U+251F  # box drawings down heavy and right up light ┟
+U+2520  # box drawings vertical heavy and right light ┠
+U+2521  # box drawings down light and right up heavy ┡
+U+2522  # box drawings up light and right down heavy ┢
+U+2523  # box drawings heavy vertical and right ┣
+U+2524  # box drawings light vertical and left ┤
+U+2525  # box drawings vertical light and left heavy ┥
+U+2526  # box drawings up heavy and left down light ┦
+U+2527  # box drawings down heavy and left up light ┧
+U+2528  # box drawings vertical heavy and left light ┨
+U+2529  # box drawings down light and left up heavy ┩
+U+252A  # box drawings up light and left down heavy ┪
+U+252B  # box drawings heavy vertical and left ┫
+U+252C  # box drawings light down and horizontal ┬
+U+252D  # box drawings left heavy and right down light ┭
+U+252E  # box drawings right heavy and left down light ┮
+U+252F  # box drawings down light and horizontal heavy ┯
+U+2530  # box drawings down heavy and horizontal light ┰
+U+2531  # box drawings right light and left down heavy ┱
+U+2532  # box drawings left light and right down heavy ┲
+U+2533  # box drawings heavy down and horizontal ┳
+U+2534  # box drawings light up and horizontal ┴
+U+2535  # box drawings left heavy and right up light ┵
+U+2536  # box drawings right heavy and left up light ┶
+U+2537  # box drawings up light and horizontal heavy ┷
+U+2538  # box drawings up heavy and horizontal light ┸
+U+2539  # box drawings right light and left up heavy ┹
+U+253A  # box drawings left light and right up heavy ┺
+U+253B  # box drawings heavy up and horizontal ┻
+U+253C  # box drawings light vertical and horizontal ┼
+U+253D  # box drawings left heavy and right vertical light ┽
+U+253E  # box drawings right heavy and left vertical light ┾
+U+253F  # box drawings vertical light and horizontal heavy ┿
+U+2540  # box drawings up heavy and down horizontal light ╀
+U+2541  # box drawings down heavy and up horizontal light ╁
+U+2542  # box drawings vertical heavy and horizontal light ╂
+U+2543  # box drawings left up heavy and right down light ╃
+U+2544  # box drawings right up heavy and left down light ╄
+U+2545  # box drawings left down heavy and right up light ╅
+U+2546  # box drawings right down heavy and left up light ╆
+U+2547  # box drawings down light and up horizontal heavy ╇
+U+2548  # box drawings up light and down horizontal heavy ╈
+U+2549  # box drawings right light and left vertical heavy ╉
+U+254A  # box drawings left light and right vertical heavy ╊
+U+254B  # box drawings heavy vertical and horizontal ╋
+U+254C  # box drawings light double dash horizontal ╌
+U+254D  # box drawings heavy double dash horizontal ╍
+U+254E  # box drawings light double dash vertical ╎
+U+254F  # box drawings heavy double dash vertical ╏
+U+2550  # box drawings double horizontal ═
+U+2551  # box drawings double vertical ║
+U+2552  # box drawings down single and right double ╒
+U+2553  # box drawings down double and right single ╓
+U+2554  # box drawings double down and right ╔
+U+2555  # box drawings down single and left double ╕
+U+2556  # box drawings down double and left single ╖
+U+2557  # box drawings double down and left ╗
+U+2558  # box drawings up single and right double ╘
+U+2559  # box drawings up double and right single ╙
+U+255A  # box drawings double up and right ╚
+U+255B  # box drawings up single and left double ╛
+U+255C  # box drawings up double and left single ╜
+U+255D  # box drawings double up and left ╝
+U+255E  # box drawings vertical single and right double ╞
+U+255F  # box drawings vertical double and right single ╟
+U+2560  # box drawings double vertical and right ╠
+U+2561  # box drawings vertical single and left double ╡
+U+2562  # box drawings vertical double and left single ╢
+U+2563  # box drawings double vertical and left ╣
+U+2564  # box drawings down single and horizontal double ╤
+U+2565  # box drawings down double and horizontal single ╥
+U+2566  # box drawings double down and horizontal ╦
+U+2567  # box drawings up single and horizontal double ╧
+U+2568  # box drawings up double and horizontal single ╨
+U+2569  # box drawings double up and horizontal ╩
+U+256A  # box drawings vertical single and horizontal double ╪
+U+256B  # box drawings vertical double and horizontal single ╫
+U+256C  # box drawings double vertical and horizontal ╬
+U+256D  # box drawings light arc down and right ╭
+U+256E  # box drawings light arc down and left ╮
+U+256F  # box drawings light arc up and left ╯
+U+2570  # box drawings light arc up and right ╰
+U+2571  # box drawings light diagonal upper right to lower left ╱
+U+2572  # box drawings light diagonal upper left to lower right ╲
+U+2573  # box drawings light diagonal cross ╳
+U+2574  # box drawings light left ╴
+U+2575  # box drawings light up ╵
+U+2576  # box drawings light right ╶
+U+2577  # box drawings light down ╷
+U+2578  # box drawings heavy left ╸
+U+2579  # box drawings heavy up ╹
+U+257A  # box drawings heavy right ╺
+U+257B  # box drawings heavy down ╻
+
+# block elements
+
+U+2580  # upper half block ▀
+U+2581  # lower one eighth block ▁
+U+2582  # lower one quarter block ▂
+U+2584  # lower half block ▄
+U+2585  # lower five eighths block ▅
+U+2586  # lower three quarters block ▆
+U+2587  # lower seven eighths block ▇
+U+2588  # full block █
+U+2589  # left seven eighths block ▉
+U+258A  # left three quarters block ▊
+U+258B  # left five eighths block ▋
+U+258C  # left half block ▌
+U+258E  # left one quarter block ▎
+U+258F  # left one eighth block ▏
+U+2590  # right half block ▐
+U+2591  # light shade ░
+U+2592  # medium shade ▒
+U+2593  # dark shade ▓
+U+2594  # upper one eighth block ▔
+U+2595  # right one eighth block ▕
+U+2596  # quadrant lower left ▖
+U+2597  # quadrant lower right ▗
+U+2598  # quadrant upper left ▘
+U+259D  # quadrant upper right ▝
+
+# gnu apl
+
+U+03BB  # greek small letter lamda λ
+U+03C7  # greek small letter chi χ
+U+03BC  # greek small letter mu μ
+U+2070  # superscript zero ⁰
+U+2074  # superscript four ⁴
+U+2075  # superscript five ⁵
+U+2076  # superscript six ⁶
+U+2077  # superscript seven ⁷
+U+2078  # superscript eight ⁸
+U+2079  # superscript nine ⁹
+U+207F  # superscript latin small letter n ⁿ
+U+2080  # subscript zero ₀
+U+2081  # subscript one ₁
+U+2082  # subscript two ₂
+U+2083  # subscript three ₃
+U+2084  # subscript four ₄
+U+2085  # subscript five ₅
+U+2086  # subscript six ₆
+U+2087  # subscript seven ₇
+U+2088  # subscript eight ₈
+U+2089  # subscript nine ₉
+U+2190  # leftwards arrow ←
+U+2191  # upwards arrow ↑
+U+2192  # rightwards arrow →
+U+2193  # downwards arrow ↓
+U+21C4  # rightwards arrow over leftwards arrow ⇄
+U+21E8  # rightwards white arrow ⇨
+U+2206  # increment ∆
+U+2207  # nabla ∇
+U+2208  # element of ∈
+U+2218  # ring operator ∘
+U+2223  # divides ∣
+U+2228  # logical or ∨
+U+2229  # intersection ∩
+U+222A  # union ∪
+U+223C  # tilde operator ∼
+U+2260  # not equal to ≠
+U+2261  # identical to ≡
+U+2264  # less-than or equal to ≤
+U+2265  # greater-than or equal to ≥
+U+226C  # between ≬
+U+2282  # subset of ⊂
+U+2283  # superset of ⊃
+U+2296  # circled minus ⊖
+U+22A2  # right tack ⊢
+U+22A3  # left tack ⊣
+U+22A4  # down tack ⊤
+U+22A5  # up tack ⊥
+U+22C6  # star operator ⋆
+U+2336  # apl functional symbol i-beam ⌶
+U+2337  # apl functional symbol squish quad ⌷
+U+233B  # apl functional symbol quad jot ⌻
+U+233D  # apl functional symbol circle stile ⌽
+U+233E  # apl functional symbol circle jot ⌾
+U+2349  # apl functional symbol circle backslash ⍉
+U+234A  # apl functional symbol down tack underbar ⍊
+U+2370  # apl functional symbol quad question ⍰
+U+2374  # apl functional symbol rho ⍴
+U+2375  # apl functional symbol omega ⍵
+U+237A  # apl functional symbol alpha ⍺
+
+# miscellaneous math
+
+U+2194  # left right arrow ↔
+U+2195  # up down arrow ↕
+U+221E  # infinity ∞
+U+2248  # almost equal to ≈
+U+221A  # square root √
+U+03C0  # greek small letter pi π
+
+# miscellaneous
+
+U+2018  # left single quotation mark ‘
+U+2019  # right single quotation mark ’
+U+201A  # single low-9 quotation mark ‚
+U+201C  # left double quotation mark “
+U+201D  # right double quotation mark ”
+U+201E  # double low-9 quotation mark „
+U+2026  # horizontal ellipsis …
+U+20AC  # euro sign €
+U+2219  # bullet operator ∙
+U+2639  # white frowning face
+U+263A  # white smiling face ☺
+U+25B2  # black up-pointing triangle ▲
+U+25B6  # black right-pointing triangle ▶
+U+25BC  # black down-pointing triangle ▼
+U+25C0  # black left-pointing triangle ◀
+U+2666  # black diamond suit ♦
+
+# replacement character
+
+U+FFFD  # replacement character �
+
+# other apl
+
+U+22C4  # diamond operator ⋄
+U+25AF  # white vertical rectangle
+U+25CB  # white circle ○
+U+25E6  # white bullet ◦
+U+25CF  # BLACK CIRCLE ●
+U+2010  # HYPHEN ‐
+U+2606  # WHITE STAR ☆
+U+2713  # CHECK MARK ✓	- not working as of 14.04
+U+2717  # BALLOT X ✗	- not working as of 14.04
+U+2032  # PRIME = minutes, feet ′
+U+2033  # DOUBLE PRIME = seconds, inches ″
+U+25A1  # WHITE SQUARE □
+U+2122  # TRADE MARK SIGN ™
+U+200A  # HAIR SPACE  
+
+
+
+# removed glyphs
+
+# removed: latin-1
+#U+00AA  # feminine ordinal indicator ª
+#U+00D0  # latin capital letter eth Ð
+#U+00DD  # latin capital letter y with acute Ý
+#U+00DE  # latin capital letter thorn Þ
+#U+00F0  # latin small letter eth ð
+#U+00FE  # latin small letter thorn þ
+#U+00FD  # latin small letter y with acute ý
+
+# removed: blocks elements
+#U+257C  # box drawings light left and heavy right ╼
+#U+257D  # box drawings light up and heavy down ╽
+#U+257E  # box drawings heavy left and light right ╾
+#U+257F  # box drawings heavy up and light down ╿
+#U+2583  # lower three eighths block ▃
+#U+258D  # left three eighths block ▍
+#U+259B  # quadrant upper left and upper right and lower left ▛
+#U+2599  # quadrant upper left and lower left and lower right ▙
+#U+259C  # quadrant upper left and upper right and lower right ▜
+#U+259F  # quadrant upper right and lower left and lower right ▟
+#U+259E  # quadrant upper right and lower left ▞
+#U+259A  # quadrant upper left and lower right ▚
+
+# removed: gnu apl
+#U+2235  # because ∵
+#U+2308  # left ceiling ⌈
+#U+230A  # left floor ⌊
+#U+2338  # apl functional symbol quad equal ⌸
+#U+2339  # apl functional symbol quad divide ⌹
+#U+233A  # apl functional symbol quad diamond ⌺
+#U+233C  # apl functional symbol quad circle ⌼
+#U+233F  # apl functional symbol slash bar ⌿
+#U+236F  # apl functional symbol quad not equal ⍯
+#U+2340  # apl functional symbol backslash bar ⍀
+#U+2341  # apl functional symbol quad slash ⍁
+#U+2342  # apl functional symbol quad backslash ⍂
+#U+2343  # apl functional symbol quad less-than ⍃
+#U+2344  # apl functional symbol quad greater-than ⍄
+#U+2345  # apl functional symbol leftwards vane ⍅
+#U+2346  # apl functional symbol rightwards vane ⍆
+#U+2347  # apl functional symbol quad leftwards arrow ⍇
+#U+2348  # apl functional symbol quad rightwards arrow ⍈
+#U+234B  # apl functional symbol delta stile ⍋
+#U+234C  # apl functional symbol quad down caret ⍌
+#U+234D  # apl functional symbol quad delta ⍍
+#U+234E  # apl functional symbol down tack jot ⍎
+#U+234F  # apl functional symbol upwards vane ⍏
+#U+2350  # apl functional symbol quad upwards arrow ⍐
+#U+2351  # apl functional symbol up tack overbar ⍑
+#U+2352  # apl functional symbol del stile ⍒
+#U+2353  # apl functional symbol quad up caret ⍓
+#U+2354  # apl functional symbol quad del ⍔
+#U+2355  # apl functional symbol up tack jot ⍕
+#U+2356  # apl functional symbol downwards vane ⍖
+#U+2357  # apl functional symbol quad downwards arrow ⍗
+#U+2358  # apl functional symbol quote underbar ⍘
+#U+2359  # apl functional symbol delta underbar ⍙
+#U+235A  # apl functional symbol diamond underbar ⍚
+#U+235B  # apl functional symbol jot underbar ⍛
+#U+235C  # apl functional symbol circle underbar ⍜
+#U+235D  # apl functional symbol up shoe jot ⍝
+#U+235E  # apl functional symbol quote quad ⍞
+#U+235F  # apl functional symbol circle star ⍟
+#U+2360  # apl functional symbol quad colon ⍠
+#U+2361  # apl functional symbol up tack diaeresis ⍡
+#U+2362  # apl functional symbol del diaeresis ⍢
+#U+2363  # apl functional symbol star diaeresis ⍣
+#U+2364  # apl functional symbol jot diaeresis ⍤
+#U+2365  # apl functional symbol circle diaeresis ⍥
+#U+2366  # apl functional symbol down shoe stile ⍦
+#U+2367  # apl functional symbol left shoe stile ⍧
+#U+2368  # apl functional symbol tilde diaeresis ⍨
+#U+2369  # apl functional symbol greater-than diaeresis ⍩
+#U+236A  # apl functional symbol comma bar ⍪
+#U+236B  # apl functional symbol del tilde ⍫
+#U+236C  # apl functional symbol zilde ⍬
+#U+236D  # apl functional symbol stile tilde ⍭
+#U+236E  # apl functional symbol semicolon underbar ⍮
+#U+2371  # apl functional symbol down caret tilde ⍱
+#U+2372  # apl functional symbol up caret tilde ⍲
+#U+2373  # apl functional symbol iota ⍳
+#U+2376  # apl functional symbol alpha underbar ⍶
+#U+2377  # apl functional symbol epsilon underbar ⍷
+#U+2378  # apl functional symbol iota underbar ⍸
+#U+2379  # apl functional symbol omega underbar ⍹
+#U+0461  # cyrillic small letter omega
+##U+22F8  # element of with underbar maps to u+2377
+##U+2395  # apl func symbol quad --> map to u+25af white vertical rectangle
+
+# removed: other apl
+#U+2227  # logical and ∧
+#U+22BC  # nand ⊼
+#U+22BD  # nor ⊽
+##U+25CA  # lozenge                  --> map to u+22c4 diamond operator
+##U+03B1  # greek small letter alpha --> map to u+237a
+##U+03C9  # greek small letter omega --> map to u+2375 apl functional symbol omega
+##U+2212  # minus sign               --> map to u+002d hyphen-minus
+##U+26AA  # medium white circle      --> map to u+25cb white circle
+##U+2B26  # white medium diamond     --> map to u+22c4 diamond operator
+##U+2A7D  # less-than or slanted equal to    --> map to u+2264 less-than or equal to
+##U+2A7E  # greater-than or slanted equal to --> map to u+2265 greater-than or equal to
+
+# removed: miscellaneous math
+#U+2200  # for all ∀
+#U+2205  # empty set ∅
+#U+2262  # not identical to ≢
+#U+2286  # subset of or equal to ⊆
+#U+2287  # superset of or equal to ⊇
+#U+2299  # circled dot operator ⊙
+
+# removed: for french, from iso 8859-15
+#U+0152  # latin capital ligature oe Œ
+#U+0153  # latin small ligature oe œ
+#U+0178  # latin capital letter y with diaeresis Ÿ
+
+# removed: miscellaneous
+#U+2020  # dagger †
+#U+2021  # double dagger ‡
+
+
+

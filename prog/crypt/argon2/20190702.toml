@@ -1,0 +1,15 @@
+[ src ]
+
+url = "https://github.com/P-H-C/phc-winner-argon2/archive/<ver>/argon2-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "phc-winner-<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make OPTTARGET='none' LIBRARY_REL='lib'"
+pkg_create = "make OPTTARGET='none' LIBRARY_REL='lib' DESTDIR=<pkg_dir> install"

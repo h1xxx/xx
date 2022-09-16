@@ -1,0 +1,74 @@
+[ src ]
+
+url = "https://mesa.freedesktop.org/archive/mesa-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D buildtype=release
+	-D platforms=
+	-D dri-drivers=i965,nouveau
+	-D gallium-drivers=i915,nouveau
+	-D gallium-nine=false
+	-D glx=disabled
+	-D osmesa=false
+	-D valgrind=disabled
+	-D libunwind=disabled
+	-D dri3=enabled
+	-D egl=enabled
+	-D gbm=enabled
+	-D gles1=disabled
+	-D gles2=enabled
+	-D shared-glapi=enabled
+	-D llvm=disabled
+	-D lmsensors=disabled
+	-D vulkan-drivers=''
+	-D vulkan-layers=''
+	-D microsoft-clc=disabled"
+
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+
+
+
+[ gallium_glx ]
+
+# required by xorg-server built with dri and gallium
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D buildtype=release
+	-D platforms=x11
+	-D dri-drivers=i965,nouveau
+	-D gallium-drivers=i915,nouveau
+	-D gallium-nine=false
+	-D glx=dri
+	-D osmesa=false
+	-D valgrind=disabled
+	-D libunwind=disabled
+	-D dri3=enabled
+	-D egl=enabled
+	-D gbm=enabled
+	-D gles1=disabled
+	-D gles2=enabled
+	-D shared-glapi=enabled
+	-D llvm=disabled
+	-D lmsensors=disabled
+	-D vulkan-drivers=''
+	-D vulkan-layers=''
+	-D microsoft-clc=disabled"
+
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+
+
+

@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://www.cabextract.org.uk/cabextract-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking
+	--with-external-libmspack"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+

@@ -1,0 +1,17 @@
+[ src ]
+
+url = "https://github.com/Oblomov/clinfo//archive/<ver>/clinfo-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make"
+pkg_create = "mkdir -p <pkg_dir>/usr/{bin,share/man/man1} &&
+	cp -av clinfo <pkg_dir>/usr/bin &&
+	cp -av man1/clinfo.1 <pkg_dir>/usr/share/man/man1"

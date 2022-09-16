@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/jinfeihan57/p7zip/archive/v<ver>/<prog>-v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make 7z 7zr 7za"
+pkg_create = "make
+	DEST_DIR=<pkg_dir>
+	DEST_HOME=/usr
+	DEST_MAN=/usr/share/man
+	install &&
+	rm -r <pkg_dir>/usr/share/doc/"

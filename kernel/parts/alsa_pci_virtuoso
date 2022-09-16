@@ -1,0 +1,6 @@
+# drivers -> sound -> alsa pci
+# ============================
+
+CONFIG_SND_PCI=y
+CONFIG_SND_VIRTUOSO=y
+

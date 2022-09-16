@@ -1,0 +1,97 @@
+
+dependencies
+============
+
+- gnu build tools
+- lxc
+- xx user with home dir /home/xx/ and part of following groups
+        - lxc - for creating and running containers
+        - tty - for using tty within containers
+        - disk - to create and modify loop devices for qemu image files
+- 4 GB free on /tmp
+
+optional, for usb drive installation
+- sgdisk
+
+optional, for qemu images build
+- qemu
+- kernel with loop device support
+
+
+
+install instructions
+====================
+
+* configure system
+
+	useradd -m xx
+	usermod -a -g lxc xx
+	usermod -a -g tty xx
+
+* install and configure lxc and deps
+
+* git clone xx
+
+* compile static tools: xx command, ksh and busybox
+
+	mkdir -p /tmp/xx/build
+	make
+	make tools
+
+* download all source files first
+
+  Sometimes sourceforge throws errors, in that case run this command again. If
+  a pkg really doesn't want to be downloaded you'll need to find it on the
+  internet and place it in src directory of that pkg with version as base name.
+
+	./xx/xx source -d definitions/install/xx_all.xx
+
+* cross-compile the base system
+
+	make init
+
+* compile other parts of the system
+
+	xx/xx build -d definitions/build/sys.xx
+	xx/xx build -d definitions/build/net.xx
+	xx/xx build -d definitions/build/media.xx
+	xx/xx build -d definitions/build/misc.xx
+	xx/xx build -d definitions/build/qemu.xx
+	xx/xx build -d definitions/build/x11.xx
+
+* install xx on a pendrive or another disk
+
+  Installation of syslinux will hang for a while on a post-deploy step, because
+  the kernel is writing to disk all the changes made to the filesystem so far.
+
+	scripts/dev_install -e -t /dev/sde -s definitions/install/xx_all.xx -c ../xx-conf/usb/
+
+
+
+setting ownership only as root
+uid and gid are from current system, so make sure that they match
+
+sysctl.conf if exists is used for kernel configuration
+
+iptables -t nat -o wlan0 -A POSTROUTING -j MASQUERADE
+iptables -t nat -o eth0 -A POSTROUTING -j MASQUERADE
+
+printf 1 > /proc/sys/net/ipv4/ip_forward
+
+gcc builds four packages - main one and three separate libraries:
+...
+
+
+# initramfs
+
+create initramfs with custom config
+	cd initramfs
+	make CONFIG_DIR=/home/xx/conf/<xx config dir>/
+	cp build/initramfs.cpio.zst \
+		../conf/x200/linux/std-latest/boot/initramfs.cpio.zst
+
+notes:
+- boot device must be passed as kernel parameter as bootdev=UUID
+- boot partition must contain boot.conf in root dir from
+  /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/boot.conf
+

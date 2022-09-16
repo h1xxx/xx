@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://distfiles.dereferenced.org/pkgconf/pkgconf-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--with-system-libdir=/lib:/usr/lib
+	--with-system-includedir=/usr/include
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	ln -sv pkgconf <pkg_dir>/usr/bin/pkg-config &&
+	rm -r <pkg_dir>/usr/share/doc/"

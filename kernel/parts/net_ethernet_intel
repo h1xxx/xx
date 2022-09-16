@@ -1,0 +1,14 @@
+# drivers -> net -> ethernet -> intel
+# ===================================
+
+CONFIG_NET_VENDOR_INTEL=y
+CONFIG_E1000=y
+CONFIG_E1000E=y
+CONFIG_E1000E_HWTS=y
+CONFIG_IGB=y
+CONFIG_IGB_HWMON=y
+
+# possible deps
+#CONFIG_I2C_ALGOBIT=y
+
+

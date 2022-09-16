@@ -1,0 +1,28 @@
+[ src ]
+
+url = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "meson
+	--prefix=/usr
+	--libdir=lib
+	--buildtype=release
+	--wrap-mode=nodownload
+	-D alsa=enabled
+	-D audiomixer=enabled
+	-D introspection=enabled
+	-D opus=enabled
+	-D nls=disabled
+	-D doc=disabled
+	-D tremor=disabled
+	build"
+
+build = "ninja -C build all"
+pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"

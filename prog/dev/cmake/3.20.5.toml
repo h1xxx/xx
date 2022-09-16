@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/Kitware/CMake/releases/download/v<ver>/cmake-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--parallel=8"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/doc/ &&
+	rm -r <pkg_dir>/usr/share/{bash-completion,emacs,vim}/"

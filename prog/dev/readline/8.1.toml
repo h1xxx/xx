@@ -1,0 +1,41 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-multibyte
+	--with-curses
+	--docdir=/usr/share/doc/readline"
+
+build = "make SHLIB_LIBS='-ltinfow'"
+pkg_create = "make DESTDIR=<pkg_dir> SHLIB_LIBS='-ltinfow' install &&
+	chmod -R u+w <pkg_dir>/ || : &&
+	rm -r <pkg_dir>/usr/share/{doc,info}/"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-multibyte
+	--without-curses
+	--docdir=/usr/share/doc/readline"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> SHLIB_LIBS='-ltinfow' install &&
+	chmod -R u+w <pkg_dir>/ || : && 
+	rm -r <pkg_dir>/usr/share/{doc,info}/"

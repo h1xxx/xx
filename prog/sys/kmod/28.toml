@@ -1,0 +1,28 @@
+[ src ]
+
+url = "https://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--with-rootlibdir=/usr/lib
+	--with-zlib
+	--disable-python
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -p <pkg_dir>/usr/sbin &&
+	for target in depmod insmod lsmod modinfo modprobe rmmod; do
+		ln -sv ../bin/kmod <pkg_dir>/usr/sbin/${target};
+	done &&
+	ln -sv kmod <pkg_dir>/usr/bin/lsmod &&
+	rm -r <pkg_dir>/usr/share/bash-completion/"

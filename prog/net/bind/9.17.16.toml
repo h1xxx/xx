@@ -1,0 +1,47 @@
+[ src ]
+
+url = "https://downloads.isc.org/isc/bind9/9.17.16/bind-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--disable-maintainer-mode
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -p <pkg_dir>/usr/share/man/man1 &&
+	cp -a doc/man/dig.1in <pkg_dir>/usr/share/man/man1/dig.1 &&
+	sed -i 's|\"@RELEASE_DATE@\" \"@PACKAGE_VERSION@\"|\"<ver>\"|g'
+		<pkg_dir>/usr/share/man/man1/dig.1"
+
+
+
+[ tools ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--disable-maintainer-mode
+	--disable-dependency-tracking
+	--disable-chroot
+	--disable-geoip
+	--disable-linux-caps
+	--with-maxminddb=no
+	--with-gssapi=no"
+
+build = "make -C lib/ && make -C bin/dig/"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -p <pkg_dir>/usr/share/man/man1 &&
+	cp -a doc/man/dig.1in <pkg_dir>/usr/share/man/man1/dig.1 &&
+	sed -i 's|\"@RELEASE_DATE@\" \"@PACKAGE_VERSION@\"|\"<ver>\"|g'
+		<pkg_dir>/usr/share/man/man1/dig.1"

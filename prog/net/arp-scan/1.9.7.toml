@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://github.com/royhills/arp-scan/archive/refs/tags/<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "autoreconf --install && ./configure
+	--prefix=/usr
+	--mandir=/usr/share/man
+	--disable-dependency-tracking
+	--disable-nls
+	--disable-static"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

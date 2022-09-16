@@ -1,0 +1,65 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+msg 'mounting filesystems...'
+${BB} mountpoint -q /dev || ${BB} mount -o rw,nosuid,noexec /dev ||
+	err "can't mount /dev"
+
+${BB} mount /proc || err "can't mount /proc"
+${BB} mount /sys || err "can't mount /sys"
+${BB} mount /run || err "can't mount /run"
+
+# wait for dev, proc and sys
+t=0
+while [ ! -e /dev/console ] || [ ! -e /proc/sys ] || [ ! -e /sys/dev ]; do
+	${BB} sleep 0.01
+	t="$((t+1))"
+	[ "${t}" -gt 500 ] && err '/dev, /proc or /sys not mounted'
+done
+
+# remount root if it's read-only
+if ${BB} grep -q ' / ext4 ro' /proc/mounts; then
+	msg 'remounting root as read-write...'
+	${BB} mount -o remount,rw / || err "can't remount root dir"
+fi
+
+# create dirs for other mount points
+${BB} mkdir -p -m 0755 /dev/pts /dev/shm  /run/lock /run/lvm /run/user /run/log
+${BB} install -m 1770 -g daemon -d /run/pid
+
+# mount all the rest
+mount -a
+
+if [ -e /proc/cgroups ]; then
+	${BB} mount -o mode=0755 -t tmpfs cgroup_root /sys/fs/cgroup
+
+	for cg in $(${BB} awk '!/^#/ { if ($4 == 1) print $1 }' /proc/cgroups); do
+		mount_dir="/sys/fs/cgroup/${cg}"
+		${BB} mkdir -p "${mount_dir}"
+		${BB} mount -t cgroup -o "${cg}" "${cg}" "${mount_dir}"
+	done
+
+	${BB} mkdir -p /sys/fs/cgroup/unified
+	${BB} mount -t cgroup2 -o nsdelegate cgroup2 /sys/fs/cgroup/unified
+
+	if [ -e /sys/fs/cgroup/memory/memory.use_hierarchy ]; then
+		${BB} printf 1 > /sys/fs/cgroup/memory/memory.use_hierarchy
+	fi
+fi
+
+if [ -d /sys/kernel/security ]; then
+	${BB} mount -n -t securityfs securityfs /sys/kernel/security
+fi
+
+if [ -d /sys/firmware/efi ]; then
+	${BB} mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+fi
+
+if [ "${HUGEPAGES}" != '' ]; then
+	${BB} install -m 0775 -g x -d /dev/hugepages
+	${BB} mount -t hugetlbfs hugetlbfs /dev/hugepages
+	${BB} sysctl vm.nr_hugepages="$((HUGEPAGES*1024/2))"
+fi
+

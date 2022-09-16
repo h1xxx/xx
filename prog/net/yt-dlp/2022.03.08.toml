@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i '/^all: / s/doc //' Makefile &&
+	sed -i '/^all: / s/ pypi-files//' Makefile &&
+	sed -i '/^install: / s/ yt-dlp.1 completions//' Makefile &&
+	sed -i '/install -Dm644 yt-dlp.1/d' Makefile &&
+	sed -i '/install -Dm644 completions/d' Makefile"
+
+build = "make PREFIX=/usr"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,31 @@
+[ src ]
+
+url = "https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/man/man3"
+
+
+
+[ cert_pem ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = ""
+pkg_create = "mkdir -p <pkg_dir>/etc/ssl && cp cert.pem <pkg_dir>/etc/ssl/"

@@ -1,0 +1,36 @@
+[ src ]
+
+url = "https://sourceware.org/ftp/lvm2/LVM2.<ver>.tgz"
+src_type = "tar"
+src_dirname = "LVM2.<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--libdir=/usr/lib
+	--exec-prefix=/usr
+	--disable-cmdlib
+	--disable-use-lvmlockd
+	--disable-use-lvmpolld
+	--disable-dmeventd
+	--disable-dmfilemapd
+	--disable-notify-dbus
+	--disable-udev-systemd-background-jobs
+	--disable-udev_rules
+	--disable-udev_sync
+	--disable-udev-rule-exec-detection
+	--disable-dbus-service
+	--disable-selinux
+	--disable-static_link
+	--disable-nls
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	chmod -Rv u+w <pkg_dir>/ || : &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"

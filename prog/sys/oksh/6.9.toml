@@ -1,0 +1,63 @@
+[ src ]
+
+url = "https://github.com/ibara/oksh/releases/download/<prog>-<ver>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-ksh"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ xx_tools_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/
+	--enable-static
+	--enable-ksh"
+
+build = "make"
+pkg_create = "make DESTDIR=/home/xx/tools install &&
+	echo 'program installed in /home/xx/tools/' >> <pkg_dir>/info.txt &&
+	mv /home/xx/tools/bin/ksh /home/xx/tools &&
+	rmdir /home/xx/tools/bin &&
+	rm -r /home/xx/tools/share"
+
+
+
+[ init_cross ]
+
+env = [ "CFLAGS=", "LDFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-static
+	--enable-ksh"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--enable-ksh"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

@@ -1,0 +1,4 @@
+# filesystems -> ntfs
+# ===================
+
+CONFIG_NTFS_FS=y

@@ -1,0 +1,25 @@
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+
+media/libpng			std			latest
+
+text/libxslt			std			latest
+dev/glib			std			latest
+sys/liburing			std			latest
+x11/pixman			std			latest
+
+sys/attr			std			latest
+sys/libcap-ng			std			latest
+net/libslirp			std			latest
+
+media/libjpeg-turbo		std			latest
+media/opus			std			latest
+arch/lz4			std			latest
+emu/spice-protocol		std			latest
+emu/spice			std			latest
+
+emu/qemu			std			latest
+
+
+#app-emulation/spice

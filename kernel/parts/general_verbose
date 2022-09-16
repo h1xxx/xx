@@ -1,0 +1,12 @@
+# kernel hacking
+# ==============
+
+
+# verbose bug() reporting (adds 70k)
+# todo: maybe disable?
+CONFIG_DEBUG_BUGVERBOSE=y
+
+# verbose boot
+# todo: maybe disable?
+CONFIG_X86_VERBOSE_BOOTUP=y
+

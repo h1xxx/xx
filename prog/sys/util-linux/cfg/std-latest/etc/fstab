@@ -1,0 +1,12 @@
+proc	/proc	proc		rw,nosuid,nodev,noexec,hidepid=2,gid=0	0 0
+sys	/sys	sysfs		rw,nosuid,nodev,noexec			0 0
+run	/run	tmpfs		rw,nosuid,nodev,mode=0755		0 0
+tmp	/tmp	tmpfs		rw,nosuid,nodev,mode=0770,gid=43,size=80% 0 0
+
+shm	/dev/shm	tmpfs	rw,nosuid,noexec,mode=1777		0 0
+devpts	/dev/pts	devpts	rw,nosuid,noexec,mode=0620,gid=5	0 0
+lock	/run/lock	tmpfs	rw,nosuid,nodev,noexec,mode=1777	0 0
+
+/dev/sda2	/	ext4	rw,lazytime,noiversion		0 1
+/dev/sda1	/boot	ext4	rw,lazytime,noiversion		0 2
+

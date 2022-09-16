@@ -1,0 +1,6 @@
+# device drivers -> block devices
+# ===============================
+
+# loopback block device support (mount files with a filesystem)
+CONFIG_BLK_DEV_LOOP=y
+

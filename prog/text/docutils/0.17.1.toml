@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/docutils/docutils-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "python setup.py build"
+pkg_create = "python setup.py install
+		--root=<pkg_dir>
+		--prefix=/usr
+		--skip-build &&
+	for f in <pkg_dir>/usr/bin/*.py; do
+		ln -s $(basename ${f}) <pkg_dir>/usr/bin/$(basename ${f} .py);
+	done  &&
+	find <pkg_dir> -depth -type f -name '*.py[co]' -delete
+		-o -type d -name __pycache__ -delete"

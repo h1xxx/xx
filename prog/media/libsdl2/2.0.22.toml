@@ -1,0 +1,162 @@
+[ src ]
+
+url = "https://www.libsdl.org/release/SDL2-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "SDL2-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking
+
+	--enable-video
+	--enable-video-kmsdrm
+	--enable-video-opengl
+	--enable-video-opengles
+	--enable-video-opengles1
+	--enable-video-opengles2
+
+	--disable-video-vivante
+	--disable-video-directfb
+
+	--enable-audio
+	--enable-alsa
+
+	--enable-render
+	--enable-events
+	--enable-joystic
+	--enable-haptic
+	--enable-arts
+	--enable-libsamplerate
+
+	--enable-libudev
+	--enable-sdl-dlopen
+	--enable-hidapi
+	--enable-hidapi-libusb
+	--enable-sdl2-config
+
+	--enable-directx
+	--enable-render-d3d
+	--enable-wasapi
+
+	--enable-sensor
+	--enable-power
+	--enable-filesystem
+	--enable-threads
+	--enable-timers
+	--enable-file
+	--enable-loadso
+
+	--disable-pulseaudio
+	--disable-jack
+	--disable-oss
+	--disable-esd
+	--disable-nas
+	--disable-sndio
+	--disable-diskaudio
+	--disable-alsatest
+	--disable-esdtest
+
+	--disable-video-wayland
+	--disable-video-x11
+	--disable-video-cocoa
+	--disable-video-metal
+	--disable-video-vulkan
+	--disable-video-dummy
+
+	--disable-dbus
+	--disable-ime
+	--disable-ibus
+	--disable-fcitx
+	--disable-joystick-mfi"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libSDL2main.a"
+
+
+
+[ x11 ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking
+
+	--enable-video
+	--enable-video-x11
+	--enable-video-opengl
+	--enable-video-opengles
+	--enable-video-opengles2
+
+	--disable-video-kmsdrm
+	--disable-video-vivante
+	--disable-video-directfb
+	--disable-video-opengles1
+
+	--enable-audio
+	--enable-alsa
+
+	--enable-render
+	--enable-events
+	--enable-joystic
+	--enable-haptic
+	--enable-arts
+	--enable-libsamplerate
+
+	--enable-libudev
+	--enable-sdl-dlopen
+	--enable-hidapi
+	--enable-hidapi-libusb
+	--enable-sdl2-config
+
+	--enable-directx
+	--enable-render-d3d
+	--enable-wasapi
+
+	--enable-sensor
+	--enable-power
+	--enable-filesystem
+	--enable-threads
+	--enable-timers
+	--enable-file
+	--enable-loadso
+
+	--disable-pulseaudio
+	--disable-jack
+	--disable-oss
+	--disable-esd
+	--disable-nas
+	--disable-sndio
+	--disable-diskaudio
+	--disable-alsatest
+	--disable-esdtest
+
+	--disable-video-wayland
+	--disable-video-cocoa
+	--disable-video-metal
+	--disable-video-vulkan
+	--disable-video-dummy
+
+	--disable-dbus
+	--disable-ime
+	--disable-ibus
+	--disable-fcitx
+	--disable-joystick-mfi"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libSDL2main.a"
+

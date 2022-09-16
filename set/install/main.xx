@@ -1,0 +1,194 @@
+sys/busybox			sysinit			latest
+sys/busybox			std			latest
+sys/oksh			std			latest
+sys/bash			std			latest
+sys/coreutils			std			latest
+text/man-pages			std			latest
+sys/iana-etc			std			latest
+sys/tzdata			std			latest
+lang/bc				std			latest
+
+# archiving programs
+arch/cpio			std			latest
+arch/gzip			std			latest
+arch/bzip2			std			latest
+arch/xz				std			latest
+arch/zstd			std			latest
+arch/tar			std			latest
+arch/zip			std			latest
+arch/unzip			std			latest
+arch/unrar			std			latest
+arch/p7zip			std			latest
+
+# core system tools
+sys/diffutils			std			latest
+sys/findutils			std			latest
+text/nawk			std			latest
+text/grep			std			latest
+text/sed			std			latest
+sys/shadow			std			latest
+sys/util-linux			std			latest
+sys/kmod			std			latest
+text/groff			std			latest
+text/man-db			std			latest
+sys/file			std			latest
+text/less			std			latest
+sys/which			std			latest
+sys/numactl			std			latest
+
+# network tools and libs
+sys/iptables			std			latest
+sys/openssh			std			latest
+net/rsync			std			latest
+net/bind			tools			latest
+net/chrony			std			latest
+net/curl			std			latest
+net/wget			std			latest
+sys/iproute2			std			latest
+
+# dev tools
+dev/git				std			latest
+dev/gcc				std			latest
+dev/flex			std			latest
+dev/m4				std			latest
+dev/make			std			latest
+dev/strace			std			latest
+lang/go				std			latest
+dev/mpc				std			latest
+dev/mpfr			std			latest
+sys/linux			api_headers		latest
+
+# network tools
+net/arping			std			latest
+net/mtr				std			latest
+net/fping			std			latest
+net/tcpdump			std			latest
+
+# system tools
+sys/e2fsprogs			std			latest
+sys/kbd				std			latest
+sys/vlock			std			latest
+sys/syslinux			std			6.04-pre1
+sys/gptfdisk			std			latest
+sys/cryptsetup			std			latest
+sys/dosfstools			std			latest
+sys/eudev			std			latest
+sys/hwids			std			latest
+sys/cronie			std			latest
+sys/lsof			std			latest
+sys/mtools			std			latest
+sys/psmisc			std			latest
+sys/procps-ng			std			latest
+emu/lxc				std			latest
+sys/linux			perf			latest
+
+# monitoring
+sys/sysstat			std			latest
+sys/iotop			std			latest
+
+# uefi
+sys/efitools			std			latest
+sys/efibootmgr			std			latest
+
+# misc
+sys/alsa-utils			std			latest
+sys/ca-certificates		std			latest
+crypt/libressl 			cert_pem		latest
+sys/gnupg			std			latest
+sys/tmux			std			latest
+dev/checksec			std			latest
+sys/acpi			std			latest
+sys/rsyslog			std			latest
+sys/usbutils			std			latest
+sys/linux			std			latest
+sys/unifont			std			latest
+text/vim			std			latest
+
+sys/iw				std			latest
+net/wpa_supplicant		std			latest
+net/hostapd			std			latest
+net/dhcpcd			std			latest
+
+net/wireguard-tools		std			latest
+net/nmap			std			latest
+net/socat			std			latest
+sys/wol				std			latest
+sys/smartmontools		std			latest
+sys/hdparm			std			latest
+sys/flashrom			std			latest
+
+sys/ncdu			std			latest
+sys/vifm			std			latest
+text/task			std			latest
+
+emu/qemu			std			latest
+
+net/transmission		std			latest
+net/geoip			std			latest
+net/geoip-database		std			latest
+sys/android-tools		std			latest
+net/mblaze			std			latest
+
+media/cdrdao			std			latest
+media/cdrtools			std			latest
+media/id3ted			std			latest
+media/sane-backends		std			latest
+
+net/acme-sh			std			latest
+net/aircrack-ng			std			latest
+net/arping			std			latest
+net/arp-scan			std			latest
+net/diod			std			latest
+net/dnsmasq			std			latest
+net/dnstracer			std			latest
+net/fetchmail			std			latest
+net/httpie			std			latest
+net/iftop			std			latest
+net/iodine			std			latest
+net/iperf			std			latest
+net/irssi			std			latest
+net/lftp			std			latest
+net/lorcon			std			latest
+net/macchanger			std			latest
+net/mblaze			std			latest
+net/mitmproxy			std			latest
+net/mktorrent			std			latest
+net/nethogs			std			latest
+net/siege			std			latest
+net/speedtest-cli		std			latest
+net/telnet-bsd			std			latest
+net/tor				std			latest
+net/vnstat			std			latest
+net/whois			std			latest
+
+sys/ethtool			std			latest
+sys/efivar			std			latest
+sys/fdupes			std			latest
+sys/flashrom			std			latest
+sys/hplip			std			latest
+sys/lm-sensors			std			latest
+sys/lshw			std			latest
+sys/mtools			std			latest
+sys/powertop			std			latest
+sys/sl				std			latest
+sys/stress			std			latest
+sys/testdisk			std			latest
+
+text/asciidoc			std			latest
+text/ebook-tools		std			latest
+text/xmlto			std			latest
+
+media/mpv			std			latest		c
+media/fim			std			latest		c
+text/fbpdf			std			latest		c
+text/vim			std			latest		c
+net/w3m				std			latest		c
+net/mutt			std			latest		c
+media/exiftool			std			latest		c
+
+x11/xorg-server			std			latest		c
+
+#emu/dosbox-x			std			latest		c
+#emu/dosbox-staging		std			latest		c
+#emu/mednafen			std			latest		c
+

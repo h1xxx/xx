@@ -1,0 +1,15 @@
+# drivers -> multiple devices (raid, lvm, mapper etc.)
+# ====================================================
+
+CONFIG_MD=y
+CONFIG_MD_AUTODETECT=y
+CONFIG_BLK_DEV_MD=y
+CONFIG_BLK_DEV_DM=y
+CONFIG_BLK_DEV_DM_BUILTIN=y
+CONFIG_DM_CRYPT=y
+
+# possible deps
+#CONFIG_CRYPTO_AUTHENC=y
+#CONFIG_CRYPTO_CBC=y
+#CONFIG_CRYPTO_ESSIV=y
+

@@ -1,0 +1,29 @@
+[ src ]
+
+url = "https://downloads.sourceforge.net/tinyxml/tinyxml_<ver_pkgspec>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i
+		-e 's|^RELEASE_CFLAGS .*|RELEASE_CFLAGS   := ${CFLAGS} -fPIC|g'
+		-e 's|^TINYXML_USE_STL .*|TINYXML_USE_STL := YES|g'
+		Makefile &&
+	patch -p1 -i <prog_dir>/patch/stl.patch"
+
+build = "make &&
+	g++ -shared -o libtinyxml.so.<ver>
+		-Wl,-soname,libtinyxml.so $(ls *.o | grep -v xmltest) &&
+	ln -sv libtinyxml.so.<ver> libtinyxml.so &&
+	ln -sv libtinyxml.so.<ver> libtinyxml.so.0"
+
+pkg_create = "mkdir -p <pkg_dir>/usr/{lib/pkgconfig,include} &&
+	cp -av lib*so*	<pkg_dir>/usr/lib/ &&
+	cp -av *.h	<pkg_dir>/usr/include/ &&
+	cp -av <prog_dir>/files/tinyxml.pc <pkg_dir>/usr/lib/pkgconfig/ &&
+	sed -i 's|__VER__|<ver>|g' <pkg_dir>/usr/lib/pkgconfig/tinyxml.pc"

@@ -1,0 +1,17 @@
+[ src ]
+
+# package disappeared from upstream url, gentoo mirror is used instead
+#url = "https://www.codon.org.uk/~mjg59/<prog>/downloads/<prog>-<ver>.tar.gz"
+url = "https://mirror.dkm.cz/gentoo/distfiles/03/libx86-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "patch -Np0 -i <prog_dir>/patch/libx86-0.99-ifmask.patch"
+build = "make BACKEND=x86emu"
+pkg_create = "make DESTDIR=<pkg_dir> install"

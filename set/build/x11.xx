@@ -1,0 +1,180 @@
+# xorg-server
+media/freetype			std			latest
+x11/xcb-proto			std			latest
+x11/xorg-proto			std			latest
+x11/util-macros			std			latest
+x11/pixman			std			latest
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+x11/libxshmfence		std			latest
+x11/xtrans			std			latest
+x11/libXau			std			latest
+x11/libxcb			std			latest
+x11/libX11			std			latest
+x11/libxkbfile			std			latest
+x11/libfontenc			std			latest
+x11/libXfont2			std			latest
+x11/libXext			std			latest
+x11/libXfixes			std			latest
+x11/libXxf86vm			std			latest
+x11/libXrender			std			latest
+x11/libXrandr			std			latest
+
+# mesa
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+media/mako			std			latest
+lang/ocaml			std			latest
+dev/llvm			std			latest
+media/mesa			x11			latest
+
+dev/glew			std			latest
+media/glu			std			latest
+
+x11/libXi			std			latest
+media/freeglut			std			latest
+media/mesa-demos		std			latest
+
+media/libepoxy			std			latest
+x11/xorg-server			std			latest
+
+# x11 drivers
+sys/mtdev			std			latest
+sys/libevdev			std			latest
+sys/libinput			std			latest
+x11/xf86-input-libinput		std			latest
+x11/xf86-video-intel		std			latest
+x11/xf86-video-nouveau		std			latest
+x11/xf86-video-amdgpu		std			latest
+
+# fonts
+dev/glib			std			latest
+dev/gettext			std			latest
+media/fontforge			std			latest
+media/libpng			std			latest
+media/fontconfig		std			latest
+libperl/Font-TTF		std			latest
+libperl/IO-String		std			latest
+media/dejavu			std			latest
+media/fonttools			std			latest
+media/liberation-fonts		std			latest
+#media-fonts/droid		std			latest
+#media-fonts/anonymous-pro	std			latest
+#media-fonts/fira		std			latest
+#media-fonts/fira-code		std			latest
+#media-fonts/fontawesome	std			latest
+#media-fonts/hack		std			latest
+#media-fonts/inconsolata	std			latest
+#media-fonts/lfpfonts-fix	std			latest
+#media-fonts/proggy-fonts	std			latest
+#media-fonts/stix-fonts		std			latest
+#media-fonts/terminus-font	std			latest
+#media-fonts/ubuntu-font-family	std			latest
+
+# window manager
+x11/libXft			std			latest
+x11/libXinerama			std			latest
+x11/st				std			latest
+x11/dwm				std			latest
+
+# x11 apps
+x11/libICE			std			latest
+x11/libSM			std			latest
+x11/libXt			std			latest
+x11/libXmu			std			latest
+x11/xauth			std			latest
+x11/xinit			std			latest
+x11/xkbcomp			std			latest
+x11/xrandr			std			latest
+x11/xkeyboard-config		std			latest
+
+# gtk
+sys/dbus			std			latest
+dev/gobject-introspection	std			latest
+x11/atk				std			latest
+media/harfbuzz			std			latest
+text/fribidi			std			latest
+x11/cairo			std			latest
+x11/pango			std			latest
+arch/unzip			std			latest
+text/docbook-xml		std			4.1.2
+text/docbook-xml		std			4.2
+text/docbook-xml		std			4.3
+text/docbook-xml		std			4.4
+text/docbook-xml		std			4.5
+text/catalog-xml		std			latest
+text/docbook-xsl		std			latest
+text/libxslt			std			latest
+text/xmlto			std			latest
+dev/itstool			std			latest
+x11/shared-mime-info		std			latest
+x11/gdk-pixbuf			std			latest
+x11/libXi			std			latest
+x11/libXtst			std			latest
+x11/at-spi2-core		std			latest
+x11/at-spi2-atk			std			latest
+x11/adwaita-icon-theme		std			latest
+x11/hicolor-icon-theme		std			latest
+x11/gtk+			std			latest
+
+x11/openbox			std			latest
+
+# alsa for rdp and vnc		std			latest
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+
+# spice client
+dev/six				std			latest
+text/pyparsing			std			latest
+media/libjpeg-turbo		std			latest
+media/opus			std			latest
+media/gstreamer			std			latest
+media/gst-plugins-base		std			latest
+media/gst-plugins-good		std			latest
+media/gst-plugins-bad		std			latest
+dev/json-glib			std			latest
+emu/spice-protocol		std			latest
+emu/spice-gtk			std			latest
+
+# vnc clients
+###########crypt/p11-kit		just take a look at build and rem this
+crypt/libsodium			std			latest
+net/glib-networking		std			latest
+net/libpsl			std			latest
+net/libsoup			std			latest
+media/lame			std			latest
+net/freerdp			std			latest
+net/remmina			std			latest
+
+media/libpng			std			latest
+x11/libXi			std			latest
+x11/fltk			std			latest
+
+sys/pam				std			latest
+net/tigervnc			std			latest
+
+
+# games
+media/libsdl2			x11			latest
+emu/dosbox-x			x11			latest
+
+
+
+
+#net-misc/vncsnapshot
+#net-misc/vncrec
+
+########
+
+# pixbuf with svg
+#x11-misc/slock
+#x11-misc/unclutter
+
+#x11-misc/unclutter		std			latest
+#slock				std			latest
+#media-gfx/feh			std			latest
+#app-text/zathura		std			latest
+#app-text/zathura-cb		std			latest
+#app-text/zathura-djvu		std			latest
+#app-text/zathura-pdf-mupdf	std			latest

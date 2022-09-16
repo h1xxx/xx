@@ -1,0 +1,17 @@
+[ src ]
+
+url = "https://github.com/liberationfonts/liberation-fonts/archive/<ver>/liberation-fonts-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make build"
+pkg_create = "mkdir -p <pkg_dir>/usr/share/fonts/liberation-fonts &&
+	cp -r liberation-fonts-ttf-<ver>/*.ttf
+		<pkg_dir>/usr/share/fonts/liberation-fonts/"

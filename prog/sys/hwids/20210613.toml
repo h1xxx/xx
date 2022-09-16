@@ -1,0 +1,16 @@
+[ src ]
+
+url = "https://github.com/gentoo/hwids/archive/refs/tags/hwids-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sed -i 's|udevadm hwdb|# udevadm hwdb|g' Makefile"
+build = ""
+pkg_create = "make DESTDIR=<pkg_dir> install-base &&
+	make DESTDIR=<pkg_dir> install-hwdb"

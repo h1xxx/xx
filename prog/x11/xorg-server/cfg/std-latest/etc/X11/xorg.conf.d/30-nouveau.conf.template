@@ -1,0 +1,51 @@
+Section "Screen"
+	Identifier "screen1"
+	Device "nvidia card"
+	Monitor "HDMI-1"
+EndSection
+
+Section "Device"
+	Identifier	"nvidia card"
+	Driver		"nouveau"
+	Option		"TearFree"		"true"
+	Option		"TripleBuffer"		"true"
+	Option		"DRI"			"false"
+EndSection
+
+Section "Monitor"
+	Identifier	"HDMI-1"
+	VertRefresh	120
+EndSection
+
+Section "Monitor"
+	Identifier	"VGA-1"
+	Option		"Ignore"		"1"
+EndSection
+
+Section "Monitor"
+	Identifier	"DVI-D-1"
+	Option		"Ignore"		"1"
+EndSection
+
+Section "Extensions"
+	Option 		"Composite"		"Disable"
+EndSection
+
+# other options:
+#Section "Screen"
+#	...
+
+#	SubSection "Display"
+#		Depth		"24"
+#		Modes		"1920x1080_119.89"
+#	EndSubSection
+#	DefaultDepth 24
+#EndSection
+
+#Section "Monitor"
+#	...
+#	Mode		1920x1080
+#	Modeline	"1920x1080_120.00"	369.50  1920 2080 2288 2656  1080 1083 1088 1160 -hsync +vsync
+#	Option		"PreferredMode"		"1920x1080_120.00"
+#EndSection
+

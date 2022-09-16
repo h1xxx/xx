@@ -1,0 +1,15 @@
+# audio libraries
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+media/flac			std			latest
+media/libogg			std			latest
+media/libvorbis			std			latest
+media/opus			std			latest
+#media/lame			std			latest
+#media/wavpack			std			latest
+
+# utils
+dev/boost			std			latest
+media/snapcast			std			latest
+

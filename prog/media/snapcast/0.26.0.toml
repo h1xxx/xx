@@ -1,0 +1,29 @@
+[ src ]
+
+url = "https://github.com/badaix/snapcast/archive/refs/tags/v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=/usr/lib
+	-D CMAKE_INSTALL_SYSCONFDIR=/etc
+	-D CMAKE_BUILD_TYPE='Release'
+	-D BUILD_STATIC_LIBS=OFF
+	-D BUILD_TESTS=OFF
+	-D BUILD_WITH_AVAHI=OFF
+	-D BUILD_WITH_EXPAT=OFF
+	-D BUILD_WITH_PULSE=OFF
+	-D BUILD_WITH_TREMOR=OFF
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{pixmaps,snapserver}/"

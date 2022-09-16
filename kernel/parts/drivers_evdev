@@ -1,0 +1,6 @@
+# drivers -> event interface (evdev)
+# ==================================
+
+# needed by xorg
+CONFIG_INPUT_EVDEV=y
+

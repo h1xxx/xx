@@ -1,0 +1,19 @@
+# font/text libraries
+media/freetype			std			latest
+
+# image libraries
+media/libwebp			std			latest
+media/libraw			std			latest
+media/giflib			std			latest
+media/jbig2dec			std			latest
+media/libpng			std			latest
+media/libjpeg-turbo		std			latest
+media/openjpeg			std			latest
+media/tiff			std			latest
+media/imlib2			std			latest
+
+# misc libraries
+dev/boehm-gc			std			latest
+
+# utils
+net/w3m				std			latest

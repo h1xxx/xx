@@ -1,0 +1,5 @@
+image/gif; mpv --vo=drm --loop '%s'
+image/*; fim -a '%s'
+video/*; mpv --vo=drm --loop '%s'
+audio/*; mpv '%s'
+

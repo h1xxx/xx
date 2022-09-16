@@ -1,0 +1,83 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/binutils/binutils-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build && cd build && ../configure
+	--prefix=/usr
+	--enable-gold
+	--enable-ld=default
+	--enable-plugins
+	--enable-shared
+	--disable-nls
+	--disable-werror
+	--enable-64-bit-bfd
+	--with-system-zlib"
+
+build = "cd build && make tooldir=/usr"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a &&
+	rm -r <pkg_dir>/usr/share/info/"
+
+
+
+[ init_1_cross ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build && cd build && ../configure
+	--prefix=/tools
+	--with-sysroot=<root_dir>
+	--target=${TARGET_TRI}
+	--disable-nls
+	--disable-werror"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+
+
+
+[ init_2_cross ]
+
+env = [ "CFLAGS=", "LDFLAGS=", "MAKEFLAGS=j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build && cd build && ../configure
+	--prefix=/usr
+	--build=$(../config.guess)
+	--host=${TARGET_TRI}
+	--disable-nls
+	--enable-shared
+	--disable-werror
+	--disable-nls
+	--enable-64-bit-bfd"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build && cd build && ../configure
+	--prefix=/usr
+	--enable-gold
+	--enable-ld=default
+	--enable-plugins
+	--enable-shared
+	--disable-nls
+	--disable-werror
+	--enable-64-bit-bfd
+	--with-system-zlib"
+
+build = "cd build && make tooldir=/usr"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a"

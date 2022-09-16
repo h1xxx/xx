@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://github.com/numactl/numactl/releases/download/v<ver>/numactl-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -rf <pkg_dir>/usr/share/man/man2"

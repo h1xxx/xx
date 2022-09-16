@@ -1,0 +1,16 @@
+[ src ]
+
+url = "https://github.com/ninja-build/ninja/archive/v<ver>/ninja-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "python3 configure.py --bootstrap"
+pkg_create = "mkdir -pv <pkg_dir>/usr/bin/ &&
+	install -vm755 ninja <pkg_dir>/usr/bin/"

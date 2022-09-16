@@ -1,0 +1,9 @@
+# for --enable-docs
+#libperl/XML-NamespaceSupport    std                     latest
+#libperl/XML-SAX-Base            std                     latest
+#libperl/XML-SAX                 std                     latest
+#libperl/XML-SAX-Expat           std                     latest
+#text/docbook2x
+
+sys/libcap			std			latest
+emu/lxc				std			latest

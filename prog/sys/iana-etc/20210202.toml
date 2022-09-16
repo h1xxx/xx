@@ -1,0 +1,25 @@
+[ src ]
+
+url = "https://github.com/Mic92/<prog>/releases/download/<ver>/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = ""
+pkg_create = "mkdir -v <pkg_dir>/etc && cp -v services protocols <pkg_dir>/etc"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = ""
+pkg_create = "mkdir -v <pkg_dir>/etc && cp -v services protocols <pkg_dir>/etc"

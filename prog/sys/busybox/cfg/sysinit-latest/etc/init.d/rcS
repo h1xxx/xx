@@ -1,0 +1,32 @@
+#!/bin/busybox sh
+
+# init start script, depends only on /bin/busybox
+#
+# optional dependencies (detected automatically):
+#   - loadkeys from sys/kbd
+#   - setfont from sys/kbd
+#   - setterm from sys/util-linux
+#   - zoneinfo from sys/tzdata
+#   - tput from dev/ncurses
+#   - any services defined in SERVICES in rc.conf
+#   - any commands defined in NET_CMD in rc.conf
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+start_dt="$(date +'%Y-%m-%d %H:%M:%S')"
+
+${BB} mount /tmp || err "can't mount /tmp"
+run mount
+run udevd
+run config
+run net
+run start
+
+${BB} printf '%80s\n' | ${BB} tr " " "=" >> /var/log/init.log
+printf '%s\n' "init start: ${start_dt}" >> /var/log/init.log
+${BB} dmesg >> /var/log/init.log
+${BB} cat /tmp/init.log >> /var/log/init.log
+${BB} rm /tmp/init.log
+${BB} printf '%80s\n' | ${BB} tr " " "-" >> /var/log/init.log
+

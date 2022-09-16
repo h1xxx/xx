@@ -1,0 +1,20 @@
+# filesystems
+# ===========
+
+# todo: verify
+CONFIG_VALIDATE_FS_PARSER=y
+
+# enable filesystem export operations for block io
+CONFIG_EXPORTFS_BLOCK_OPS=y
+
+# inotify support for userspace
+CONFIG_INOTIFY_USER=y
+
+# shows only options for nfs and 9p, doesn't add kernel code
+CONFIG_NETWORK_FILESYSTEMS=y
+
+# possible deps
+#CONFIG_FILE_LOCKING=y
+#CONFIG_FSNOTIFY=y
+#CONFIG_INOTIFY_USER=y
+

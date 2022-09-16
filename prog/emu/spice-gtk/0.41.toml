@@ -1,0 +1,20 @@
+[ src ]
+
+url = "https://www.spice-space.org/download/gtk/spice-gtk-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "meson --prefix=/usr --libdir=lib --buildtype=release
+	-D opus=enabled
+	-D introspection=enabled
+	-D gtk=enabled
+	-D celt051=disabled build"
+
+build = "ninja -C build all"
+pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"

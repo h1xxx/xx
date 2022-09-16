@@ -1,0 +1,24 @@
+[ src ]
+
+url = "https://xorg.freedesktop.org/releases/individual/lib/pixman-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && meson
+	--prefix=/usr
+	-D loongson-mmi=disabled
+	-D vmx=disabled
+	-D arm-simd=disabled
+	-D neon=disabled
+	-D iwmmxt=disabled
+	-D mips-dspr2=disabled
+	-D gtk=disabled"
+
+build = "cd build && ninja"
+pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"

@@ -1,0 +1,13 @@
+# audio libraries
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+media/libao			std			latest
+media/libogg			std			latest
+media/libvorbis			std			latest
+media/lame			std			latest
+
+# cd/dvd/bluray utils
+media/cdrtools			std			latest
+media/cdrdao			std			latest
+

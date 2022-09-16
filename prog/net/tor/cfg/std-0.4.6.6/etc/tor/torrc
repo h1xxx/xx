@@ -1,0 +1,15 @@
+#
+# Minimal torrc so tor will work out of the box
+#
+User			tor
+PIDFile			/run/tor/tor.pid
+Log 			notice file /var/log/tor.log
+DataDirectory		/var/lib/tor/data
+
+DisableAllSwap		1
+RunAsDaemon		1
+Sandbox			1
+
+## Torified DNS
+DNSPort			127.0.0.1:53
+AutomapHostsOnResolve	1

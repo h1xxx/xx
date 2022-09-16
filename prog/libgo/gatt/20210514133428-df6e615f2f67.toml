@@ -1,0 +1,16 @@
+[ src ]
+
+url = "github.com/bettercap/gatt"
+src_type = "go-get"
+src_dirname = ""
+
+
+
+[ std ]
+
+env = []
+prepare = "mkdir -p <pkg_dir>/usr/lib/go-pkg/"
+configure = ""
+build = ""
+pkg_create = "cp -a <src_dir>/<ver>/* <pkg_dir>/usr/lib/go-pkg/ &&
+	chmod -R u+w <pkg_dir>/ <src_dir>/"

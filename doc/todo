@@ -1,0 +1,387 @@
+design methods around worldT struct
+move genC params into worldT
+rename pkg to p, pkgC to pc, and world to w
+
+add correct cfg perms during deployment
+deployCfg and deployPkg may use install with perms per file instead of cp 
+make sure that suid bits are cleared
+
+save xx command config to a file and use it for the next run on the root dir
+if the supplied parameters are different then, use a special force param to update the config
+
+force install of one pkg from set doesn't work
+
+move /home/xx/misc/lxc_config to .go
+rename misc to examples
+
+fixing version may be only for one package if no set file is used, rn all
+packages have the version supplied in cli
+
+make /etc/init.d scripts more reusable
+
+split buildInstPkgs to build and InstPkgs
+
+replace walk with faster walkDir
+
+if sha256.log missing then create it, e.g. for sys/mime-types
+download sys/mime-types from somewhere, rn it's hardcoded in the pkg
+
+add a check in toml parsing to see if all <var_var> variables are converted
+
+in .xx files allow spaces
+
+force during install not working
+
+speed up powering down by checking if all processes are killed
+
+create a dir with links to all config files in sysconf 
+
+deploy default config files to usr//cnt/./home do use when no /var/lib/.
+
+cntrun: if cnt is running attach, instead of execute
+
+w3m should also start tor and privoxy maybe? depends on cpu cycles needed for
+that
+
+review file capabilities in all packages
+
+when building or installing a single package add an option for pkg set
+
+add .config as log/config-help
+
+remove /sbin and /usr/sbin, keep only static bins in /bin, shared in /usr/bin
+
+rename w3mhelp-w3m.html to w3mhelp-w3m_en.html
+
+fine tune prog/sys/shadow/cfg/std-latest/etc/perms, drop uid 100000 for
+containers in favour of fixed user(s)
+limit perms in prog/sys/eudev/cfg/std-latest/etc/udev/rules.d/90-custom.rules
+make tty and console permissions more strict
+run containers as user cnt
+	lxc.idmap = u 0 100000 1002
+	lxc.idmap = u 1002 1002 1
+	lxc.idmap = u 1003 101003 64533
+	# map input, video and audio groups when needed
+	lxc.idmap = g 0 100000 65536
+	lxc.init.uid = 1002
+	lxc.init.gid = 0
+make cnt/files/* be readable only by group cnt
+limit other perms for input,video,audio groups in udev
+
+'./xx/xx i -t /mnt/xx -c conf/x200/ sys/oksh' on almost empty dir breaks the
+permissions deployment
+
+rm ./prog/arch/xz/pkg/init-5.2.5-00/usr/share/locale/it/LC_MESSAGES/xz.mo
+investigate why there is no /usr/share/locale/en_US.utf8/LC_MESSAGES/libc.mo
+
+deploying base twice fails container test
+
+mount /dev/, /proc/cgroups, /run/* with 750
+
+log build times
+
+fine tune /etc/diod.conf and /etc/init.d/diod.conf
+
+kernel - add CONFIG_INIT_STACK_ALL_ZERO
+
+rename init with bootstrap when bootstrapping
+
+lxc manpages
+
+docs: config precedence
+
+compare kernel settings with sabotage and oasis
+
+add hash files to make integrity check clean for:
+/usr/lib/libgcc_s.so
+/usr/lib/libgomp.so
+/usr/lib/libstdc++.so
+linux/src
+also make sure that these packages are also bumped for gcc ver bump
+
+add --buildtype=release to all meson configure commands 
+
+see if fontconfig is using harfbuzz in media.xx build
+
+set rpath to /usr/lib/
+
+trigger nvidia rebuild when new kernel is available
+
+if installation is only for permissions then also check for existance of files
+from the pkg in the system from the set file, highlight untracked files
+
+when downloading from gentoo, also try pkg_name e.g. exiftool from libc_media
+or maybe just add linuxconsole mirror? dunno
+
+use pkgsrc in a container build initial toolchain for pkgsrc
+and then to get unpackaged software
+
+add a check to dev_install script if initramfs is included in system cfg
+
+create a process to update pkgs versions
+	find cves for current versions
+	find new commits for git pkgs
+	update patch dir versions as well
+	update system config dir versions, even when the first time user forgot
+	copy over cfg/<set>-<old-ver> too
+	update also gcc libraries together with gcc version via mapping to gcc
+	parse vulnerabilities from
+	http://cdn.netbsd.org/pub/NetBSD/packages/vulns/pkg-vulnerabilities.bz2
+	https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-2021.json.gz
+	https://nvd.nist.gov/feeds/json/cpematch/1.0/nvdcpematch-1.0.json.gz
+
+script to test deps and lxc
+test lxc config by creating container with busybox and testing ls output
+test as xx user and as root
+
+add lib name to infodeps for shared libs
+
+add description to toml files
+
+when building individual packages make sure that base dir is there
+
+make coreutils not depend on gmp, gpgme not depend on gcc (languages='') etc
+
+in 'make init' add code that will enable to rerun it in case of errors, maybe
+split it in 3 distinct makefile sections?
+
+see what other libs/bins depend on libgcc++, apart from gmp
+
+try qt5 and qutebrowser
+
+when installing with config check if config dir structure is correct
+
+verify if config-help is correct after build in pkg logs
+
+diff - don't print dir summary if nothing changed, unless verbose flag is set
+diff add a flag to also list changed files, new files and removed files
+diff add a diff of changed text files
+removed files do not show up, but new files do
+abreviate to old(prev) new(curr) mod(changed)
+add diff column in file count and size
+add section 'files moved' based on hash
+allow 32 chars for file names
+print ver => ver a little bit closer to the left
+add dir header on top left
+don't print lines that change every build:
+for meson:
+-  Source dir /tmp/mesa-21.2.1-1436020850/mesa-21.2.1
++  Source dir /tmp/mesa-21.2.1-2745965901/mesa-21.2.1
+for cmake:
+-  test data dir:        /tmp/poppler-21.07.0-1214447559/poppler-21.07.0/../test
++  test data dir:        /tmp/poppler-21.07.0-148113440/poppler-21.07.0/../test
+ 
+ 
+the wrongly built package is not deleted before pressAkey func
+
+automate getting dependency versions from git repositories for go programs,
+e.g. bettercap; also improve go get to use this syntax:
+go get github.com/bettercap/gatt@df6e615f2f67
+
+create a check:
+if all base packages are built and all the install packages are built
+if compilation order is in line with dependencies
+check if files match sha256 and are not missing
+add removal of files leftover from prvious deployments on xx system
+if any files are duplicated across all packages
+check if there are no files in /lib64 and /usr/lib64 and /usr/local
+check for duplicated libnames
+check if url in toml contains <ver>
+list which libraries are not used by other programs
+check if system cfg dir has ower perms and linux dirs for valid pkgs
+check if all files from system config dir are in the system
+check if cfg dir has correct format (pkgset-ver)
+check if files listed in sha256.log are accurate
+check for empty or with error config-help.log
+check for unique prog names
+check if <ver> is in url
+
+bzip all the man files `bzip2 -9 <pkg_path>/usr/share/man/*/* ||:`
+if compressed, ie not text, leave
+if man is a link, recreate a link to bzipped file
+
+add maintenance - tar.zst old pkgs and backup src
+
+add versioning and releases for xx cmd
+
+add gpg/sha512 check for source files in source acion; store them in a file
+
+try qemu on console with sdl
+qemu type server without curses,virtfs,libusb etc.
+qemu try to build with --enable-pie and safe-stack with llvm/clang
+
+search for http:// and ftp:// and verify signatures
+
+hplip - maybe all binaries can be disabled, leaving just ppd files
+
+try do build fbpdf with mupdf(media-libs/libglvnd media-libs/freeglut),
+requires x11 probably to build gxl in libglvnd needed for mupdf-threads
+
+list static binaries need to be recompiled because of bdeps change, in a log
+list versions of libs used
+
+create install/update log with all files changed or named
+
+try to make usb device and qemu image without root in a container
+
+choose cpu flags for modern cpus and store them the same way as in kernel setup
+or maybe in rc.conf or smth
+
+benchmark --enable-stack-protector=all in glibc
+
+retry 3 times when downloading from src
+put all the downloaded souce code on linux console
+if the download fails after gentoo donwload packages from linux console
+add a flag to disable this fallback
+
+add static pie building for static bins (gcc --no-dynamic-linker?)
+
+gcc creates new packages that are not deployed when new version is
+available - e.g. libc_misc/gcc-libgomp should be checked if there is no new ver
+
+make static programs for initramfs
+
+split libraries by default from programs to separate pkgs when toml specifies this
+
+install with force installs dependencies multiple times (coz force...)
+
+start programs when running xorg instead of dwm:
+dolphin
+pcsx2
+redream via wine
+games via wine
+firefox from pacman
+
+verify if downloading the source for dev-go/bettercap and dev-go/gatt is ok
+
+run http://www.ezbsystems.com/ultraiso/ with vine to convert nrg to bin/cue
+
+disable static libs in app-crypt/argon2
+sed -i -e '/LIBRARIES =/s/\$(LIB_ST)//' Makefile
+
+speed up setting system permissions; run multiple processes in parallel
+
+# tests in vm
+run update on previous vm state
+make iso9660 filesystem and mount it
+cryptsetup, use luks1 and luks2+argon2di
+make ext4+fat32 filesystem with gpt table, encrypt, open, write, decrypt, read
+run lsof and count files
+ssh into the machine
+generate ssh keys
+encrypt gpg file with password and a key from keychain, generate a key, decrypt
+rsync some files
+run a dhcp client in test mode to see the reply
+run xx 1 pkg build and download some file inside lxc container
+run xx base rebuild
+tcpdump traffic from iface and read it
+cmark conversion
+check if cron is running a script writing echo to /tmp
+eudev device detection
+checksec
+openssl verify some www certs
+verify checksec script from source files:
+openssl dgst -sha256 -verify checksec.pub -signature checksec.sig checksec
+busybox ash and ksh 'ls / /usr /var'
+test a machine as a router and vm server
+gcc, binutils and glibc tests
+play mpv, encode ffmpgeg, view fim and fbpdf in a container
+youtube-dl in a container
+download stuff with https, check different ca certs, openssl client_s...
+test the bootstrap process from raw debian and arch installs
+test setting permissions, also for perms.d
+start startx in a container
+test spicy and vncviewer to qemu
+
+limit wpa_supplicant priviliges via capabilities, see REAMDE in src
+
+lxc: check adding lxc.apparmor.profile= and lxc.log.file and lxc.log.level
+
+check https://man.archlinux.org/man/setpriv.1.en
+
+don't create /bin and /sbin and /usr/lib64 and /lib64 and /lib when installing
+
+harden containers and system:
+set vlans for containers
+seccomp
+apparmor
+investigate all the cgroups used
+drop suid from lxc-user-nic by creating fixed iface
+
+try gcc without mpc, mpfr  and benchmark results
+
+fix harmless Extraction failed error when building nvidia
+
+kernel:
+add descriptions and config paths in parts from kconfig
+use ACPI_TINY_POWER_BUTTON instead of acpi daemon in vms
+set CONFIG_WERROR
+add a diff for kernel config
+log kernel config
+add CONFIG_X86_CPUID
+check CONFIG_X86_PAT
+check CMDLINE_BOOL
+check CONFIG_INTEL_IDLE
+check CONFIG_X86_SYSFB=y
+add CONFIG_ISO9660_FS
+
+implement checks for kernel from portage, e.g. for lxc:
+*   CONFIG_CPUSETS:     is not set when it should be.
+*   CONFIG_MACVLAN: needed for internal (inter-container) networking
+*   CONFIG_POSIX_MQUEUE: needed for lxc-execute command
+*   CONFIG_USER_NS:     is not set when it should be.
+*   CONFIG_VETH: needed for internal (host-to-container) networking
+
+add  pacman in a cnt, requires libarchive
+https://sources.archlinux.org/other/pacman/pacman-6.0.1.tar.xz
+
+review lfs init scripts
+
+config check:
+dhcpcd requires udev, so rc.conf must have server=false
+
+dev_install:
+make 'syslinux --directory syslinux --install' exec in container
+make 'extlinux --install' exec in container
+copy /usr/share/syslinux files from /home/xx not root
+maybe just export LD_LIBRARY will suffice instead of container?
+also maybe detect syslinux path from /home/xx also for gptmbr.bin
+
+replace toml with conf, drop toml parser as a dep
+
+on toml config change rebuild the package
+
+in case of gtk issues
++++ b/prog/x11/shared-mime-info/2.1.toml
+@@ -13,4 +13,5 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+ configure = "meson --prefix=/usr --libdir=lib --buildtype=release build"
+ build = "ninja -C build all"
+ install = "DESTDIR=<pkg_path> ninja -C build install"
+-deploy = "/usr/bin/update-mime-database /usr/share/mime"
++deploy = "LD_LIBRARY_PATH=<deploy_dir>/lib
++       <deploy_dir>/usr/bin/update-mime-database <deploy_dir>/usr/share/mime"
+gtk+
+-deploy = "gtk-query-immodules-3.0 --update-cache &&
+-       glib-compile-schemas /usr/share/glib-2.0/schemas"
++deploy = "> <deploy_dir>/usr/lib/gtk-3.0/3.0.0/immodules.cache &&
++       <deploy_dir>/usr/bin/glib-compile-schemas
++
+gdk-pixbuf-query-loaders --update-cache
+/usr/bin/update-mime-database /usr/share/mime
+gtk-query-immodules-3.0 --update-cache
+
+review security mitigations:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/arch/x86/Kconfig?id=v5.15.57&id2=v5.15.56
+
+/home/xx/prog/net/w3m/cfg/std-latest/var/lib/w3m/bookmark.html should be placed
+somewhere where w3m can read it
+
+build check if all deps and pkgs are available at the beginning of processing
+install check if all deps and pkgs are available at the beginning of process
+check if two files exist in the same loc during install
+./xx/xx b set/build/media_video results in panic coz file not exists, aslo when
+package doesn't exist
+
+find full prog name based on name alone and also with prog
+
+cmd.log doesn't include env vars values

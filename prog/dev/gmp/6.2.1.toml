@@ -1,0 +1,46 @@
+[ src ]
+
+url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+# cp config...: produce generic libraries, not optimized for the host cpu
+configure = "cp -v configfsf.guess config.guess &&
+	cp -v configfsf.sub config.sub &&
+	./configure
+	--prefix=/usr
+	--disable-cxx
+	--disable-static
+	--build=x86_64-unknown-linux-gnu
+	--docdir=/usr/share/doc/gmp"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/"
+
+
+
+[ init ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+# cp config...: produce generic libraries, not optimized for the host cpu
+configure = "cp -v configfsf.guess config.guess &&
+	cp -v configfsf.sub config.sub &&
+	./configure
+	--prefix=/usr
+	--disable-cxx
+	--disable-static
+	--build=x86_64-unknown-linux-gnu
+	--docdir=/usr/share/doc/gmp"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

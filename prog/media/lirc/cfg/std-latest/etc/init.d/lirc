@@ -1,0 +1,110 @@
+#!/bin/busybox sh
+
+bin='/usr/sbin/lircd'
+opts=''
+
+sig_stop='TERM'
+sig_reload='HUP'
+write_pid='n'
+
+name="$(basename "${0}")"
+pidfile="/run/pid/${name}.pid"
+
+case "${1}" in
+start)
+        printf '%s' "Starting ${name}... "
+
+        if [ -f "${pidfile}" ]; then
+		printf '%s' 'error: pid file exists'
+		pid="$(cat "${pidfile}")"
+		if [ -d "/proc/${pid}" ] && [ -n "${pid}" ]; then
+			printf '%s\n' ', process running'
+		else
+			printf '%s\n' ', process not running'
+		fi
+		exit 1
+	fi
+
+	exec ${bin} ${opts} > /dev/null 2>&1 &
+        pid="$(printf "${!}")"
+	sleep 0.2
+
+        if [ -n "${pid}" ] && [ "${write_pid}" == 'y' ]; then
+		printf '%s' "${pid}" > "${pidfile}"
+	fi
+
+        if [ -f "${pidfile}" ]; then
+		pid="$(cat "${pidfile}")"
+		if [ -d "/proc/${pid}" ] && [ -n "${pid}" ]; then
+			printf '%s\n' 'ok'
+		else
+			printf '%s\n' 'error'
+			exit 1
+		fi
+	else
+		printf '%s\n' 'error'
+		exit 1
+	fi
+	;;
+stop)
+	printf '%s' "Stopping ${name}... "
+
+	if [ -f "${pidfile}" ]; then
+		pid="$(cat "${pidfile}")"
+		if [ ! -d "/proc/${pid}" ] || [ -z "${pid}" ]; then
+			printf '%s\n' 'error: process not found'
+			rm -f "${pidfile}"
+			exit 1
+		fi
+		if kill -s "${sig_stop}" "${pid}"; then
+			printf '%s\n' 'stopped'
+			rm -f "${pidfile}"
+		else
+			printf '%s\n' 'error when sending signal'
+		fi
+	else
+		printf '%s\n' 'error: pid file not found'
+	fi
+	;;
+restart)
+        "${0}" stop
+        "${0}" start
+	;;
+reload)
+	printf '%s' "Reloading ${name}... "
+
+	if [ -f "${pidfile}" ]; then
+		pid="$(cat "${pidfile}")"
+		if [ ! -d "/proc/${pid}" ] || [ -z "${pid}" ]; then
+			printf '%s\n' 'error: process not found'
+			exit 1
+		fi
+		if kill -s "${sig_reload}" "${pid}"; then
+			printf '%s\n' 'ok'
+		else
+			printf '%s\n' 'error when sending signal'
+		fi
+	else
+		printf '%s\n' 'error: pid file not found'
+	fi
+	;;
+status)
+        printf '%s' "Checking ${name}... "
+	if [ -f "${pidfile}" ]; then
+		pid="$(cat "${pidfile}")"
+		if [ -d "/proc/${pid}" ] && [ -n "${pid}" ]; then
+			echo 'running'
+		else
+			printf '%s\n' 'not running, pid file exists'
+		fi
+	else
+		printf '%s\n' 'not running'
+	fi
+	;;
+*)
+        echo "Usage: ${0} {start|stop|restart|reload|status}"
+        exit 1
+esac
+
+exit $?
+

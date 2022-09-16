@@ -1,0 +1,59 @@
+# initial toolchain built from host OS
+
+# tools built using libc and compiler from the host system
+dev/binutils			init_1_cross		latest
+dev/gcc				init_1_cross		latest
+sys/linux			init_api_headers_cross	latest
+dev/glibc			init_cross		latest
+dev/glibc			init_headers_cross	latest
+dev/gcc				init_libstdcpp_1_cross	latest
+dev/m4				init_cross		latest
+sys/bash			init_cross		latest
+sys/oksh			init_cross		latest
+sys/coreutils			init_cross		latest
+sys/diffutils			init_cross		latest
+sys/file			init_cross		latest
+sys/findutils			init_cross		latest
+text/gawk			init_cross		latest
+text/grep			init_cross		latest
+arch/gzip			init_cross		latest
+dev/make			init_cross		latest
+dev/patch			init_cross		latest
+text/sed			init_cross		latest
+arch/tar			init_cross		latest
+arch/xz				init_cross		latest
+arch/zstd			init_cross		latest
+dev/binutils			init_2_cross		latest
+dev/gcc				init_2_cross		latest
+
+# here starts the build in an isolated container
+dev/gcc				init_libstdcpp_2	latest
+dev/bison			init			latest
+lang/perl			init			latest
+lang/python			init			latest
+sys/shadow			init			latest
+sys/util-linux			init			latest
+text/man-pages			init			latest
+sys/iana-etc			init			latest
+dev/glibc			init			latest
+sys/tzdata			init			latest
+arch/zlib			init			latest
+arch/bzip2			init			latest
+arch/xz				init			latest
+arch/zstd			init			latest
+sys/file			init			latest
+dev/readline			init			latest
+dev/m4				init			latest
+lang/bc				init			latest
+dev/flex			init			latest
+lang/tcl			init			latest
+dev/expect			init			latest
+dev/dejagnu			init			latest
+text/texinfo			init			latest
+dev/binutils			init			latest
+dev/gmp				init			latest
+dev/mpfr			init			latest
+dev/mpc				init			latest
+dev/gcc				init			latest
+sys/bash			init			latest
+lang/go				init			latest

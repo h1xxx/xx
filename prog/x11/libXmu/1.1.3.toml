@@ -1,0 +1,21 @@
+[ src ]
+
+url = "https://xorg.freedesktop.org/releases/individual/lib/libXmu-<ver>.tar.bz2"
+src_type = "tar"
+src_dirname = "libXmu-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/"

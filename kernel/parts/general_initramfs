@@ -1,0 +1,11 @@
+# general -> initramfs
+# ====================
+
+CONFIG_BLK_DEV_INITRD=y
+CONFIG_RD_ZSTD=y
+CONFIG_ACPI_TABLE_UPGRADE=y
+
+# possible deps
+#CONFIG_INITRAMFS_SOURCE=""
+#CONFIG_ZLIB_INFLATE=y
+

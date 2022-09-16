@@ -1,0 +1,40 @@
+[ src ]
+
+url = "https://github.com/mpv-player/mpv/archive/refs/tags/v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "waf configure --prefix=/usr
+	--confdir=/etc/mpv
+	--lua=52
+	--enable-lua
+	--enable-cdda
+	--enable-dvb
+	--enable-dvdnav
+	--enable-libmpv-shared
+	--enable-drm
+	--enable-vaapi
+	--enable-vaapi-drm
+	--disable-build-date
+	--disable-debug-build
+	--disable-pulse
+	--disable-jack
+	--disable-sdl2
+	--disable-sdl2-video
+	--disable-sdl2-audio
+	--disable-wayland
+	--disable-x11
+	--disable-xv
+	--disable-gl-cocoa
+	--disable-egl-x11"
+
+build = "waf build"
+pkg_create = "waf install --destdir=<pkg_dir> &&
+	install -m0644 TOOLS/lua/* -D -t <pkg_dir>/usr/share/mpv/scripts &&
+	rm -r <pkg_dir>/usr/share/{applications,bash-completion,icons,zsh}/"

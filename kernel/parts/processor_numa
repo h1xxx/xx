@@ -1,0 +1,18 @@
+# processor -> numa
+# =================
+
+# numa memory allocation and scheduler support
+CONFIG_NUMA=y
+
+# acpi numa detection
+CONFIG_ACPI_NUMA=y
+CONFIG_X86_64_ACPI_NUMA=y
+
+# possible deps
+#CONFIG_NEED_MULTIPLE_NODES=y
+#CONFIG_NODES_SHIFT=6
+#CONFIG_NODES_SPAN_OTHER_NODES=y
+#CONFIG_USE_PERCPU_NUMA_NODE_ID=y
+#CONFIG_MIGRATION=y
+
+

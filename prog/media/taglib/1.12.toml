@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://taglib.github.io/releases/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_INSTALL_LIBDIR=/usr/lib
+	-D CMAKE_BUILD_TYPE='Release'
+	-D BUILD_SHARED_LIBS=ON
+	-D BUILD_STATIC_LIBS=OFF
+	.."
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

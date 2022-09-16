@@ -1,0 +1,18 @@
+[ src ]
+
+url = "https://github.com/aligrudi/fbpdf"
+src_type = "git"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = ""
+build = "make fbpdf2 fbdjvu"
+pkg_create = "mkdir -p <pkg_dir>/usr/{bin,share/man/man1} &&
+	cp -a fbpdf2 <pkg_dir>/usr/bin/fbpdf &&
+	cp -a fbdjvu <pkg_dir>/usr/bin/ &&
+	cp -a fbpdf.1 <pkg_dir>/usr/share/man/man1/"

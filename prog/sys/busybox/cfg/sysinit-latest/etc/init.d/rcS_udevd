@@ -1,0 +1,22 @@
+#!/bin/busybox sh
+
+. /etc/init.d/rc.rc
+. /etc/rc.conf || err "can't load /etc/rc.conf"
+
+[ "${UDEV}" != 'true' ] && return
+
+msg "starting udev and waiting for devices to settle..."
+
+udevd --daemon > /dev/null || err "can't start udev"
+udevadm trigger --action=add --type=subsystems
+udevadm trigger --action=add --type=devices
+udevadm settle
+
+# make sure that /dev/disk/by-uuid appears
+t=0
+while [ ! -e /dev/disk/by-uuid/ ]; do
+	${BB} sleep 0.01
+	t="$((t+1))"
+	[ "${t}" -gt 250 ] && err '/dev/disk/by-uuid/ not mounted'
+done
+

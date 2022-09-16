@@ -1,0 +1,22 @@
+[ src ]
+
+url = "https://download.aircrack-ng.org/<prog>-<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = [ "CFLAGS+=-fcommon" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "autoreconf -fiv && ./configure
+	--prefix=/usr
+	--libexecdir=/usr/lib
+	--with-ext-scripts
+	--with-experimental
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/sbin/airodump-ng-oui-update"

@@ -1,0 +1,27 @@
+# font/text libraries
+media/freetype			std			latest
+media/fontconfig		std			latest
+
+# image libraries
+media/libwebp			std			latest
+media/libraw			std			latest
+media/giflib			std			latest
+media/jbig2dec			std			latest
+media/libpng			std			latest
+media/libjpeg-turbo		std			latest
+media/openjpeg			std			latest
+media/tiff			std			latest
+media/imlib2			std			latest
+media/leptonica			std			latest
+
+# additional libs
+dev/gettext			std			latest
+media/libexif			std			latest
+text/djvu			std			latest
+
+# utils
+media/imagemagick		std			latest
+media/fim			std			latest
+media/fbvis			std			latest
+
+#media-gfx/img2pdf

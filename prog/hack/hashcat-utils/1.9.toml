@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://github.com/hashcat/hashcat-utils/archive/refs/tags/v<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = ""
+build = "make -C src"
+pkg_create = "mkdir -p <pkg_dir>/usr/bin &&
+
+	for f in src/*.bin; do 
+		cp -av ${f} <pkg_dir>/usr/bin/$(basename ${f} .bin);
+	done &&
+
+	for f in src/*.pl; do 
+		cp -av ${f} <pkg_dir>/usr/bin/$(basename ${f} .pl);
+	done"

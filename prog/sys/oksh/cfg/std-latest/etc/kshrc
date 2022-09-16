@@ -1,0 +1,46 @@
+mkdir -p ${HOME}/.ksh.history
+
+export UID="$(id -u)"
+export GID="$(id -g)"
+export USER="$(id -un)"
+export TTY="$(tty | cut -d'/' -f3- | sed 's|/||g')"
+export HISTSIZE=16384
+export HISTFILE="${HOME}/.ksh.history/${TTY}"
+export HISTCONTROL=ignoredups:ignorespace
+
+GREEN='\[\033[32m\]'
+RED='\[\033[31m\]'
+WHITE='\[\033[00m\]'
+
+[ "${UID}" -eq 0 ] && PROMPT_COL=${RED} || PROMPT_COL=${GREEN}
+PS1="${PROMPT_COL}\u@\h: ${WHITE}\W \$ "
+
+# affects tmux copy mode
+export EDITOR=vi
+
+# limit the scope of gpg-agent
+export GPG_TTY=$(tty)
+
+# this needs to be set after GPG_TTY for some reason
+set -o emacs
+
+alias ..='cd ..'
+alias d='pwd'
+alias x='exit'
+alias watch='watch'
+alias cp='cp -a'
+alias cl='clear'
+alias l='ls -1FNL --group-directories-first'
+alias ls='ls -FN --group-directories-first'
+alias ll='ls -lhFN --group-directories-first'
+alias la='ls -lhFNa --group-directories-first'
+alias lm='ls -lFN --block-size=M --group-directories-first'
+alias grep='grep -s --devices=skip --color=auto'
+alias egrep='egrep -s --devices=skip --color=auto'
+alias fgrep='fgrep -s --devices=skip --color=auto'
+alias cal='cal -m'
+alias du='du -hs'
+alias df='df -h'
+alias free='free -h'
+alias psgrep='ps aux | grep'
+
