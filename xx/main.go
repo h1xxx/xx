@@ -373,6 +373,7 @@ func getGenCfg(args argsT) genCfgT {
 	abbr["s"] = "source"
 	abbr["d"] = "diff"
 	abbr["n"] = "info"
+	abbr["u"] = "update"
 
 	genC.action = args.action
 	if len(genC.action) == 1 {
@@ -571,6 +572,9 @@ actions/parameters:
 i(n)fo		show additional information on xx system
 -d		information on dependencies
 -i		verify system integrity
+
+(u)pdate	update toml files
+-i		get information on latest packages available
 
 general parameters:
 -v		verbose messages`)
