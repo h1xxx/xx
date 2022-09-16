@@ -24,7 +24,7 @@ pkg_create = "make DESTDIR=<pkg_dir> SHLIB_LIBS='-ltinfow' install &&
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

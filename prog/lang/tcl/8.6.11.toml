@@ -28,7 +28,7 @@ pkg_create = "sed -i 's|$(INSTALL_DOC_TARGETS)||g' Makefile &&
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

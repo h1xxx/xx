@@ -74,7 +74,7 @@ pkg_create = "mkdir <pkg_dir>/usr && cp -a usr/include/ <pkg_dir>/usr/"
 
 
 
-[ init_api_headers_cross ]
+[ bootstrap_api_headers_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

@@ -48,7 +48,7 @@ pkg_create = "make DESTDIR=<pkg_dir> install"
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

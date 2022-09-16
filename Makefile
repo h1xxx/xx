@@ -1,4 +1,4 @@
-.PHONY: xx tools init base clean-tmp
+.PHONY: xx tools bootstrap base clean-tmp
 
 xx:
 	CGO_ENABLED=0 go build -o xx/cntrun/cntrun xx/cntrun/cntrun.go
@@ -12,30 +12,30 @@ tools:
 	xx/xx build -f -s xx_tools_cross sys/busybox
 	xx/xx build -f -s xx_tools_cross sys/oksh
 
-init:
+bootstrap:
 	# cross-compiling compiler and libc from the host system and then
 	# rebuilding them in environment isolated from the host system
-	xx/xx build set/build/init.xx
+	xx/xx build set/build/bootstrap.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
 	# creating environment only with packages build in isolation from the
 	# host system
-	xx/xx build set/build/init-base.xx
-	mv /tmp/xx/init /tmp/xx/base
+	xx/xx build set/build/bootstrap-base.xx
+	mv /tmp/xx/bootstrap /tmp/xx/base
 
 	# todo: run if prev step ok
 	# final build of all base packages
 	xx/xx build set/build/base.xx
 	rm -rf /tmp/xx/
 
-init_rebuild:
-	xx/xx build -f set/build/init.xx
+bootstrap_rebuild:
+	xx/xx build -f set/build/bootstrap.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
-	xx/xx build -f set/build/init-base.xx
-	mv /tmp/xx/init /tmp/xx/base
+	xx/xx build -f set/build/bootstrap-base.xx
+	mv /tmp/xx/bootstrap /tmp/xx/base
 
 	# todo: run if prev step ok
 	xx/xx build -f set/build/base.xx
@@ -73,10 +73,10 @@ clean_pkg:
 	# bring back mime-types pkg
 	git checkout prog/sys/mime-types/pkg/
 
-clean_init:
-	rm -fr prog/*/*/pkg/init_*cross-*/
-	rm -fr prog/*/*/pkg/init-*/
-	rm -fr prog/*/*/pkg/init_libstdcpp_2-*/
+clean_bootstrap:
+	rm -fr prog/*/*/pkg/bootstrap_*cross-*/
+	rm -fr prog/*/*/pkg/bootstrap-*/
+	rm -fr prog/*/*/pkg/bootstrap_libstdcpp_2-*/
 
 clean_src:
 	rm -fr prog/*/*/src/*

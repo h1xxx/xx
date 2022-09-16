@@ -17,7 +17,7 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = [ "PREFIX=/usr", "CC=gcc" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

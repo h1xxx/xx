@@ -69,7 +69,7 @@ pkg_create = "cd build &&
 
 
 
-[ init_1_cross ]
+[ bootstrap_1_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
@@ -114,7 +114,7 @@ pkg_create = "cd build &&
 
 
 
-[ init_2_cross ]
+[ bootstrap_2_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
@@ -158,7 +158,7 @@ pkg_create = "cd build &&
 
 
 
-[ init_libstdcpp_1_cross ]
+[ bootstrap_libstdcpp_1_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -176,7 +176,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 
 
 
-[ init_libstdcpp_2 ]
+[ bootstrap_libstdcpp_2 ]
 
 env = [ "CXXFLAGS=-g -O2 -D_GNU_SOURCE", "CFLAGS=", "LDFLAGS=" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -193,7 +193,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

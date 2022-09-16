@@ -16,7 +16,7 @@ pkg_create = ""
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = ""

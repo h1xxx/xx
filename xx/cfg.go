@@ -115,8 +115,8 @@ func getBuildEnv(actionTarget string) string {
 		fields := strings.Split(file, ".")
 		buildEnv := strings.Join(fields[:len(fields)-1], ".")
 		switch {
-		case buildEnv == "init-base":
-			buildEnv = "init"
+		case buildEnv == "bootstrap-base":
+			buildEnv = "bootstrap"
 		case buildEnv == "":
 			buildEnv = "base"
 		}

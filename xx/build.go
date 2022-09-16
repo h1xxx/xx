@@ -17,7 +17,7 @@ func actionBuild(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 	errExit(err, "can't create dir: /tmp/xx/build/")
 
 	switch {
-	case genC.buildEnv == "init" || genC.buildEnv == "init-base":
+	case genC.buildEnv == "bootstrap" || genC.buildEnv == "bootstrap-base":
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			genC.setFileName)
 		buildInstPkgs(world, genC, pkgs, pkgCfgs)

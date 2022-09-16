@@ -54,7 +54,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
 
 
 
-[ init_cross ]
+[ bootstrap_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -76,7 +76,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
 
 
 
-[ init_headers_cross ]
+[ bootstrap_headers_cross ]
 
 env = []
 prepare = ""
@@ -89,7 +89,7 @@ pkg_create = "<root_dir>/tools/libexec/gcc/${TARGET_TRI}/*/install-tools/mkheade
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = [ "CFLAGS=", "LDFLAGS=" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

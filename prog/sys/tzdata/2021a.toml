@@ -30,7 +30,7 @@ pkg_create = "zonedir='<pkg_dir>/usr/share/zoneinfo' &&
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "mkdir <tmp_dir>/<prog> &&

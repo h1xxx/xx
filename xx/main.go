@@ -51,13 +51,13 @@ type argsT struct {
 // rootDir	root system dir:		/, /mnt/xx, /tmp/xx/media
 // sysCfgDir	dir with system config:		/home/xx/conf/<machine>
 // setFileName	pkg env definition file:	[empty], base.xx, media.xx
-// buildEnv	name of the build environment:	base, init, net, media
+// buildEnv	name of the build environment:	base, bootstrap, net, media
 // actionTarget	package name or pkg env file:	sys/lvm2, base.xx, media.xx
 // action	action to perform:		build, install, update, diff
 // date		current calendar date:		2002-05-13
 //
 // forceAll	force action on all packages:	false, true
-// fixedSet	fixed pkg set for all packages:	[empty], std, init
+// fixedSet	fixed pkg set for all packages:	[empty], std, bootstrap
 // fixedVer	fixed pkg ver for all packages:	[empty], latest, 2.35
 //
 // instPerms	only install sys permissions:	false, true
@@ -102,7 +102,7 @@ type genCfgT struct {
 // name		package name (format <category/program>):	sys/lvm2
 // categ	program category: 				sys
 // prog		program name:					lvm2
-// set		package set:					std, init_cross
+// set		package set:					std, bootstrap_cross
 // ver		resolved program version, not 'latest':		2.35
 // verShort	short ver; in case of git repo, commit hash:	2, 4d21a91b
 // rel		current pkg release (build) version in hex:	01, 0a, 1e
@@ -114,9 +114,9 @@ type genCfgT struct {
 // setVerNewRel  combination of <pkg set>-<ver>-<new pkg rel>:	std-2.35-02
 //
 // progDir	progam dir:			/home/xx/sys/lvm2
-// pkgDir	dir with current release:	<prog_dir>/pkg/init_1-2.35-09
-// newPkgDir	dir with new release:		<prog_dir>/pkg/init_1-2.35-0a
-// prevPkgDir	dir with new release:		<prog_dir>/pkg/init_1-2.35-08
+// pkgDir	dir with current release:	<prog_dir>/pkg/std_1-2.35-09
+// newPkgDir	dir with new release:		<prog_dir>/pkg/std_1-2.35-0a
+// prevPkgDir	dir with new release:		<prog_dir>/pkg/std_1-2.35-08
 // cfgDir	dir with pkg config:		<prog_dir>/cfg/std-2.35
 //
 type pkgT struct {

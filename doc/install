@@ -34,7 +34,6 @@ install instructions
 
 * compile static tools: xx command, ksh and busybox
 
-	mkdir -p /tmp/xx/build
 	make
 	make tools
 
@@ -48,7 +47,7 @@ install instructions
 
 * cross-compile the base system
 
-	make init
+	make bootstrap
 
 * compile other parts of the system
 

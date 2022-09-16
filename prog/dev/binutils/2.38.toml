@@ -28,7 +28,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
 
 
 
-[ init_1_cross ]
+[ bootstrap_1_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -44,7 +44,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 
 
 
-[ init_2_cross ]
+[ bootstrap_2_cross ]
 
 env = [ "CFLAGS=", "LDFLAGS=", "MAKEFLAGS=j1" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -63,7 +63,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

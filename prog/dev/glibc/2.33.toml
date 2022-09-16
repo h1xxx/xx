@@ -54,7 +54,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
 
 
 
-[ init_cross ]
+[ bootstrap_cross ]
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
@@ -80,7 +80,7 @@ deploy = "<root_dir>/tools/libexec/gcc/${TARGET_TRI}/*/install-tools/mkheaders
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = [ "CFLAGS=", "LDFLAGS=" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

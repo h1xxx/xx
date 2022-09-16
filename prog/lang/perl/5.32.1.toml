@@ -31,7 +31,7 @@ pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
 
 
 
-[ init ]
+[ bootstrap ]
 
 env = [ "CFLAGS=", "LDFLAGS=" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"

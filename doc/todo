@@ -84,8 +84,6 @@ fine tune /etc/diod.conf and /etc/init.d/diod.conf
 
 kernel - add CONFIG_INIT_STACK_ALL_ZERO
 
-rename init with bootstrap when bootstrapping
-
 lxc manpages
 
 docs: config precedence
@@ -142,7 +140,7 @@ when building individual packages make sure that base dir is there
 
 make coreutils not depend on gmp, gpgme not depend on gcc (languages='') etc
 
-in 'make init' add code that will enable to rerun it in case of errors, maybe
+in 'make bootstrap' add code that will enable to rerun it in case of errors, maybe
 split it in 3 distinct makefile sections?
 
 see what other libs/bins depend on libgcc++, apart from gmp
