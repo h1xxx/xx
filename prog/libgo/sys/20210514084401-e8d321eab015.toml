@@ -1,7 +1,7 @@
 [ src ]
 
 url = "golang.org/x/sys"
-src_type = "go-get"
+src_type = "go-mod"
 src_dirname = ""
 
 

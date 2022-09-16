@@ -231,6 +231,8 @@ retry 3 times when downloading from src
 put all the downloaded souce code on linux console
 if the download fails after gentoo donwload packages from linux console
 add a flag to disable this fallback
+add another source: https://deb.debian.org/debian/pool/main/[a-z]/<prog>-orig.tar.gz
+or from pkgsrc
 
 add static pie building for static bins (gcc --no-dynamic-linker?)
 
@@ -290,6 +292,7 @@ test the bootstrap process from raw debian and arch installs
 test setting permissions, also for perms.d
 start startx in a container
 test spicy and vncviewer to qemu
+download all source code
 
 limit wpa_supplicant priviliges via capabilities, see REAMDE in src
 

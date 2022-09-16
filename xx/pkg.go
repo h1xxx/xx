@@ -58,8 +58,8 @@ func getSrc(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 		getSrcTar(pkg, pkgC)
 	case "git":
 		getSrcGitMaster(pkg, pkgC)
-	case "go-get":
-		getViaGoGet(pkg, pkgC)
+	case "go-mod":
+		getViaGoMod(pkg, pkgC)
 	case "alpine":
 		getAlpinePkgs(genC, pkg, pkgC)
 	}
@@ -166,13 +166,13 @@ func getSrcGitMaster(pkg pkgT, pkgC pkgCfgT) {
 	cloneDir := fp.Join(pkg.progDir, "src", pkg.prog)
 	c := "git clone " + pkgC.src.url + " " + cloneDir
 
-	if fileExists(fp.Join(cloneDir, ".git/index")) {
-		fmt.Println("  git pull...")
-		c = "cd " + cloneDir +  
-			" && git rev-parse --quiet --verify " + pkg.ver +
-			" || git pull ||:"
-	} else {
+	if !fileExists(cloneDir) {
 		fmt.Println("  git clone...")
+	} else if !gitCommitExists(cloneDir, pkg.verShort) {
+		fmt.Println("  git pull...")
+		c = "cd " + cloneDir + " && git pull"
+	} else {
+		return
 	}
 
 	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
@@ -180,20 +180,32 @@ func getSrcGitMaster(pkg pkgT, pkgC pkgCfgT) {
 	errExit(err, "can't get source from git server: "+pkgC.src.url)
 }
 
-func getViaGoGet(pkg pkgT, pkgC pkgCfgT) {
+func gitCommitExists(gitRoot, commit string) bool {
+	c := "cd " + gitRoot + " && git rev-parse --quiet --verify " + commit
+	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	err := cmd.Run()
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
+func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
 	srcDir := fp.Join(pkg.progDir, "src", pkg.ver)
 	if fileExists(srcDir) {
 		return
 	}
 
 	uri := pkgC.src.url + "@v0.0.0-" + pkg.ver
-	c := "go get -d " + uri
+	c := "go mod download " + uri
 	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
 	cmd.Env = []string{"GOPATH=" + srcDir,
 		"GOCACHE=/tmp/xx/gocache",
 		"PATH=/bin:/sbin:/usr/bin:/usr/sbin"}
 	out, err := cmd.CombinedOutput()
-	errExit(err, "can't get source with:\n  'go get "+uri+"'\n"+string(out))
+	errExit(err, "can't get source with:\n  'go mod download "+uri+"'\n"+string(out))
 }
 
 func getAlpinePkgs(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {

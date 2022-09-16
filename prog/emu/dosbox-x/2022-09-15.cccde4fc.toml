@@ -1,0 +1,56 @@
+[ src ]
+
+url = "https://github.com/joncampbell123/dosbox-x"
+src_type = "git"
+src_dirname = "<prog>"
+
+
+
+[ std ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = "./autogen.sh && ./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking
+	--disable-x11
+	--disable-alsatest
+	--disable-printer
+	--disable-mt32
+	--disable-screenshots
+	--disable-avcodec
+	--enable-opengl
+	--enable-d3d9
+	--enable-d3d-shaders
+	--enable-sdl2"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && 
+	rm -r <pkg_dir>/usr/share/{applications,icons,metainfo}/"
+
+
+
+[ x11 ]
+
+env = []
+prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
+configure = "./autogen.sh && ./configure
+	--prefix=/usr
+	--disable-static
+	--disable-dependency-tracking
+	--enable-x11
+	--disable-alsatest
+	--disable-printer
+	--disable-mt32
+	--disable-screenshots
+	--disable-avcodec
+	--enable-opengl
+	--enable-d3d9
+	--enable-d3d-shaders
+	--enable-sdl2"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && 
+	rm -r <pkg_dir>/usr/share/{applications,icons,metainfo}/"
+

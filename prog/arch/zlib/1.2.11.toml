@@ -1,6 +1,6 @@
 [ src ]
 
-url = "https://zlib.net/zlib-<ver>.tar.xz"
+url = "https://zlib.net/zlib-<ver>.tar.gz"
 src_type = "tar"
 src_dirname = "<prog>-<ver>"
 

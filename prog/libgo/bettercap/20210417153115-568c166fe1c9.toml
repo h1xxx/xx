@@ -1,7 +1,7 @@
 [ src ]
 
 url = "github.com/bettercap/bettercap"
-src_type = "go-get"
+src_type = "go-mod"
 src_dirname = ""
 
 

@@ -186,7 +186,7 @@ type pkgCfgT struct {
 // url		url to source code:	https://ftp.gnu.org/lvm2-2.35.tar.xz
 // srcFile	downloaded file		<src_dir>/lvm2-2.35.tar.xz
 // srcDirName	dir in tar archive:	lvm2-2.35
-// srcType	type of source code:	tar, git, files, go-get, alpine
+// srcType	type of source code:	tar, git, files, go-mod, alpine
 type srcT struct {
 	url        string
 	srcFile    string

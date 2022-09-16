@@ -37,19 +37,26 @@ install instructions
 	make
 	make tools
 
-* download all source files first
+* download source files for base packages
 
-  Sometimes sourceforge throws errors, in that case run this command again. If
-  a pkg really doesn't want to be downloaded you'll need to find it on the
-  internet and place it in src directory of that pkg with version as base name.
+Sometimes sourceforge throws errors, in that case run this command again. If
+a pkg really doesn't want to be downloaded you'll need to find it on the
+internet and place it in src directory of that pkg with version as base name.
 
-	./xx/xx source -d definitions/install/xx_all.xx
+	./xx/xx source -d set/build/base.xx
+
+You can also download source code for all the packages if you want.
+
+	./xx/xx source -d set/install/all.xx
 
 * cross-compile the base system
 
 	make bootstrap
 
 * compile other parts of the system
+
+Don't forget to download the packages before running these commands to make sure
+that the build process is not interrupted by faulty download.
 
 	xx/xx build -d definitions/build/sys.xx
 	xx/xx build -d definitions/build/net.xx

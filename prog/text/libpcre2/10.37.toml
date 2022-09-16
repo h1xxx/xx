@@ -1,6 +1,6 @@
 [ src ]
 
-url = "https://ftp.pcre.org/pub/pcre/pcre2-<ver>.tar.gz"
+url = "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-<ver>/pcre2-<ver>.tar.bz2"
 src_type = "tar"
 src_dirname = "pcre2-<ver>"
 
