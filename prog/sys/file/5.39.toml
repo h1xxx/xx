@@ -39,7 +39,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 
 configure = "./configure
 	--prefix=/usr
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--build=$(./config.guess)
 	--disable-dependency-tracking"
 

@@ -3,6 +3,7 @@ dependencies
 ============
 
 - gnu build tools
+  bison, texinfo, glibc, gcc, perl, gawk
 - lxc
 - xx user with home dir /home/xx/ and part of following groups
         - lxc - for creating and running containers
@@ -25,10 +26,11 @@ install instructions
 * configure system
 
 	useradd -m xx
-	usermod -a -g lxc xx
-	usermod -a -g tty xx
+	usermod -a -G lxc xx
+	usermod -a -G tty xx
 
 * install and configure lxc and deps
+	pacman -S base-devel
 
 * git clone xx
 

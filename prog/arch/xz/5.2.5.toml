@@ -28,7 +28,7 @@ env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
 	--prefix=/usr
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--disable-static
 	--build=$(build-aux/config.guess)
 	--docdir=/usr/share/doc/xz

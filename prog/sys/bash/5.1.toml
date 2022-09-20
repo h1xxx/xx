@@ -32,7 +32,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
 	--prefix=/usr
 	--build=$(support/config.guess)
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--enable-minimal-config
 	--without-curses
 	--without-bash-malloc"

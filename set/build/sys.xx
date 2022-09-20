@@ -1,8 +1,10 @@
 sys/linux			api_headers		latest
 sys/linux-firmware-bin		std			latest
 sys/intel-microcode-bin		std			latest
-sys/linux			std			latest	f
-sys/linux			perf			latest
+sys/linux			std			latest
+
+# todo: doesn't build
+#sys/linux			perf			latest
 
 sys/bash			std			latest
 sys/numactl			std			latest
@@ -52,6 +54,12 @@ dev/protobuf			std			latest
 dev/gtest			std			latest
 arch/brotli			std			latest
 arch/lz4			std			latest
+
+libgo/net			std		20190404232315-eb5bcb51f2a3
+libgo/sys			std		20190215142949-d0b11bdaac8a
+libgo/sys			std		20190412213103-97732733099d
+libgo/crypto			std		20190308221718-c2843e01d9a2
+libgo/text			std			0.3.0
 libgo/crypto			std		20200622213623-75b288015ac9
 sys/android-tools		std			latest
 sys/android-file-transfer-linux	std			latest

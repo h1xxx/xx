@@ -160,7 +160,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	// todo: check if this algorithm needs to be sped up
 	tomlStr = replaceTomlVars(tomlStr, genC, pkg, pkgC)
 	conf, err = toml.Load(tomlStr)
-	errExit(err, "can't parse toml file")
+	errExit(err, "can't parse toml file: "+tomlFile)
 	checkConf(pkg, conf)
 	confStep := conf.Get(pkg.set).(*toml.Tree)
 
@@ -256,13 +256,13 @@ func getRegexes() reT {
 	return re
 }
 
-// reads xs toml file and escapes newlines to be compliant with toml format
+// reads xx toml file and escapes newlines to be compliant with toml format
 func readToml(file string) string {
 	var tomlStr string
 	var isStep bool
 
 	fd, err := os.Open(file)
-	errExit(err, "can't open toml file")
+	errExit(err, "can't open toml file: "+file)
 	defer fd.Close()
 
 	input := bufio.NewScanner(fd)

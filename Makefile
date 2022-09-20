@@ -67,8 +67,6 @@ clean_tmp:
 clean_pkg:
 	rm -fr prog/*/*/pkg/*/
 	rm -fr prog/*/*/log/*/
-	rm -fr prog/unused/*/*/pkg/*/
-	rm -fr prog/unused/*/*/log/*/
 
 	# bring back mime-types pkg
 	git checkout prog/sys/mime-types/pkg/

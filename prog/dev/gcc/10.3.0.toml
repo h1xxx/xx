@@ -83,7 +83,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64"
 
 configure = "mkdir -p build && cd build && ../configure
-	--target=${TARGET_TRI}
+	--target=${TARGET_TRIPLET}
 	--prefix=/tools
 	--with-glibc-version=2.33
 	--with-sysroot=<root_dir>
@@ -107,7 +107,7 @@ build = "cd build && make"
 pkg_create = "cd build &&
 	make DESTDIR=<pkg_dir> install &&
 	cd .. &&
-	gcc_dir=$(dirname $(<pkg_dir>/tools/bin/${TARGET_TRI}-gcc
+	gcc_dir=$(dirname $(<pkg_dir>/tools/bin/${TARGET_TRIPLET}-gcc
 		-print-libgcc-file-name)) &&
 	cat gcc/limitx.h gcc/glimits.h gcc/limity.h >
 	                ${gcc_dir}/install-tools/include/limits.h"
@@ -128,13 +128,13 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64"
 
 configure = "mkdir -p build && cd build &&
-	mkdir -pv ${TARGET_TRI}/libgcc &&
-	ln -s ../../../libgcc/gthr-posix.h ${TARGET_TRI}/libgcc/gthr-default.h &&
+	mkdir -pv ${TARGET_TRIPLET}/libgcc &&
+	ln -s ../../../libgcc/gthr-posix.h ${TARGET_TRIPLET}/libgcc/gthr-default.h &&
 	../configure
 	--build=$(../config.guess)
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--prefix=/usr
-	CC_FOR_TARGET=${TARGET_TRI}-gcc
+	CC_FOR_TARGET=${TARGET_TRIPLET}-gcc
 	--with-glibc-version=2.33
 	--with-build-sysroot=<root_dir>
 	--enable-initfini-array
@@ -163,13 +163,13 @@ pkg_create = "cd build &&
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "mkdir -p build && cd build && ../libstdc++-v3/configure
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--build=$(../config.guess)
 	--prefix=/usr
 	--disable-multilib
 	--disable-nls
 	--disable-libstdcxx-pch
-	--with-gxx-include-dir=/tools/${TARGET_TRI}/include/c++/<ver>"
+	--with-gxx-include-dir=/tools/${TARGET_TRIPLET}/include/c++/<ver>"
 
 build = "cd build && make"
 pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
@@ -185,7 +185,7 @@ configure = "ln -sv gthr-posix.h libgcc/gthr-default.h &&
 	--prefix=/usr
 	--disable-multilib
 	--disable-nls
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--disable-libstdcxx-pch"
 
 build = "cd build && make"

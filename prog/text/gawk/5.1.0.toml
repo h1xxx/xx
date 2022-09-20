@@ -28,7 +28,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "sed -i 's/extras//' Makefile.in
 	&& ./configure
 	--prefix=/usr
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--build=$(./config.guess)
 	--disable-nls
 	--disable-dependency-tracking"

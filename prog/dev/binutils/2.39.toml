@@ -36,6 +36,7 @@ configure = "mkdir -p build && cd build && ../configure
 	--prefix=/tools
 	--with-sysroot=<root_dir>
 	--target=${TARGET_TRIPLET}
+	--enable-gprofng=no
 	--disable-nls
 	--disable-werror"
 
@@ -46,14 +47,21 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 
 [ bootstrap_2_cross ]
 
-env = [ "CFLAGS=", "LDFLAGS=", "MAKEFLAGS=j1" ]
+
+# binutils is shipped with an outdated libtool copy. It lacks sysroot support
+# so the produced binaries will be mistakenly linked to libraries from
+# the host distro. sed here is a workaround for that.
+# use "MAKEFLAGS=j1" if errors show up
+env = [ "CFLAGS=", "LDFLAGS=" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+configure = "sed '6009s/$add_dir//' -i ltmain.sh &&
+	mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--build=$(../config.guess)
 	--host=${TARGET_TRIPLET}
 	--disable-nls
 	--enable-shared
+	--enable-gprofng=no
 	--disable-werror
 	--disable-nls
 	--enable-64-bit-bfd"

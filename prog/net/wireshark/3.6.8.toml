@@ -23,5 +23,4 @@ configure = "mkdir build && cd build && cmake
 	.."
 
 build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"

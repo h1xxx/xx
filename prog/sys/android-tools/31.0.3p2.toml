@@ -1,0 +1,23 @@
+[ src ]
+
+url = "https://github.com/nmeum/android-tools/releases/download/<ver>/android-tools-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir build && cd build && cmake
+	-D CMAKE_INSTALL_PREFIX=/usr
+	-D CMAKE_BUILD_TYPE=Release
+	.."
+
+build = "export GOPATH=/usr/lib/go-pkg &&
+	export GOCACHE=<build_dir>/build/gocache &&
+	cd build && make"
+
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/"

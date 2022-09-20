@@ -384,5 +384,3 @@ check if two files exist in the same loc during install
 package doesn't exist
 
 find full prog name based on name alone and also with prog
-
-cmd.log doesn't include env vars values

@@ -1,0 +1,17 @@
+[ src ]
+
+url = ""
+src_type = "files"
+src_dirname = ""
+
+
+
+# this pkg is created during gcc build
+[ std ]
+
+env = []
+prepare = ""
+configure = ""
+build = ""
+pkg_create = ""
+

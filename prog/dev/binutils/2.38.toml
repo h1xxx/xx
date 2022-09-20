@@ -35,7 +35,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "mkdir -p build && cd build && ../configure
 	--prefix=/tools
 	--with-sysroot=<root_dir>
-	--target=${TARGET_TRI}
+	--target=${TARGET_TRIPLET}
 	--disable-nls
 	--disable-werror"
 
@@ -51,7 +51,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--build=$(../config.guess)
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--disable-nls
 	--enable-shared
 	--disable-werror

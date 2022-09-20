@@ -62,7 +62,7 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "mkdir build && cd build && ../configure
 	--prefix=/usr
 	--exec-prefix=/usr
-	--host=${TARGET_TRI}
+	--host=${TARGET_TRIPLET}
 	--enable-kernel=5.10.0
 	--build=$(../scripts/config.guess)
 	--with-headers=<root_dir>/usr/include
@@ -75,7 +75,7 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
 	rmdir -v <pkg_dir>/sbin/"
 
 # fix limits.h
-deploy = "<root_dir>/tools/libexec/gcc/${TARGET_TRI}/*/install-tools/mkheaders
+deploy = "<root_dir>/tools/libexec/gcc/${TARGET_TRIPLET}/*/install-tools/mkheaders
 		-v -v <root_dir>/tools"
 
 

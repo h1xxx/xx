@@ -43,7 +43,10 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) (b
 	saveHelp(genC, pkg, pkgC)
 	cleanup(pkg, pkgC)
 	dumpSHA256(pkg)
-	dumpSharedLibs(world, genC, pkg)
+
+	if !pkgC.crossBuild {
+		dumpSharedLibs(world, genC, pkg)
+	}
 
 	if dirIsEmpty(pkg.newPkgDir) {
 		fmt.Println("! pkg empty:", pkg.newPkgDir)
@@ -198,7 +201,14 @@ func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
 		return
 	}
 
-	uri := pkgC.src.url + "@v0.0.0-" + pkg.ver
+	var uri string
+	// todo: find a better way to determine golib version type
+	if strings.Contains(pkg.ver, "-") {
+		uri = pkgC.src.url + "@v0.0.0-" + pkg.ver
+	} else {
+		uri = pkgC.src.url + "@v" + pkg.ver
+	}
+
 	c := "go mod download " + uri
 	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
 	cmd.Env = []string{"GOPATH=" + srcDir,
@@ -606,7 +616,8 @@ func logCmd(pkg pkgT, pkgC pkgCfgT, cmd *exec.Cmd, step string) {
 	cmdStr = strings.Replace(cmdStr, " -- ", " -- \n\n", -1)
 	cmdStr = strings.Replace(cmdStr, "&& ", "&& \n\n", -1)
 
-	fmt.Fprintf(fd, "[ %s ]\n\n%s\n\n\n", step, cmdStr)
+	fmt.Fprintf(fd, "[ %s ]\nENV: %+v\n\n%s\n\n\n",
+		step, pkgC.steps.env, cmdStr)
 }
 
 func dumpSHA256(pkg pkgT) {
@@ -705,8 +716,12 @@ func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 // used only during build step
 func findLibPath(world map[string]worldT, genC genCfgT, lib string) string {
 	ldSoConf := fp.Join(genC.rootDir, "/etc/ld.so.conf")
+	if !fileExists(ldSoConf) {
+		return ""
+	}
+
 	fd, err := os.Open(ldSoConf)
-	errExit(err, "can't open ld.so.conf"+ldSoConf)
+	errExit(err, "can't open ld.so.conf in "+ldSoConf)
 	defer fd.Close()
 	input := bufio.NewScanner(fd)
 

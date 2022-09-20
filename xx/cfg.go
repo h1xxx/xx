@@ -184,9 +184,11 @@ func prepareEnv(envIn []string, genC genCfgT, pkgC pkgCfgT) []string {
 
 	if pkgC.crossBuild {
 		envMap["PATH"] = genC.rootDir
-		envMap["PATH"] += "tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+		envMap["PATH"] += "/tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
+		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-gnu"
 	} else {
 		envMap["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin"
+		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
 	}
 
 	if !pkgC.crossBuild {
@@ -201,7 +203,6 @@ func prepareEnv(envIn []string, genC genCfgT, pkgC pkgCfgT) []string {
 	envMap["LC_ALL"] = "C"
 	envMap["HOME"] = "/home/xx"
 	envMap["USER"] = "xx"
-	envMap["TARGET_TRI"] = "x86_64-pc-linux-gnu"
 	envMap["MAKEFLAGS"] = fmt.Sprintf("j%d", runtime.NumCPU())
 
 	for _, e := range envIn {

@@ -117,7 +117,9 @@ func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs [
 			addPkgToWorldT(world, pkg, "/")
 
 			// double check if shared libraries are ok
-			selfLibsExist(world, genC, pkg)
+			if genC.buildEnv != "bootstrap" {
+				selfLibsExist(world, genC, pkg)
+			}
 		}
 
 		if strings.HasSuffix(pkg.set, "_tools_cross") {

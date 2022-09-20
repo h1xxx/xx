@@ -5,8 +5,8 @@ dev/binutils			bootstrap_1_cross		latest
 dev/gcc				bootstrap_1_cross		latest
 sys/linux			bootstrap_api_headers_cross	latest
 dev/glibc			bootstrap_cross			latest
-dev/glibc			bootstrap_headers_cross		latest
-dev/gcc				bootstrap_libstdcpp_1_cross	latest
+dev/glibc			bootstrap_headers_cross		latest	f
+dev/gcc				bootstrap_libstdcpp_cross	latest
 dev/m4				bootstrap_cross			latest
 sys/bash			bootstrap_cross			latest
 sys/oksh			bootstrap_cross			latest
@@ -27,7 +27,6 @@ dev/binutils			bootstrap_2_cross		latest
 dev/gcc				bootstrap_2_cross		latest
 
 # here starts the build in an isolated container
-dev/gcc				bootstrap_libstdcpp_2		latest
 dev/bison			bootstrap			latest
 lang/perl			bootstrap			latest
 lang/python			bootstrap			latest
