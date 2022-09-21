@@ -182,15 +182,17 @@ x11/shared-mime-info			std			latest
 # these are really run-time dependencies, and are included here just beacause
 # they are required to build gtk+
 text/xmlto				std			latest
+	text/libxslt			std			latest
+	text/docbook-catalog		std			latest
+
+text/docbook-catalog			std			latest
+	text/libxml2			std			latest
 	text/docbook-xml		std			4.1.2
 	text/docbook-xml		std			4.2
+	text/docbook-xml		std			4.3
+	text/docbook-xml		std			4.4
 	text/docbook-xml		std			4.5
-	text/docbook-xsl		std			latest
-	text/libxslt			std			latest
-	text/catalog-xml		std			latest
-
-text/catalog-xml			std			latest
-	text/libxml2			std			latest
+	text/docbook-xsl		std			1.79.2
 
 text/docbook-xml			std			latest
 	arch/unzip			std			latest
@@ -248,6 +250,7 @@ x11/xorg-server				std			latest
 	x11/libX11			std			latest
 	x11/libxkbfile			std			latest
 	x11/libXfont2			std			latest
+	x11/libxcvt			std			latest
 
 x11/libdrm				std			latest
 	x11/libpciaccess		std			latest

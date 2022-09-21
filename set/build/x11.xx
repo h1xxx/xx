@@ -19,6 +19,7 @@ x11/libXfixes			std			latest
 x11/libXxf86vm			std			latest
 x11/libXrender			std			latest
 x11/libXrandr			std			latest
+x11/libxcvt			std			latest
 
 # mesa
 x11/libpciaccess		std			latest
@@ -102,8 +103,8 @@ text/docbook-xml		std			4.2
 text/docbook-xml		std			4.3
 text/docbook-xml		std			4.4
 text/docbook-xml		std			4.5
-text/catalog-xml		std			latest
-text/docbook-xsl		std			latest
+text/docbook-xsl		std			1.79.2
+text/docbook-catalog		std			latest
 text/libxslt			std			latest
 text/xmlto			std			latest
 dev/itstool			std			latest
