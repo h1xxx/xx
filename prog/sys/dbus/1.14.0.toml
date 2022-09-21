@@ -1,0 +1,42 @@
+[ src ]
+
+url = "https://dbus.freedesktop.org/releases/dbus/dbus-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr/
+	--sysconfdir=/etc/
+	--localstatedir=/var/
+	--libexecdir=/usr/lib/dbus
+	runstatedir=/run/
+	--enable-user-session
+	--without-x
+	--with-console-auth-dir=/run/console/
+	--with-dbus-user=nobody
+	--with-system-pid-file=/run/dbus/pid
+	--with-system-socket=/run/dbus/system_bus_socket
+	--with-systemduserunitdir=no
+	--with-systemdsystemunitdir=no
+	--disable-inotify
+	--disable-libaudit
+	--disable-systemd
+	--disable-xml-docs
+	--disable-doxygen-docs
+	--disable-ducktype-docs
+	--disable-static
+	--disable-dependency-tracking"
+
+# machine id is taken from whonix
+build = "make"
+pkg_create = "make 'DESTDIR=<pkg_dir>/' install &&
+	rm -r <pkg_dir>/no &&
+	rm -r <pkg_dir>/var/run &&
+	echo b08dfa6083e7567a1921a715000001fb > <pkg_dir>/etc/machine-id &&
+	ln -s ../../../etc/machine-id <pkg_dir>/var/lib/dbus/machine-id"

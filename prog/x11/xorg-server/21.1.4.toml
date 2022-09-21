@@ -1,0 +1,50 @@
+[ src ]
+
+url = "https://xorg.freedesktop.org/releases/individual/xserver/xorg-server-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--sysconfdir=/etc/X11
+	--localstatedir=/var
+	--with-fontrootdir=/usr/share/fonts
+	--with-xkb-output=/var/lib/xkb
+
+	--enable-libdrm
+	--enable-glamor
+	--disable-dri
+	--enable-dri2
+	--enable-dri3
+	--enable-xorg
+	--with-sha1=libcrypto
+
+	--disable-systemd-logind
+	--disable-config-hal
+	--disable-linux-acpi
+	--disable-dependency-tracking
+	--disable-unit-tests
+	--disable-clientids
+	--disable-devel-docs
+	--disable-glx
+	--disable-xvfb
+	--disable-xnest
+	--disable-xquartz
+	--disable-xwin
+	--disable-xephyr
+	--without-systemd-daemon
+	--without-dtrace
+	--without-fop"
+
+build = "make"
+
+# copy over a header that's disabled by --disable-dri, but needed by nouveau
+pkg_create = "make DESTDIR=<pkg_dir> install && 
+	cp -v hw/xfree86/dri/sarea.h <pkg_dir>/usr/include/"
+
