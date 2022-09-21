@@ -141,7 +141,7 @@ func getPkgRels(pkg pkgT) (string, string, string) {
 		var err error
 		idSplit := strings.Split(pkg.setVerRel, "-")
 		id, err = strconv.ParseInt(idSplit[len(idSplit)-1], 16, 64)
-		errExit(err, "unable to convert pkg release")
+		errExit(err, "unable to convert pkg release: "+pkg.name)
 	}
 
 	pkgRel := fmt.Sprintf("%0.2x", id)
@@ -172,7 +172,7 @@ func getLastRel(pkgDir, dirPrefix string) int64 {
 			s := strings.Split(dir.Name(), "-")
 			idStr := s[len(s)-1]
 			id, err = strconv.ParseInt(idStr, 16, 64)
-			errExit(err, "unable to convert pkg release")
+			errExit(err, "unable to convert pkg release: "+pkgDir)
 		}
 	}
 	return id

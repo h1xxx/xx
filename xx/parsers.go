@@ -142,7 +142,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	// replace already known variables in toml and parse it
 	tomlStr = replaceTomlVars(tomlStr, genC, pkg, pkgC)
 	conf, err := toml.Load(tomlStr)
-	errExit(err, "can't parse toml file")
+	errExit(err, "can't parse toml file: "+tomlFile)
 	checkConf(pkg, conf)
 	confSrc := conf.Get("src").(*toml.Tree)
 
