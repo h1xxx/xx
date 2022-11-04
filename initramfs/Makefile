@@ -7,7 +7,7 @@ initramfs:
 	mkdir -p build/tmp/root
 
 	../xx/xx install -r /home/xx/initramfs/build/tmp initramfs.xx
-	
+
 	# remove unnecessary files
 	rm -rf build/tmp/etc/ssl
 	rm -rf build/tmp/usr/share
@@ -25,5 +25,5 @@ initramfs:
 
 	cd build/tmp && find * -print0 | \
 		cpio --owner=root:root --null --create --format=newc | \
-		zstd -19 -T8 > ../initramfs.cpio.zst
+		zstd -19 -T8 --long=27 > ../initramfs.cpio.zst
 

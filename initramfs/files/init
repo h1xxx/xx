@@ -49,7 +49,7 @@ setfont -C /dev/console /usr/share/consolefonts/unifont-apl8x16.psf.gz
 # disable kernel messages
 echo 0 > /proc/sys/kernel/printk
 
-# create /dev/disk/by-uuid/ dirs
+# create /dev/disk/by-uuid/ dirs for found block devices in /dev/
 mkdir -p /dev/disk/by-uuid
 for dev in /dev/[sv]d* /dev/nvme[0-9]*; do
 	uuid="$(blkid ${dev} | cut -d'"' -f2)"
@@ -64,7 +64,7 @@ conf=/mnt/boot/boot.conf
 
 # mount boot partition
 t=0
-while ! mount UUID="${bootdev}" /mnt/boot/; do
+while ! mount UUID="${bootdev}" /mnt/boot/ 2>/dev/null; do
 	sleep 0.01
 	t="$((t+1))" && [ "${t}" -gt 500 ] &&
 		err "${bootdev} not mounted"
