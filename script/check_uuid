@@ -1,0 +1,54 @@
+#!/bin/bash
+set -euo pipefail
+
+root="${1}"
+
+if ! mount -V | grep -q util-linux; then
+	echo 'error: mount command is not from util-linux'
+	exit 1
+fi
+
+if ! mountpoint -q "${root}"; then
+	echo "error: ${root} is not a mount point"
+	exit 1
+fi
+
+if ! mountpoint -q "${root}/boot"; then
+	echo "error: ${root}/boot is not a mount point"
+	exit 1
+fi
+
+root_dev="$(findmnt -n "${root}" | cut -d' ' -f2)"
+boot_dev="$(findmnt -n "${root}/boot" | cut -d' ' -f2)"
+
+root_partuuid="$(blkid -s PARTUUID -o value "${root_dev}")"
+root_check="root=PARTUUID=${root_partuuid}"
+
+boot_uuid="$(blkid -s UUID -o value "${boot_dev}")"
+boot_cfg="${root}/boot/syslinux/syslinux.cfg"
+
+if [[ "${root_dev}" == /dev/mapper/* ]]; then
+	crypt_uuid="$(dmsetup table "${root_dev}" |
+		cut -d' ' -f5 |
+		cut -d':' -f5 |
+		rev |
+		cut -d'-' -f2- |
+		rev)"
+
+	if ! grep -q "cryptdev=${crypt_uuid}" "${boot_cfg}"; then
+		echo "error: crypt device UUID not in ${boot_cfg}"
+		echo "missing: cryptdev=${crypt_uuid}"
+		echo
+	fi
+elif ! grep -q "${root_check}" "${boot_cfg}"; then
+	echo "error: root partition PARTUUID not in ${boot_cfg}"
+	echo "missing: ${root_check}"
+	echo
+fi
+
+if ! grep /boot "${root}/etc/fstab" | grep -q "UUID=${boot_uuid}"; then
+	echo "error: boot partition UUID not in ${root}/etc/fstab"
+	echo "missing: UUID=${boot_uuid}"
+	echo
+fi
+
