@@ -19,7 +19,7 @@ CONFIG_FILE_LOCKING=y
 
 # set default kernel options
 CONFIG_CMDLINE_BOOL=y
-CONFIG_CMDLINE="net.ifnames=0"
+CONFIG_CMDLINE="net.ifnames=0 rootwait consoleblank=60"
 
 CONFIG_EMBEDDED=n
 
