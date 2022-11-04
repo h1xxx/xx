@@ -80,7 +80,7 @@ sys/mtools			std			latest
 sys/psmisc			std			latest
 sys/procps-ng			std			latest
 emu/lxc				std			latest
-sys/linux			perf			latest
+#sys/linux			perf			latest
 
 # monitoring
 sys/sysstat			std			latest

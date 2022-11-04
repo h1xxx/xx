@@ -19,7 +19,14 @@ text/task			std			latest
 #https://github.com/aperezdc/signify
 #https://github.com/FiloSottile/age
 #https://github.com/meganz/MEGAcmd
+# exiftran
+# beets
+# munpack
 
+#[ card reader - acr1252 ]
+#sys-apps/pcsc-lite
+#sys-apps/pcsc-tools
+#app-crypt/ccid
 
 # bluez
 # bluehydra
