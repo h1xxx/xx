@@ -165,8 +165,9 @@ func selfLibsExist(world map[string]worldT, genC genCfgT, pkg pkgT) {
 func instPkg(pkg pkgT, rootDir, instDir string, cnt bool) {
 	// todo: can be removed once init of cnt dir is done elsewhere
 	if cnt {
-		topDirs := []string{"/etc", "/home", "/usr", "/var/lib/xx",
-			"/dev", "/proc", "/run", "/sys", "/tmp", "/mnt/shared"}
+		topDirs := []string{"/bin", "/etc", "/home", "/lib", "/sbin",
+			"/usr", "/var/lib/xx", "/mnt/shared", "/mnt/xx",
+			"/dev", "/proc", "/run", "/sys", "/tmp"}
 		for _, dir := range topDirs {
 			err := os.MkdirAll(instDir+dir, 0755)
 			errExit(err, "couldn't create dir: "+instDir+dir)
@@ -180,12 +181,10 @@ func instPkg(pkg pkgT, rootDir, instDir string, cnt bool) {
 		fd.Close()
 
 		var symLinks = map[string]string{
-			"/lib":               "usr/lib",
-			"/lib64":             "usr/lib",
-			"/bin":               "usr/bin",
-			"/sbin":              "usr/sbin",
-			"/usr/lib64":         "lib",
-			"../bin/" + pkg.prog: "cntrun",
+			"/lib/ld-linux-x86-64.so.2":   "../usr/lib/ld-linux-x86-64.so.2",
+			"/lib64/ld-linux-x86-64.so.2": "../usr/lib/ld-linux-x86-64.so.2",
+			"/usr/lib64":                  "lib",
+			"../bin/" + pkg.prog:          "cntrun",
 		}
 		for symlink, target := range symLinks {
 			_ = os.Symlink(target, instDir+"/"+symlink)
@@ -326,7 +325,7 @@ func worldPkgExists(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfg
 
 func createRootDirs(rootDir string) {
 	var dirs = []string{
-		"/{etc,home,xx,mnt,root,usr,var}",
+		"/{bin,etc,home,lib,lib64,mnt,root,sbin,usr,var}",
 		"/{dev,proc,sys,run,tmp}",
 		"/etc/{xx,rc.d,perms.d,sysctl.d}",
 		"/home/{x,xx}",
@@ -374,11 +373,9 @@ func createRootDirs(rootDir string) {
 	}
 
 	var symLinks = map[string]string{
-		"/lib":       "usr/lib",
-		"/lib64":     "usr/lib",
-		"/bin":       "usr/bin",
-		"/sbin":      "usr/sbin",
-		"/usr/lib64": "lib",
+		"/lib/ld-linux-x86-64.so.2":   "../usr/lib/ld-linux-x86-64.so.2",
+		"/lib64/ld-linux-x86-64.so.2": "../usr/lib/ld-linux-x86-64.so.2",
+		"/usr/lib64":                  "lib",
 	}
 	for symlink, target := range symLinks {
 		_ = os.Symlink(target, rootDir+"/"+symlink)

@@ -354,7 +354,7 @@ lxc.autodev = 1
 
 lxc.environment = TERM=linux
 lxc.environment = HOME=/home
-lxc.environment = PATH=/bin:/sbin
+lxc.environment = PATH=/bin:/sbin:/usr/bin:/usr/sbin
 lxc.environment = LC_ALL=en_US.utf8
 
 lxc.mount.entry = /dev/tty dev/tty none bind,create=file 0 0

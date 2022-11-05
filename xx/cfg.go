@@ -178,7 +178,7 @@ func getLastRel(pkgDir, dirPrefix string) int64 {
 	return id
 }
 
-func prepareEnv(envIn []string, genC genCfgT, pkgC pkgCfgT) []string {
+func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 	var envOut []string
 	envMap := make(map[string]string)
 
@@ -198,6 +198,12 @@ func prepareEnv(envIn []string, genC genCfgT, pkgC pkgCfgT) []string {
 			"-Wformat-security -D_FORTIFY_SOURCE=2"
 		envMap["CXXFLAGS"] = envMap["CFLAGS"]
 		envMap["LDFLAGS"] = "-Wl,-z,now -Wl,-z,relro -Wl,-z,noexecstack"
+	}
+
+	if pkg.set == "musl" {
+		envMap["PKG_CONFIG_PATH"] = "/lib/pkgconfig"
+	} else {
+		envMap["PKG_CONFIG_PATH"] = "/usr/lib/pkgconfig"
 	}
 
 	envMap["LC_ALL"] = "C"

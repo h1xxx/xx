@@ -175,7 +175,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	for i := range envIface {
 		env = append(env, envIface[i].(string))
 	}
-	steps.env = prepareEnv(env, genC, pkgC)
+	steps.env = prepareEnv(env, genC, pkg, pkgC)
 
 	return src, steps
 }
