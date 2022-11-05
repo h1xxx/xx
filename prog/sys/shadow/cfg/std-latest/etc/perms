@@ -38,16 +38,25 @@ root:lxc	/usr/bin/newgidmap
 
 # dir permissions
 
+0755	d:/bin
+0755	d:/bin/
 0700	d:/boot
+0700	d:/boot/
 0755	d:/etc
 0755	d:/etc/
-0700	d:/etc/acpi
 0755	d:/mnt
+0755	d:/sbin
+0755	d:/sbin/
+0755	d:/lib
+0755	d:/lib/
+0755	d:/lib64
+0755	d:/lib64/
 0755	d:/usr
 0755	d:/usr/
 0755	d:/var
 0755	d:/var/
 
+0700	d:/etc/acpi
 0750	d:/var/log
 0750	d:/var/log/
 0700	d:/var/xx
@@ -114,9 +123,13 @@ root:lxc	/usr/bin/newgidmap
 0444	f:/etc/mtab
 
 0755	f:/etc/udev/rules.d/
+0755	f:/bin/
+0755	f:/sbin/
+0755	f:/lib/
+0755	f:/lib64/
+0700	f:/sbin/busybox-sysinit
 0755	f:/usr/bin/
 0755	f:/usr/sbin/
-0700	f:/usr/sbin/busybox-sysinit
 0755	f:/usr/libexec/
 0755	f:/usr/lib/
 0755	f:/usr/include/

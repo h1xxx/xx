@@ -28,6 +28,35 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "mkdir -p build && cd build && ../configure
+	--prefix=/musl
+	--bindir=/bin
+	--libdir=/lib
+	--target=x86_64-linux-musl
+	--enable-gold
+	--enable-ld=default
+	--enable-plugins
+	--enable-64-bit-bfd
+	--enable-deterministic-archives
+	--enable-static
+	--disable-shared
+	--disable-separate-code
+	--disable-werror
+	--disable-multilib
+	--disable-nls
+	--disable-werror
+	--with-system-zlib"
+
+build = "cd build && make tooldir=/"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/ install &&
+	rm -r <pkg_dir>/musl/share/info/"
+
+
+
 [ bootstrap_1_cross ]
 
 env = []

@@ -27,6 +27,28 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+
+# cp config...: produce generic libraries, not optimized for the host cpu
+configure = "cp -v configfsf.guess config.guess &&
+	cp -v configfsf.sub config.sub &&
+	./configure
+	--prefix=/musl
+	--bindir=/bin
+	--libdir=/lib
+	--enable-static
+	--disable-shared
+	--disable-cxx
+	--build=x86_64-linux-musl"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/musl/share/"
+
+
+
 [ bootstrap ]
 
 env = []

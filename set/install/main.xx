@@ -1,7 +1,6 @@
 sys/busybox			sysinit			latest
 sys/busybox			std			latest
-sys/oksh			std			latest
-sys/bash			std			latest
+sys/bash			musl			latest
 sys/coreutils			std			latest
 text/man-pages			std			latest
 sys/iana-etc			std			latest

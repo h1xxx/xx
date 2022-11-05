@@ -13,10 +13,10 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
 	--prefix=/usr
 	--sysconfdir=/etc
+	--bindir=/bin
+	--sbindir=/sbin
 	--mandir=/usr/share/man
 	--docdir=/usr/share/doc/bash
-	--disable-static
-	--disable-dependency-tracking
 
 	--enable-mem-scramble
 	--enable-readline
@@ -37,30 +37,43 @@ configure = "./configure
 build = "make y.tab.c && make builtins/libbuiltins.a && make"
 
 pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -f <pkg_dir>/usr/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
-	rm -r <pkg_dir>/usr/share/{doc,info}/"
+	rm -f <pkg_dir>/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
+	rm -r <pkg_dir>/usr/lib <pkg_dir>/usr/share/{doc,info}/"
 
 
 
-[ base ]
+[ musl ]
 
-env = []
+env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/usr
+	--prefix=/musl
 	--sysconfdir=/etc
+	--bindir=/bin
 	--mandir=/usr/share/man
 	--docdir=/usr/share/doc/bash
-	--without-curses
+
+	--enable-mem-scramble
+	--enable-readline
+	--with-installed-readline
+	--with-curses
+
 	--without-bash-malloc
+	--disable-threads
 	--disable-nls
-	--with-installed-readline"
+	--disable-debugger
+	--disable-directory-stack
+	--disable-disabled-builtins
+	--disable-net-redirections
+	--disable-progcomp
+	--disable-profiling"
 
 # parallel build workarounds
 build = "make y.tab.c && make builtins/libbuiltins.a && make"
+
 pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -f <pkg_dir>/usr/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
-	rm -r <pkg_dir>/usr/share/{doc,info}/"
+	rm <pkg_dir>/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
+	rm -r <pkg_dir>/musl/{share,lib} <pkg_dir>/usr/share/doc/"
 
 
 
@@ -70,6 +83,8 @@ env = [ "MAKEFLAGS=-j1" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
 	--prefix=/usr
+	--bindir=/bin
+	--sbindir=/sbin
 	--build=$(support/config.guess)
 	--host=${TARGET_TRIPLET}
 	--without-curses
@@ -78,7 +93,7 @@ configure = "./configure
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	ln -sfv bash <pkg_dir>/usr/bin/sh &&
-	rm -f <pkg_dir>/usr/bin/bashbug"
+	rm -f <pkg_dir>/bin/bashbug"
 
 
 
@@ -88,6 +103,8 @@ env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
 	--prefix=/usr
+	--bindir=/bin
+	--sbindir=/sbin
 	--docdir=/usr/share/doc/bash
 	--without-curses
 	--without-bash-malloc
@@ -97,4 +114,4 @@ configure = "./configure
 # parallel build workarounds
 build = "make y.tab.c && make builtins/libbuiltins.a && make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -vf <pkg_dir>/usr/bin/bashbug"
+	rm -vf <pkg_dir>/bin/bashbug"

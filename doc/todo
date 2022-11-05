@@ -1,5 +1,9 @@
 add option to remove all not installed files
 
+move /var/lib/{cnt} /cnt/var
+
+fix checksec /bin/bash with musl
+
 design methods around worldT struct
 move genC params into worldT
 rename pkg to p, pkgC to pc, and world to w

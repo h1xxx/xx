@@ -1,4 +1,4 @@
-export PATH='/bin:/sbin:/usr/cnt/bin'
+export PATH='/bin:/sbin:/usr/bin/:/usr/sbin:/usr/cnt/bin'
 export LC_ALL=en_US.utf8
 
 umask 027

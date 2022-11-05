@@ -24,6 +24,16 @@ init script: /etc/runit/3
 	uses /etc/rc.d/*.stop and /etc/rc.conf for config
 
 
+dir structure
+=============
+
+/bin		static user binaries
+/usr/bin	dynamic user binaries
+/sbin		static root user binaries
+/usr/sbin	dynamic root user binaries
+/lib		static libraries
+/usr/lib	dynamic libraries
+
 
 variable info
 

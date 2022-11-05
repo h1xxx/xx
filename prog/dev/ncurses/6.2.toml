@@ -10,7 +10,6 @@ src_dirname = "<prog>-<ver>"
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-
 configure = "./configure
 	--prefix=/usr
 	--exec-prefix=/usr
@@ -64,3 +63,35 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 	ln -sv libncurses.so <pkg_dir>/usr/lib/libcurses.so &&
 	rm -r <pkg_dir>/usr/share/man/man3/"
 
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/musl
+	--bindir=/bin
+	--libdir=/lib
+	--enable-widec
+	--enable-symlinks
+	--without-termlib
+	--disable-pc-files
+	--disable-home-terminfo
+	--disable-db-install
+	--without-shared
+	--without-progs
+	--without-manpages
+	--without-ada
+	--without-profile
+	--without-libtool
+	--without-ticlib
+	--without-cxx
+	--without-debug
+	--without-tests
+	--without-sysmouse
+	--without-normal"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	ln -s libncursesw.a <pkg_dir>/lib/libcurses.a"

@@ -14,10 +14,10 @@ configure = "make defconfig &&
 	sed -i 's|# CONFIG_STATIC is not set|CONFIG_STATIC=y|g' .config"
 
 build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/bin/ &&
-	cp -v busybox <pkg_dir>/usr/bin/ &&
-	ln -sv busybox <pkg_dir>/usr/bin/sh &&
-	ln -sv busybox <pkg_dir>/usr/bin/vi"
+pkg_create = "mkdir -pv <pkg_dir>/bin/ &&
+	cp -v busybox <pkg_dir>/bin/ &&
+	ln -sv busybox <pkg_dir>/bin/sh &&
+	ln -sv busybox <pkg_dir>/bin/vi"
 
 
 
@@ -29,10 +29,10 @@ configure = "cp <prog_dir>/files/sysinit-<ver_short>.config .config &&
 	make oldconfig"
 
 build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/sbin/ &&
-	cp -v busybox <pkg_dir>/usr/sbin/busybox-sysinit &&
+pkg_create = "mkdir -pv <pkg_dir>/sbin/ &&
+	cp -v busybox <pkg_dir>/sbin/busybox-sysinit &&
 	for l in init poweroff reboot; do
-		ln -sv busybox-sysinit <pkg_dir>/usr/sbin/${l};
+		ln -sv busybox-sysinit <pkg_dir>/sbin/${l};
 	done"
 
 

@@ -2,6 +2,7 @@
 
 # libc and a compiler
 dev/glibc			std			latest
+dev/musl			std			latest
 dev/gcc				std			latest
 dev/gcc-libgcc_s		std			latest
 dev/gcc-libgomp			std			latest
@@ -12,8 +13,11 @@ sys/busybox			std			latest
 sys/coreutils			std			latest
 dev/pkgconf			std			latest
 arch/zlib			std			latest
+arch/zlib			musl			latest
 dev/ncurses			std			latest
+dev/ncurses			musl			latest
 dev/readline			std			latest
+dev/readline			musl			latest
 
 # archiving programs
 arch/gzip			std			latest
@@ -37,13 +41,12 @@ dev/gperf			std			latest
 lang/bc				std			latest
 text/texinfo			std			latest
 dev/binutils			std			latest
-dev/bison			std			latest
+dev/bison			musl			latest
 dev/flex			std			latest
-dev/m4				std			latest
+dev/m4				musl			latest
 
-# shells
-sys/oksh			std			latest
-sys/bash			base			latest
+# shell
+sys/bash			musl			latest
 
 # /etc, /usr/share
 sys/iana-etc			std			latest
@@ -160,3 +163,4 @@ sys/gnupg			std			latest
 crypt/gpgme			std			latest
 sys/usbutils			std			latest
 sys/pciutils			std			latest
+

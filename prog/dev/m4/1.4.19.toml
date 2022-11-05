@@ -24,6 +24,21 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--bindir=/bin
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/info/"
+
+
+
 [ bootstrap_cross ]
 
 env = []

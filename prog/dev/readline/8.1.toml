@@ -24,6 +24,26 @@ pkg_create = "make DESTDIR=<pkg_dir> SHLIB_LIBS='-ltinfow' install &&
 
 
 
+[ musl ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/musl
+	--bindir=/bin
+	--libdir=/lib
+	--enable-static
+	--disable-shared
+	--disable-multibyte
+	--with-curses"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	chmod -R u+w <pkg_dir>/ || : &&
+	rm -r <pkg_dir>/musl/share/{doc,info}/"
+
+
+
 [ bootstrap ]
 
 env = []

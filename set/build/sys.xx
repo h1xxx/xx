@@ -6,7 +6,6 @@ sys/linux			std			latest
 # todo: doesn't build
 #sys/linux			perf			latest
 
-sys/bash			std			latest
 sys/numactl			std			latest
 sys/acpi			std			latest
 sys/cronie			std			latest

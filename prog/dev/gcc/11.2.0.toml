@@ -69,6 +69,43 @@ pkg_create = "cd build &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "for f in <prog_dir>/patch/musl-<ver>/*; do
+		patch -p1 -i \"${f}\";
+	done &&
+	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
+	mkdir -p build && cd build &&
+	../configure
+	--prefix=/musl
+	--target=x86_64-linux-musl
+	LD=ld
+	--disable-multilib
+	--disable-nls
+	--disable-bootstrap
+	--disable-assembly
+	--disable-werror
+	--disable-libmudflap
+	--disable-libsanitizer
+	--disable-gnu-indirect-function
+	--disable-libmpx
+	--with-system-zlib
+	--with-abi=64
+	--enable-fdpic
+	--enable-libstdcxx-time=rt
+	--enable-initfini-array
+	--enable-tls
+	--enable-default-pie
+	--enable-default-ssp
+	--enable-languages=c,c++"
+
+build = "cd build && make"
+pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+
+
+
 [ bootstrap_1_cross ]
 
 env = []
@@ -222,3 +259,4 @@ pkg_create = "cd build &&
 	mkdir -pv <pkg_dir>/usr/share/gdb/auto-load/usr/lib &&
 	mv -v <pkg_dir>/usr/lib/*gdb.py
 		<pkg_dir>/usr/share/gdb/auto-load/usr/lib"
+
