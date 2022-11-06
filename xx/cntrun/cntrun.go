@@ -39,8 +39,8 @@ func main() {
 		}
 	}
 
-	homeDir := "/usr/cnt/" + binCnt[prog] + "/home"
-	filesDir := "/usr/cnt/" + binCnt[prog] + "/files"
+	homeDir := "/cnt/rootfs/" + binCnt[prog] + "/home"
+	mntDir := "/cnt/rootfs/" + binCnt[prog] + "/mnt"
 	paths := getPathsFromArgs(initArgs)
 
 	// remove all files in a dir for links
@@ -55,24 +55,21 @@ func main() {
 	for _, p := range paths {
 		fileBase := filepath.Base(p)
 		fileBase = strings.Replace(fileBase, "'", "", -1)
-		cntLink := path.Join(filesDir, fileBase)
+		cntLink := path.Join(mntDir, fileBase)
 		// try hard links first; this has the advantage of bypassing
 		// parent dir permissions
 		err := createHardLink(p, cntLink)
 
 		// if hard links are not possible due to different filesystems
-		// or other reasons, then try to bind files/dirs 
+		// or other reasons, then try to bind files/dirs
 		fmt.Println(err, p, cntLink)
 		if err != nil {
 			bindFile(p, cntLink, &lxcConfig)
 		}
 	}
 
-	// bind /var/lib/<prog> to /home in a container
-	progVarDir := "/var/lib/" + binCnt[prog]
-	if fileExists(progVarDir) {
-		bindFile(progVarDir, "/home", &lxcConfig)
-	}
+	// bind /cnt/home/<prog> to /home in a container
+	bindFile("/cnt/home/"+binCnt[prog], "/home", &lxcConfig)
 
 	// prepare cmd
 	var args []string
@@ -110,13 +107,14 @@ func main() {
 	lxcConfig += cfgCmd
 
 	// write config
-	fOpts := os.O_CREATE | os.O_TRUNC | os.O_WRONLY
-	fd, err := os.OpenFile("/usr/cnt/"+binCnt[prog]+"/config", fOpts, 0600)
-	errExit(err, "can't write lxc config to /usr/cnt/"+prog+"/config")
+	c := "/cnt/rootfs/" + binCnt[prog] + "/config"
+	fd, err := os.OpenFile(c, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0600)
+	errExit(err, "can't write lxc config to "+c)
 	fmt.Fprintf(fd, lxcConfig)
 
 	// run
-	cmd := exec.Command("lxc-execute", "-n", binCnt[prog], "-P", "/usr/cnt")
+	cmd := exec.Command("lxc-execute", "-n", binCnt[prog], "-P",
+		"/cnt/rootfs")
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -124,7 +122,7 @@ func main() {
 	errExit(err, "can't run")
 
 	// cleanup
-	clearDir(filesDir)
+	clearDir(mntDir)
 }
 
 func parseCntConf(cntConf string) (map[string]string, map[string]string) {
@@ -266,7 +264,8 @@ func escapePath(path string) string {
 }
 
 func makeLxcConfig(cnt, ip string, netEnable bool) string {
-	lxcConfig := strings.Replace(cfgTemplate, "<dir>", "/usr/cnt/"+cnt, -1)
+	lxcConfig := strings.Replace(cfgTemplate, "<dir>",
+		"/cnt/rootfs/"+cnt, -1)
 
 	switch cnt {
 	case "mpv":

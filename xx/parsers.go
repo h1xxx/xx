@@ -314,7 +314,7 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 	var worldPkgs []pkgT
 	pkgVerMap := make(map[string]string)
 
-	worldDir := fp.Join(instDir, "/var/lib/xx")
+	worldDir := fp.Join(instDir, "/var/xx")
 	if !fileExists(worldDir) {
 		return worldPkgs
 	}
@@ -374,7 +374,7 @@ func parseSharedLibsFile(genC genCfgT, sharedLibsFile string) []pkgT {
 	return deps
 }
 
-// get a list of all container names in root's /usr/cnt dir
+// get a list of all container names in /cnt/rootfs dir
 func getCntList(cntDir string) []string {
 	var cntList []string
 	if !fileExists(cntDir) {
@@ -385,7 +385,7 @@ func getCntList(cntDir string) []string {
 
 	for _, cntDirEntry := range cntDirs {
 		cntDirName := cntDirEntry.Name()
-		if !cntDirEntry.IsDir() || cntDirName == "bin" {
+		if !cntDirEntry.IsDir() {
 			continue
 		}
 		cntList = append(cntList, cntDirName)

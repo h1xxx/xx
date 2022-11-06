@@ -68,7 +68,7 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 			if !worldPkgExists(world, genC, dep, pkgC) && !pkgC.force {
 				depCfgFiles := getPkgCfgFiles(genC, dep)
 
-				instPkg(dep, genC.rootDir, pkgC.instDir, pkgC.cnt)
+				instPkg(dep, pkgC, genC.rootDir)
 				instPkgCfg(depCfgFiles, pkgC.instDir, genC.verbose)
 
 				addPkgToWorldT(world, dep, loc)
@@ -77,7 +77,7 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
 		if !worldPkgExists(world, genC, pkg, pkgC) && !pkgC.force {
-			instPkg(pkg, genC.rootDir, pkgC.instDir, pkgC.cnt)
+			instPkg(pkg, pkgC, genC.rootDir)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, genC.verbose)
 
 			addPkgToWorldT(world, pkg, loc)
@@ -324,10 +324,10 @@ func readDeps(genC genCfgT, depType string) map[pkgT][]pkgT {
 func instSysCfg(world map[string]worldT, genC genCfgT) {
 	instTargetCfg(genC, genC.rootDir, world["/"].pkgs)
 
-	cntDir := fp.Join(genC.rootDir, "/usr/cnt")
+	cntDir := fp.Join(genC.rootDir, "/cnt/rootfs/")
 	cntList := getCntList(cntDir)
 	for _, cntName := range cntList {
-		instTargetCfg(genC, "/usr/cnt/"+cntName, world[cntName].pkgs)
+		instTargetCfg(genC, "/cnt/rootfs/"+cntName, world[cntName].pkgs)
 	}
 }
 

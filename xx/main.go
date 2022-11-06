@@ -143,14 +143,14 @@ type pkgT struct {
 
 // pkgCfgT stores configuration of the package and build environment
 //
-// instDir	dir to install a pkg to:	<root_dir>, <root_dir>/usr/cnt/<prog>
+// instDir	dir to install a pkg to:	<root_dir>, /cnt/rootfs/<prog>
 // tmpDir	tmp build dir:		/tmp/xx/build/lvm2-2.35_build-00
 // tmpLogDir	tmp log dir:		/tmp/xx/build/lvm2-2.35_build-00/log
 //
 // force	force building or installation of the package
 // cnt		package is to be installed in a container
 // cntPkg	root package for the container
-// cntProg	name of the container in /usr/cnt
+// cntProg	name of the pkg container in /cnt/rootfs/
 // crossBuild	program is compiled with host tools
 //
 // src		struct with source code location and type
@@ -331,7 +331,7 @@ func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
 		addPkgToWorldT(world, pkg, "/")
 	}
 
-	cntDir := fp.Join(genC.rootDir, "/usr/cnt")
+	cntDir := fp.Join(genC.rootDir, "/cnt/rootfs")
 	cntList := getCntList(cntDir)
 	for _, pkgC := range pkgCfgs {
 		if pkgC.cnt && !stringExists(pkgC.cntProg, cntList) {
@@ -344,7 +344,7 @@ func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
 	}
 
 	for _, cntProg := range cntList {
-		cntRootDir := fp.Join(genC.rootDir, "/usr/cnt", cntProg)
+		cntRootDir := fp.Join(genC.rootDir, "/cnt/rootfs/", cntProg)
 		cntWorldPkgs := getWorldPkgs(genC, cntRootDir)
 
 		for _, pkg := range cntWorldPkgs {
@@ -494,7 +494,8 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 	if pkgC.cnt {
 		pkgC.cntPkg = pkg
 		pkgC.cntProg = pkg.prog
-		pkgC.instDir = genC.rootDir + "/usr/cnt/" + pkgC.cntProg
+		pkgC.instDir = fp.Join(genC.rootDir, "/cnt/rootfs/",
+			pkgC.cntProg)
 	} else {
 		pkgC.instDir = genC.rootDir
 	}

@@ -1,8 +1,10 @@
+deploy default config files to usr//cnt/./home do use when no /var/lib/.
+
 add option to remove all not installed files
 
-move /var/lib/{cnt} /cnt/var
-
 fix checksec /bin/bash with musl
+
+args check: root dir parameter must be an absolute path
 
 design methods around worldT struct
 move genC params into worldT
@@ -42,7 +44,6 @@ speed up powering down by checking if all processes are killed
 
 create a dir with links to all config files in sysconf 
 
-deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
 cntrun: if cnt is running attach, instead of execute
 

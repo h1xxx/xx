@@ -1,4 +1,4 @@
 
 
 post-deploy step is run in a container unless target_dir is "/" (includes
-installs to /usr/cnt) or is cross_build
+installs to /cnt) or is cross_build

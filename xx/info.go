@@ -246,7 +246,7 @@ func getFileMaps(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]strin
 		// store files and hashes in maps for all packages
 		for f, h := range fh {
 			if pkgCfgs[i].cnt {
-				f = "/usr/cnt/" + pkg.prog + "/" + f
+				f = "/cnt/rootfs/" + pkg.prog + "/" + f
 			}
 			f = filepath.Clean(f)
 

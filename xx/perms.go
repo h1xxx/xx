@@ -18,13 +18,13 @@ func setSysPerm(rootDir string) {
 	fmt.Println("  " + rootDir)
 	setTargetPerm(rootDir, false)
 
-	// set permissions for containers in /usr/cnt
-	cntPathList, err := os.ReadDir(rootDir + "/usr/cnt")
-	errExit(err, "can't read dir: "+rootDir+"/usr/cnt/")
+	// set permissions for containers in /cnt/rootfs
+	cntPathList, err := os.ReadDir(rootDir + "/cnt/rootfs")
+	errExit(err, "can't read dir: "+rootDir+"/cnt/rootfs")
 
 	for _, cntPath := range cntPathList {
 		cntName := cntPath.Name()
-		targetPath := fp.Join(rootDir, "/usr/cnt/", cntName)
+		targetPath := fp.Join(rootDir, "/cnt/rootfs/", cntName)
 		fmt.Println("  " + targetPath)
 		if !fileExists(targetPath + "/etc/perms") {
 			continue
@@ -201,7 +201,7 @@ func getMode(path, targetDir string, permsMap map[string]string, cnt bool) os.Fi
 		pType = "f"
 	}
 
-	if !cnt && strings.HasPrefix(path, "/usr/cnt/") {
+	if !cnt && strings.HasPrefix(path, "/cnt/rootfs") {
 		pathLen := len(strings.Split(path, "/"))
 		if pathLen >= 6 {
 			return 0
@@ -266,7 +266,7 @@ func getOwner(path, targetDir string, ownerMap map[string]string, cnt bool) (int
 
 	p := fp.Join(targetDir, path)
 
-	if !cnt && strings.HasPrefix(path, "/usr/cnt/") {
+	if !cnt && strings.HasPrefix(path, "/cnt/rootfs") {
 		pathLen := len(strings.Split(path, "/"))
 		if pathLen >= 6 {
 			return 0, 0

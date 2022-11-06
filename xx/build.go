@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -78,7 +79,7 @@ func linkBaseDir(rootDir string) {
 	errExit(err, "can't create link to /tmp/xx/base in:\n  "+rootDir)
 
 	// remove the link to world dir in base system
-	os.RemoveAll(rootDir + "/var/lib/xx")
+	os.RemoveAll(rootDir + "/var/xx")
 
 	baseLinkFile := fp.Join(rootDir, "base_linked")
 	_, err = os.Create(baseLinkFile)
@@ -129,7 +130,7 @@ func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs [
 		} else if pkg.categ == "alpine" && !pkgC.cnt {
 			continue
 		} else {
-			instPkg(pkg, genC.rootDir, pkgC.instDir, pkgC.cnt)
+			instPkg(pkg, pkgC, genC.rootDir)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, genC.verbose)
 
 			loc := "/"
@@ -162,51 +163,62 @@ func selfLibsExist(world map[string]worldT, genC genCfgT, pkg pkgT) {
 	}
 }
 
-func instPkg(pkg pkgT, rootDir, instDir string, cnt bool) {
+func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 	// todo: can be removed once init of cnt dir is done elsewhere
-	if cnt {
-		topDirs := []string{"/bin", "/etc", "/home", "/lib", "/sbin",
-			"/usr", "/var/lib/xx", "/mnt/shared", "/mnt/xx",
-			"/dev", "/proc", "/run", "/sys", "/tmp"}
-		for _, dir := range topDirs {
-			err := os.MkdirAll(instDir+dir, 0755)
-			errExit(err, "couldn't create dir: "+instDir+dir)
+	if pkgC.cnt {
+		var dirsToCreate = map[string]fs.FileMode{
+			fp.Join(pkgC.instDir, "/mnt"):                0777,
+			fp.Join(rootDir, "/cnt/bin"):                 0755,
+			fp.Join(rootDir, "/cnt/home/", pkgC.cntProg): 0755,
 		}
-		err := os.MkdirAll(instDir+"/files", 0777)
-		errExit(err, "couldn't create dir: "+instDir+"files")
-		err = os.MkdirAll(rootDir+"/usr/cnt/bin", 0755)
-		errExit(err, "couldn't create dir:"+rootDir+"/usr/cnt/bin")
 
-		fd, _ := os.Create(instDir + "/config")
+		topDirs := []string{"/bin", "/etc", "/home", "/lib", "/lib64",
+			"/sbin", "/usr", "/var/xx", "/mnt",
+			"/dev", "/proc", "/run", "/sys", "/tmp"}
+
+		for _, dir := range topDirs {
+			dirsToCreate[fp.Join(pkgC.instDir, dir)] = 0755
+		}
+
+		for dir, perm := range dirsToCreate {
+			err := os.MkdirAll(dir, perm)
+			errExit(err, "can't create dir: "+dir)
+		}
+
+		fd, _ := os.Create(pkgC.instDir + "/config")
 		fd.Close()
 
+		ldLib := "ld-linux-x86-64.so.2"
 		var symLinks = map[string]string{
-			"/lib/ld-linux-x86-64.so.2":   "../usr/lib/ld-linux-x86-64.so.2",
-			"/lib64/ld-linux-x86-64.so.2": "../usr/lib/ld-linux-x86-64.so.2",
-			"/usr/lib64":                  "lib",
-			"../bin/" + pkg.prog:          "cntrun",
+			"/lib/" + ldLib:        "../usr/lib/" + ldLib,
+			"/lib64/" + ldLib:      "../usr/lib/" + ldLib,
+			"/usr/lib64":           "lib",
+			"/cnt/bin/" + pkg.prog: "cntrun",
 		}
+
 		for symlink, target := range symLinks {
-			_ = os.Symlink(target, instDir+"/"+symlink)
+			l := fp.Join(pkgC.instDir, symlink)
+			_ = os.Symlink(target, l)
 		}
 
 		// create symlinks to containers
 		binCnt, _ := parseCntConf(rootDir + "/etc/cnt.conf")
 		for bin, cnt := range binCnt {
 			if cnt == pkg.prog {
-				_ = os.Symlink("cntrun",
-					instDir+"/../bin/"+bin)
+				l := pkgC.instDir + "/../../bin/" + bin
+				_ = os.Symlink("cntrun", l)
 			}
 		}
 
 		cmd := exec.Command("/home/xx/tools/busybox", "cp",
-			"/home/xx/xx/cntrun/cntrun", instDir+"/../bin")
-		if strings.Contains(instDir, ":/") {
+			"/home/xx/xx/cntrun/cntrun", pkgC.instDir+"/../../bin/")
+		if strings.Contains(pkgC.instDir, ":/") {
 			cmd = exec.Command("scp", "-q",
 				"/home/xx/xx/cntrun/cntrun",
-				instDir+"/../bin")
+				pkgC.instDir+"/../../bin/")
 		}
-		err = cmd.Run()
+
+		err := cmd.Run()
 		errExit(err, "can't copy cntrun file")
 
 		// install default shadow files
@@ -214,16 +226,17 @@ func instPkg(pkg pkgT, rootDir, instDir string, cnt bool) {
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/perms",
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/group",
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/passwd",
-			instDir+"/etc/")
-		if strings.Contains(instDir, ":/") {
+			pkgC.instDir+"/etc/")
+		if strings.Contains(pkgC.instDir, ":/") {
+			etcDir := "/home/xx/prog/sys/shadow/cfg/std-latest/etc"
 			cmd = exec.Command("scp", "-q",
-				"/home/xx/prog/sys/shadow/cfg/std-latest/etc/perms",
-				"/home/xx/prog/sys/shadow/cfg/std-latest/etc/group",
-				"/home/xx/prog/sys/shadow/cfg/std-latest/etc/passwd",
-				instDir+"/etc/")
+				etcDir+"/perms",
+				etcDir+"/group",
+				etcDir+"/passwd",
+				pkgC.instDir+"/etc/")
 		}
 		err = cmd.Run()
-		errExit(err, "can't copy /etc/perms file to: "+instDir+"/etc")
+		errExit(err, "can't copy /etc/perms file to: "+pkgC.instDir+"/etc")
 	}
 
 	fmt.Println("  installing...")
@@ -232,17 +245,17 @@ func instPkg(pkg pkgT, rootDir, instDir string, cnt bool) {
 	createRootDirs(rootDir)
 
 	busybox := "/home/xx/tools/busybox"
-	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + instDir
-	if strings.Contains(instDir, ":/") {
-		c = "scp -q " + pkg.pkgDir + "/* " + instDir
+	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + pkgC.instDir
+	if strings.Contains(pkgC.instDir, ":/") {
+		c = "scp -q " + pkg.pkgDir + "/* " + pkgC.instDir
 	}
 	cmd := exec.Command(busybox, "sh", "-c", c)
 	out, err := cmd.Output()
-	errExit(err, "can't copy "+pkg.pkgDir+" to "+instDir+
+	errExit(err, "can't copy "+pkg.pkgDir+" to "+pkgC.instDir+
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
 
 	// todo: move this outside
-	addPkgToWorldDir(pkg, instDir)
+	addPkgToWorldDir(pkg, pkgC.instDir)
 }
 
 // installs config files for the pkg
@@ -268,7 +281,7 @@ func instPkgCfg(cfgFiles map[string]string, instDir string, verbose bool) {
 }
 
 func addPkgToWorldDir(pkg pkgT, instDir string) {
-	worldDir := fp.Join(instDir, "/var/lib/xx")
+	worldDir := fp.Join(instDir, "/var/xx")
 
 	// todo: add remote host handling
 
@@ -300,9 +313,9 @@ func addPkgToWorldT(world map[string]worldT, pkg pkgT, loc string) {
 
 func worldPkgExists(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) bool {
 	// todo: try to simplify this by making instDir == rootDir
-	worldDir := fp.Join(genC.rootDir, "/var/lib/xx")
+	worldDir := fp.Join(genC.rootDir, "/var/xx")
 	if pkgC.cnt {
-		worldDir = fp.Join(pkgC.instDir, "/var/lib/xx")
+		worldDir = fp.Join(pkgC.instDir, "/var/xx")
 	}
 	// todo: add remote host handling
 	f := fp.Join(worldDir, pkg.name, pkg.setVerRel)
@@ -329,9 +342,10 @@ func createRootDirs(rootDir string) {
 		"/{dev,proc,sys,run,tmp}",
 		"/etc/{xx,rc.d,perms.d,sysctl.d}",
 		"/home/{x,xx}",
+		"/cnt/{bin,home,rootfs}",
 		"/mnt/{misc,shared}",
 		"/usr/lib/firmware",
-		"/usr/{bin,cnt/bin,include,lib,sbin,share}",
+		"/usr/{bin,include,lib,sbin,share}",
 		"/usr/share/{doc,locale,man,misc,terminfo,zoneinfo}",
 		"/usr/share/man/man{1,2,3,4,5,6,7,8}",
 		"/run/lock",

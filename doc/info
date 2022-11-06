@@ -80,8 +80,9 @@ pkg toml
   needed for that - "mode" e.g. mode = "base"
 
 
-adding container in /usr/cnt/bin
+adding container in /cnt/bin
 - /etc/cnt.conf
+- /etc/perms
 
 
 lxc-execute to build alpine is not done in /tmp/xx/media, but in /tmp/xx/build/pandoc-edge_build-04//

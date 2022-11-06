@@ -74,16 +74,16 @@ root:lxc	/usr/bin/newgidmap
 
 0777	d:/mnt/shared
 
-0755	d:/usr/cnt
-0755	d:/usr/cnt/
+0755	d:/cnt
+0755	d:/cnt/
 
-0777	d:/usr/cnt/exiftool/files
-0777	d:/usr/cnt/fbpdf/files
-0777	d:/usr/cnt/fim/files
-0777	d:/usr/cnt/mpv/files
-0777	d:/usr/cnt/mutt/files
-0777	d:/usr/cnt/w3m/files
-0777	d:/usr/cnt/vim/files
+0777	d:/cnt/exiftool/files
+0777	d:/cnt/fbpdf/files
+0777	d:/cnt/fim/files
+0777	d:/cnt/mpv/files
+0777	d:/cnt/mutt/files
+0777	d:/cnt/w3m/files
+0777	d:/cnt/vim/files
 
 0777	d:/var/lib/dosbox-x
 0777	d:/var/lib/dosbox-x/
@@ -141,9 +141,9 @@ root:lxc	/usr/bin/newgidmap
 4755	f:/usr/bin/newuidmap
 4755	f:/usr/bin/newgidmap
 4755	f:/usr/libexec/lxc/lxc-user-nic
-0755	f:/usr/cnt/w3m/usr/libexec
+0755	f:/cnt/w3m/usr/libexec
 
-0755	f:/usr/cnt/bin/
+0755	f:/cnt/bin/
 
 0666	f:/var/lib/dosbox-x/
 0666	f:/var/lib/dosbox-staging/
@@ -153,7 +153,7 @@ root:lxc	/usr/bin/newgidmap
 
 
 
-# permissions for for /usr/cnt
+# permissions for containers in /cnt
 x:x	c:/home
 x:x	c:/config
 
