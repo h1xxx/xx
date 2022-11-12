@@ -1,7 +1,7 @@
 HISTSIZE=32768
 HISTFILE="${HOME}/.bash_history"
 HISTCONTROL=ignoredups:ignorespace
-HISTIGNORE='ls -l:ls -la:l:ls:ll:la:lx:lm:d:x:du:df:free:top'
+HISTIGNORE='ls -l:ls -la:l:ls:ll:la:lx:lm:d:du:dusort:df:free:top'
 HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S : '
 
 green='\[\033[32m\]'
@@ -43,3 +43,4 @@ alias df='df -h'
 alias free='free -h'
 alias psgrep='ps aux | grep'
 
+dusort(){ du -h "${@}" | sort -h ;}
