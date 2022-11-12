@@ -55,7 +55,7 @@ dev/strace			std			latest
 lang/go				std			latest
 dev/mpc				std			latest
 dev/mpfr			std			latest
-sys/linux			api_headers		latest
+sys/linux			headers			latest
 
 # network tools
 net/arping			std			latest

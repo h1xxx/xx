@@ -31,6 +31,38 @@ pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sh Configure -des
+	-Uusedl
+	-Duseshrplib
+	-Dusesoname
+	-Dperl_static_inline='static __inline__'
+	-Dd_static_inline
+	-Dprefix=
+	-Dbin=/bin
+	-Dvendorprefix=
+	-Dcccdlflags='-fPIC'
+	-Dcccdlflags='-fPIC'
+	-Dccdlflags='-rdynamic'
+	-Dprivlib=/lib/perl5/<ver>/core_perl
+	-Darchlib=/lib/perl5/<ver>/core_perl
+	-Dsitelib=/lib/perl5/<ver>/site_perl
+	-Dsitearch=/lib/perl5/<ver>/site_perl
+	-Dvendorlib=/lib/perl5/<ver>/vendor_perl
+	-Dvendorarch=/lib/perl5/<ver>/vendor_perl
+	-Dpager='/usr/bin/less -isR'
+	-Dman1dir=none
+	-Dman3dir=none"
+ 
+build = "make"
+pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+"
+
+
+
 [ bootstrap ]
 
 env = [ "CFLAGS=", "LDFLAGS=" ]

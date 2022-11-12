@@ -23,6 +23,12 @@ sys/eudev				std			latest
 	dev/gperf			std			latest
 	lang/perl			std			latest
 
+lang/perl				std			latest
+	sys/gdbm			std			latest
+
+lang/perl				musl			latest
+	sys/gdbm			musl			latest
+
 sys/rsyslog				std			latest
 	text/libestr			std			latest
 	text/libfastjson		std			latest
@@ -54,6 +60,11 @@ dev/git					std			latest
 
 dev/popt				std			latest
 	dev/autoconf			std			latest
+	lang/perl			std			latest
+
+dev/popt				musl			latest
+	dev/autoconf			std			latest
+	lang/perl			musl			latest
 
 sys/tmux				std			latest
 	sys/libevent			std			latest
@@ -63,9 +74,34 @@ sys/cryptsetup				std			latest
 	sys/lvm2			std			latest
 	dev/popt			std			latest
 	crypt/argon2			std			latest
+	sys/util-linux			std			latest
+
+sys/cryptsetup				musl			latest
+	text/json-c			musl			latest
+	sys/lvm2			musl			latest
+	dev/popt			musl			latest
+	crypt/argon2			musl			latest
+	sys/util-linux			musl			latest
+
+sys/util-linux				std			latest
+	sys/linux			headers			latest
+
+sys/util-linux				musl			latest
+	sys/linux			headers_static		latest
 
 sys/lvm2				std			latest
+	sys/util-linux			std			latest
 	dev/libaio			std			latest
+
+sys/lvm2				musl			latest
+	sys/util-linux			musl			latest
+	dev/libaio			musl			latest
+	dev/ctags			musl			latest
+
+dev/ctags				musl			latest
+	text/libpcre2			musl			latest
+	arch/bzip2			musl			latest
+	sys/libseccomp			musl			latest
 
 emu/lxc					std			latest
 	sys/libseccomp			std			latest
@@ -308,7 +344,7 @@ x11/dwm					std			latest
 	x11/libXft			std			latest
 	x11/libXinerama			std			latest
 
-sys/linux				api_headers		latest
+sys/linux				headers			latest
 	dev/git				std			latest
 
 sys/flashrom				std			latest
@@ -589,6 +625,13 @@ x11/openbox				std			latest
 
 net/chrony				std			latest
 	sys/libcap			std			latest
+
+sys/openssh				std			latest
+	crypt/openssl			std			latest
+
+sys/openssh				musl			latest
+	crypt/libressl			musl			latest
+
 
 
 ### deprecated

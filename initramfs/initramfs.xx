@@ -1,5 +1,6 @@
 sys/busybox			std			latest
-sys/cryptsetup			std			latest
-sys/openssh			std			latest
-sys/e2fsprogs			std			latest
-net/dhcpcd			std			latest
+sys/shadow			musl			latest
+sys/cryptsetup			musl			latest
+sys/openssh			musl			latest
+sys/e2fsprogs			musl			latest
+net/dhcpcd			musl			latest

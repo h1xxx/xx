@@ -3,9 +3,9 @@
 # tools built using libc and compiler from the host system
 dev/binutils			bootstrap_1_cross		latest
 dev/gcc				bootstrap_1_cross		latest
-sys/linux			bootstrap_api_headers_cross	latest
+sys/linux			bootstrap_headers_cross		latest
 dev/glibc			bootstrap_cross			latest
-dev/glibc			bootstrap_headers_cross		latest	f
+dev/glibc			bootstrap_headers_cross		latest
 dev/gcc				bootstrap_libstdcpp_cross	latest
 dev/m4				bootstrap_cross			latest
 sys/bash			bootstrap_cross			latest

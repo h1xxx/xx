@@ -31,7 +31,42 @@ configure = "./configure
 
 	--with-crypto_backend=openssl
 	--with-luks2-pbkdf=argon2id
-	--with-luks2-parallel-threads=8"
+	--with-luks2-parallel-threads=4"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include", "PKG_CONFIG_PATH=/lib/pkgconfig" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=
+	--with-default-luks-format=LUKS2
+	--enable-static
+	--disable-shared
+	--disable-dependency-tracking
+	--disable-nls
+	--disable-pwquality
+	--disable-passwdqc
+	--disable-veritysetup
+	--disable-cryptsetup-reencrypt
+	--disable-integritysetup
+	--disable-selinux
+	--disable-udev
+
+	--enable-libargon2
+	--enable-internal-sse-argon2
+	--disable-veritysetup
+	--disable-cryptsetup-reencrypt
+	--disable-integritysetup
+	--disable-gcrypt-pbkdf2
+
+	--with-crypto_backend=openssl
+	--with-luks2-pbkdf=argon2id
+	--with-luks2-parallel-threads=4"
 
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install"

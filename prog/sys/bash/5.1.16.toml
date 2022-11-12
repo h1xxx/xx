@@ -47,11 +47,10 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/musl
+	--prefix=
 	--sysconfdir=/etc
-	--bindir=/bin
-	--mandir=/usr/share/man
-	--docdir=/usr/share/doc/bash
+	--mandir=/share/man
+	--docdir=share/doc/bash
 
 	--enable-mem-scramble
 	--enable-readline
@@ -72,8 +71,8 @@ configure = "./configure
 build = "make y.tab.c && make builtins/libbuiltins.a && make"
 
 pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm <pkg_dir>/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
-	rm -r <pkg_dir>/musl/{share,lib} <pkg_dir>/usr/share/doc/"
+	rm <pkg_dir>/bin/bashbug <pkg_dir>/share/man/man1/*bug* &&
+	rm -r <pkg_dir>/{share,lib} <pkg_dir>/share/doc/"
 
 
 

@@ -70,14 +70,12 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/musl
-	--bindir=/bin
-	--libdir=/lib
+	--prefix=
 	--enable-widec
 	--enable-symlinks
-	--without-termlib
-	--disable-pc-files
-	--disable-home-terminfo
+	--with-termlib
+	--enable-pc-files
+	--enable-home-terminfo
 	--disable-db-install
 	--without-shared
 	--without-progs
@@ -94,4 +92,10 @@ configure = "./configure
 
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
-	ln -s libncursesw.a <pkg_dir>/lib/libcurses.a"
+	mkdir -pv <pkg_dir>/lib/pkgconfig &&
+	mv <pkg_dir>/usr/share/pkgconfig/* <pkg_dir>/lib/pkgconfig/ &&
+	rmdir <pkg_dir>/usr/share/pkgconfig <pkg_dir>/usr/share <pkg_dir>/usr &&
+	for lib in form menu ncurses panel tinfo; do
+		echo \"INPUT(-l${lib}w)\" > <pkg_dir>/lib/lib${lib}.a &&
+		ln -sv ${lib}w.pc <pkg_dir>/lib/pkgconfig/${lib}.pc;
+	done"

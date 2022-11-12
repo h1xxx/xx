@@ -1,0 +1,58 @@
+[ src ]
+
+url = "https://github.com/universal-ctags/ctags/archive/p<ver>.tar.gz"
+src_type = "tar"
+src_dirname = "<prog>-p<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "if [ ! -e /bin/perl ]; then
+                ln -s /usr/bin/perl /bin/perl &&
+                ./autogen.sh &&
+                rm /bin/perl;
+        else
+                ./autogen.sh;
+        fi;
+	./configure
+	--prefix=/
+	--sysconfdir=/etc
+	--prefix=/usr
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--disable-static
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "if [ ! -e /bin/perl ]; then
+                ln -s /usr/bin/perl /bin/perl &&
+                ./autogen.sh &&
+                rm /bin/perl;
+        else
+                ./autogen.sh;
+        fi;
+	./configure
+	--prefix=/
+	--sysconfdir=/etc
+	--mandir=/usr/share/man
+	--enable-static
+	--disable-shared
+	--localstatedir=/var
+	--disable-iconv
+	--disable-xml
+	--disable-dependency-tracking
+	--disable-external-sort"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"

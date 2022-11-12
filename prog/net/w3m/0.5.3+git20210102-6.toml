@@ -11,7 +11,7 @@ src_dirname = "w3m-debian-<ver_pkgspec>"
 env = [ "LIBS=-ltinfow" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/
+	--prefix=
 	--sysconfdir=/etc
 	--bindir=/usr/bin
 	--libexecdir=/usr/libexec

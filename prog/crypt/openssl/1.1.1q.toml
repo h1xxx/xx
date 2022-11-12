@@ -23,3 +23,4 @@ pkg_create = "sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile &&
 	make DESTDIR=<pkg_dir> MANSUFFIX=ssl install_sw &&
 	make DESTDIR=<pkg_dir> MANSUFFIX=ssl install_man_docs &&
 	rm -r <pkg_dir>/usr/share/man/man{1/openssl-,1/c_,3,5,7}*"
+

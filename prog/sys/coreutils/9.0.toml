@@ -29,6 +29,31 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static", "FORCE_UNSAFE_CONFIGURE=1", "CFLAGS+=-mcmodel=large" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=/usr
+	--bindir=/bin
+	--enable-install-program=hostname
+	--enable-no-install-program=kill,uptime
+	--disable-acl
+	--disable-xattr
+	--disable-libcap
+	--disable-nls
+	--disable-dependency-tracking
+	--without-selinux"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mkdir -pv <pkg_dir>/{usr/bin,sbin} &&
+	ln -sv /bin/env <pkg_dir>/usr/bin/env &&
+	mv -v <pkg_dir>/bin/chroot <pkg_dir>/sbin &&
+	rm -r <pkg_dir>/usr/share/info/"
+
+
+
 [ bootstrap_cross ]
 
 env = []

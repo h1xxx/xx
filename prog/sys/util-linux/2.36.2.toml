@@ -40,6 +40,39 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 
 
 
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include -I/usr/include -D_DIRENT_HAVE_D_TYPE" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	ADJTIME_PATH=/var/lib/hwclock/adjtime
+	--prefix=
+	--host=x86_64-pc-linux-gcc
+	--docdir=/share/doc/util-linux
+	--enable-static
+	--disable-shared
+	--disable-chfn-chsh
+	--disable-pylibmount
+	--disable-bash-completion
+	--disable-agetty
+	--disable-plymouth_support
+	--disable-nls
+	--disable-nologin
+	--disable-colors-default
+	--disable-dependency-tracking
+	--disable-makeinstall-chown
+	--disable-makeinstall-setuid
+	--without-btrfs
+	--without-python
+	--without-systemd
+	--without-systemdsystemunitdir"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"
+
+
+
 [ bootstrap ]
 
 env = [ "CFLAGS=", "LDFLAGS=" ]

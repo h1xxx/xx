@@ -19,3 +19,20 @@ configure = "./configure
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/usr/share/info/"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=
+	--enable-static
+	--disable-shared
+	--disable-nls
+	--disable-dependency-tracking"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/share/info/"

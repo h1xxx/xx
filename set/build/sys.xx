@@ -1,4 +1,4 @@
-sys/linux			api_headers		latest
+sys/linux			headers			latest
 sys/linux-firmware-bin		std			latest
 sys/intel-microcode-bin		std			latest
 sys/linux			std			latest

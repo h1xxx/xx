@@ -24,3 +24,24 @@ build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	mv -v <pkg_dir>/etc/ <pkg_dir>/usr/share/ &&
 	chmod -Rv u+w <pkg_dir>/usr/"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include", "CFLAGS+=-fPIC" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=
+	--libexecdir=/lib/dhcpcd
+	--dbdir=/var/lib/dhcpcd
+	--sanitize
+	--enable-privsep
+	--privsepuser=dhcpcd
+	--disable-auth
+	--without-udev"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	mv -v <pkg_dir>/etc/ <pkg_dir>/share/ &&
+	chmod -Rv u+w <pkg_dir>/"

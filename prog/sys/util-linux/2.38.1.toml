@@ -1,0 +1,105 @@
+[ src ]
+
+url = "https://www.kernel.org/pub/linux/utils/util-linux/v<ver_short>/util-linux-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	ADJTIME_PATH=/var/lib/hwclock/adjtime
+	--prefix=/usr
+	--libdir=/usr/lib
+	--bindir=/usr/bin
+	--sbindir=/usr/sbin
+	--docdir=/usr/share/doc/util-linux
+	--disable-chfn-chsh
+	--disable-pylibmount
+	--disable-bash-completion
+	--disable-agetty
+	--disable-plymouth_support
+	--disable-nls
+	--disable-nologin
+	--disable-static
+	--disable-colors-default
+	--disable-dependency-tracking
+	--disable-makeinstall-chown
+	--disable-makeinstall-setuid
+	--without-btrfs
+	--without-python
+	--without-systemd
+	--without-systemdsystemunitdir"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include -D_DIRENT_HAVE_D_TYPE", "MAKEFLAGS=-j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	ADJTIME_PATH=/var/lib/hwclock/adjtime
+	--prefix=
+	--host=x86_64-pc-linux-musl
+	--docdir=/share/doc/util-linux
+	--enable-static
+	--disable-shared
+	--disable-chfn-chsh
+	--disable-pylibmount
+	--disable-bash-completion
+	--disable-agetty
+	--disable-plymouth_support
+	--disable-nls
+	--disable-nologin
+	--disable-colors-default
+	--disable-dependency-tracking
+	--disable-makeinstall-chown
+	--disable-makeinstall-setuid
+	--without-btrfs
+	--without-python
+	--without-systemd
+	--without-systemdsystemunitdir"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/share/doc/"
+
+
+
+[ bootstrap ]
+
+env = [ "CFLAGS=", "LDFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	ADJTIME_PATH=/var/lib/hwclock/adjtime
+	--prefix=/usr
+	--libdir=/usr/lib
+	--bindir=/usr/bin
+	--sbindir=/usr/sbin
+	--docdir=/usr/share/doc/util-linux
+	--disable-agetty
+	--disable-bash-completion
+	--disable-chfn-chsh
+	--disable-login
+	--disable-nologin
+	--disable-setpriv
+	--disable-su
+	--disable-nls
+	--disable-runuser
+	--disable-pylibmount
+	--disable-static
+	--disable-dependency-tracking
+	--disable-makeinstall-chown
+	--disable-makeinstall-setuid
+	--without-python"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/"

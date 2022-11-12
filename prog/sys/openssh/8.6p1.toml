@@ -26,3 +26,27 @@ configure = "./configure
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/var/"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static -I/include/" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=
+	--sysconfdir=/etc/ssh
+	--disable-security-key
+	--disable-pkcs11
+	--disable-etc-default-login
+	--with-pie
+	--with-mantype=man
+	--with-xauth=/usr/bin/xauth
+	--with-ssl-dir=/include/openssl
+	--without-pam
+	--without-selinux
+	--without-kerberos5"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/var/"

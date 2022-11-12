@@ -94,7 +94,7 @@ dev/gcc					std			latest
 	dev/flex			std			latest
 	dev/mpc				std			latest
 	dev/mpfr			std			latest
-	sys/linux			api_headers		latest
+	sys/linux			headers			latest
 
 sys/alsa-utils				std			latest
 	sys/alsa-lib			std			latest

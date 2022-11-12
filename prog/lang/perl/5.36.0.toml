@@ -1,0 +1,81 @@
+[ src ]
+
+url = "https://www.cpan.org/src/5.0/<prog>-<ver>.tar.xz"
+src_type = "tar"
+src_dirname = "<prog>-<ver>"
+
+
+
+[ std ]
+
+env = []
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sh Configure -des
+	-Dprefix=/usr
+	-Dvendorprefix=/usr
+	-Dprivlib=/usr/lib/perl5/<ver>/core_perl
+	-Darchlib=/usr/lib/perl5/<ver>/core_perl
+	-Dsitelib=/usr/lib/perl5/<ver>/site_perl
+	-Dsitearch=/usr/lib/perl5/<ver>/site_perl
+	-Dvendorlib=/usr/lib/perl5/<ver>/vendor_perl
+	-Dvendorarch=/usr/lib/perl5/<ver>/vendor_perl
+	-Dpager='/usr/bin/less -isR'
+	-Duseshrplib
+	-Dusethreads
+	-Dman1dir=none
+	-Dman3dir=none"
+ 
+build = "make"
+pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static", "MAKEFLAGS=-j1" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "echo git apply <prog_dir>/patch/musl-* &&
+	sh Configure -des
+	-Uusedl
+	-Dprefix=/usr
+	-Dvendorprefix=/usr
+	-Dbin=/bin
+	-Dlibpth=/lib
+	-Dcc='musl-gcc -static -I/include'
+	-Dprivlib=/lib/perl5/<ver>/core_perl
+	-Darchlib=/lib/perl5/<ver>/core_perl
+	-Dsitelib=/lib/perl5/<ver>/site_perl
+	-Dsitearch=/lib/perl5/<ver>/site_perl
+	-Dvendorlib=/lib/perl5/<ver>/vendor_perl
+	-Dvendorarch=/lib/perl5/<ver>/vendor_perl
+	-Dpager='/usr/bin/less -isR'
+	-Dman1dir=none
+	-Dman3dir=none &&
+	sed -i 's|HAS_LC_MONETARY_2008|undef &|g' config.h"
+ 
+build = "make"
+pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+"
+
+
+
+[ bootstrap ]
+
+env = [ "CFLAGS=", "LDFLAGS=" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "sh Configure -des
+	-Dprefix=/usr
+	-Dvendorprefix=/usr
+	-Dprivlib=/usr/lib/perl5/<ver>/core_perl
+	-Darchlib=/usr/lib/perl5/<ver>/core_perl
+	-Dsitelib=/usr/lib/perl5/<ver>/site_perl
+	-Dsitearch=/usr/lib/perl5/<ver>/site_perl
+	-Dvendorlib=/usr/lib/perl5/<ver>/vendor_perl
+	-Dvendorarch=/usr/lib/perl5/<ver>/vendor_perl
+	-Dman1dir=none
+	-Dman3dir=none"
+ 
+build = "make"
+pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+"

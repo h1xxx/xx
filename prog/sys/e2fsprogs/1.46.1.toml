@@ -33,3 +33,27 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 	rm <pkg_dir>/usr/lib/lib{com_err,e2p,ext2fs,ss}.a &&
 	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
 
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "./configure
+	--prefix=
+	--with-root-prefix=''
+	--enable-relative-symlinks
+	--disable-libblkid
+	--disable-libuuid
+	--disable-uuidd
+	--disable-fsck
+	--disable-nls &&
+	sed -i '/$(MAKE) docs/d' Makefile &&
+	sed -i 's|&& cd doc &&.*| |g' Makefile"
+
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install &&
+	chmod u+w <pkg_dir>/lib/*.a &&
+	mv <pkg_dir>/etc/ <pkg_dir>/share/ &&
+	rm -r <pkg_dir>/usr/"

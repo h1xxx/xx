@@ -10,9 +10,39 @@ src_dirname = "<prog>-<ver>"
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh && ./configure
+configure = "if [ ! -e /bin/perl ]; then
+		ln -s /usr/bin/perl /bin/perl &&
+		./autogen.sh &&
+		rm /bin/perl;
+	else
+		./autogen.sh;
+	fi;
+	./configure
 	--prefix=/usr
 	--disable-static
+	--disable-dependency-tracking
+	--disable-nls"
+
+build = "make"
+pkg_create = "make DESTDIR=<pkg_dir> install"
+
+
+
+[ musl ]
+
+env = [ "CC=musl-gcc -static" ]
+prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+configure = "if [ ! -e /bin/perl ]; then
+		ln -s /usr/bin/perl /bin/perl &&
+		./autogen.sh &&
+		rm /bin/perl;
+	else
+		./autogen.sh;
+	fi;
+	./configure
+	--prefix=
+	--enable-static
+	--disable-shared
 	--disable-dependency-tracking
 	--disable-nls"
 

@@ -2,13 +2,22 @@ deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
 add option to remove all not installed files
 
+finish perl musl pkg, probably needs gcc to be compiled with musl for c++, which
+needs a separate musl environment; remove /bin/perl workarounds from .toml files
+
+ncurses musl needs terminfo to be copied to /share, maybe reuse the one from std
+
 fix checksec /bin/bash with musl
 
 args check: root dir parameter must be an absolute path
 
+move ld-linux-x86-64.so.2 linking to the pkg from xx/*.go
+
 design methods around worldT struct
 move genC params into worldT
 rename pkg to p, pkgC to pc, and world to w
+
+check for unpacked directories in src/
 
 add correct cfg perms during deployment
 deployCfg and deployPkg may use install with perms per file instead of cp 
@@ -245,8 +254,6 @@ add static pie building for static bins (gcc --no-dynamic-linker?)
 
 gcc creates new packages that are not deployed when new version is
 available - e.g. libc_misc/gcc-libgomp should be checked if there is no new ver
-
-make static programs for initramfs
 
 split libraries by default from programs to separate pkgs when toml specifies this
 

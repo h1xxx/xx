@@ -343,11 +343,11 @@ sys/libseccomp			std			latest
 sys/libunwind			std			latest
 sys/liburing			std			latest
 sys/libusb			std			latest
-sys/linux			api_headers		latest
+sys/linux			headers			latest
 sys/linux-firmware-bin		std			latest
 sys/linux			perf			latest
 sys/linux			source			latest
-sys/linux			std			latest	f
+sys/linux			std			latest
 sys/lm-sensors			std			latest
 sys/lshw			std			latest
 sys/lsof			std			latest

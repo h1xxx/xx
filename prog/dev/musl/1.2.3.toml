@@ -11,9 +11,7 @@ src_dirname = "<prog>-<ver>"
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/musl
-	--bindir=/bin
-	--libdir=/lib
+	--prefix=
 	--enable-wrapper=all
 	--disable-shared"
 

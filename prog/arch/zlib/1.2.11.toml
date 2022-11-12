@@ -20,7 +20,7 @@ pkg_create = "make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a"
 
 env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/musl --libdir=/lib --static"
+configure = "./configure --prefix= --static"
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install"
 

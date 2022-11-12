@@ -5,7 +5,7 @@ net/mtr				std			latest
 net/tcpdump			std			latest
 net/whois			std			latest
 net/rsync			std			latest
-net/dhcpcd			std			latest
+net/dhcpcd			musl			latest
 net/telnet-bsd			std			latest
 net/wget			std			latest
 

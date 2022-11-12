@@ -29,9 +29,7 @@ pkg_create = "make DESTDIR=<pkg_dir> SHLIB_LIBS='-ltinfow' install &&
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "./configure
-	--prefix=/musl
-	--bindir=/bin
-	--libdir=/lib
+	--prefix=
 	--enable-static
 	--disable-shared
 	--disable-multibyte
@@ -40,7 +38,7 @@ configure = "./configure
 build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	chmod -R u+w <pkg_dir>/ || : &&
-	rm -r <pkg_dir>/musl/share/{doc,info}/"
+	rm -r <pkg_dir>/share/{doc,info}/"
 
 
 
