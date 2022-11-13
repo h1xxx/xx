@@ -632,7 +632,17 @@ sys/openssh				std			latest
 sys/openssh				musl			latest
 	crypt/libressl			musl			latest
 
+#dev/binutils				std			latest
+#	text/texinfo			std			latest
 
+#dev/binutils				musl			latest
+#	text/texinfo			musl			latest
+
+#text/texinfo				musl			latest
+#	lang/perl			musl			latest
+
+#text/texinfo				std			latest
+#	lang/perl			std			latest
 
 ### deprecated
 

@@ -10,13 +10,7 @@ src_dirname = "<prog>-<ver>"
 
 env = []
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "if [ ! -e /bin/perl ]; then
-		ln -s /usr/bin/perl /bin/perl &&
-		./autogen.sh &&
-		rm /bin/perl;
-	else
-		./autogen.sh;
-	fi;
+configure = "./autogen.sh &&
 	./configure
 	--prefix=/usr
 	--disable-static
@@ -32,13 +26,7 @@ pkg_create = "make DESTDIR=<pkg_dir> install"
 
 env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "if [ ! -e /bin/perl ]; then
-		ln -s /usr/bin/perl /bin/perl &&
-		./autogen.sh &&
-		rm /bin/perl;
-	else
-		./autogen.sh;
-	fi;
+configure = "./autogen.sh &&
 	./configure
 	--prefix=
 	--enable-static

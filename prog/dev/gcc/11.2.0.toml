@@ -79,8 +79,8 @@ configure = "for f in <prog_dir>/patch/musl-<ver>/*; do
 	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
 	mkdir -p build && cd build &&
 	../configure
-	--prefix=/musl
-	--target=x86_64-linux-musl
+	--prefix=
+	--target=x86_64-pc-linux-musl
 	LD=ld
 	--disable-multilib
 	--disable-nls

@@ -40,8 +40,8 @@ build = "make"
 pkg_create = "make DESTDIR=<pkg_dir> install &&
 	
 	mkdir -pv <pkg_dir>/usr/lib/pkgconfig/ &&
-	mv -v <pkg_dir>/lib/pkgconfig <pkg_dir>/usr/lib/ &&
-	rmdir -v <pkg_dir>/lib &&
+	mv <pkg_dir>/usr/share/pkgconfig/* <pkg_dir>/usr/lib/pkgconfig/ &&
+	rmdir <pkg_dir>/usr/share/pkgconfig &&
 
 	for lib in form menu ncurses panel tinfo; do
 		echo \"INPUT(-l${lib}w)\" > <pkg_dir>/usr/lib/lib${lib}.so &&

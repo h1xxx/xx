@@ -2,7 +2,7 @@
 
 # libc and a compiler
 dev/glibc			std			latest
-dev/musl			std			latest
+#dev/musl			std			latest
 dev/gcc				std			latest
 dev/gcc-libgcc_s		std			latest
 dev/gcc-libgomp			std			latest
@@ -10,19 +10,20 @@ dev/gcc-libstdc++		std			latest
 
 # some sys libs and tools
 sys/busybox			std			latest
-sys/coreutils			musl			latest
+sys/coreutils			std			latest
+#sys/coreutils			musl			latest
 dev/pkgconf			std			latest
 arch/zlib			std			latest
-arch/zlib			musl			latest
+#arch/zlib			musl			latest
 dev/ncurses			std			latest
-dev/ncurses			musl			latest
+#dev/ncurses			musl			latest
 dev/readline			std			latest
-dev/readline			musl			latest
+#dev/readline			musl			latest
 
 # archiving programs
 arch/gzip			std			latest
 arch/bzip2			std			latest
-arch/bzip2			musl			latest
+#arch/bzip2			musl			latest
 arch/xz				std			latest
 arch/zstd			std			latest
 arch/tar			std			latest
@@ -42,13 +43,16 @@ dev/gperf			std			latest
 lang/bc				std			latest
 text/texinfo			std			latest
 dev/binutils			std			latest
-dev/bison			musl			latest
+dev/bison			std			latest
+#dev/bison			musl			latest
 dev/flex			std			latest
-dev/m4				musl			latest
+dev/m4				std			latest
+#dev/m4				musl			latest
 
 
 # shell
-sys/bash			musl			latest
+sys/bash			std			latest
+#sys/bash			musl			latest
 sys/which			std			latest
 
 # /etc, /usr/share
@@ -60,11 +64,11 @@ sys/mime-types			std			latest
 sys/linux			headers			latest
 sys/linux			headers_static		latest
 sys/gdbm			std			latest
-sys/gdbm			musl			latest
+#sys/gdbm			musl			latest
 sys/libseccomp			std			latest
-sys/libseccomp			musl			latest
+#sys/libseccomp			musl			latest
 crypt/openssl			std			latest
-crypt/libressl			musl			latest
+#crypt/libressl			musl			latest
 
 # core system tools
 sys/diffutils			std			latest
@@ -72,9 +76,10 @@ sys/findutils			std			latest
 text/gawk			std			latest
 text/grep			std			latest
 text/sed			std			latest
-sys/shadow			musl			latest
+sys/shadow			std			latest
+#sys/shadow			musl			latest
 sys/util-linux			std			latest
-sys/util-linux			musl			latest
+#sys/util-linux			musl			latest
 sys/kmod			std			latest
 text/groff			std			latest
 
@@ -100,7 +105,8 @@ net/libmnl			std			latest
 net/libnetfilter_conntrack	std			latest
 net/libnet			std			latest
 sys/iptables			std			latest
-sys/openssh			musl			latest
+sys/openssh			std			latest
+#sys/openssh			musl			latest
 sys/iproute2			std			latest
 
 # dev tools
@@ -117,29 +123,31 @@ dev/strace			std			latest
 text/doxygen			std			latest
 net/curl			std			latest
 dev/git				std			latest
-text/libpcre2			musl			latest
-dev/ctags			musl			latest
+#text/libpcre2			musl			latest
+#dev/ctags			musl			latest
 
 # system tools
 sys/kbd				std			latest
 sys/syslinux			std			6.04-pre1
 text/json-c			std			latest
-text/json-c			musl			latest
+#text/json-c			musl			latest
 text/libxml2			std			latest
 dev/libaio			std			latest
-dev/libaio			musl			latest
+#dev/libaio			musl			latest
 dev/popt			std			latest
-dev/popt			musl			latest
+#dev/popt			musl			latest
 sys/gptfdisk			std			latest
 sys/lvm2			std			2.02.188
-sys/lvm2			musl			2.02.188
+#sys/lvm2			musl			2.02.188
 crypt/argon2			std			latest
-crypt/argon2			musl			latest
-sys/cryptsetup			musl			latest
+#crypt/argon2			musl			latest
+sys/cryptsetup			std			latest
+#sys/cryptsetup			musl			latest
 sys/dosfstools			std			latest
-sys/e2fsprogs			musl			latest
+sys/e2fsprogs			std			latest
+#sys/e2fsprogs			musl			latest
 sys/eudev			std			latest
-sys/eudev			musl			latest
+#sys/eudev			musl			latest
 sys/file			std			latest
 sys/hwids			std			latest
 sys/mtools			std			latest

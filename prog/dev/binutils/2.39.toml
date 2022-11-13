@@ -28,19 +28,23 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
 
 
 
-[ musl ]
+[ musl_bootstrap ]
 
 env = [ "CC=musl-gcc -static" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+configure = "git apply -v <prog_dir>/patch/<ver>/*.patch &&
+	sed '6009s/$add_dir//' -i ltmain.sh &&
+	mkdir -p build && cd build && ../configure
 	--prefix=
 	--target=x86_64-pc-linux-musl
-	--enable-gold
 	--enable-ld=default
 	--enable-plugins
 	--enable-64-bit-bfd
 	--enable-deterministic-archives
 	--enable-static
+	--enable-gprofng=no
+	--with-static-standard-libraries
+	--disable-host-shared
 	--disable-shared
 	--disable-separate-code
 	--disable-werror

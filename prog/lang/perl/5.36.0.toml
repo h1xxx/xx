@@ -27,12 +27,15 @@ configure = "sh Configure -des
  
 build = "make"
 pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
-	find <pkg_dir> -exec chmod ug+w {} \\+"
+	find <pkg_dir> -exec chmod ug+w {} \\+ &&
+	mkdir <pkg_dir>/bin &&
+	ln -sv ../usr/bin/perl <pkg_dir>/bin/perl"
 
 
 
 [ musl ]
 
+# todo: not working, fix this
 env = [ "CC=musl-gcc -static", "MAKEFLAGS=-j1" ]
 prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
 configure = "echo git apply <prog_dir>/patch/musl-* &&
