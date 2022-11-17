@@ -182,7 +182,7 @@ type pkgCfgT struct {
 	allRunDeps []pkgT
 }
 
-// srcT stores information from toml file on source code location and type
+// srcT stores information from ini file on source code location and type
 // url		url to source code:	https://ftp.gnu.org/lvm2-2.35.tar.xz
 // file		downloaded file		<src_dir>/lvm2-2.35.tar.xz
 // dirName	dir in tar archive:	lvm2-2.35
@@ -194,7 +194,7 @@ type srcT struct {
 	srcType string
 }
 
-// stepsT stores shell commands from toml file to be executed in build steps
+// stepsT stores shell commands from ini file to be executed in build steps
 // env		environment variables to use during build
 // buildDir	root build dir:	/tmp/xx/build/lvm2-2.35_build-00/lvm2-2.35
 type stepsT struct {
@@ -512,7 +512,7 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 		pkgC.crossBuild = true
 	}
 
-	pkgC.src, pkgC.steps = parsePkgToml(genC, pkg, pkgC)
+	pkgC.src, pkgC.steps = parsePkgIni(genC, pkg, pkgC)
 	pkgC.cfgFiles = getPkgCfgFiles(genC, pkg)
 
 	_, pkgC.libDeps = getPkgLibDeps(genC, pkg)
@@ -574,7 +574,7 @@ i(n)fo		show additional information on xx system
 -d		information on dependencies
 -i		verify system integrity
 
-(u)pdate	update toml files
+(u)pdate	update ini files
 -i		get information on latest packages available
 
 general parameters:

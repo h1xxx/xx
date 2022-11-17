@@ -27,9 +27,9 @@ func getVer(pkg pkgT, fixedVer string) string {
 	errExit(err, "can't open prog dir")
 
 	for _, file := range files {
-		if strings.HasSuffix(file.Name(), ".toml") {
+		if strings.HasSuffix(file.Name(), ".ini") {
 			var ver, sep string
-			verRaw := strings.Split(file.Name(), ".toml")[0]
+			verRaw := strings.Split(file.Name(), ".ini")[0]
 			verSplit := strings.Split(verRaw, ".")
 			for _, v := range verSplit {
 				ver += fmt.Sprintf("%s%32s", sep, v)
@@ -41,7 +41,7 @@ func getVer(pkg pkgT, fixedVer string) string {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(errors.New(""), "no toml file available for "+pkg.name)
+		errExit(errors.New(""), "no ini file available for "+pkg.name)
 	}
 
 	return strings.Replace(versions[len(versions)-1], " ", "", -1)

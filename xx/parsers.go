@@ -131,7 +131,7 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 	return binCnt, cntIP
 }
 
-func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
+func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	var steps stepsT
 	var stepsSl = make(map[string]string)
 	var src srcT
@@ -154,11 +154,11 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		"nonEmptyPkgCreate": false,
 	}
 
-	tomlFile := fp.Join(pkg.progDir, pkg.ver+".toml")
+	iniFile := fp.Join(pkg.progDir, pkg.ver+".ini")
 
 	re := getRegexes()
-	f, err := os.Open(tomlFile)
-	errExit(err, "can't open file: "+tomlFile)
+	f, err := os.Open(iniFile)
+	errExit(err, "can't open file: "+iniFile)
 	defer f.Close()
 
 	input := bufio.NewScanner(f)
@@ -174,7 +174,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		}
 
 		// replace predefined variables
-		line = replaceTomlVars(line, genC, pkg, pkgC)
+		line = replaceIniVars(line, genC, pkg, pkgC)
 
 		switch {
 		// start of the new section
@@ -183,7 +183,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			section = str.TrimSuffix(section, " ]")
 			if str.Contains(section, " ") {
 				msg := "name has a space in line %d of %s"
-				errExit(fmt.Errorf(msg, i, tomlFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile), "")
 			}
 			step, varsVar = "", ""
 			switch section {
@@ -226,7 +226,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			vars[varsVar] = after
 			if !found {
 				msg := "incorrect var name in line %d of %s"
-				errExit(fmt.Errorf(msg, i, tomlFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile), "")
 			}
 
 		case section == "vars":
@@ -238,7 +238,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			stepsSl[step] = str.Trim(after, " ")
 			if !found {
 				msg := "incorrect step in line %d of %s"
-				errExit(fmt.Errorf(msg, i, tomlFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile), "")
 			}
 			check["has_"+step] = true
 
@@ -259,7 +259,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	for c, val := range check {
 		if !val {
 			msg := "check %s failed in %s"
-			errExit(fmt.Errorf(msg, c, tomlFile), "")
+			errExit(fmt.Errorf(msg, c, iniFile), "")
 		}
 	}
 
@@ -271,7 +271,7 @@ func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	}
 
 	env, err := getIniEnv(stepsSl["env"])
-	errExit(err, fmt.Sprintf("incorrect env %s", tomlFile))
+	errExit(err, fmt.Sprintf("incorrect env %s", iniFile))
 
 	steps.env = prepareEnv(env, genC, pkg, pkgC)
 	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
@@ -343,7 +343,7 @@ func startStepLine(line string) bool {
 	return false
 }
 
-func replaceTomlVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
+func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
 	replMap := setReplMap(genC, pkg, pkgC)
 
 	for k, v := range replMap {
