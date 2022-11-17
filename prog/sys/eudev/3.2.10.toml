@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://dev.gentoo.org/~blueness/eudev/eudev-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://dev.gentoo.org/~blueness/eudev/eudev-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--exec-prefix=/usr
 	--libdir=/usr/lib
@@ -23,19 +27,19 @@ configure = "./configure
 	--disable-kmod
 	--disable-mtd_probe
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static", "CFLAGS+=-fPIC" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static" CFLAGS+=-fPIC
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--bindir=/sbin
 	--with-rootlibdir=/lib
@@ -45,8 +49,8 @@ configure = "./configure
 	--disable-selinux
 	--disable-kmod
 	--disable-mtd_probe
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	mv <pkg_dir>/etc/ <pkg_dir>/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/etc/ <pkg_dir>/share/

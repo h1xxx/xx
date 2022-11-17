@@ -1,22 +1,26 @@
 [ src ]
 
-url = "https://www.rarlab.com/rar/unrarsrc-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>"
+url = https://www.rarlab.com/rar/unrarsrc-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LDFLAGS+=-pthread" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -e '/CXXFLAGS=/d' -e '/LDFLAGS=/d' -i makefile &&
+env = LDFLAGS+=-pthread
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -e '/CXXFLAGS=/d' -e '/LDFLAGS=/d' -i makefile &&
 	mkdir unrar libunrar &&
 	cp -a *.* makefile unrar/ &&
-	cp -a *.* makefile libunrar/"
+	cp -a *.* makefile libunrar/
 
-build = "make -C libunrar lib && make -C unrar -j1"
-pkg_create = "mkdir -p <pkg_dir>/usr/{bin,lib} <pkg_dir>/usr/include/unrar &&
-	cp -a unrar/unrar <pkg_dir>/usr/bin/ && 
+build = make -C libunrar lib && make -C unrar -j1
+pkg_create = mkdir -p <pkg_dir>/usr/{bin,lib} <pkg_dir>/usr/include/unrar &&
+	cp -a unrar/unrar <pkg_dir>/usr/bin/ &&
 	cp -a libunrar/libunrar.so <pkg_dir>/usr/lib/ &&
-	cp -a libunrar/dll.hpp <pkg_dir>/usr/include/unrar/"
+	cp -a libunrar/dll.hpp <pkg_dir>/usr/include/unrar/

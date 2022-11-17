@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/unifont/unifont-<ver>/unifont-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/unifont/unifont-<ver>/unifont-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "MAKEFLAGS=-j1" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "cp -v <prog_dir>/files/unifont-apl.txt font/psf/unifont-apl.txt &&
-	sed -i 's|-C font|-C font psf|g' Makefile"
+env = MAKEFLAGS=-j1
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = cp -v <prog_dir>/files/unifont-apl.txt font/psf/unifont-apl.txt &&
+	sed -i 's|-C font|-C font psf|g' Makefile
 
-build = "make BUILDFONT=1"
-pkg_create = "mkdir -p <pkg_dir>/usr/share/consolefonts &&
+build = make BUILDFONT=1
+pkg_create = mkdir -p <pkg_dir>/usr/share/consolefonts &&
 	cp -av font/compiled/Unifont-APL8x16-<ver>.psf.gz
-		<pkg_dir>/usr/share/consolefonts/unifont-apl8x16.psf.gz"
+		<pkg_dir>/usr/share/consolefonts/unifont-apl8x16.psf.gz

@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/APKINDEX.tar.gz
+url = https://dl-cdn.alpinelinux.org/alpine/edge/main/x86_64/APKINDEX.tar.gz
 https://dl-cdn.alpinelinux.org/alpine/edge/community/x86_64/APKINDEX.tar.gz
-https://dl-cdn.alpinelinux.org/alpine/edge/testing/x86_64/APKINDEX.tar.gz"
+https://dl-cdn.alpinelinux.org/alpine/edge/testing/x86_64/APKINDEX.tar.gz
 
-src_type = "alpine"
-src_dirname = "rootfs"
+src_type = alpine
+src_dirname = rootfs
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "ADD_PROGS=loksh another_pkg" ]
-prepare = "apk update"
-configure = ""
-build = "apk add --no-chown <prog> ${ADD_PROGS}"
-pkg_create = "cp -av <build_dir>/rootfs/* <pkg_dir>/ &&
-	cd <pkg_dir> && chmod 755 proc && rm -rf {media,opt,srv,var/*}"
+env = ADD_PROGS="loksh another_pkg"
+prepare = apk update
+configure =
+build = apk add --no-chown <prog> ${ADD_PROGS}
+pkg_create = cp -av <build_dir>/rootfs/* <pkg_dir>/ &&
+	cd <pkg_dir> && chmod 755 proc && rm -rf {media,opt,srv,var/*}

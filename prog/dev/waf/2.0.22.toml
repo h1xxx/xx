@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://waf.io/waf-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://waf.io/waf-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "./waf-light
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = ./waf-light
 	configure --prefix=/usr
-	build --make-waf"
+	build --make-waf
 
-pkg_create = "install -vDm 755 waf -t <pkg_dir>/usr/bin &&
-	install -vDm 644 wscript -t <pkg_dir>/usr/share/waf"
+pkg_create = install -vDm 755 waf -t <pkg_dir>/usr/bin &&
+	install -vDm 644 wscript -t <pkg_dir>/usr/share/waf

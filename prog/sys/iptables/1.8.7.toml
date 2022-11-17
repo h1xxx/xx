@@ -1,21 +1,25 @@
 [ src ]
 
-url = "http://www.netfilter.org/projects/iptables/files/iptables-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://www.netfilter.org/projects/iptables/files/iptables-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS+=-fPIC" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CFLAGS+=-fPIC
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-nfsynproxy
 	--disable-nftables
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	ln -sfv ../sbin/xtables-legacy-multi <pkg_dir>/usr/bin/iptables-xml"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	ln -sfv ../sbin/xtables-legacy-multi <pkg_dir>/usr/bin/iptables-xml

@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://github.com/alexanderwink/subdl"
-src_type = "git"
-src_dirname = "<prog>"
+url = https://github.com/alexanderwink/subdl
+src_type = git
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
-configure = ""
-build = ""
-pkg_create = "install -Dm755 subdl.py <pkg_dir>/usr/bin/subdl"
+env =
+prepare = cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>
+configure =
+build =
+pkg_create = install -Dm755 subdl.py <pkg_dir>/usr/bin/subdl

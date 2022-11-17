@@ -1,26 +1,30 @@
 [ src ]
 
-url = ""
-src_type = "files"
-src_dirname = ""
+url =
+src_type = files
+src_dirname =
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = ""
-configure = ""
-build = ""
-pkg_create = ""
+env =
+prepare =
+configure =
+build =
+pkg_create =
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = ""
-configure = ""
-build = ""
-pkg_create = ""
+env =
+prepare =
+configure =
+build =
+pkg_create =
 

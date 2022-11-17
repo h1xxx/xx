@@ -1,25 +1,29 @@
 [ src ]
 
-url = "https://www.kernel.org/pub/linux/docs/man-pages/man-pages-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.kernel.org/pub/linux/docs/man-pages/man-pages-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = make DESTDIR=<pkg_dir> install

@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://repo.or.cz/fbvis"
-src_type = "git"
-src_dirname = "<prog>"
+url = https://repo.or.cz/fbvis
+src_type = git
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
-configure = ""
-build = "make"
-pkg_create = "mkdir -p <pkg_dir>/usr/{bin,share/fbvis} &&
+env =
+prepare = cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>
+configure =
+build = make
+pkg_create = mkdir -p <pkg_dir>/usr/{bin,share/fbvis} &&
 	cp -a fbvis <pkg_dir>/usr/bin/ &&
-	cp -a README <pkg_dir>/usr/share/fbvis/"
+	cp -a README <pkg_dir>/usr/share/fbvis/

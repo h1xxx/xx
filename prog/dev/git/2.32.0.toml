@@ -1,22 +1,26 @@
 [ src ]
 
-url = "https://mirrors.edge.kernel.org/pub/software/scm/git/git-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://mirrors.edge.kernel.org/pub/software/scm/git/git-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [  ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--with-shell=/bin/bash
 	--with-curl
 	--without-python
-	--without-tcltk"
+	--without-tcltk
 
-build = "make NO_GETTEXT=1"
-pkg_create = "make NO_GETTEXT=1 DESTDIR=<pkg_dir> install"
+build = make NO_GETTEXT=1
+pkg_create = make NO_GETTEXT=1 DESTDIR=<pkg_dir> install

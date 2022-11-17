@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://caml.inria.fr/distrib/ocaml-<ver_short>/ocaml-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://caml.inria.fr/distrib/ocaml-<ver_short>/ocaml-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS+=-fPIC" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CFLAGS+=-fPIC
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--mandir=/usr/share/man
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

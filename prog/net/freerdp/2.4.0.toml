@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/freerdp/freerdp/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "FreeRDP-<ver>"
+url = https://github.com/freerdp/freerdp/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = FreeRDP-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && cmake
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=lib
 	-D CMAKE_BUILD_TYPE='Release'
@@ -37,7 +41,7 @@ configure = "mkdir build && cd build && cmake
 	-D WITH_CUPS=OFF
 	-D CHANNEL_URBDRC_CLIENT=OFF
 	-Wno-dev
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

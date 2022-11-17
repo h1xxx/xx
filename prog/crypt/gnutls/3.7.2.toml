@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.gnupg.org/ftp/gcrypt/gnutls/v<ver_short>/gnutls-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.gnupg.org/ftp/gcrypt/gnutls/v<ver_short>/gnutls-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-dependency-tracking
 	--disable-maintainer-mode
@@ -23,8 +27,8 @@ configure = "./configure
 	--disable-guile
 	--with-included-unistring
 	--with-default-trust-store-pkcs11='pkcs11:'
-	--with-p11-kit"
+	--with-p11-kit
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,info,man/man3}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,info,man/man3}/

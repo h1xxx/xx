@@ -1,35 +1,39 @@
 [ src ]
 
-url = "https://zlib.net/zlib-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://zlib.net/zlib-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix= --static"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix= --static
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm <pkg_dir>/usr/lib/libz.a

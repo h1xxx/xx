@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://www.alsa-project.org/files/pub/lib/<prog>-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.alsa-project.org/files/pub/lib/<prog>-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "for dir in topology/*; do
-		install -vDm 644 \"${dir}\"/*.conf -t
-		\"<pkg_dir>/usr/share/alsa/topology/$(basename ${dir})\";
-	done"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = for dir in topology/*; do
+		install -vDm 644 "${dir}"/*.conf -t
+		"<pkg_dir>/usr/share/alsa/topology/$(basename ${dir})";
+	done

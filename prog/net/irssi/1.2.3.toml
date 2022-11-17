@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/irssi/irssi/releases/download/<ver>/irssi-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/irssi/irssi/releases/download/<ver>/irssi-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--mandir=/usr/share/man
@@ -26,7 +30,7 @@ configure = "./configure
 	--with-perl=no
 	--without-bot
 	--without-fuzzer
-	--without-capsicum"
+	--without-capsicum
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

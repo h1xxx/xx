@@ -1,18 +1,22 @@
 [ src ]
 
-url = ""
-src_type = "tar"
-src_dirname = ""
+url =
+src_type = tar
+src_dirname =
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = ""
-configure = ""
-build = ""
-pkg_create = "install -v -d -m755 <pkg_dir>/etc/xml &&
+env =
+prepare =
+configure =
+build =
+pkg_create = install -v -d -m755 <pkg_dir>/etc/xml &&
 	xmlcatalog --noout --create <pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --create <pkg_dir>/etc/xml/catalog &&
 	xmlcatalog --noout --add 'delegatePublic'
@@ -36,50 +40,50 @@ pkg_create = "install -v -d -m755 <pkg_dir>/etc/xml &&
 
 	for ver in 4.1.2 4.2 4.3 4.4 4.5; do
 
-	echo \"generating /etc/xml/docbook for ${ver}\" &&
+	echo "generating /etc/xml/docbook for ${ver}" &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//DTD DocBook XML V${ver}//EN\"
-		\"http://www.oasis-open.org/docbook/xml/${ver}/docbookx.dtd\"
+		"-//OASIS//DTD DocBook XML V${ver}//EN"
+		"http://www.oasis-open.org/docbook/xml/${ver}/docbookx.dtd"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//DTD DocBook XML CALS Table Model V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/calstblx.dtd\"
+		"-//OASIS//DTD DocBook XML CALS Table Model V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/calstblx.dtd"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
 		'-//OASIS//DTD XML Exchange Table Model 19990315//EN'
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/soextblx.dtd\"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/soextblx.dtd"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ELEMENTS DocBook XML Information Pool V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbpoolx.mod\"
+		"-//OASIS//ELEMENTS DocBook XML Information Pool V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbpoolx.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ELEMENTS DocBook XML Document Hierarchy V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbhierx.mod\"
+		"-//OASIS//ELEMENTS DocBook XML Document Hierarchy V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbhierx.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ELEMENTS DocBook XML HTML Tables V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/htmltblx.mod\"
+		"-//OASIS//ELEMENTS DocBook XML HTML Tables V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/htmltblx.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ENTITIES DocBook XML Notations V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbnotnx.mod\"
+		"-//OASIS//ENTITIES DocBook XML Notations V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbnotnx.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ENTITIES DocBook XML Character Entities V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbcentx.mod\"
+		"-//OASIS//ENTITIES DocBook XML Character Entities V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbcentx.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'public'
-		\"-//OASIS//ENTITIES DocBook XML Additional General Entities V${ver}//EN\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbgenent.mod\"
+		"-//OASIS//ENTITIES DocBook XML Additional General Entities V${ver}//EN"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}/dbgenent.mod"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'rewriteSystem'
-		\"http://www.oasis-open.org/docbook/xml/${ver}\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}\"
+		"http://www.oasis-open.org/docbook/xml/${ver}"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}"
 		<pkg_dir>/etc/xml/docbook &&
 	xmlcatalog --noout --add 'rewriteURI'
-		\"http://www.oasis-open.org/docbook/xml/${ver}\"
-		\"file:///usr/share/xml/docbook/xml-dtd-${ver}\"
+		"http://www.oasis-open.org/docbook/xml/${ver}"
+		"file:///usr/share/xml/docbook/xml-dtd-${ver}"
 		<pkg_dir>/etc/xml/docbook
 	; done &&
 
@@ -87,37 +91,37 @@ pkg_create = "install -v -d -m755 <pkg_dir>/etc/xml &&
 	echo '* docbook-xls' &&
 	for ver in 1.79.2; do
 
-	echo \"generating /etc/xml/catalog for ${ver}\" &&
+	echo "generating /etc/xml/catalog for ${ver}" &&
 
 	xmlcatalog --noout --add 'rewriteSystem'
-		\"https://cdn.docbook.org/release/xsl-nons/${ver}\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"https://cdn.docbook.org/release/xsl-nons/${ver}"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog &&
 
 	xmlcatalog --noout --add 'rewriteURI'
-		\"https://cdn.docbook.org/release/xsl-nons/${ver}\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"https://cdn.docbook.org/release/xsl-nons/${ver}"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog &&
 
 	xmlcatalog --noout --add 'rewriteSystem'
-		\"https://cdn.docbook.org/release/xsl-nons/current\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"https://cdn.docbook.org/release/xsl-nons/current"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog &&
 
 	xmlcatalog --noout --add 'rewriteURI'
-		\"https://cdn.docbook.org/release/xsl-nons/current\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"https://cdn.docbook.org/release/xsl-nons/current"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog &&
 
 	xmlcatalog --noout --add 'rewriteSystem'
-		\"http://docbook.sourceforge.net/release/xsl/current\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"http://docbook.sourceforge.net/release/xsl/current"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog &&
 
 	xmlcatalog --noout --add 'rewriteURI'
-		\"http://docbook.sourceforge.net/release/xsl/current\"
-		\"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}\"
+		"http://docbook.sourceforge.net/release/xsl/current"
+		"/usr/share/xml/docbook/xsl-stylesheets-nons-${ver}"
 		<pkg_dir>/etc/xml/catalog
 
 	; done
-	"
+

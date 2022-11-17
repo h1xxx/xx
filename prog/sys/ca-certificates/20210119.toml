@@ -1,22 +1,26 @@
 [ src ]
 
-url = "http://deb.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "work"
+url = http://deb.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_<ver>.tar.xz
+src_type = tar
+src_dirname = work
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/share/ca-certificates/
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make
+pkg_create = mkdir -pv <pkg_dir>/usr/share/ca-certificates/
 		<pkg_dir>/usr/sbin/
 		<pkg_dir>/etc/ssl/certs &&
 
-	make DESTDIR=<pkg_dir> install && 
+	make DESTDIR=<pkg_dir> install &&
 	cd <pkg_dir>/usr/share/ca-certificates/ &&
 	find * -name '*.crt' | LC_ALL=C sort >
 		<pkg_dir>/etc/ca-certificates.conf &&
@@ -26,6 +30,6 @@ pkg_create = "mkdir -pv <pkg_dir>/usr/share/ca-certificates/
 
 	echo 'converting absolute links to relative links...' &&
 	for f in <pkg_dir>/etc/ssl/certs/*.pem; do
-		flink=\"$(readlink \"${f}\")\";
-		ln -vsf \"../../..//${flink}\" \"${f}\";
-	done"
+		flink="$(readlink "${f}")";
+		ln -vsf "../../..//${flink}" "${f}";
+	done

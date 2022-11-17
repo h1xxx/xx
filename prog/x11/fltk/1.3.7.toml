@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/<prog>/<prog>/archive/release-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-release-<ver>"
+url = https://github.com/<prog>/<prog>/archive/release-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-release-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
-configure = "mkdir build && cd build && cmake
+configure = mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=/usr/lib
 	-D FLTK_LIBDIR='/usr/lib'
@@ -22,7 +26,7 @@ configure = "mkdir build && cd build && cmake
 	-D OPTION_BUILD_STATIC_LIBS=OFF
 	-D OPTION_BUILD_HTML_DOCUMENTATION=OFF
 	-D OPTION_INSTALL_HTML_DOCUMENTATION=OFF
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

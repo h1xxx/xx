@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.wireshark.org/download/src/wireshark-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.wireshark.org/download/src/wireshark-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && cmake
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && cmake
 	-D CMAKE_BUILD_TYPE=Release
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=lib
@@ -20,8 +24,8 @@ configure = "mkdir build && cd build && cmake
 	-D ENABLE_CAP=OFF
 	-D ENABLE_BROTLI=OFF
 	-D ENABLE_PLUGINS=OFF
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://xorg.freedesktop.org/releases/individual/lib/<prog>-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://xorg.freedesktop.org/releases/individual/lib/<prog>-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
-	--disable-static"
+	--disable-static
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	chmod -v 755 <pkg_dir>/usr/lib/lib{hogweed,nettle}.so"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	chmod -v 755 <pkg_dir>/usr/lib/lib{hogweed,nettle}.so

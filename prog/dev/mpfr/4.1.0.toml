@@ -1,56 +1,60 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-static
 	--enable-thread-safe
 	--docdir=/usr/share/doc/mpfr
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/
 
 
 
 [ musl ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/musl
 	--bindir=/bin
 	--libdir=/lib
 	--enable-static
 	--disable-shared
 	--enable-thread-safe
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/musl/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/musl/share/
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-static
 	--enable-thread-safe
 	--docdir=/usr/share/doc/mpfr
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

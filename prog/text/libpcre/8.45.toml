@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://sourceforge.net/projects/pcre/files/pcre/<ver>/pcre-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "pcre-<ver>"
+url = https://sourceforge.net/projects/pcre/files/pcre/<ver>/pcre-<ver>.tar.bz2
+src_type = tar
+src_dirname = pcre-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-pcre2grep-libz
 	--enable-pcre2grep-libbz2
@@ -20,19 +24,19 @@ configure = "./configure
 	--enable-pcre2-32
 	--disable-dependency-tracking
 	--disable-static
-	--disable-cpp"
+	--disable-cpp
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,man/man3}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,man/man3}/
 
 
 
 [ cpp ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-pcre2grep-libz
 	--enable-pcre2grep-libbz2
@@ -42,8 +46,8 @@ configure = "./configure
 	--enable-pcre2-32
 	--disable-dependency-tracking
 	--disable-static
-	--enable-cpp"
+	--enable-cpp
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,man/man3}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,man/man3}/

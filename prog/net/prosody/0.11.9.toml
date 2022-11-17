@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://prosody.im/downloads/source/prosody-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://prosody.im/downloads/source/prosody-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "MAKEFLAGS=-j1" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = MAKEFLAGS=-j1
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--ostype=linux
 	--sysconfdir=/etc/prosody
@@ -20,11 +24,11 @@ configure = "./configure
 	--runwith=lua5.2
 	--with-lua-include=/usr/include/lua5.2
 	--no-example-certs
-	--cflags=\"${CPPFLAGS} ${CFLAGS} -fPIC -D_GNU_SOURCE\"
-	--ldflags=\"${LDFLAGS} -shared\" 
+	--cflags="${CPPFLAGS} ${CFLAGS} -fPIC -D_GNU_SOURCE"
+	--ldflags="${LDFLAGS} -shared"
 	--idn-library=idn
-	"
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/

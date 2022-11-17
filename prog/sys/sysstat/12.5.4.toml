@@ -1,16 +1,20 @@
 [ src ]
 
-url = "http://pagesperso-orange.fr/sebastien.godard/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://pagesperso-orange.fr/sebastien.godard/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-dependency-tracking
 	--disable-nls
@@ -20,10 +24,10 @@ configure = "./configure
 	--enable-collect-all
 	--disable-compress-manpg &&
 	sed	-e 's|CFLAGS = |CFLAGS += $(CPPFLAGS) |'
-		-e 's|LFLAGS = |LFLAGS = $(LDFLAGS) |' -i Makefile"
+		-e 's|LFLAGS = |LFLAGS = $(LDFLAGS) |' -i Makefile
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mv -v <pkg_dir>/usr/lib64 <pkg_dir>/usr/lib &&
-	rm -rv <pkg_dir>/var/ <pkg_dir>/usr/share/doc/"
+	rm -rv <pkg_dir>/var/ <pkg_dir>/usr/share/doc/
 

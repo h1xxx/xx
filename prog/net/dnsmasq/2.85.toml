@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://thekelleys.org.uk/dnsmasq/dnsmasq-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://thekelleys.org.uk/dnsmasq/dnsmasq-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make COPTS='-DNO_ID
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make COPTS='-DNO_ID
 		-DNO_TFTP
 		-DNO_DHCP6
 		-DNO_SCRIPT
@@ -19,6 +23,6 @@ build = "make COPTS='-DNO_ID
 		-DNO_INOTIFY
 		-DNO_LOOP
 		-DNO_IPSET
-		-DNO_DUMPFILE'"
+		-DNO_DUMPFILE'
 
-pkg_create = "make DESTDIR=<pkg_dir> PREFIX=/usr install"
+pkg_create = make DESTDIR=<pkg_dir> PREFIX=/usr install

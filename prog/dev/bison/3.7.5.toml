@@ -1,55 +1,59 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--docdir=/usr/share/doc/bison
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm <pkg_dir>/usr/share/bison/bison-default.css &&
 	rm -r <pkg_dir>/usr/share/{doc,info,locale}/ &&
-	rm -r <pkg_dir>/usr/lib/"
+	rm -r <pkg_dir>/usr/lib/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--bindir=/bin
 	--docdir=/usr/share/doc/bison
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm <pkg_dir>/usr/share/bison/bison-default.css &&
 	rm -r <pkg_dir>/usr/share/{doc,info}/ &&
-	rm -r <pkg_dir>/usr/lib/"
+	rm -r <pkg_dir>/usr/lib/
 
 
 
 [ bootstrap ]
 
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--docdir=/usr/share/doc/bison
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 

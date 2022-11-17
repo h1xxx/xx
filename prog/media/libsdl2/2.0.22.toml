@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.libsdl.org/release/SDL2-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "SDL2-<ver>"
+url = https://www.libsdl.org/release/SDL2-<ver>.tar.gz
+src_type = tar
+src_dirname = SDL2-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--mandir=/usr/share/man
@@ -76,19 +80,19 @@ configure = "./configure
 	--disable-ime
 	--disable-ibus
 	--disable-fcitx
-	--disable-joystick-mfi"
+	--disable-joystick-mfi
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm <pkg_dir>/usr/lib/libSDL2main.a"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libSDL2main.a
 
 
 
 [ x11 ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--mandir=/usr/share/man
@@ -154,9 +158,9 @@ configure = "./configure
 	--disable-ime
 	--disable-ibus
 	--disable-fcitx
-	--disable-joystick-mfi"
+	--disable-joystick-mfi
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm <pkg_dir>/usr/lib/libSDL2main.a"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libSDL2main.a
 

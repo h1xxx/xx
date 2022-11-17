@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/binutils/binutils-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/binutils/binutils-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--enable-gold
 	--enable-ld=default
@@ -19,20 +23,20 @@ configure = "mkdir -p build && cd build && ../configure
 	--disable-nls
 	--disable-werror
 	--enable-64-bit-bfd
-	--with-system-zlib"
+	--with-system-zlib
 
-build = "cd build && make tooldir=/usr"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+build = cd build && make tooldir=/usr
+pkg_create = cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
 	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a &&
-	rm -r <pkg_dir>/usr/share/info/"
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ musl_bootstrap ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "git apply -v <prog_dir>/patch/<ver>/*.patch &&
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = git apply -v <prog_dir>/patch/<ver>/*.patch &&
 	sed '6009s/$add_dir//' -i ltmain.sh &&
 	mkdir -p build && cd build && ../configure
 	--prefix=
@@ -51,28 +55,28 @@ configure = "git apply -v <prog_dir>/patch/<ver>/*.patch &&
 	--disable-multilib
 	--disable-nls
 	--disable-werror
-	--with-system-zlib"
+	--with-system-zlib
 
-build = "cd build && make tooldir=/"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/ install &&
-	rm -r <pkg_dir>/share/info/"
+build = cd build && make tooldir=/
+pkg_create = cd build && make DESTDIR=<pkg_dir> tooldir=/ install &&
+	rm -r <pkg_dir>/share/info/
 
 
 
 [ bootstrap_1_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/tools
 	--with-sysroot=<root_dir>
 	--target=${TARGET_TRIPLET}
 	--enable-gprofng=no
 	--disable-nls
-	--disable-werror"
+	--disable-werror
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
@@ -83,9 +87,9 @@ pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
 # so the produced binaries will be mistakenly linked to libraries from
 # the host distro. sed here is a workaround for that.
 # use "MAKEFLAGS=j1" if errors show up
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed '6009s/$add_dir//' -i ltmain.sh &&
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed '6009s/$add_dir//' -i ltmain.sh &&
 	mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--build=$(../config.guess)
@@ -95,18 +99,18 @@ configure = "sed '6009s/$add_dir//' -i ltmain.sh &&
 	--enable-gprofng=no
 	--disable-werror
 	--disable-nls
-	--enable-64-bit-bfd"
+	--enable-64-bit-bfd
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--enable-gold
 	--enable-ld=default
@@ -115,8 +119,8 @@ configure = "mkdir -p build && cd build && ../configure
 	--disable-nls
 	--disable-werror
 	--enable-64-bit-bfd
-	--with-system-zlib"
+	--with-system-zlib
 
-build = "cd build && make tooldir=/usr"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
-	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a"
+build = cd build && make tooldir=/usr
+pkg_create = cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a

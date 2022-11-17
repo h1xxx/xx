@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://xorg.freedesktop.org/releases/individual/lib/libXt-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "libXt-<ver>"
+url = https://xorg.freedesktop.org/releases/individual/lib/libXt-<ver>.tar.bz2
+src_type = tar
+src_dirname = libXt-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/

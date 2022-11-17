@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-dependency-tracking
 	--disable-csharp
@@ -18,10 +22,10 @@ configure = "./configure
 	--with-xz
 	--without-included-libxml
 	--without-libxml2-prefix
-	--without-included-gettext"
+	--without-included-gettext
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/usr/lib/*.a &&
-	rm -r <pkg_dir>/usr/share/{doc,info}/"
+	rm -r <pkg_dir>/usr/share/{doc,info}/
 

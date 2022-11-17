@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.kernel.org/pub/linux/utils/util-linux/v<ver_short>/util-linux-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.kernel.org/pub/linux/utils/util-linux/v<ver_short>/util-linux-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	ADJTIME_PATH=/var/lib/hwclock/adjtime
 	--prefix=/usr
 	--libdir=/usr/lib
@@ -32,19 +36,19 @@ configure = "./configure
 	--without-btrfs
 	--without-python
 	--without-systemd
-	--without-systemdsystemunitdir"
+	--without-systemdsystemunitdir
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static -I/include -I/usr/include -D_DIRENT_HAVE_D_TYPE" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static -I/include -I/usr/include -D_DIRENT_HAVE_D_TYPE"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	ADJTIME_PATH=/var/lib/hwclock/adjtime
 	--prefix=
 	--host=x86_64-pc-linux-gcc
@@ -65,19 +69,19 @@ configure = "./configure
 	--without-btrfs
 	--without-python
 	--without-systemd
-	--without-systemdsystemunitdir"
+	--without-systemdsystemunitdir
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/
 
 
 
 [ bootstrap ]
 
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	ADJTIME_PATH=/var/lib/hwclock/adjtime
 	--prefix=/usr
 	--libdir=/usr/lib
@@ -98,8 +102,8 @@ configure = "./configure
 	--disable-dependency-tracking
 	--disable-makeinstall-chown
 	--disable-makeinstall-setuid
-	--without-python"
+	--without-python
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

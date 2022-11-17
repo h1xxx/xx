@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/gcc/gcc-<ver>/gcc-<ver>.tar.xz
+url = https://ftp.gnu.org/gnu/gcc/gcc-<ver>/gcc-<ver>.tar.xz
 https://www.mpfr.org/mpfr-4.1.0/mpfr-4.1.0.tar.xz
 https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz
-https://ftp.gnu.org/gnu/mpc/mpc-1.2.1.tar.gz"
+https://ftp.gnu.org/gnu/mpc/mpc-1.2.1.tar.gz
 
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
 	mkdir -p build && cd build &&
 	../configure
 	--prefix=/usr
@@ -26,14 +30,14 @@ configure = "sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
 	--with-glibc-version=2.33
 	--enable-default-pie
 	--enable-default-ssp
-	--enable-languages=c,c++"
+	--enable-languages=c,c++
 
-build = "cd build && make"
+build = cd build && make
 
 # libgcc_s.so* is moved to a separate pkg: libc_misc/gcc-libgcc_s
 # libgomp.so* is moved to a separate pkg: libc_misc/gcc-libgomp
 # libstdc++.so* is moved to a separate pkg: libcpp/gcc-libstdc++
-pkg_create = "cd build &&
+pkg_create = cd build &&
 	make DESTDIR=<pkg_dir> install &&
 	rm -rv <pkg_dir>/usr/lib/gcc/x86_64-pc-linux-gnu/<ver>/include-fixed/bits/ &&
 	ln -s gcc <pkg_dir>/usr/bin/cc &&
@@ -49,7 +53,7 @@ pkg_create = "cd build &&
 
 	for prog in	libc_misc/gcc-libgcc_s
 			libc_misc/gcc-libgomp
-			libcpp/gcc-libstdc++; do 
+			libcpp/gcc-libstdc++; do
 
 		prog_path=/home/xx/prog/${prog} &&
 		lib=$(echo ${prog} | cut -d'/' -f2 | cut -d'-' -f2-) &&
@@ -65,14 +69,14 @@ pkg_create = "cd build &&
 			${prog_path}/log/<set_ver_rel>/sha256.log &&
 		cd -;
 
-	done"
+	done
 
 
 
 [ bootstrap_1_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	tar --no-same-owner -xf <src_dir>/mpfr-4.1.0.tar.xz -C <build_dir> &&
 	tar --no-same-owner -xf <src_dir>/gmp-6.2.1.tar.xz -C <build_dir> &&
 	tar --no-same-owner -xf <src_dir>/mpc-1.2.1.tar.gz -C <build_dir> &&
@@ -80,9 +84,9 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	mv mpfr-4.1.0 mpfr &&
 	mv gmp-6.2.1 gmp &&
 	mv mpc-1.2.1 mpc &&
-	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64"
+	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
 
-configure = "mkdir -p build && cd build && ../configure
+configure = mkdir -p build && cd build && ../configure
 	--target=${TARGET_TRIPLET}
 	--prefix=/tools
 	--with-glibc-version=2.33
@@ -101,23 +105,23 @@ configure = "mkdir -p build && cd build && ../configure
 	--disable-libssp
 	--disable-libvtv
 	--disable-libstdcxx
-	--enable-languages=c,c++"
+	--enable-languages=c,c++
 
-build = "cd build && make"
-pkg_create = "cd build &&
+build = cd build && make
+pkg_create = cd build &&
 	make DESTDIR=<pkg_dir> install &&
 	cd .. &&
 	gcc_dir=$(dirname $(<pkg_dir>/tools/bin/${TARGET_TRIPLET}-gcc
 		-print-libgcc-file-name)) &&
 	cat gcc/limitx.h gcc/glimits.h gcc/limity.h >
-	                ${gcc_dir}/install-tools/include/limits.h"
+	                ${gcc_dir}/install-tools/include/limits.h
 
 
 
 [ bootstrap_2_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	tar --no-same-owner -xf <src_dir>/mpfr-4.1.0.tar.xz -C <build_dir> &&
 	tar --no-same-owner -xf <src_dir>/gmp-6.2.1.tar.xz -C <build_dir> &&
 	tar --no-same-owner -xf <src_dir>/mpc-1.2.1.tar.gz -C <build_dir> &&
@@ -125,9 +129,9 @@ prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	mv mpfr-4.1.0 mpfr &&
 	mv gmp-6.2.1 gmp &&
 	mv mpc-1.2.1 mpc &&
-	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64"
+	sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64
 
-configure = "mkdir -p build && cd build &&
+configure = mkdir -p build && cd build &&
 	mkdir -pv ${TARGET_TRIPLET}/libgcc &&
 	ln -s ../../../libgcc/gthr-posix.h ${TARGET_TRIPLET}/libgcc/gthr-default.h &&
 	../configure
@@ -149,55 +153,55 @@ configure = "mkdir -p build && cd build &&
 	--disable-libstdcxx
 	--enable-default-pie
 	--enable-default-ssp
-	--enable-languages=c,c++"
+	--enable-languages=c,c++
 
-build = "cd build && make"
-pkg_create = "cd build &&
+build = cd build && make
+pkg_create = cd build &&
 	make DESTDIR=<pkg_dir> install &&
-	ln -sv gcc <pkg_dir>/usr/bin/cc"
+	ln -sv gcc <pkg_dir>/usr/bin/cc
 
 
 
 [ bootstrap_libstdcpp_1_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../libstdc++-v3/configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../libstdc++-v3/configure
 	--host=${TARGET_TRIPLET}
 	--build=$(../config.guess)
 	--prefix=/usr
 	--disable-multilib
 	--disable-nls
 	--disable-libstdcxx-pch
-	--with-gxx-include-dir=/tools/${TARGET_TRIPLET}/include/c++/<ver>"
+	--with-gxx-include-dir=/tools/${TARGET_TRIPLET}/include/c++/<ver>
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap_libstdcpp_2 ]
 
-env = [ "CXXFLAGS=-g -O2 -D_GNU_SOURCE", "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "ln -sv gthr-posix.h libgcc/gthr-default.h &&
+env = CXXFLAGS="-g -O2 -D_GNU_SOURCE" CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ln -sv gthr-posix.h libgcc/gthr-default.h &&
 	mkdir -p build && cd build && ../libstdc++-v3/configure
 	--prefix=/usr
 	--disable-multilib
 	--disable-nls
 	--host=${TARGET_TRIPLET}
-	--disable-libstdcxx-pch"
+	--disable-libstdcxx-pch
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
 	mkdir -p build && cd build &&
 	../configure
 	--prefix=/usr
@@ -209,10 +213,10 @@ configure = "sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 &&
 	--with-glibc-version=2.33
 	--enable-default-pie
 	--enable-default-ssp
-	--enable-languages=c,c++"
+	--enable-languages=c,c++
 
-build = "cd build && make"
-pkg_create = "cd build &&
+build = cd build && make
+pkg_create = cd build &&
 	make DESTDIR=<pkg_dir> install &&
 	rm -rv <pkg_dir>/usr/lib/gcc/x86_64-pc-linux-gnu/<ver>/include-fixed/bits/ &&
 	ln -s gcc <pkg_dir>/usr/bin/cc &&
@@ -221,4 +225,4 @@ pkg_create = "cd build &&
 		<pkg_dir>/usr/lib/bfd-plugins/ &&
 	mkdir -pv <pkg_dir>/usr/share/gdb/auto-load/usr/lib &&
 	mv -v <pkg_dir>/usr/lib/*gdb.py
-		<pkg_dir>/usr/share/gdb/auto-load/usr/lib"
+		<pkg_dir>/usr/share/gdb/auto-load/usr/lib

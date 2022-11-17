@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://www.python.org/ftp/python/doc/<ver>/python-<ver>-docs-html.tar.bz2"
-src_type = "tar"
-src_dirname = "python-<ver>-docs-html"
+url = https://www.python.org/ftp/python/doc/<ver>/python-<ver>-docs-html.tar.bz2
+src_type = tar
+src_dirname = python-<ver>-docs-html
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner --no-same-permissions -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "mkdir -pv <pkg_dir>/usr/share/doc/python/html/ &&
+env =
+prepare = tar --no-same-owner --no-same-permissions -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = mkdir -pv <pkg_dir>/usr/share/doc/python/html/ &&
 	install -v -dm755 <pkg_dir>/usr/share/doc/python/html/ &&
-	mv -v * <pkg_dir>/usr/share/doc/python/html/"
+	mv -v * <pkg_dir>/usr/share/doc/python/html/

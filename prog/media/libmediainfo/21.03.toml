@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://mediaarea.net/download/source/libmediainfo/<ver>/libmediainfo_<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "MediaInfoLib/Project/GNU/Library"
+url = https://mediaarea.net/download/source/libmediainfo/<ver>/libmediainfo_<ver>.tar.xz
+src_type = tar
+src_dirname = MediaInfoLib/Project/GNU/Library
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--enable-shared
 	--disable-static
 	--disable-dependency-tracking
-	--without-libcurl"
+	--without-libcurl
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

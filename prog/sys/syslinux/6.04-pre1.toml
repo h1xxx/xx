@@ -1,21 +1,25 @@
 [ src ]
 
-#url = "https://git.zytor.com/syslinux/syslinux.git/snapshot/syslinux-<ver>.tar.gz"
-url = "https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+#url = https://git.zytor.com/syslinux/syslinux.git/snapshot/syslinux-<ver>.tar.gz
+url = https://mirrors.edge.kernel.org/pub/linux/utils/boot/syslinux/Testing/6.04/syslinux-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LDFLAGS=", "CFLAGS+=-fcommon" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "git apply <prog_dir>/patch/<ver>-*.patch"
-build = "make efi64 installer"
-pkg_create = "make -j1
+env = LDFLAGS= CFLAGS+=-fcommon
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = git apply <prog_dir>/patch/<ver>-*.patch
+build = make efi64 installer
+pkg_create = make -j1
 	INSTALLROOT=<pkg_dir>
 	BINDIR=/usr/bin
 	SBINDIR=/usr/bin
 	MANDIR=/usr/share/man
-	bios efi64 install"
+	bios efi64 install

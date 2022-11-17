@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.rsyslog.com/files/download/rsyslog/rsyslog-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.rsyslog.com/files/download/rsyslog/rsyslog-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--enable-openssl
@@ -18,8 +22,8 @@ configure = "./configure
 	--disable-klog
 	--disable-fmhttp
 	--disable-libsystemd
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rmdir <pkg_dir>/usr/bin/ <pkg_dir>/usr/share/man/man1/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rmdir <pkg_dir>/usr/bin/ <pkg_dir>/usr/share/man/man1/

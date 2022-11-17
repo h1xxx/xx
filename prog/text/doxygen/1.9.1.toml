@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/doxygen/doxygen/archive/refs/tags/Release_<ver_pkgspec>.tar.gz"
-src_type = "tar"
-src_dirname = "doxygen-Release_<ver_pkgspec>"
+url = https://github.com/doxygen/doxygen/archive/refs/tags/Release_<ver_pkgspec>.tar.gz
+src_type = tar
+src_dirname = doxygen-Release_<ver_pkgspec>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i
-	's:DESTINATION man/man1:DESTINATION \"${CMAKE_INSTALL_PREFIX}/share/man/man1\":g'
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i
+	's:DESTINATION man/man1:DESTINATION "${CMAKE_INSTALL_PREFIX}/share/man/man1":g'
 	doc/CMakeLists.txt &&
 	mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX:PATH=/usr
@@ -19,7 +23,7 @@ configure = "sed -i
 	-D PYTHON_EXECUTABLE:FILE=/usr/bin/python
 	-D build_doc:BOOL=OFF
 	-D build_wizard:BOOL=OFF
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

@@ -1,26 +1,30 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr --disable-dependency-tracking"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/info/"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr --disable-dependency-tracking
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr --disable-dependency-tracking"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr --disable-dependency-tracking
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.gnupg.org/ftp/gcrypt/pinentry/pinentry-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-pinentry-tty
 	--enable-libsecret
@@ -21,7 +25,7 @@ configure = "./configure
 	--disable-pinentry-gnome3
 	--disable-pinentry-qt
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/usr/share/

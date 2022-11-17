@@ -1,15 +1,19 @@
 [ src ]
 
-url = ""
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url =
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson --prefix=/usr --libdir=lib --buildtype=release build"
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson --prefix=/usr --libdir=lib --buildtype=release build
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install

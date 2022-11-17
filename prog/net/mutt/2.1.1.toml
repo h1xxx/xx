@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://bitbucket.org/mutt/mutt/downloads/mutt-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://bitbucket.org/mutt/mutt/downloads/mutt-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--enable-autocrypt
@@ -36,10 +40,10 @@ configure = "./configure
 	--with-ssl
 	--with-sasl
 	--without-gss
-	--without-idn2"
+	--without-idn2
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir <pkg_dir>/usr/share/mutt/ &&
 	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/mutt/ &&
-	rm -r <pkg_dir>/usr/share/{doc,info}/"
+	rm -r <pkg_dir>/usr/share/{doc,info}/

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://imagemagick.org/download/ImageMagick-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "ImageMagick-<ver>"
+url = https://imagemagick.org/download/ImageMagick-<ver>.tar.xz
+src_type = tar
+src_dirname = ImageMagick-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--disable-static
@@ -23,9 +27,9 @@ configure = "./configure
 	--without-fftw
 	--without-fpx
 	--without-gcc-arch
-	--without-gvc"
+	--without-gvc
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
-#rm <pkg_dir>/usr/share/ImageMagick/fr*"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/
+#rm <pkg_dir>/usr/share/ImageMagick/fr*

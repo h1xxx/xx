@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/binutils/binutils-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/binutils/binutils-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--enable-gold
 	--enable-ld=default
@@ -19,36 +23,36 @@ configure = "mkdir -p build && cd build && ../configure
 	--disable-nls
 	--disable-werror
 	--enable-64-bit-bfd
-	--with-system-zlib"
+	--with-system-zlib
 
-build = "cd build && make tooldir=/usr"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+build = cd build && make tooldir=/usr
+pkg_create = cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
 	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a &&
-	rm -r <pkg_dir>/usr/share/info/"
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ bootstrap_1_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/tools
 	--with-sysroot=<root_dir>
 	--target=${TARGET_TRIPLET}
 	--disable-nls
-	--disable-werror"
+	--disable-werror
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap_2_cross ]
 
-env = [ "CFLAGS=", "LDFLAGS=", "MAKEFLAGS=j1" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env = CFLAGS= LDFLAGS= MAKEFLAGS=j1
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--build=$(../config.guess)
 	--host=${TARGET_TRIPLET}
@@ -56,18 +60,18 @@ configure = "mkdir -p build && cd build && ../configure
 	--enable-shared
 	--disable-werror
 	--disable-nls
-	--enable-64-bit-bfd"
+	--enable-64-bit-bfd
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build && cd build && ../configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build && cd build && ../configure
 	--prefix=/usr
 	--enable-gold
 	--enable-ld=default
@@ -76,8 +80,8 @@ configure = "mkdir -p build && cd build && ../configure
 	--disable-nls
 	--disable-werror
 	--enable-64-bit-bfd
-	--with-system-zlib"
+	--with-system-zlib
 
-build = "cd build && make tooldir=/usr"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
-	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a"
+build = cd build && make tooldir=/usr
+pkg_create = cd build && make DESTDIR=<pkg_dir> tooldir=/usr install &&
+	rm -v <pkg_dir>/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes}.a

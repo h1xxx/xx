@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://download.flashrom.org/releases/flashrom-v<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-v<ver>"
+url = https://download.flashrom.org/releases/flashrom-v<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-v<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && meson --prefix=/usr --libdir=lib"
-build = "cd build && ninja"
-pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && meson --prefix=/usr --libdir=lib
+build = cd build && ninja
+pkg_create = cd build && DESTDIR=<pkg_dir> ninja install

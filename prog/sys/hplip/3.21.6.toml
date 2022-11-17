@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/hplip/hplip-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/hplip/hplip-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-lite-build
 	--enable-cups-drv-install
@@ -23,14 +27,14 @@ configure = "./configure
 	--disable-qt4
 	--disable-qt5
 	--disable-imageProcessor-build
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r	<pkg_dir>/usr/share/hal/
 		<pkg_dir>/usr/lib/cups/
 		<pkg_dir>/usr/lib/systemd/
 		<pkg_dir>/usr/share/doc/
 		<pkg_dir>/var/ &&
 	rmdir <pkg_dir>/usr/bin/ &&
-	mv <pkg_dir>/etc/udev/ <pkg_dir>/usr/lib/"
+	mv <pkg_dir>/etc/udev/ <pkg_dir>/usr/lib/

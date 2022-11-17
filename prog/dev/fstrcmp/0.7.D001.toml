@@ -1,24 +1,28 @@
 [ src ]
 
-url = "http://fstrcmp.sourceforge.net/fstrcmp-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://fstrcmp.sourceforge.net/fstrcmp-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make all-bin"
-pkg_create = "make DESTDIR=<pkg_dir> install-bin &&
+build = make all-bin
+pkg_create = make DESTDIR=<pkg_dir> install-bin &&
 	mkdir -p <pkg_dir>/usr/{lib/pkgconfig,include}/ &&
 
 	cp -av lib/.libs/lib*so*  <pkg_dir>/usr/lib/ &&
 	cp -av lib/*.h      <pkg_dir>/usr/include/ &&
-	cp -av <prog_dir>/files/fstrcmp.pc <pkg_dir>/usr/lib/pkgconfig/"
+	cp -av <prog_dir>/files/fstrcmp.pc <pkg_dir>/usr/lib/pkgconfig/

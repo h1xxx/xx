@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v<ver>/e2fsprogs-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/project/e2fsprogs/e2fsprogs/v<ver>/e2fsprogs-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--exec-prefix=/usr
 	--libdir=/usr/lib
@@ -24,22 +28,22 @@ configure = "./configure
 	--disable-fsck
 	--disable-nls &&
 	sed -i '/$(MAKE) docs/d' Makefile &&
-	sed -i 's|&& cd doc &&.*| |g' Makefile"
+	sed -i 's|&& cd doc &&.*| |g' Makefile
 
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	chmod u+w <pkg_dir>/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a &&
 	rm <pkg_dir>/usr/lib/lib{com_err,e2p,ext2fs,ss}.a &&
-	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--with-root-prefix=''
 	--enable-relative-symlinks
@@ -49,11 +53,11 @@ configure = "./configure
 	--disable-fsck
 	--disable-nls &&
 	sed -i '/$(MAKE) docs/d' Makefile &&
-	sed -i 's|&& cd doc &&.*| |g' Makefile"
+	sed -i 's|&& cd doc &&.*| |g' Makefile
 
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	chmod u+w <pkg_dir>/lib/*.a &&
 	mv <pkg_dir>/etc/ <pkg_dir>/share/ &&
-	rm -r <pkg_dir>/usr/"
+	rm -r <pkg_dir>/usr/

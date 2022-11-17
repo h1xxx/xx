@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/gabime/spdlog/archive/v<ver>/spdlog-v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/gabime/spdlog/archive/v<ver>/spdlog-v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && cmake
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=/usr/lib
 	-D CMAKE_BUILD_TYPE='Release'
@@ -19,7 +23,7 @@ configure = "mkdir build && cd build && cmake
 	-D SPDLOG_BUILD_TESTS=OFF
 	-D SPDLOG_FMT_EXTERNAL=ON
 	-D SPDLOG_BUILD_SHARED=ON
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

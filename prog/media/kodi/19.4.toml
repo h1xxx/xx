@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://github.com/xbmc/xbmc/archive/refs/tags/<ver>-Matrix.tar.gz
+url = https://github.com/xbmc/xbmc/archive/refs/tags/<ver>-Matrix.tar.gz
 	https://mirrors.kodi.tv/build-deps/sources/crossguid-8f399e8bd4.tar.gz
 	libdvdread-6.0.0-Leia-Alpha-3.tar.gz::https://github.com/xbmc/libdvdread/archive/6.0.0-Leia-Alpha-3.tar.gz
-	libdvdnav-6.0.0-Leia-Alpha-3.tar.gz::https://github.com/xbmc/libdvdnav/archive/6.0.0-Leia-Alpha-3.tar.gz"
+	libdvdnav-6.0.0-Leia-Alpha-3.tar.gz::https://github.com/xbmc/libdvdnav/archive/6.0.0-Leia-Alpha-3.tar.gz
 
-src_type = "tar"
-src_dirname = "xbmc-<ver>-Matrix"
+src_type = tar
+src_dirname = xbmc-<ver>-Matrix
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir -p build/download && cd build &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir -p build/download && cd build &&
 	cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CORE_PLATFORM_NAME=gbm
@@ -52,10 +56,10 @@ configure = "mkdir -p build/download && cd build &&
 	-D CROSSGUID_URL=<src_dir>/crossguid-8f399e8bd4.tar.gz
 	-D libdvdread_URL=<src_dir>/libdvdread-6.0.0-Leia-Alpha-3.tar.gz
 	-D libdvdnav_URL=<src_dir>/libdvdnav-6.0.0-Leia-Alpha-3.tar.gz
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install &&
 	rm -rv <pkg_dir>/usr/lib/ &&
 	rm -rv <pkg_dir>/usr/share/{applications,icons,metainfo,xsessions}/ &&
-	mv -v <pkg_dir>/usr/{lib64,lib}"
+	mv -v <pkg_dir>/usr/{lib64,lib}

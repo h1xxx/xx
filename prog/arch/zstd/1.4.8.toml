@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://github.com/facebook/zstd/releases/download/v<ver>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/facebook/zstd/releases/download/v<ver>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # set '-17 --long=31' as default, as we usually have enough time and memory
 # set mulithreading by default
 # make --ultra swich redundant
-configure = "sed -i
+configure = sed -i
 	-e 's|define ZSTDCLI_CLEVEL_DEFAULT 3|define ZSTDCLI_CLEVEL_DEFAULT 17|g'
 	-e 's|define ZSTD_WINDOWLOG_LIMIT_DEFAULT 27|define ZSTD_WINDOWLOG_LIMIT_DEFAULT 31|g'
 	-e 's|g_defaultDictCLevel = 3|g_defaultDictCLevel = 17|g'
@@ -27,30 +31,30 @@ configure = "sed -i
 	sed -i
 	-e 's|define ZSTD_CLEVEL_DEFAULT 3|define ZSTD_CLEVEL_DEFAULT 17|g'
 	-e 's|define ZSTD_WINDOWLOG_LIMIT_DEFAULT 27|define ZSTD_WINDOWLOG_LIMIT_DEFAULT 31|g'
-	lib/zstd.h"
+	lib/zstd.h
 
-build = "make"
-pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
-	rm -v <pkg_dir>/usr/lib/libzstd.a"
+build = make
+pkg_create = make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a
 
 
 
 [ bootstrap_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make"
-pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
-	rm -v <pkg_dir>/usr/lib/libzstd.a"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make
+pkg_create = make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make"
-pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install &&
-	rm -v <pkg_dir>/usr/lib/libzstd.a"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make
+pkg_create = make prefix=/usr DESTDIR=<pkg_dir> install &&
+	rm -v <pkg_dir>/usr/lib/libzstd.a

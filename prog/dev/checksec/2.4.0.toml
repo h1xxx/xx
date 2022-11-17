@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://github.com/slimm609/checksec.sh/archive/refs/tags/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>.sh-<ver>"
+url = https://github.com/slimm609/checksec.sh/archive/refs/tags/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>.sh-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "mkdir -pv <pkg_dir>/usr/bin/ && cp checksec <pkg_dir>/usr/bin/"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = mkdir -pv <pkg_dir>/usr/bin/ && cp checksec <pkg_dir>/usr/bin/

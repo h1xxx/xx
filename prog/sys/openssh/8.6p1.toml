@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc/ssh
 	--disable-security-key
@@ -21,19 +25,19 @@ configure = "./configure
 	--with-xauth=/usr/bin/xauth
 	--without-pam
 	--without-selinux
-	--without-kerberos5"
+	--without-kerberos5
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/var/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/var/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static -I/include/" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static -I/include"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--sysconfdir=/etc/ssh
 	--disable-security-key
@@ -45,8 +49,8 @@ configure = "./configure
 	--with-ssl-dir=/include/openssl
 	--without-pam
 	--without-selinux
-	--without-kerberos5"
+	--without-kerberos5
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/var/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/var/

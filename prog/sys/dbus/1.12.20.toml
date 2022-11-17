@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://dbus.freedesktop.org/releases/dbus/dbus-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://dbus.freedesktop.org/releases/dbus/dbus-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--localstatedir=/var
@@ -31,12 +35,12 @@ configure = "./configure
 	--disable-doxygen-docs
 	--disable-ducktype-docs
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
 # machine id is taken from whonix
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/no &&
 	rm -r <pkg_dir>/var/run &&
 	echo b08dfa6083e7567a1921a715000001fb > <pkg_dir>/etc/machine-id &&
-	ln -s ../../../etc/machine-id <pkg_dir>/var/lib/dbus/machine-id"
+	ln -s ../../../etc/machine-id <pkg_dir>/var/lib/dbus/machine-id

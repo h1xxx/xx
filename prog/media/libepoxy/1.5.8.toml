@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/anholt/<prog>/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/anholt/<prog>/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build &&
-	meson --prefix=/usr -D tests=false -D egl=yes -D glx=yes"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build &&
+	meson --prefix=/usr -D tests=false -D egl=yes -D glx=yes
 
-build = "cd build && ninja"
-pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+build = cd build && ninja
+pkg_create = cd build && DESTDIR=<pkg_dir> ninja install

@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/lsof-org/lsof/archive/refs/tags/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/lsof-org/lsof/archive/refs/tags/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./Configure -n linux"
-build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/bin/ <pkg_dir>/usr/share/man/man8/ &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./Configure -n linux
+build = make
+pkg_create = mkdir -pv <pkg_dir>/usr/bin/ <pkg_dir>/usr/share/man/man8/ &&
 	cp lsof <pkg_dir>/usr/bin/ &&
-	cp Lsof.8 <pkg_dir>/usr/share/man/man8/lsof.8"
+	cp Lsof.8 <pkg_dir>/usr/share/man/man8/lsof.8

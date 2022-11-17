@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://mandoc.bsd.lv/snapshots/mandoc-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://mandoc.bsd.lv/snapshots/mandoc-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "echo PREFIX=/usr > configure.local &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = echo PREFIX=/usr > configure.local &&
         printf '%s\n' MANDIR=/usr/share/man >> configure.local &&
         printf '%s\n' LIBDIR=/usr/lib >> configure.local &&
         printf '%s\n' UTF8_LOCALE=en_US.UTF-8 >> configure.local &&
@@ -18,7 +22,7 @@ configure = "echo PREFIX=/usr > configure.local &&
         printf '%s\n' MANPATH_BASE=/usr/share/man >> configure.local &&
         printf '%s %s\n' LN=\\'ln -sf\\' >> configure.local &&
         printf '%s\n' HAVE_LESS_T=0 >> configure.local &&
-	./configure"
+	./configure
 
-build = "make"
-pkg_create = "make -j1 DESTDIR=<pkg_dir> base-install lib-install"
+build = make
+pkg_create = make -j1 DESTDIR=<pkg_dir> base-install lib-install

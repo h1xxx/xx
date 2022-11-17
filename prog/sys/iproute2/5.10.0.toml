@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i /ARPD/d Makefile && rm -v man/man8/arpd.8"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> DOCDIR=/usr/share/doc/iproute2 install &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i /ARPD/d Makefile && rm -v man/man8/arpd.8
+build = make
+pkg_create = make DESTDIR=<pkg_dir> DOCDIR=/usr/share/doc/iproute2 install &&
 	mv <pkg_dir>/sbin/ <pkg_dir>/usr/ &&
-	rm -r <pkg_dir>/usr/share/bash-completion/"
+	rm -r <pkg_dir>/usr/share/bash-completion/

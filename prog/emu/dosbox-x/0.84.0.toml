@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/joncampbell123/dosbox-x/archive/refs/tags/dosbox-x-v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<prog>-v<ver>"
+url = https://github.com/joncampbell123/dosbox-x/archive/refs/tags/dosbox-x-v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<prog>-v<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
@@ -23,8 +27,8 @@ configure = "./autogen.sh && ./configure
 	--enable-opengl
 	--enable-d3d9
 	--enable-d3d-shaders
-	--enable-sdl2"
+	--enable-sdl2
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && 
-	rm -r <pkg_dir>/usr/share/{applications,icons,metainfo}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{applications,icons,metainfo}/

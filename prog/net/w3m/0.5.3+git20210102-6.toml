@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/tats/w3m/archive/refs/tags/debian/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "w3m-debian-<ver_pkgspec>"
+url = https://github.com/tats/w3m/archive/refs/tags/debian/<ver>.tar.gz
+src_type = tar
+src_dirname = w3m-debian-<ver_pkgspec>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LIBS=-ltinfow" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = LIBS=-ltinfow
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--sysconfdir=/etc
 	--bindir=/usr/bin
@@ -33,9 +37,9 @@ configure = "./configure
 	--with-browser=/usr/bin/w3m
 	--with-editor=/usr/bin/vim
 	--with-ssl
-	--with-termlib=ncurses"
+	--with-termlib=ncurses
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/usr/share/w3m/*{.de.,.ja.}* &&
-	rm -r <pkg_dir>/usr/share/man/{de,ja}/"
+	rm -r <pkg_dir>/usr/share/man/{de,ja}/

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://mesa.freedesktop.org/archive/mesa-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://mesa.freedesktop.org/archive/mesa-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && meson
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && meson
 	--prefix=/usr
 	-D buildtype=release
 	-D platforms=
@@ -31,10 +35,10 @@ configure = "mkdir build && cd build && meson
 	-D lmsensors=disabled
 	-D vulkan-drivers=''
 	-D vulkan-layers=''
-	-D microsoft-clc=disabled"
+	-D microsoft-clc=disabled
 
-build = "cd build && ninja"
-pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+build = cd build && ninja
+pkg_create = cd build && DESTDIR=<pkg_dir> ninja install
 
 
 
@@ -42,9 +46,9 @@ pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
 
 # required by xorg-server built with dri and gallium
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && meson
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && meson
 	--prefix=/usr
 	-D buildtype=release
 	-D platforms=x11
@@ -65,10 +69,10 @@ configure = "mkdir build && cd build && meson
 	-D lmsensors=disabled
 	-D vulkan-drivers=''
 	-D vulkan-layers=''
-	-D microsoft-clc=disabled"
+	-D microsoft-clc=disabled
 
-build = "cd build && ninja"
-pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install"
+build = cd build && ninja
+pkg_create = cd build && DESTDIR=<pkg_dir> ninja install
 
 
 

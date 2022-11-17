@@ -1,69 +1,73 @@
 [ src ]
 
-url = "https://www.sourceware.org/pub/bzip2/bzip2-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.sourceware.org/pub/bzip2/bzip2-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS+=-D_FILE_OFFSET_BITS=64" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i '/^LDFLAGS=$/d' Makefile &&
+env = CFLAGS+=-D_FILE_OFFSET_BITS=64
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i '/^LDFLAGS=$/d' Makefile &&
 	sed -i 's/^CFLAGS=/CFLAGS+=/' Makefile &&
 	sed -i 's/^CFLAGS=/CFLAGS+=/' Makefile-libbz2_so &&
 	sed -i '/^LDFLAGS=/d' Makefile &&
 	sed -i 's@\\(ln -s -f \\)$(PREFIX)/bin/@\\1@' Makefile &&
 	sed -i 's@(PREFIX)/man@(PREFIX)/share/man@g' Makefile &&
 	make -f Makefile-libbz2_so &&
-	make clean"
+	make clean
 
-build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/{bin,lib} &&
+build = make
+pkg_create = mkdir -pv <pkg_dir>/usr/{bin,lib} &&
 	make PREFIX=<pkg_dir>/usr install &&
 	cp -v bzip2-shared <pkg_dir>/usr/bin/bzip2 &&
 	cp -av libbz2.so* <pkg_dir>/usr/lib &&
 	ln -sv libbz2.so.1.0 <pkg_dir>/usr/lib/libbz2.so &&
-	rm -v <pkg_dir>/usr/lib/libbz2.a"
+	rm -v <pkg_dir>/usr/lib/libbz2.a
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static", "CFLAGS+=-D_FILE_OFFSET_BITS=64" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i '/^LDFLAGS=$/d' Makefile &&
+env = CC="musl-gcc -static" CFLAGS+=-D_FILE_OFFSET_BITS=64
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i '/^LDFLAGS=$/d' Makefile &&
 	sed -i 's/^CFLAGS=/CFLAGS+=/' Makefile &&
 	sed -i '/^LDFLAGS=/d' Makefile &&
 	sed -i 's@\\(ln -s -f \\)$(PREFIX)/bin/@\\1@' Makefile &&
 	sed -i 's@(PREFIX)/man@(PREFIX)/share/man@g' Makefile &&
-	make clean"
+	make clean
 
-build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/{bin,lib} &&
+build = make
+pkg_create = mkdir -pv <pkg_dir>/{bin,lib} &&
 	make PREFIX=<pkg_dir> install &&
-	cp -av libbz2.a* <pkg_dir>/lib"
+	cp -av libbz2.a* <pkg_dir>/lib
 
 
 
 [ bootstrap ]
 
-env = [ "CFLAGS+=-D_FILE_OFFSET_BITS=64" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i '/^LDFLAGS=$/d' Makefile &&
+env = CFLAGS+=-D_FILE_OFFSET_BITS=64
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i '/^LDFLAGS=$/d' Makefile &&
 	sed -i 's/^CFLAGS=/CFLAGS+=/' Makefile &&
 	sed -i 's/^CFLAGS=/CFLAGS+=/' Makefile-libbz2_so &&
 	sed -i '/^LDFLAGS=/d' Makefile &&
 	sed -i 's@\\(ln -s -f \\)$(PREFIX)/bin/@\\1@' Makefile &&
 	sed -i 's@(PREFIX)/man@(PREFIX)/share/man@g' Makefile &&
 	make -f Makefile-libbz2_so &&
-	make clean"
+	make clean
 
-build = "make"
-pkg_create = "mkdir -pv <pkg_dir>/usr/{bin,lib} &&
+build = make
+pkg_create = mkdir -pv <pkg_dir>/usr/{bin,lib} &&
 	make PREFIX=<pkg_dir>/usr install &&
 	cp -v bzip2-shared <pkg_dir>/usr/bin/bzip2 &&
 	cp -av libbz2.so* <pkg_dir>/usr/lib &&
 	ln -sv libbz2.so.1.0 <pkg_dir>/usr/lib/libbz2.so &&
-	rm -v <pkg_dir>/usr/lib/libbz2.a"
+	rm -v <pkg_dir>/usr/lib/libbz2.a

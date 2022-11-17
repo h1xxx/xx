@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/mchehab/zbar/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/mchehab/zbar/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "autoreconf -vfi && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = autoreconf -vfi && ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
@@ -29,9 +33,9 @@ configure = "autoreconf -vfi && ./configure
 	--without-npapi
 	--without-gir
 	--without-gtk
-	--with-imagemagick"
+	--with-imagemagick
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/
 

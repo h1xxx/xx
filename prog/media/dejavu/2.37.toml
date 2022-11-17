@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "dejavu-fonts-<ver>"
+url = https://github.com/dejavu-fonts/dejavu-fonts/releases/download/version_2_37/dejavu-fonts-<ver>.tar.bz2
+src_type = tar
+src_dirname = dejavu-fonts-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make full-ttf"
-pkg_create = "mkdir -p <pkg_dir>/usr/share/etc/dejavu/fonts/conf.avail/ &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make full-ttf
+pkg_create = mkdir -p <pkg_dir>/usr/share/etc/dejavu/fonts/conf.avail/ &&
 	mkdir -p <pkg_dir>/usr/share/fonts/ &&
 	cp fontconfig/* <pkg_dir>/usr/share/etc/dejavu/fonts/conf.avail/ &&
-	cp -r build/ <pkg_dir>/usr/share/fonts/dejavu"
+	cp -r build/ <pkg_dir>/usr/share/fonts/dejavu

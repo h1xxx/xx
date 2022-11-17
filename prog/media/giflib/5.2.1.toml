@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/project/giflib/giflib-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/project/giflib/giflib-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i 's/CFLAGS  =/CFLAGS  +=/g' Makefile"
-build = "make"
-pkg_create = "make PREFIX=/usr DESTDIR=<pkg_dir> install &&
-	rm <pkg_dir>/usr/lib/libgif.a"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i 's/CFLAGS  =/CFLAGS  +=/g' Makefile
+build = make
+pkg_create = make PREFIX=/usr DESTDIR=<pkg_dir> install &&
+	rm <pkg_dir>/usr/lib/libgif.a

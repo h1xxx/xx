@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make KERNEL_HEADERS='/usr/include' lib='lib' prefix='/usr'"
-pkg_create = "make
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make KERNEL_HEADERS='/usr/include' lib='lib' prefix='/usr'
+pkg_create = make
 	prefix='/usr'
 	lib='lib'
 	RAISE_SETFCAP='no'
 	DESTDIR=<pkg_dir>
-	install"
+	install

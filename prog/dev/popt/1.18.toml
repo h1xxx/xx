@@ -1,38 +1,42 @@
 [ src ]
 
-url = "http://ftp.rpm.org/popt/releases/popt-1.x/popt-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://ftp.rpm.org/popt/releases/popt-1.x/popt-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh &&
 	./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
-	--disable-nls"
+	--disable-nls
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh &&
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh &&
 	./configure
 	--prefix=
 	--enable-static
 	--disable-shared
 	--disable-dependency-tracking
-	--disable-nls"
+	--disable-nls
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

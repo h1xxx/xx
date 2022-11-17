@@ -1,29 +1,33 @@
 [ src ]
 
-url = "https://www.freedesktop.org/software/fontconfig/release/fontconfig-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.freedesktop.org/software/fontconfig/release/fontconfig-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--localstatedir=/var
 	--docdir=/usr/share/doc/fontconfig
 	--disable-dependency-tracking
 	--disable-nls
-	--disable-docs"
+	--disable-docs
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	for f in <pkg_dir>/etc/fonts/conf.d/*.conf; do
-		fbase=\"$(basename \"${f}\")\";
-		ln -sf \"../../../usr/share/fontconfig/conf.avail/${fbase}\"
-			\"<pkg_dir>/etc/fonts/conf.d/${fbase}\"; 
+		fbase="$(basename "${f}")";
+		ln -sf "../../../usr/share/fontconfig/conf.avail/${fbase}"
+			"<pkg_dir>/etc/fonts/conf.d/${fbase}";
 	done &&
-	rm -r <pkg_dir>/usr/share/gettext/"
+	rm -r <pkg_dir>/usr/share/gettext/

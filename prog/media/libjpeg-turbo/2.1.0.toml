@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://sourceforge.net/projects/libjpeg-turbo/files/<ver>/libjpeg-turbo-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://sourceforge.net/projects/libjpeg-turbo/files/<ver>/libjpeg-turbo-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "cmake
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=/usr/lib
 	-D CMAKE_BUILD_TYPE='Release'
@@ -20,8 +24,8 @@ configure = "cmake
 	-D WITH_JPEG8=ON
 	-W no-dev
 	-B build
-	-S ."
+	-S .
 
-build = "make -C build"
-pkg_create = "make DESTDIR=<pkg_dir> install -C build &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make -C build
+pkg_create = make DESTDIR=<pkg_dir> install -C build &&
+	rm -r <pkg_dir>/usr/share/doc/

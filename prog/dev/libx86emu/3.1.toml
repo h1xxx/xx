@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/wfeldt/libx86emu/archive/refs/tags/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/wfeldt/libx86emu/archive/refs/tags/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i -e '/VERSION := /d'
-		-e 's|all: changelog shared|all: shared|g' Makefile"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i -e '/VERSION := /d'
+		-e 's|all: changelog shared|all: shared|g' Makefile
 
-build = "make LIBDIR=/usr/lib VERSION=<ver>"
-pkg_create = "make DESTDIR=<pkg_dir> LIBDIR=/usr/lib VERSION=<ver> install"
+build = make LIBDIR=/usr/lib VERSION=<ver>
+pkg_create = make DESTDIR=<pkg_dir> LIBDIR=/usr/lib VERSION=<ver> install

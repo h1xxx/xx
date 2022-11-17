@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://ffmpeg.org/releases/ffmpeg-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ffmpeg.org/releases/ffmpeg-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # sdl2 is required for ffplay
-configure = "./configure
+configure = ./configure
 	--prefix=/usr
 	--enable-shared
 	--disable-static
@@ -51,8 +55,8 @@ configure = "./configure
 	--enable-libx264
 	--enable-libxml2
 	--enable-libxvid
-	--enable-vaapi"
+	--enable-vaapi
 
 
-build = "make && make doc/ff{mpeg,play}.1"
-pkg_create = "make DESTDIR=<pkg_dir> install install-man"
+build = make && make doc/ff{mpeg,play}.1
+pkg_create = make DESTDIR=<pkg_dir> install install-man

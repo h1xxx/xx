@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "FORCE_UNSAFE_CONFIGURE=1", "CFLAGS+=-mcmodel=large" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = FORCE_UNSAFE_CONFIGURE=1 CFLAGS+=-mcmodel=large
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-install-program=hostname
 	--enable-no-install-program=kill,uptime
@@ -19,21 +23,21 @@ configure = "./configure
 	--disable-libcap
 	--disable-nls
 	--disable-dependency-tracking
-	--without-selinux"
+	--without-selinux
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir -pv <pkg_dir>/usr/sbin &&
 	mv -v <pkg_dir>/usr/bin/chroot <pkg_dir>/usr/sbin &&
-	rm -r <pkg_dir>/usr/share/info/"
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ bootstrap_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--host=${TARGET_TRIPLET}
 	--build=$(build-aux/config.guess)
@@ -44,20 +48,20 @@ configure = "./configure
 	--disable-libcap
 	--disable-nls
 	--disable-dependency-tracking
-	--without-selinux"
+	--without-selinux
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir -pv <pkg_dir>/usr/sbin &&
-	mv -v <pkg_dir>/usr/bin/chroot <pkg_dir>/usr/sbin"
+	mv -v <pkg_dir>/usr/bin/chroot <pkg_dir>/usr/sbin
 
 
 
 [ bootstrap ]
 
-env = [ "FORCE_UNSAFE_CONFIGURE=1", "CFLAGS+=-mcmodel=large" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = FORCE_UNSAFE_CONFIGURE=1 CFLAGS+=-mcmodel=large
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-install-program=hostname
 	--enable-no-install-program=kill,uptime
@@ -66,9 +70,9 @@ configure = "./configure
 	--disable-libcap
 	--disable-nls
 	--disable-dependency-tracking
-	--without-selinux"
+	--without-selinux
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir -pv <pkg_dir>/usr/sbin &&
-	mv -v <pkg_dir>/usr/bin/chroot <pkg_dir>/usr/sbin"
+	mv -v <pkg_dir>/usr/bin/chroot <pkg_dir>/usr/sbin

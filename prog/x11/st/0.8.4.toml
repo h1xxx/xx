@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://dl.suckless.org/st/st-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://dl.suckless.org/st/st-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "cp <prog_dir>/files/config.h <build_dir>/"
-build = "PREFIX=/usr make"
-pkg_create = "make PREFIX=/usr DESTDIR=<pkg_dir> install &&
-	tic -o <pkg_dir>/usr/share/terminfo/ -sx st.info"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = cp <prog_dir>/files/config.h <build_dir>/
+build = PREFIX=/usr make
+pkg_create = make PREFIX=/usr DESTDIR=<pkg_dir> install &&
+	tic -o <pkg_dir>/usr/share/terminfo/ -sx st.info

@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://download.qemu.org/qemu-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://download.qemu.org/qemu-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # slirp is for 'user' networking support
 # virtfs is for 9p support between host and guest
-configure = "./configure
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--localstatedir=/var
@@ -70,9 +74,9 @@ configure = "./configure
 	--disable-vhost-user
 	--disable-user
 	--disable-linux-user
-	--disable-bsd-user"
+	--disable-bsd-user
 
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{applications,icons}/"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{applications,icons}/

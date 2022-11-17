@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://github.com/fenrus75/powertop/archive/v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/fenrus75/powertop/archive/v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LDFLAGS+=-lpthread" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env = LDFLAGS+=-lpthread
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # fixing gettext and 'error adding symbols' error
-configure = "sed -i -e '/GETTEXT/d'
+configure = sed -i -e '/GETTEXT/d'
 		-e 's|AM_INIT_AUTOMAKE|AC_CANONICAL_TARGET\\n&|g'
 		-e 's|PKG_PROG_PKG_CONFIG|&\\nAX_PTHREAD|g' configure.ac &&
 	sed -i '/\\tpo \\\\/d' Makefile.am &&
@@ -22,8 +26,8 @@ configure = "sed -i -e '/GETTEXT/d'
 	--sbindir=/usr/sbin
 	--disable-static
 	--disable-dependency-tracking &&
-	sed -i 's|^LIBS =|& -lpthread|g' Makefile"
+	sed -i 's|^LIBS =|& -lpthread|g' Makefile
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/bash-completion"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/bash-completion

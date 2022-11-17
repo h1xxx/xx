@@ -1,25 +1,29 @@
 [ src ]
 
-url = "https://www.openssl.org/source/openssl-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.openssl.org/source/openssl-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS+=-fPIC", "CPPFLAGS+=-DOPENSSL_NO_SSL3_METHOD=1" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./config
+env = CFLAGS+=-fPIC CPPFLAGS+=-DOPENSSL_NO_SSL3_METHOD=1
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./config
 	--prefix=/usr
 	--openssldir=/etc/ssl
 	--libdir=lib
 	no-ssl3-method
 	shared
-	zlib-dynamic"
+	zlib-dynamic
 
-build = "make"
-pkg_create = "sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile &&
+build = make
+pkg_create = sed -i '/INSTALL_LIBS/s/libcrypto.a libssl.a//' Makefile &&
 	make DESTDIR=<pkg_dir> MANSUFFIX=ssl install_sw &&
 	make DESTDIR=<pkg_dir> MANSUFFIX=ssl install_man_docs &&
-	rm -r <pkg_dir>/usr/share/man/man{1/openssl-,1/c_,3,5,7}*"
+	rm -r <pkg_dir>/usr/share/man/man{1/openssl-,1/c_,3,5,7}*

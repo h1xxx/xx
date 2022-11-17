@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/smartmontools/smartmontools-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/smartmontools/smartmontools-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-dependency-tracking
 	--with-gnupg=no
@@ -18,9 +22,9 @@ configure = "./configure
 	--with-libcap-ng=no
 	--with-libsystemd=no
 	--with-systemdsystemunitdir=no
-	--with-systemdenvfile=no"
+	--with-systemdenvfile=no
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mv <pkg_dir>/usr/etc/ <pkg_dir>/usr/share/ &&
-	rm -r <pkg_dir>/usr/share/doc/"
+	rm -r <pkg_dir>/usr/share/doc/

@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://cdn.netbsd.org/pub/pkgsrc/pkgsrc-<ver>/pkgsrc-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>"
+url = https://cdn.netbsd.org/pub/pkgsrc/pkgsrc-<ver>/pkgsrc-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS=", "CXXFLAGS=", "LDFLAGS=", "MAKEFLAGS=", "MAKE_JOBS=16" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "rm -frv /usr/pkg/"
-build = "cd bootstrap && ./bootstrap"
-pkg_create = "mkdir <pkg_dir>/usr && mv /usr/pkg <pkg_dir>/usr/ &&
+env = CFLAGS= CXXFLAGS= LDFLAGS= MAKEFLAGS= MAKE_JOBS=16
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = rm -frv /usr/pkg/
+build = cd bootstrap && ./bootstrap
+pkg_create = mkdir <pkg_dir>/usr && mv /usr/pkg <pkg_dir>/usr/ &&
 	rm -r {CVS,bootstrap} &&
 	cd .. &&
-	mv -v pkgsrc/ <pkg_dir>/usr/pkg/"
+	mv -v pkgsrc/ <pkg_dir>/usr/pkg/

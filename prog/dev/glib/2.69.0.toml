@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://download.gnome.org/sources/glib/<ver_short>/glib-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://download.gnome.org/sources/glib/<ver_short>/glib-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && meson
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && meson
 	--prefix=/usr
 	-D man=false
 	-D glib_debug=disabled
-	-D selinux=disabled"
+	-D selinux=disabled
 
-build = "cd build && ninja"
-pkg_create = "cd build && DESTDIR=<pkg_dir> ninja install &&
-	rm -r <pkg_dir>/usr/share/{bash,gettext}*/"
+build = cd build && ninja
+pkg_create = cd build && DESTDIR=<pkg_dir> ninja install &&
+	rm -r <pkg_dir>/usr/share/{bash,gettext}*/

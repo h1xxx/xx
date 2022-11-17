@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/mtoyoda/sl/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/mtoyoda/sl/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "cc ${CFLAGS} -o sl sl.c -ltinfo -lncurses"
-pkg_create = "mkdir -p <pkg_dir>{/usr/bin,/usr/share/man/man1} &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = cc ${CFLAGS} -o sl sl.c -ltinfo -lncurses
+pkg_create = mkdir -p <pkg_dir>{/usr/bin,/usr/share/man/man1} &&
 	cp sl <pkg_dir>/usr/bin/ &&
-	cp sl.1 <pkg_dir>/usr/share/man/man1/"
+	cp sl.1 <pkg_dir>/usr/share/man/man1/

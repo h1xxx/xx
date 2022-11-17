@@ -1,23 +1,27 @@
 [ src ]
 
-url = "https://github.com/chaos/diod"
-src_type = "git"
-src_dirname = "<prog>"
+url = https://github.com/chaos/diod
+src_type = git
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LIBS=-ltinfow" ]
-prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
-configure = "./autogen.sh && ./configure
+env = LIBS=-ltinfow
+prepare = cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--disable-rdmatrans
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/usr/lib &&
 	mkdir -p <pkg_dir>/usr/share/diod/ &&
-	mv <pkg_dir>/usr/etc/ <pkg_dir>/usr/share/diod/"
+	mv <pkg_dir>/usr/etc/ <pkg_dir>/usr/share/diod/
 

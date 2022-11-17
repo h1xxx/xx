@@ -1,44 +1,48 @@
 [ src ]
 
-url = "https://us.download.nvidia.com/XFree86/Linux-x86_64/<ver>/NVIDIA-Linux-x86_64-<ver>.run"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://us.download.nvidia.com/XFree86/Linux-x86_64/<ver>/NVIDIA-Linux-x86_64-<ver>.run
+src_type = tar
+src_dirname = <prog>-<ver>
 
 
 
 # pkgset for nvidia driver, openCL/CUDA libs and nvidia-utils
+[ vars ]
+
+
+
 [ std ]
 
-env = [ "SETUP_NOCHECK=1" ]
-prepare = "mkdir -pv <tmp_dir>/<prog>-<ver> &&
-	cp -v <src_path> <tmp_dir>/<prog>-<ver>"
+env = SETUP_NOCHECK=1
+prepare = mkdir -pv <tmp_dir>/<prog>-<ver> &&
+	cp -v <src_path> <tmp_dir>/<prog>-<ver>
 
-configure = "sh NVIDIA-Linux-x86_64-<ver>.run --extract-only 2> /dev/null || :"
-build = "cd NVIDIA-Linux-x86_64-<ver>/kernel &&
-	make KERNEL_SOURCES=/usr/src/linux/ IGNORE_MISSING_MODULE_SYMVERS=1"
+configure = sh NVIDIA-Linux-x86_64-<ver>.run --extract-only 2> /dev/null || :
+build = cd NVIDIA-Linux-x86_64-<ver>/kernel &&
+	make KERNEL_SOURCES=/usr/src/linux/ IGNORE_MISSING_MODULE_SYMVERS=1
 
-pkg_create = "cd NVIDIA-Linux-x86_64-<ver> &&
-	KRN_VER=\"$(cat /usr/src/linux/include/config/kernel.release)\" &&
+pkg_create = cd NVIDIA-Linux-x86_64-<ver> &&
+	KRN_VER="$(cat /usr/src/linux/include/config/kernel.release)" &&
 	mkdir -p <pkg_dir>/usr/bin
 		<pkg_dir>/usr/share/nvidia
 		<pkg_dir>/usr/share/man/man1
 		<pkg_dir>/usr/lib/firmware/nvidia/<ver>
-		\"<pkg_dir>/usr/lib/modules/${KRN_VER}/video\" &&
+		"<pkg_dir>/usr/lib/modules/${KRN_VER}/video" &&
 
 	for f in lib*so.<ver>; do
-		ln -s ${f} \"$(echo ${f} | cut -d. -f1,2)\";
-		ln -s ${f} \"$(echo ${f} | cut -d. -f1,2).1\";
+		ln -s ${f} "$(echo ${f} | cut -d. -f1,2)";
+		ln -s ${f} "$(echo ${f} | cut -d. -f1,2).1";
 	done &&
 
 	install -Dm644 nvidia.icd ${pkgdir}/etc/OpenCL/vendors/nvidia.icd &&
 
 	cp -av kernel/nvidia*.ko
-		\"<pkg_dir>/usr/lib/modules/${KRN_VER}/video\" &&
-	
+		"<pkg_dir>/usr/lib/modules/${KRN_VER}/video" &&
+
 	cp -av libnvidia-compiler.so* libnvidia-opencl.so* libOpenCL.so*
 		libcuda.so* libnvidia-nvvm.so* libnvcuvid.so.*
 		libnvidia-ptxjitcompiler.so* <pkg_dir>/usr/lib &&
-	
+
 	cp -av firmware/gsp.bin <pkg_dir>/usr/lib/firmware/nvidia/<ver> &&
 
 	cp -av nvidia-smi nvidia-cuda-mps-server nvidia-cuda-mps-control
@@ -46,4 +50,4 @@ pkg_create = "cd NVIDIA-Linux-x86_64-<ver> &&
 
 	cp -av nvidia-application-profiles-* <pkg_dir>/usr/share/nvidia &&
 	cp -av nvidia-smi.1.gz nvidia-cuda-mps-control.1.gz nvidia-modprobe.1.gz
-		<pkg_dir>/usr/share/man/man1/"
+		<pkg_dir>/usr/share/man/man1/

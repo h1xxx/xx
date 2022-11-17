@@ -1,23 +1,27 @@
 [ src ]
 
-url = "https://www.lua.org/ftp/lua-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "lua-<ver>"
+url = https://www.lua.org/ftp/lua-<ver>.tar.gz
+src_type = tar
+src_dirname = lua-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "patch -Np1 -i <prog_dir>/patch/liblua.so.patch &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = patch -Np1 -i <prog_dir>/patch/liblua.so.patch &&
 	sed -i '/#define LUA_ROOT/s:/usr/local/:/usr/:' src/luaconf.h &&
 	sed -r -e '/^LUA_(SO|A|T)=/ s/lua/lua<ver_short>/'
 		-e '/^LUAC_T=/ s/luac/luac<ver_short>/'
-		-i src/Makefile"
+		-i src/Makefile
 
-build = "make MYCFLAGS=\"${CFLAGS} -fPIC\" MYLDFLAGS=\"${LDFLAGS}\" linux"
-pkg_create = "make TO_BIN='lua<ver_short> luac<ver_short>'                     \
+build = make MYCFLAGS="${CFLAGS} -fPIC" MYLDFLAGS="${LDFLAGS}" linux
+pkg_create = make TO_BIN='lua<ver_short> luac<ver_short>'                     \
 	TO_LIB='liblua<ver_short>.so liblua<ver_short>.so.<ver_short>
 		liblua<ver_short>.so.<ver>'
 	INSTALL_DATA='cp -d'
@@ -36,4 +40,4 @@ pkg_create = "make TO_BIN='lua<ver_short> luac<ver_short>'                     \
 		<pkg_dir>/usr/lib/pkgconfig/<prog>.pc &&
 	sed -i 's|__REL__|<ver>|g' <pkg_dir>/usr/lib/pkgconfig/<prog>.pc &&
 	ln -sf <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua<ver_short>.pc &&
-	ln -sf <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua-<ver_short>.pc"
+	ln -sf <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua-<ver_short>.pc

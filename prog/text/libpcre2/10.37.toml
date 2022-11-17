@@ -1,43 +1,47 @@
 [ src ]
 
-url = "https://github.com/PhilipHazel/pcre2/releases/download/pcre2-<ver>/pcre2-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "pcre2-<ver>"
+url = https://github.com/PhilipHazel/pcre2/releases/download/pcre2-<ver>/pcre2-<ver>.tar.bz2
+src_type = tar
+src_dirname = pcre2-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-pcre2grep-libz
 	--enable-pcre2grep-libbz2
 	--enable-pcre2-16
 	--enable-pcre2-32
 	--disable-dependency-tracking
-	--disable-static"
+	--disable-static
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,man/man3}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,man/man3}/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static -I/include", "LD_LIBRARY_PATH=/lib" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static -I/include" LD_LIBRARY_PATH=/lib
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--enable-pcre2grep-libz
 	--enable-pcre2-16
 	--enable-pcre2-32
 	--enable-static
 	--disable-shared
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/share/{doc,man/man3}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/share/{doc,man/man3}/

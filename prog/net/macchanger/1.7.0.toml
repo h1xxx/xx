@@ -1,22 +1,26 @@
 [ src ]
 
-url = "https://github.com/alobbs/macchanger/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/alobbs/macchanger/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i 's|/dev/hwrng|/dev/random|' src/main.c &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i 's|/dev/hwrng|/dev/random|' src/main.c &&
 	./autogen.sh &&
 	sed -i 's|^MAKEINFO=.*|MAKEINFO=echo|g' configure &&
 	./configure
 	--prefix=/usr
 	--mandir=/usr/share/man
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm -rf <pkg_dir>/usr/share/info"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm -rf <pkg_dir>/usr/share/info

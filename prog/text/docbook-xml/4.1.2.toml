@@ -1,19 +1,23 @@
 [ src ]
 
-url = "https://docbook.org/xml/4.1.2/docbkx412.zip"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://docbook.org/xml/4.1.2/docbkx412.zip
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "unzip -x <src_path> -d <tmp_dir>/<prog>-<ver>"
-configure = ""
-build = ""
-pkg_create = "install -v -d -m755 <pkg_dir>/usr/share/xml/docbook/xml-dtd-<ver> &&
+env =
+prepare = unzip -x <src_path> -d <tmp_dir>/<prog>-<ver>
+configure =
+build =
+pkg_create = install -v -d -m755 <pkg_dir>/usr/share/xml/docbook/xml-dtd-<ver> &&
 	install -v -d -m755 <pkg_dir>/etc/xml &&
 	chown -R root:root . &&
 	cp -v -af docbook.cat *.dtd ent/ *.mod
-		<pkg_dir>/usr/share/xml/docbook/xml-dtd-<ver>"
+		<pkg_dir>/usr/share/xml/docbook/xml-dtd-<ver>

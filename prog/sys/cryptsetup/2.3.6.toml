@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.kernel.org/pub/linux/utils/cryptsetup/v<ver_short>/cryptsetup-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.kernel.org/pub/linux/utils/cryptsetup/v<ver_short>/cryptsetup-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "PKG_CONFIG_PATH=/usr/lib64/pkgconfig" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = PKG_CONFIG_PATH=/usr/lib64/pkgconfig
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--with-default-luks-format=LUKS2
 	--disable-dependency-tracking
 	--disable-nls
@@ -31,18 +35,18 @@ configure = "./configure
 
 	--with-crypto_backend=openssl
 	--with-luks2-pbkdf=argon2id
-	--with-luks2-parallel-threads=4"
+	--with-luks2-parallel-threads=4
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static -I/include", "PKG_CONFIG_PATH=/lib/pkgconfig" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static -I/include" PKG_CONFIG_PATH=/lib/pkgconfig
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--with-default-luks-format=LUKS2
 	--enable-static
@@ -66,7 +70,7 @@ configure = "./configure
 
 	--with-crypto_backend=openssl
 	--with-luks2-pbkdf=argon2id
-	--with-luks2-parallel-threads=4"
+	--with-luks2-parallel-threads=4
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

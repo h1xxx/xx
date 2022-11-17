@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/p11-glue/p11-kit/releases/download/<ver>/p11-kit-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/p11-glue/p11-kit/releases/download/<ver>/p11-kit-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson --prefix=/usr --libdir=lib --buildtype=release
-	-D trust_paths=/etc/pki/anchors build"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson --prefix=/usr --libdir=lib --buildtype=release
+	-D trust_paths=/etc/pki/anchors build
 
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install

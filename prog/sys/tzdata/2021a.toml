@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://www.iana.org/time-zones/repository/releases/tzdata<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>"
+url = https://www.iana.org/time-zones/repository/releases/tzdata<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "mkdir <tmp_dir>/<prog> &&
-	tar --no-same-owner -xf <src_path> -C <tmp_dir>/<prog>"
+env =
+prepare = mkdir <tmp_dir>/<prog> &&
+	tar --no-same-owner -xf <src_path> -C <tmp_dir>/<prog>
 
-configure = ""
-build = ""
-pkg_create = "zonedir='<pkg_dir>/usr/share/zoneinfo' &&
+configure =
+build =
+pkg_create = zonedir='<pkg_dir>/usr/share/zoneinfo' &&
 	mkdir -pv <pkg_dir>/etc &&
 	mkdir -pv ${zonedir}/{posix,right} &&
 	for tz in etcetera southamerica northamerica europe africa antarctica
@@ -26,19 +30,19 @@ pkg_create = "zonedir='<pkg_dir>/usr/share/zoneinfo' &&
 	cp -v zone.tab zone1970.tab iso3166.tab ${zonedir} &&
 	zic -d ${zonedir} -p America/New_York &&
 	ln -sfv ../usr/share/zoneinfo/Europe/Warsaw
-		<pkg_dir>/etc/localtime"
+		<pkg_dir>/etc/localtime
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "mkdir <tmp_dir>/<prog> &&
-	tar --no-same-owner -xf <src_path> -C <tmp_dir>/<prog>"
+env =
+prepare = mkdir <tmp_dir>/<prog> &&
+	tar --no-same-owner -xf <src_path> -C <tmp_dir>/<prog>
 
-configure = ""
-build = ""
-pkg_create = "zonedir='<pkg_dir>/usr/share/zoneinfo' &&
+configure =
+build =
+pkg_create = zonedir='<pkg_dir>/usr/share/zoneinfo' &&
 	mkdir -pv <pkg_dir>/etc &&
 	mkdir -pv ${zonedir}/{posix,right} &&
 	for tz in etcetera southamerica northamerica europe africa antarctica
@@ -50,4 +54,4 @@ pkg_create = "zonedir='<pkg_dir>/usr/share/zoneinfo' &&
 	cp -v zone.tab zone1970.tab iso3166.tab ${zonedir} &&
 	zic -d ${zonedir} -p America/New_York &&
 	ln -sfv ../usr/share/zoneinfo/Europe/Warsaw
-		<pkg_dir>/etc/localtime"
+		<pkg_dir>/etc/localtime

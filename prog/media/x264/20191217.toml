@@ -1,22 +1,26 @@
 [ src ]
 
-url = "http://downloads.videolan.org/pub/x264/snapshots/x264-snapshot-<ver>-2245-stable.tar.bz2"
-src_type = "tar"
-src_dirname = "x264-snapshot-<ver>-2245-stable"
+url = http://downloads.videolan.org/pub/x264/snapshots/x264-snapshot-<ver>-2245-stable.tar.bz2
+src_type = tar
+src_dirname = x264-snapshot-<ver>-2245-stable
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-shared
 	--enable-pic
 	--disable-static
 	--disable-avs
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install-cli install-lib-shared"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install-cli install-lib-shared

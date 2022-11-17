@@ -1,39 +1,43 @@
 [ src ]
 
-url = "https://github.com/json-c/json-c/archive/refs/tags/json-c-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<prog>-<ver>"
+url = https://github.com/json-c/json-c/archive/refs/tags/json-c-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir json-c-build && cd json-c-build &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir json-c-build && cd json-c-build &&
 	cmake	-D CMAKE_INSTALL_PREFIX=/usr
 		-D CMAKE_INSTALL_LIBDIR=/usr/lib
 		-D CMAKE_BUILD_TYPE='Release'
 		-D BUILD_STATIC_LIBS=OFF
-		.."
+		..
 
-build = "cd json-c-build && make"
-pkg_create = "cd json-c-build && make DESTDIR=<pkg_dir> install"
+build = cd json-c-build && make
+pkg_create = cd json-c-build && make DESTDIR=<pkg_dir> install
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir json-c-build && cd json-c-build &&
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir json-c-build && cd json-c-build &&
 	cmake	-D CMAKE_INSTALL_PREFIX=
 		-D CMAKE_BUILD_TYPE='Release'
 		-D BUILD_SHARED_LIBS=OFF
 		-D BUILD_STATIC_LIBS=ON
-		.."
+		..
 
-build = "cd json-c-build && make"
-pkg_create = "cd json-c-build && make DESTDIR=<pkg_dir> install &&
+build = cd json-c-build && make
+pkg_create = cd json-c-build && make DESTDIR=<pkg_dir> install &&
 	mv <pkg_dir>/lib64 <pkg_dir>/lib &&
-	sed -i 's/lib64/lib/g' <pkg_dir>/lib/pkgconfig/json-c.pc"
+	sed -i 's/lib64/lib/g' <pkg_dir>/lib/pkgconfig/json-c.pc

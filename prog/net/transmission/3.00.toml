@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/transmission/transmission-releases/raw/master/transmission-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/transmission/transmission-releases/raw/master/transmission-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "mkdir build && cd build && cmake
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = mkdir build && cd build && cmake
 	-DCMAKE_INSTALL_PREFIX:PATH=/usr
 	-DENABLE_GTK=OFF
 	-DENABLE_LIGHTWEIGHT=OFF
@@ -18,19 +22,19 @@ configure = "mkdir build && cd build && cmake
 	-DENABLE_QT=OFF
 	-DENABLE_TESTS=OFF
 	-DWITH_SYSTEMD=OFF
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/transmission/"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/transmission/
 
 
 
 [ std_autotools ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "rm m4/glib-gettext.m4 && autoreconf -fi &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = rm m4/glib-gettext.m4 && autoreconf -fi &&
 	./configure
 	--prefix=/usr
 	--disable-static
@@ -39,8 +43,8 @@ configure = "rm m4/glib-gettext.m4 && autoreconf -fi &&
 	--enable-cli
 	--enable-daemon
 	--without-systemd
-	--without-gtk"
+	--without-gtk
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

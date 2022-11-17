@@ -1,24 +1,28 @@
 [ src ]
 
-url = "https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "procps-<ver>"
+url = https://sourceforge.net/projects/procps-ng/files/Production/procps-ng-<ver>.tar.xz
+src_type = tar
+src_dirname = procps-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--exec-prefix=/usr
 	--libdir=/usr/lib
 	--docdir=/usr/share/doc/procps-ng
 	--disable-modern-top
 	--disable-static
-	--disable-kill"
+	--disable-kill
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,locale,man/{de,fr,pl,pt_BR,sv,uk}}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,locale,man/{de,fr,pl,pt_BR,sv,uk}}/

@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://mediaarea.net/download/source/libzen/<ver>/libzen_<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "ZenLib/Project/GNU/Library"
+url = https://mediaarea.net/download/source/libzen/<ver>/libzen_<ver>.tar.bz2
+src_type = tar
+src_dirname = ZenLib/Project/GNU/Library
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--enable-shared
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

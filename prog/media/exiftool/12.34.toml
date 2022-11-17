@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://exiftool.org/Image-ExifTool-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "Image-ExifTool-<ver>"
+url = https://exiftool.org/Image-ExifTool-<ver>.tar.gz
+src_type = tar
+src_dirname = Image-ExifTool-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "perl Makefile.PL INSTALLDIRS=vendor"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && chmod -R u+w <pkg_dir>/"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = perl Makefile.PL INSTALLDIRS=vendor
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && chmod -R u+w <pkg_dir>/

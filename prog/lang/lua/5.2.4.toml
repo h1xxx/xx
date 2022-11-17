@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://www.lua.org/ftp/lua-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "lua-<ver>"
+url = https://www.lua.org/ftp/lua-<ver>.tar.gz
+src_type = tar
+src_dirname = lua-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "patch -Np1 -i <prog_dir>/patch/liblua.so.5.2.patch"
-build = "make MYCFLAGS=\"${CFLAGS} -fPIC\" MYLDFLAGS=\"${LDFLAGS}\" linux"
-pkg_create = "make
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = patch -Np1 -i <prog_dir>/patch/liblua.so.5.2.patch
+build = make MYCFLAGS="${CFLAGS} -fPIC" MYLDFLAGS="${LDFLAGS}" linux
+pkg_create = make
 	TO_LIB='liblua.so liblua.so.<ver_short> liblua.so.<ver>'
 	INSTALL_DATA='cp -d'
 	INSTALL_TOP=${PWD}/install/usr
@@ -27,4 +31,4 @@ pkg_create = "make
 		<pkg_dir>/usr/lib/pkgconfig/<prog>.pc &&
 	sed -i 's|__REL__|<ver>|g' <pkg_dir>/usr/lib/pkgconfig/<prog>.pc &&
 	ln -s <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua<ver_short>.pc &&
-	ln -s <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua-<ver_short>.pc"
+	ln -s <prog>.pc <pkg_dir>/usr/lib/pkgconfig/lua-<ver_short>.pc

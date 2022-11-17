@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://deb.debian.org/debian/pool/main/c/console-setup/console-setup_<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "console-setup-<ver>"
+url = https://deb.debian.org/debian/pool/main/c/console-setup/console-setup_<ver>.tar.xz
+src_type = tar
+src_dirname = console-setup-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = ""
-pkg_create = "mkdir -p <pkg_dir>/usr/{bin,share/man/man1} &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build =
+pkg_create = mkdir -p <pkg_dir>/usr/{bin,share/man/man1} &&
 	cp -a Fonts/bdf2psf <pkg_dir>/usr/bin &&
-	cp -a man/bdf2psf.1 <pkg_dir>/usr/share/man/man1"
+	cp -a man/bdf2psf.1 <pkg_dir>/usr/share/man/man1

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.kernel.org/pub/linux/utils/kbd/kbd-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.kernel.org/pub/linux/utils/kbd/kbd-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i '/RESIZECONS_PROGS=/s/yes/no/' configure &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i '/RESIZECONS_PROGS=/s/yes/no/' configure &&
 	sed -i 's/resizecons.8 //' docs/man/man8/Makefile.in &&
 	./configure
 	--prefix=/usr
@@ -18,10 +22,10 @@ configure = "sed -i '/RESIZECONS_PROGS=/s/yes/no/' configure &&
 	--disable-dependency-tracking
 	--disable-tests
 	--disable-nls
-	--disable-vlock"
+	--disable-vlock
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -f <pkg_dir>/usr/lib/libtswrap.{a,la,so*} &&
 	mkdir -pv <pkg_dir>/usr/share/doc/kbd/ &&
-	cp -av docs/doc/* <pkg_dir>/usr/share/doc/kbd/"
+	cp -av docs/doc/* <pkg_dir>/usr/share/doc/kbd/

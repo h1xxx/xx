@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.cpan.org/src/5.0/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.cpan.org/src/5.0/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sh Configure -des
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sh Configure -des
 	-Dprefix=/usr
 	-Dvendorprefix=/usr
 	-Dprivlib=/usr/lib/perl5/<ver>/core_perl
@@ -23,19 +27,19 @@ configure = "sh Configure -des
 	-Duseshrplib
 	-Dusethreads
 	-Dman1dir=none
-	-Dman3dir=none"
- 
-build = "make"
-pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
-	find <pkg_dir> -exec chmod ug+w {} \\+"
+	-Dman3dir=none
+
+build = make
+pkg_create = make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static -I/include" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sh Configure -des
+env = CC="musl-gcc -static -I/include"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sh Configure -des
 	-Uusedl
 	-Duseshrplib
 	-Dusesoname
@@ -55,19 +59,19 @@ configure = "sh Configure -des
 	-Dvendorarch=/lib/perl5/<ver>/vendor_perl
 	-Dpager='/usr/bin/less -isR'
 	-Dman1dir=none
-	-Dman3dir=none"
- 
-build = "make"
-pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
-	find <pkg_dir> -exec chmod ug+w {} \\+"
+	-Dman3dir=none
+
+build = make
+pkg_create = make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+
 
 
 
 [ bootstrap ]
 
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sh Configure -des
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sh Configure -des
 	-Dprefix=/usr
 	-Dvendorprefix=/usr
 	-Dprivlib=/usr/lib/perl5/<ver>/core_perl
@@ -77,8 +81,8 @@ configure = "sh Configure -des
 	-Dvendorlib=/usr/lib/perl5/<ver>/vendor_perl
 	-Dvendorarch=/usr/lib/perl5/<ver>/vendor_perl
 	-Dman1dir=none
-	-Dman3dir=none"
- 
-build = "make"
-pkg_create = "make install.perl DESTDIR=<pkg_dir> &&
-	find <pkg_dir> -exec chmod ug+w {} \\+"
+	-Dman3dir=none
+
+build = make
+pkg_create = make install.perl DESTDIR=<pkg_dir> &&
+	find <pkg_dir> -exec chmod ug+w {} \\+

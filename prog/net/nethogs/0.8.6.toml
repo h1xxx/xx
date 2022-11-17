@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://github.com/raboof/nethogs/archive/v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/raboof/nethogs/archive/v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "LDFLAGS+=-ltinfow" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i 's|/sbin|/bin|' src/MakeApp.mk &&
-	sed -i 's|/local||'  Makefile"
+env = LDFLAGS+=-ltinfow
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i 's|/sbin|/bin|' src/MakeApp.mk &&
+	sed -i 's|/local||'  Makefile
 
-build = "make prefix=/usr"
-pkg_create = "make prefix=/usr DESTDIR=<pkg_dir> install"
+build = make prefix=/usr
+pkg_create = make prefix=/usr DESTDIR=<pkg_dir> install

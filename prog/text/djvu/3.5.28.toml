@@ -1,25 +1,29 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/project/djvu/DjVuLibre/<ver>/djvulibre-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>libre-<ver>"
+url = https://downloads.sourceforge.net/project/djvu/DjVuLibre/<ver>/djvulibre-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>libre-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	cd <build_dir> &&
 	for p in <prog_dir>/patch/<ver>*.patch; do
 		patch -d . -p1 < ${p};
-	done"
+	done
 
-configure = "./configure
+configure = ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-desktopfiles
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

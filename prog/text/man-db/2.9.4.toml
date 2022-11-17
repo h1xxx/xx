@@ -1,16 +1,20 @@
 [ src ]
 
-url = "http://download.savannah.gnu.org/releases/man-db/man-db-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://download.savannah.gnu.org/releases/man-db/man-db-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--docdir=/usr/share/doc/man-db
 	--sysconfdir=/etc
@@ -24,8 +28,8 @@ configure = "./configure
 	--with-vgrind=/usr/bin/vgrind
 	--with-grap=/usr/bin/grap
 	--with-systemdtmpfilesdir=no
-	--with-systemdsystemunitdir=no"
+	--with-systemdsystemunitdir=no
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

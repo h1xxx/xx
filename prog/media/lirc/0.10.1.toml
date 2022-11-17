@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://master.dl.sourceforge.net/project/lirc/LIRC/<ver>/lirc-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://master.dl.sourceforge.net/project/lirc/LIRC/<ver>/lirc-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "for patch in <prog_dir>/patch/*.patch; do 
-		patch -p1 -i \"${patch}\";
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = for patch in <prog_dir>/patch/*.patch; do
+		patch -p1 -i "${patch}";
 	done &&
 	./autogen.sh &&
 	./configure
@@ -21,13 +25,13 @@ configure = "for patch in <prog_dir>/patch/*.patch; do
 		--enable-devinput
 		--enable-uinput
 		--disable-static
-		--disable-dependency-tracking"
+		--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/lirc/ &&
 
-	rm -r <pkg_dir>/var/ <pkg_dir>/usr/share/doc/ 
+	rm -r <pkg_dir>/var/ <pkg_dir>/usr/share/doc/
 		<pkg_dir>/usr/lib/python3.9/site-packages/*/__pycache__/
 		<pkg_dir>/usr/share/lirc/python-pkg/
-		<pkg_dir>usr/share/lirc/lirc-0.10.1.tar.gz"
+		<pkg_dir>usr/share/lirc/lirc-0.10.1.tar.gz

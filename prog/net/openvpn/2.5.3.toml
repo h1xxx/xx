@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/OpenVPN/openvpn/archive/refs/tags/v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/OpenVPN/openvpn/archive/refs/tags/v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "autoreconf --force --install && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = autoreconf --force --install && ./configure
 	--prefix=/usr
 	--sbindir=/usr/bin
 	--disable-pkcs11
@@ -23,8 +27,8 @@ configure = "autoreconf --force --install && ./configure
 	--disable-plugin-down-root
 	--disable-x509-alt-username
 	--disable-dependency-tracking
-	--disable-static"
+	--disable-static
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

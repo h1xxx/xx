@@ -1,39 +1,43 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # cp config...: produce generic libraries, not optimized for the host cpu
-configure = "cp -v configfsf.guess config.guess &&
+configure = cp -v configfsf.guess config.guess &&
 	cp -v configfsf.sub config.sub &&
 	./configure
 	--prefix=/usr
 	--disable-cxx
 	--disable-static
 	--build=x86_64-unknown-linux-gnu
-	--docdir=/usr/share/doc/gmp"
+	--docdir=/usr/share/doc/gmp
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # cp config...: produce generic libraries, not optimized for the host cpu
-configure = "cp -v configfsf.guess config.guess &&
+configure = cp -v configfsf.guess config.guess &&
 	cp -v configfsf.sub config.sub &&
 	./configure
 	--prefix=/musl
@@ -42,27 +46,27 @@ configure = "cp -v configfsf.guess config.guess &&
 	--enable-static
 	--disable-shared
 	--disable-cxx
-	--build=x86_64-linux-musl"
+	--build=x86_64-linux-musl
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/musl/share/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install && rm -r <pkg_dir>/musl/share/
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # cp config...: produce generic libraries, not optimized for the host cpu
-configure = "cp -v configfsf.guess config.guess &&
+configure = cp -v configfsf.guess config.guess &&
 	cp -v configfsf.sub config.sub &&
 	./configure
 	--prefix=/usr
 	--disable-cxx
 	--disable-static
 	--build=x86_64-unknown-linux-gnu
-	--docdir=/usr/share/doc/gmp"
+	--docdir=/usr/share/doc/gmp
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

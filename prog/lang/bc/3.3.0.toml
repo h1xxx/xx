@@ -1,26 +1,30 @@
 [ src ]
 
-url = "https://github.com/gavinhoward/bc/releases/download/<ver>/bc-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/gavinhoward/bc/releases/download/<ver>/bc-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "PREFIX=/usr", "CC=gcc" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure -G -O3"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/locale/"
+env = PREFIX=/usr CC=gcc
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure -G -O3
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/locale/
 
 
 
 [ bootstrap ]
 
-env = [ "PREFIX=/usr", "CC=gcc" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure -G -O3"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env = PREFIX=/usr CC=gcc
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure -G -O3
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

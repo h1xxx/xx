@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/infozip/unzip<ver_pkgspec>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog><ver_pkgspec>"
+url = https://downloads.sourceforge.net/infozip/unzip<ver_pkgspec>.tar.gz
+src_type = tar
+src_dirname = <prog><ver_pkgspec>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "patch -Np1 -i
-	<prog_dir>/files/unzip-6.0-consolidated_fixes-1.patch"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = patch -Np1 -i
+	<prog_dir>/files/unzip-6.0-consolidated_fixes-1.patch
 
-build = "make -f unix/Makefile generic"
-pkg_create = "make prefix=<pkg_dir>/usr MANDIR=<pkg_dir>/usr/share/man/man1
-	 -f unix/Makefile install"
+build = make -f unix/Makefile generic
+pkg_create = make prefix=<pkg_dir>/usr MANDIR=<pkg_dir>/usr/share/man/man1
+	 -f unix/Makefile install

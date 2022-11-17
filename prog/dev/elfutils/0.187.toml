@@ -1,24 +1,28 @@
 [ src ]
 
-url = "https://sourceware.org/ftp/elfutils/<ver>/elfutils-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://sourceware.org/ftp/elfutils/<ver>/elfutils-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-debuginfod
 	--enable-libdebuginfod=dummy
 	--disable-nls
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> -C libelf install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> -C libelf install &&
 	mkdir -p <pkg_dir>/usr/lib/pkgconfig &&
 	install -vm644 config/libelf.pc <pkg_dir>/usr/lib/pkgconfig/ &&
-	rm <pkg_dir>/usr/lib/libelf.a"
+	rm <pkg_dir>/usr/lib/libelf.a

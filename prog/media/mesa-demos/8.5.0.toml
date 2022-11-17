@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://mesa.freedesktop.org/archive/demos/mesa-demos-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://mesa.freedesktop.org/archive/demos/mesa-demos-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson --prefix=/usr
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson --prefix=/usr
 	--libdir=lib
 	--buildtype=release
 	-D egl=enabled
@@ -20,7 +24,7 @@ configure = "meson --prefix=/usr
 	-D libdrm=enabled
 	-D x11=enabled
 	-D wayland=disabled
-	build"
+	build
 
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install

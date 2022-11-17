@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://github.com/Diaoul/subliminal/releases/download/<ver>/subliminal-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/Diaoul/subliminal/releases/download/<ver>/subliminal-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "PYTHONHASHSEED=0" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "python setup.py build"
-pkg_create = "python setup.py install
+env = PYTHONHASHSEED=0
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = python setup.py build
+pkg_create = python setup.py install
 		--root=<pkg_dir>
 		--prefix=/usr
 		--optimize=1
 		--skip-build &&
 	find <pkg_dir> -depth -type f -name '*.py[co]' -delete
-		-o -type d -name __pycache__ -delete"
+		-o -type d -name __pycache__ -delete

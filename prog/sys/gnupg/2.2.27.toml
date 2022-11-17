@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://www.gnupg.org/ftp/gcrypt/gnupg/gnupg-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "rm doc/gnupg.info &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = rm doc/gnupg.info &&
 	./configure
 	--prefix=/usr
 	--sysconfdir=/etc
@@ -25,9 +29,9 @@ configure = "rm doc/gnupg.info &&
 	--disable-dirmngr-auto-start
 	--disable-nls
 	--disable-doc
-	--disable-tests"
+	--disable-tests
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	cd doc && make DESTDIR=<pkg_dir> install-man &&
-	rm -r <pkg_dir>/usr/share/doc/"
+	rm -r <pkg_dir>/usr/share/doc/

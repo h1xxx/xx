@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr"
-build = "make"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr
+build = make
 
 # empty autopoint file is needed by popt configure script
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	touch <pkg_dir>/usr/bin/autopoint &&
 	chmod -v 755 <pkg_dir>/usr/bin/autopoint &&
-	rm -r <pkg_dir>/usr/share/info/"
+	rm -r <pkg_dir>/usr/share/info/

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://github.com/OpenPrinting/cups/releases/download/v<ver>/cups-<ver>-source.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/OpenPrinting/cups/releases/download/v<ver>/cups-<ver>-source.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS+=-fPIC" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "export DSOFLAGS=${LDFLAGS} &&
+env = CFLAGS+=-fPIC
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = export DSOFLAGS=${LDFLAGS} &&
 	./configure
 	--sysconfdir=/etc
 	--localstatedir=/var
@@ -28,7 +32,7 @@ configure = "export DSOFLAGS=${LDFLAGS} &&
 	--enable-relro
 	--enable-sanitizer
 	--enable-libpaper
-	--with-optim=\"${CFLAGS}\"
+	--with-optim="${CFLAGS}"
 	--without-dnssd-libs
 	--disable-webif
 	--disable-pam
@@ -40,13 +44,13 @@ configure = "export DSOFLAGS=${LDFLAGS} &&
 	--disable-acl
 	--disable-avahi
 	--disable-unit-tests
-	--disable-static"
+	--disable-static
 
-build = "export DSOFLAGS=${LDFLAGS} && make"
-pkg_create = "make BUILDROOT=<pkg_dir> install &&
+build = export DSOFLAGS=${LDFLAGS} && make
+pkg_create = make BUILDROOT=<pkg_dir> install &&
 	rm -r 	<pkg_dir>/var/
 		<pkg_dir>/etc/rc*
 		<pkg_dir>/usr/share/cups/{[a-l]*,model,profiles,templates}/
 		<pkg_dir>/usr/share/locale/{[a-d]*,es,[f-z]*}/ &&
 		chmod -Rv u+w <pkg_dir>/ || : &&
-		mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+		mv <pkg_dir>/etc/ <pkg_dir>/usr/share/

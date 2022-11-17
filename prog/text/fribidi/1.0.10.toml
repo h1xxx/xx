@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://github.com/fribidi/fribidi/archive/refs/tags/v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/fribidi/fribidi/archive/refs/tags/v<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson build --prefix=/usr --libdir=lib -D docs=false"
-build = "meson compile -C build"
-pkg_create = "DESTDIR=<pkg_dir> meson install -C build"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson build --prefix=/usr --libdir=lib -D docs=false
+build = meson compile -C build
+pkg_create = DESTDIR=<pkg_dir> meson install -C build

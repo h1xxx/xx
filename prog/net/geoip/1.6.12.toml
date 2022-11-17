@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://github.com/maxmind/geoip-api-c/archive/v<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "geoip-api-c-<ver>"
+url = https://github.com/maxmind/geoip-api-c/archive/v<ver>.tar.gz
+src_type = tar
+src_dirname = geoip-api-c-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./bootstrap && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./bootstrap && ./configure
 	--prefix=/usr
 	--mandir=/usr/share/man
 	--sysconfdir=/etc/geoip
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

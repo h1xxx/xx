@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://nginx.org/download/nginx-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://nginx.org/download/nginx-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--with-threads
 	--with-http_ssl_module
@@ -41,10 +45,10 @@ configure = "./configure
 	--without-http_upstream_random_module
 	--without-http_upstream_keepalive_module
 	--without-http_upstream_zone_module
-	--without-pcre"
+	--without-pcre
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir -p <pkg_dir>/usr/share/man/man8 &&
 	cp -a man/nginx.8 <pkg_dir>/usr/share/man/man8/ &&
-	rm -r <pkg_dir>/usr/{conf,html,logs}/"
+	rm -r <pkg_dir>/usr/{conf,html,logs}/

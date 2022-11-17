@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://gitlab.freedesktop.org/xorg/driver/xf86-video-intel"
-src_type = "git"
-src_dirname = "<prog>"
+url = https://gitlab.freedesktop.org/xorg/driver/xf86-video-intel
+src_type = git
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>"
-configure = "./autogen.sh && ./configure
+env =
+prepare = cp -a <src_path> <tmp_dir> && cd <build_dir> && git checkout <ver_short>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
@@ -18,8 +22,8 @@ configure = "./autogen.sh && ./configure
 	--disable-dri1
 	--enable-dri2
 	--enable-dri3
-	--enable-kms"
+	--enable-kms
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/polkit-1/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/polkit-1/

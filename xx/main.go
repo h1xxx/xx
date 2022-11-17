@@ -184,18 +184,18 @@ type pkgCfgT struct {
 
 // srcT stores information from toml file on source code location and type
 // url		url to source code:	https://ftp.gnu.org/lvm2-2.35.tar.xz
-// srcFile	downloaded file		<src_dir>/lvm2-2.35.tar.xz
-// srcDirName	dir in tar archive:	lvm2-2.35
+// file		downloaded file		<src_dir>/lvm2-2.35.tar.xz
+// dirName	dir in tar archive:	lvm2-2.35
 // srcType	type of source code:	tar, git, files, go-mod, alpine
 type srcT struct {
-	url        string
-	srcFile    string
-	srcDirName string
-	srcType    string
+	url     string
+	file    string
+	dirName string
+	srcType string
 }
 
 // stepsT stores shell commands from toml file to be executed in build steps
-// env		environment variable to use during build
+// env		environment variables to use during build
 // buildDir	root build dir:	/tmp/xx/build/lvm2-2.35_build-00/lvm2-2.35
 type stepsT struct {
 	env      []string

@@ -1,23 +1,27 @@
 [ src ]
 
-url = "https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "libxkbcommon-xkbcommon-<ver>"
+url = https://github.com/xkbcommon/libxkbcommon/archive/refs/tags/xkbcommon-<ver>.tar.gz
+src_type = tar
+src_dirname = libxkbcommon-xkbcommon-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson --prefix=/usr
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson --prefix=/usr
 	--libdir=lib
 	--buildtype=release
 	-D enable-x11=false
 	-D enable-wayland=false
 	-D xkb-config-root=/usr/share/X11/xkb
 	-D x-locale-root=/usr/share/X11/locale
-	build"
+	build
 
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install

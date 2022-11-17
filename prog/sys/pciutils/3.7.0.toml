@@ -1,25 +1,29 @@
 [ src ]
 
-url = "https://mj.ucw.cz/download/linux/pci/pciutils-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://mj.ucw.cz/download/linux/pci/pciutils-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make
 	ZLIB=no
 	SHARED=yes
 	STATIC=no
 	PREFIX=/usr
 	MANDIR=/usr/share/man
-	SBINDIR=/usr/bin"
+	SBINDIR=/usr/bin
 
-pkg_create = "make
+pkg_create = make
 	DESTDIR=<pkg_dir>
 	ZLIB=no
 	SHARED=yes
@@ -27,4 +31,4 @@ pkg_create = "make
 	PREFIX=/usr
 	MANDIR=/usr/share/man
 	SBINDIR=/usr/bin
-	install install-lib"
+	install install-lib

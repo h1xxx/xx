@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://github.com/intel/libva-utils/archive/<ver>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/intel/libva-utils/archive/<ver>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson --prefix=/usr --libdir=lib build"
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson --prefix=/usr --libdir=lib build
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install

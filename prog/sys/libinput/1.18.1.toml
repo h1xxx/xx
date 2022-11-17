@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://freedesktop.org/software/libinput/libinput-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "libinput-<ver>"
+url = https://freedesktop.org/software/libinput/libinput-<ver>.tar.xz
+src_type = tar
+src_dirname = libinput-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "meson
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = meson
 	--prefix=/usr
 	--libdir=lib
 	-D debug-gui=false
@@ -20,8 +24,8 @@ configure = "meson
 	-D tests=false
 	-D documentation=false
 	-D zshcompletiondir=no
-	build"
+	build
 
-build = "ninja -C build all"
-pkg_create = "DESTDIR=<pkg_dir> ninja -C build install &&
-	rmdir <pkg_dir>/etc/libinput/ <pkg_dir>/etc/"
+build = ninja -C build all
+pkg_create = DESTDIR=<pkg_dir> ninja -C build install &&
+	rmdir <pkg_dir>/etc/libinput/ <pkg_dir>/etc/

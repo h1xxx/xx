@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--exec-prefix=/usr
 	--libdir=/usr/lib
@@ -30,21 +34,21 @@ configure = "./configure
 	--without-debug
 	--without-tests
 	--without-sysmouse
-	--without-normal"
+	--without-normal
 
-build = "make"
+build = make
 
 # create links to names w/o 'w' at the end
 # also, keep only mostly used terminfos
 # also, create a link from the old curses name (libcurses.so)
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	
+pkg_create = make DESTDIR=<pkg_dir> install &&
+
 	mkdir -pv <pkg_dir>/usr/lib/pkgconfig/ &&
 	mv <pkg_dir>/usr/share/pkgconfig/* <pkg_dir>/usr/lib/pkgconfig/ &&
 	rmdir <pkg_dir>/usr/share/pkgconfig &&
 
 	for lib in form menu ncurses panel tinfo; do
-		echo \"INPUT(-l${lib}w)\" > <pkg_dir>/usr/lib/lib${lib}.so &&
+		echo "INPUT(-l${lib}w)" > <pkg_dir>/usr/lib/lib${lib}.so &&
 		ln -sv ${lib}w.pc <pkg_dir>/usr/lib/pkgconfig/${lib}.pc;
 	done &&
 
@@ -61,15 +65,15 @@ pkg_create = "make DESTDIR=<pkg_dir> install &&
 		<pkg_dir>/usr/share/terminfo/x/ &&
 
 	ln -sv libncurses.so <pkg_dir>/usr/lib/libcurses.so &&
-	rm -r <pkg_dir>/usr/share/man/man3/"
+	rm -r <pkg_dir>/usr/share/man/man3/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--enable-widec
 	--enable-symlinks
@@ -88,14 +92,14 @@ configure = "./configure
 	--without-debug
 	--without-tests
 	--without-sysmouse
-	--without-normal"
+	--without-normal
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	mkdir -pv <pkg_dir>/lib/pkgconfig &&
 	mv <pkg_dir>/usr/share/pkgconfig/* <pkg_dir>/lib/pkgconfig/ &&
 	rmdir <pkg_dir>/usr/share/pkgconfig <pkg_dir>/usr/share <pkg_dir>/usr &&
 	for lib in form menu ncurses panel tinfo; do
-		echo \"INPUT(-l${lib}w)\" > <pkg_dir>/lib/lib${lib}.a &&
+		echo "INPUT(-l${lib}w)" > <pkg_dir>/lib/lib${lib}.a &&
 		ln -sv ${lib}w.pc <pkg_dir>/lib/pkgconfig/${lib}.pc;
-	done"
+	done

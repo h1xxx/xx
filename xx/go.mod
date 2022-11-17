@@ -3,7 +3,6 @@ module toml
 go 1.18
 
 require (
-	github.com/pelletier/go-toml v1.9.5
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
 )
 

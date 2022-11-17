@@ -10,43 +10,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-
-	toml "github.com/pelletier/go-toml"
 )
-
-func checkConf(pkg pkgT, conf *toml.Tree) {
-	var errMsg string
-	var stepMissing bool
-
-	srcVars := []string{"url", "src_type", "src_dirname"}
-	stepVars := []string{"env", "prepare", "configure", "build",
-		"pkg_create"}
-
-	if !conf.Has(pkg.set) {
-		errMsg += "\tsection \"" + pkg.set + "\"\n"
-		stepMissing = true
-	}
-
-	for _, v := range srcVars {
-		if !conf.HasPath([]string{"src", v}) {
-			errMsg += "\t\"" + v + "\" in section \"src\"\n"
-		}
-	}
-
-	if !stepMissing {
-		for _, v := range stepVars {
-			if !conf.HasPath([]string{pkg.set, v}) {
-				errMsg += "\t\"" + v + "\" in section \"" +
-					pkg.set + "\"\n"
-			}
-		}
-	}
-
-	if errMsg != "" {
-		errExit(errors.New(""),
-			"missing variables in .toml file:\n"+pkg.name+errMsg)
-	}
-}
 
 // replaces a string with another one in-place
 func repl(s *string, a string, b string) {
@@ -215,6 +179,8 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 		var add bool
 		s := strings.Split(e, "=")
 		key, val := s[0], strings.Join(s[1:], "=")
+		val = strings.Trim(val, "\"")
+		val = strings.Trim(val, "'")
 		if strings.HasSuffix(key, "+") {
 			key = strings.TrimSuffix(key, "+")
 			add = true

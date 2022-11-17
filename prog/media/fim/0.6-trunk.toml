@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://download.savannah.nongnu.org/releases/fbi-improved/fim-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://download.savannah.nongnu.org/releases/fbi-improved/fim-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i -e 's/#define FIM_WANT_BACKGROUND_LOAD.*//' src/fim.h &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i -e 's/#define FIM_WANT_BACKGROUND_LOAD.*//' src/fim.h &&
 	sed -i -e 's/void exit/FIM_NORETURN void exit/' src/CommandConsole.h &&
 	sed -i -e 's/°//g' src/fim.cpp &&
 
@@ -40,8 +44,8 @@ configure = "sed -i -e 's/#define FIM_WANT_BACKGROUND_LOAD.*//' src/fim.h &&
 	--disable-sdl
 	--disable-imlib2
 	--disable-history
-	--disable-cacalib"
+	--disable-cacalib
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/doc/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/doc/

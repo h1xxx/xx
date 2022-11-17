@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "perl Makefile.PL"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	chmod -Rv u+w <pkg_dir>/usr/lib/perl*/*/site_perl/"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = perl Makefile.PL
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	chmod -Rv u+w <pkg_dir>/usr/lib/perl*/*/site_perl/

@@ -1,17 +1,21 @@
 [ src ]
 
-url = "https://poppler.freedesktop.org/poppler-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://poppler.freedesktop.org/poppler-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
-configure = "mkdir build && cd build && cmake
+configure = mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=/usr/lib
 	-D OpenJPEG_DIR=/usr/lib
@@ -32,7 +36,7 @@ configure = "mkdir build && cd build && cmake
 	-D WITH_Cairo=OFF
 	-D WITH_GObjectIntrospection=OFF
 	-D WITH_NSS3=OFF
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

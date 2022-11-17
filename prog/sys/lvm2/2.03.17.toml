@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://sourceware.org/ftp/lvm2/LVM2.<ver>.tgz"
-src_type = "tar"
-src_dirname = "LVM2.<ver>"
+url = https://sourceware.org/ftp/lvm2/LVM2.<ver>.tgz
+src_type = tar
+src_dirname = LVM2.<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--libdir=/usr/lib
 	--exec-prefix=/usr
@@ -28,20 +32,20 @@ configure = "./configure
 	--disable-selinux
 	--disable-static_link
 	--disable-nls
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	chmod -Rv u+w <pkg_dir>/ || : &&
-	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/"
+	mv <pkg_dir>/etc/ <pkg_dir>/usr/share/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "for p in <prog_dir>/patch/<ver>/*.patch; do
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = for p in <prog_dir>/patch/<ver>/*.patch; do
 		echo ${p} 1>&2 &&
 		patch -d . -p1 < ${p} 1>&2 || exit 1;
 	done &&
@@ -72,13 +76,13 @@ configure = "for p in <prog_dir>/patch/<ver>/*.patch; do
 	--disable-dependency-tracking &&
 	sed -i 's| TARGETS += | TARGETS = man-generator |g' tools/Makefile &&
 	sed -i 's|TARGETS += |TARGETS = |g' tools/Makefile &&
-	sed -i 's|TARGETS_DM += |TARGETS_DM = |g' tools/Makefile"
+	sed -i 's|TARGETS_DM += |TARGETS_DM = |g' tools/Makefile
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	chmod -Rv u+w <pkg_dir>/ || : &&
 	mv -v <pkg_dir>/etc/ <pkg_dir>/share/ &&
 	mv -v <pkg_dir>/sbin/lvm.static <pkg_dir>/sbin/lvm &&
 	mv -v <pkg_dir>/sbin/dmsetup.static <pkg_dir>/sbin/dmsetup &&
-	rm -v <pkg_dir>/lib/*.so*"
+	rm -v <pkg_dir>/lib/*.so*
 

@@ -1,57 +1,61 @@
 [ src ]
 
-url = "http://ftp.astron.com/pub/<prog>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = http://ftp.astron.com/pub/<prog>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--enable-libseccomp
 	--enable-zlib
 	--enable-bzlib
 	--enable-xzlib
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap_cross ]
 
-env = []
+env =
 
 # creating signature file from existing file installation
 # installed file version needs to be the same as the one being built
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	cd <build_dir> && mkdir build && cd build &&
 	../configure --disable-bzlib
 	--disable-libseccomp
 	--disable-xzlib	\
 	--disable-zlib &&
-	make"
+	make
 
-configure = "./configure
+configure = ./configure
 	--prefix=/usr
 	--host=${TARGET_TRIPLET}
 	--build=$(./config.guess)
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make FILE_COMPILE=$(pwd)/build/src/file"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make FILE_COMPILE=$(pwd)/build/src/file
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure --prefix=/usr --disable-dependency-tracking"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure --prefix=/usr --disable-dependency-tracking
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

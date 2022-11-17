@@ -1,21 +1,25 @@
 [ src ]
 
-url = "https://github.com/libarchive/libarchive/releases/download/v<ver>/libarchive-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/libarchive/libarchive/releases/download/v<ver>/libarchive-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
 	--without-xml2
-	--without-nettle"
+	--without-nettle
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

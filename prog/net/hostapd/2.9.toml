@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://w1.fi/releases/hostapd-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://w1.fi/releases/hostapd-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "cp <prog_dir>/files/defconfig hostapd/.config"
-build = "cd hostapd && make"
-pkg_create = "mkdir -p <pkg_dir>/usr/bin <pkg_dir>/usr/share/man/man1 &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = cp <prog_dir>/files/defconfig hostapd/.config
+build = cd hostapd && make
+pkg_create = mkdir -p <pkg_dir>/usr/bin <pkg_dir>/usr/share/man/man1 &&
 	cd hostapd &&
 	cp hostapd_cli hostapd <pkg_dir>/usr/bin/ &&
-	cp *.1 <pkg_dir>/usr/share/man/man1/"
+	cp *.1 <pkg_dir>/usr/share/man/man1/

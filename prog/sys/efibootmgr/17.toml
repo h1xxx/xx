@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://github.com/rhboot/efibootmgr/archive/<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://github.com/rhboot/efibootmgr/archive/<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = [ "CFLAGS=", "LDFLAGS=" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i '/extern int efi_set_verbose/d' src/efibootmgr.c"
-build = "libdir=/usr/lib PCDIR=/usr/lib/pkgconfig EFIDIR=/boot/efi make"
-pkg_create = "libdir=/usr/lib EFIDIR=/boot/efi make DESTDIR=<pkg_dir> install"
+env = CFLAGS= LDFLAGS=
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i '/extern int efi_set_verbose/d' src/efibootmgr.c
+build = libdir=/usr/lib PCDIR=/usr/lib/pkgconfig EFIDIR=/boot/efi make
+pkg_create = libdir=/usr/lib EFIDIR=/boot/efi make DESTDIR=<pkg_dir> install

@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://nlnetlabs.nl/downloads/unbound/unbound-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://nlnetlabs.nl/downloads/unbound/unbound-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--enable-pie
@@ -25,10 +29,10 @@ configure = "./configure
 	--disable-cachedb
 	--disable-ipsecmod
 	--disable-ipset
-	--without-pythonmodule"
+	--without-pythonmodule
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -r <pkg_dir>/usr/share/man/man3/ &&
 	mkdir -p <pkg_dir>/usr/share/unbound/ &&
-	mv <pkg_dir>/etc <pkg_dir>/usr/share/unbound"
+	mv <pkg_dir>/etc <pkg_dir>/usr/share/unbound

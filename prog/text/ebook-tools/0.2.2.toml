@@ -1,23 +1,27 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/ebook-tools/ebook-tools-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/ebook-tools/ebook-tools-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir> &&
 	cd <build_dir> &&
-	patch -p2 < <prog_dir>/patch/0.2.2.crash-fix.patch"
+	patch -p2 < <prog_dir>/patch/0.2.2.crash-fix.patch
 
-configure = "mkdir build && cd build && cmake
+configure = mkdir build && cd build && cmake
 	-D CMAKE_INSTALL_PREFIX=/usr
 	-D CMAKE_INSTALL_LIBDIR=/usr/lib
 	-D CMAKE_BUILD_TYPE='Release'
-	.."
+	..
 
-build = "cd build && make"
-pkg_create = "cd build && make DESTDIR=<pkg_dir> install"
+build = cd build && make
+pkg_create = cd build && make DESTDIR=<pkg_dir> install

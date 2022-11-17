@@ -1,18 +1,22 @@
 [ src ]
 
-url = "https://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git/snapshot/efitools-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://git.kernel.org/pub/scm/linux/kernel/git/jejb/efitools.git/snapshot/efitools-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "for p in <prog_dir>/patch/<ver>-*.patch; do
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = for p in <prog_dir>/patch/<ver>-*.patch; do
 		patch -d . -p1 < ${p};
-	done"
+	done
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

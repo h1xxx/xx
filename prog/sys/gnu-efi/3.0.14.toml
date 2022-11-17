@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://downloads.sourceforge.net/project/gnu-efi/gnu-efi-<ver>.tar.bz2"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://downloads.sourceforge.net/project/gnu-efi/gnu-efi-<ver>.tar.bz2
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make -j1"
-pkg_create = "make PREFIX=/usr INSTALLROOT=<pkg_dir> install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make -j1
+pkg_create = make PREFIX=/usr INSTALLROOT=<pkg_dir> install

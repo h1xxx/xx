@@ -3,13 +3,12 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"path"
 	fp "path/filepath"
 	"regexp"
-	"strings"
-
-	toml "github.com/pelletier/go-toml"
+	str "strings"
 )
 
 func parsePkgEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
@@ -39,7 +38,7 @@ func parsePkgEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
 
 func parseSetLine(line string, genC genCfgT, re reT) (pkgT, pkgCfgT) {
 	line = re.wSpaces.ReplaceAllString(line, "\t")
-	fields := strings.Split(line, "\t")
+	fields := str.Split(line, "\t")
 	len := len(fields)
 	var flags string
 	err := errors.New("")
@@ -76,13 +75,13 @@ func parseSetLine(line string, genC genCfgT, re reT) (pkgT, pkgCfgT) {
 func parsePkgFlags(flags, pkgName string) (bool, bool) {
 	var force, cnt bool
 
-	if strings.Contains(flags, "f") {
+	if str.Contains(flags, "f") {
 		force = true
-		flags = strings.Replace(flags, "f", "", 1)
+		flags = str.Replace(flags, "f", "", 1)
 	}
-	if strings.Contains(flags, "c") {
+	if str.Contains(flags, "c") {
 		cnt = true
-		flags = strings.Replace(flags, "c", "", 1)
+		flags = str.Replace(flags, "c", "", 1)
 	}
 	if flags != "" {
 		errExit(errors.New(""), "unknown flags in:\n  "+pkgName)
@@ -109,7 +108,7 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 		}
 
 		line = re.wSpaces.ReplaceAllString(line, "\t")
-		fields := strings.Split(line, "\t")
+		fields := str.Split(line, "\t")
 		len := len(fields)
 
 		switch {
@@ -134,50 +133,214 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 
 func parsePkgToml(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	var steps stepsT
+	var stepsSl = make(map[string]string)
 	var src srcT
+	var section, step, varsVar string
+	vars := make(map[string]string)
 
-	tomlFile := pkg.progDir + "/" + pkg.ver + ".toml"
-	tomlStr := readToml(tomlFile)
-
-	// replace already known variables in toml and parse it
-	tomlStr = replaceTomlVars(tomlStr, genC, pkg, pkgC)
-	conf, err := toml.Load(tomlStr)
-	errExit(err, "can't parse toml file: "+tomlFile)
-	checkConf(pkg, conf)
-	confSrc := conf.Get("src").(*toml.Tree)
-
-	src.url = confSrc.Get("url").(string)
-	srcFileBase := path.Base(strings.Split(src.url, " ")[0])
-	src.srcFile = fp.Join(pkg.progDir, "src", srcFileBase)
-	src.srcDirName = confSrc.Get("src_dirname").(string)
-	src.srcType = confSrc.Get("src_type").(string)
-
-	steps.buildDir = fp.Join(pkgC.tmpDir, src.srcDirName)
-	pkgC.src = src
-	pkgC.steps = steps
-
-	// replace also new src variables in toml string and reparse it
-	// todo: check if this algorithm needs to be sped up
-	tomlStr = replaceTomlVars(tomlStr, genC, pkg, pkgC)
-	conf, err = toml.Load(tomlStr)
-	errExit(err, "can't parse toml file: "+tomlFile)
-	checkConf(pkg, conf)
-	confStep := conf.Get(pkg.set).(*toml.Tree)
-
-	steps.prepare = confStep.Get("prepare").(string)
-	steps.configure = confStep.Get("configure").(string)
-	steps.build = confStep.Get("build").(string)
-	steps.pkg_create = confStep.Get("pkg_create").(string)
-
-	// todo: place default configs in a file, read defaults into genC
-	var env []string
-	envIface := confStep.Get("env").([]interface{})
-	for i := range envIface {
-		env = append(env, envIface[i].(string))
+	check := map[string]bool{
+		"hasSrc":            false,
+		"hasUrl":            false,
+		"hasSrcType":        false,
+		"hasSrcDirName":     false,
+		"hasVars":           false,
+		"hasSet":            false,
+		"has_env":           false,
+		"has_prepare":       false,
+		"has_configure":     false,
+		"has_build":         false,
+		"has_pkg_create":    false,
+		"nonEmptySrcType":   false,
+		"nonEmptyPkgCreate": false,
 	}
+
+	tomlFile := fp.Join(pkg.progDir, pkg.ver+".toml")
+
+	re := getRegexes()
+	f, err := os.Open(tomlFile)
+	errExit(err, "can't open file: "+tomlFile)
+	defer f.Close()
+
+	input := bufio.NewScanner(f)
+	var i int
+	for input.Scan() {
+		i++
+		line := input.Text()
+		line = re.wSpaces.ReplaceAllString(line, " ")
+		line = str.Trim(line, " ")
+
+		if line == "" || string(line[0]) == "#" {
+			continue
+		}
+
+		// replace predefined variables
+		line = replaceTomlVars(line, genC, pkg, pkgC)
+
+		switch {
+		// start of the new section
+		case str.HasPrefix(line, "[ ") && str.HasSuffix(line, " ]"):
+			section = str.TrimPrefix(line, "[ ")
+			section = str.TrimSuffix(section, " ]")
+			if str.Contains(section, " ") {
+				msg := "name has a space in line %d of %s"
+				errExit(fmt.Errorf(msg, i, tomlFile), "")
+			}
+			step, varsVar = "", ""
+			switch section {
+			case "src":
+				check["hasSrc"] = true
+			case "vars":
+				check["hasVars"] = true
+			case pkg.set:
+				check["hasSet"] = true
+			}
+
+			if _, done := stepsSl["pkg_create"]; done {
+				break
+			}
+
+		case section == "src" && str.HasPrefix(line, "url ="):
+			src.url = str.TrimPrefix(line, "url = ")
+			fileBase := path.Base(str.Split(src.url, " ")[0])
+			src.file = fp.Join(pkg.progDir, "src", fileBase)
+			step = "url"
+			check["hasUrl"] = true
+
+		case section == "src" && str.HasPrefix(line, "src_type = "):
+			src.srcType = str.TrimPrefix(line, "src_type = ")
+			step = "src_type"
+			check["hasSrcType"] = true
+
+		case section == "src" && str.HasPrefix(line, "src_dirname ="):
+			src.dirName = str.TrimPrefix(line, "src_dirname =")
+			src.dirName = str.Trim(src.dirName, " ")
+			step = "src_dirname"
+			check["hasSrcDirName"] = true
+
+		case section == "src" && step == "url":
+			src.url += " " + line
+
+		case section == "vars" && str.HasPrefix(line, "var "):
+			before, after, found := str.Cut(line, " = ")
+			varsVar = before
+			vars[varsVar] = after
+			if !found {
+				msg := "incorrect var name in line %d of %s"
+				errExit(fmt.Errorf(msg, i, tomlFile), "")
+			}
+
+		case section == "vars":
+			vars[varsVar] += " " + line
+
+		case pkg.set == section && startStepLine(line):
+			before, after, found := str.Cut(line, " =")
+			step = before
+			stepsSl[step] = str.Trim(after, " ")
+			if !found {
+				msg := "incorrect step in line %d of %s"
+				errExit(fmt.Errorf(msg, i, tomlFile), "")
+			}
+			check["has_"+step] = true
+
+		case pkg.set == section:
+			stepsSl[step] += " " + line
+		}
+	}
+
+	if src.srcType != "" {
+		check["nonEmptySrcType"] = true
+	}
+
+	if stepsSl["pkg_create"] != "" || src.srcType == "files" {
+		check["nonEmptyPkgCreate"] = true
+	}
+
+	// check if all's ok
+	for c, val := range check {
+		if !val {
+			msg := "check %s failed in %s"
+			errExit(fmt.Errorf(msg, c, tomlFile), "")
+		}
+	}
+
+	// replace user defined vars in each step
+	for step, val := range stepsSl {
+		for varsVar, varVal := range vars {
+			stepsSl[step] = str.Replace(val, varsVar, varVal, -1)
+		}
+	}
+
+	env, err := getIniEnv(stepsSl["env"])
+	errExit(err, fmt.Sprintf("incorrect env %s", tomlFile))
+
 	steps.env = prepareEnv(env, genC, pkg, pkgC)
+	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
+
+	steps.prepare = stepsSl["prepare"]
+	steps.configure = stepsSl["configure"]
+	steps.build = stepsSl["build"]
+	steps.pkg_create = stepsSl["pkg_create"]
 
 	return src, steps
+}
+
+func getIniEnv(s string) ([]string, error) {
+	var env []string
+	var v string
+	var isQuoted bool
+
+	fields := str.Split(s, " ")
+	for _, f := range fields {
+		if f == "" {
+			continue
+		}
+
+		if str.Contains(f, "=\"") || str.Contains(f, "='") {
+			isQuoted = true
+			v = f
+			if str.HasSuffix(f, "\"") || str.HasSuffix(f, "'") {
+				if !str.Contains(f, "=") {
+					msg := "envvar with no '='"
+					return env, errors.New(msg)
+				}
+				env = append(env, f)
+				isQuoted = false
+			}
+			continue
+		}
+
+		if !isQuoted {
+			if !str.Contains(f, "=") {
+				return env, errors.New("envvar with no '='")
+			}
+			env = append(env, f)
+			continue
+		}
+
+		if str.HasSuffix(f, "\"") || str.HasSuffix(f, "'") {
+			v += " " + f
+			if !str.Contains(v, "=") {
+				return env, errors.New("envvar with no '='")
+			}
+			env = append(env, v)
+			isQuoted = false
+			v = ""
+		} else {
+			v += " " + f
+		}
+	}
+	return env, nil
+}
+
+func startStepLine(line string) bool {
+	stepsNames := []string{"env", "prepare", "configure",
+		"build", "pkg_create"}
+	for _, name := range stepsNames {
+		if str.HasPrefix(line, name+" =") {
+			return true
+		}
+	}
+	return false
 }
 
 func replaceTomlVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
@@ -185,7 +348,7 @@ func replaceTomlVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
 
 	for k, v := range replMap {
 		if v != "" {
-			s = strings.Replace(s, k, v, -1)
+			s = str.Replace(s, k, v, -1)
 		}
 	}
 
@@ -204,7 +367,7 @@ func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT) map[string]string {
 		"<prog_dir>":    pkg.progDir,
 		"<src_dir>":     fp.Join(pkg.progDir, "src"),
 		"<ver_pkgspec>": getPkgSpecVer(pkg),
-		"<src_path>":    pkgC.src.srcFile,
+		"<src_path>":    pkgC.src.file,
 		"<tmp_dir>":     pkgC.tmpDir,
 		"<build_dir>":   pkgC.steps.buildDir,
 	}
@@ -215,34 +378,34 @@ func getPkgSpecVer(pkg pkgT) string {
 
 	switch pkg.prog {
 	case "sqlite":
-		v = strings.Replace(pkg.ver, ".", "", -1) + "000"
+		v = str.Replace(pkg.ver, ".", "", -1) + "000"
 	case "libnl":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	case "cdrtools":
-		v = strings.Split(pkg.ver, "a")[0]
+		v = str.Split(pkg.ver, "a")[0]
 	case "c-ares":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	case "doxygen":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	case "libcdio-paranoia":
-		v = strings.Replace(pkg.ver, "+", "-", -1)
+		v = str.Replace(pkg.ver, "+", "-", -1)
 	case "boost":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	case "libexif":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	case "vim":
-		vSplit := strings.Split(pkg.ver, ".")
+		vSplit := str.Split(pkg.ver, ".")
 		v = vSplit[0] + vSplit[1]
 	case "w3m":
-		v = strings.Replace(pkg.ver, "+git", "-git", -1)
+		v = str.Replace(pkg.ver, "+git", "-git", -1)
 	case "unzip":
-		v = strings.Replace(pkg.ver, ".", "", -1)
+		v = str.Replace(pkg.ver, ".", "", -1)
 	case "fetchmail":
-		v = strings.Replace(pkg.ver, ".", "-", -1)
+		v = str.Replace(pkg.ver, ".", "-", -1)
 	case "zip":
-		v = strings.Replace(pkg.ver, ".", "", -1)
+		v = str.Replace(pkg.ver, ".", "", -1)
 	case "tinyxml":
-		v = strings.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(pkg.ver, ".", "_", -1)
 	}
 
 	return v
@@ -256,57 +419,15 @@ func getRegexes() reT {
 	return re
 }
 
-// reads xx toml file and escapes newlines to be compliant with toml format
-func readToml(file string) string {
-	var tomlStr string
-	var isStep bool
-
-	fd, err := os.Open(file)
-	errExit(err, "can't open toml file: "+file)
-	defer fd.Close()
-
-	input := bufio.NewScanner(fd)
-	for input.Scan() {
-		line := input.Text()
-		if isStepStart(line) {
-			isStep = true
-		}
-		if isStepEnd(line) {
-			isStep = false
-		}
-		if isStep {
-			tomlStr += line + " \\\n"
-		} else {
-			tomlStr += line + "\n"
-		}
-	}
-	return tomlStr
-}
-
 func isStepStart(line string) bool {
 	steps := []string{"url", "env", "prepare", "configure", "build",
 		"pkg_create"}
 
 	for _, step := range steps {
-		if strings.HasPrefix(line, step) {
+		if str.HasPrefix(line, step) {
 			return true
 		}
 	}
-	return false
-}
-
-func isStepEnd(line string) bool {
-	line = strings.TrimSpace(line)
-	if strings.HasSuffix(line, "\"") && !strings.HasSuffix(line, "\\\"") {
-		return true
-	}
-
-	// this is for env variable, but the whole funcion doesn't cover all
-	// cases, todo: make it more robust
-	if strings.HasSuffix(line, "]") && !strings.HasSuffix(line, "\\]") {
-		return true
-	}
-
 	return false
 }
 
@@ -323,19 +444,19 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 	errExit(err, "can't walk world dir: "+worldDir)
 
 	for _, dir := range dirs {
-		dir := strings.TrimPrefix(dir, worldDir+"/")
-		fields := strings.Split(dir, "/")
+		dir := str.TrimPrefix(dir, worldDir+"/")
+		fields := str.Split(dir, "/")
 		if len(fields) != 3 {
 			continue
 		}
 		name, pkgSetVerRel := fields[0]+"/"+fields[1], fields[2]
-		fields = strings.Split(pkgSetVerRel, "-")
+		fields = str.Split(pkgSetVerRel, "-")
 		if len(fields) < 3 {
 			errExit(errors.New(""), "can't parse line: "+dir)
 		}
 
 		set := fields[0]
-		ver := strings.Join(fields[1:len(fields)-1], "-")
+		ver := str.Join(fields[1:len(fields)-1], "-")
 		nameSet := name + "\t" + set
 
 		// assuming that latest entries are installed prog versions
@@ -343,7 +464,7 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 	}
 
 	for nameSet, ver := range pkgVerMap {
-		fields := strings.Split(nameSet, "\t")
+		fields := str.Split(nameSet, "\t")
 		name := fields[0]
 		set := fields[1]
 		pkg := getPkg(genC, name, set, ver)
@@ -364,7 +485,7 @@ func parseSharedLibsFile(genC genCfgT, sharedLibsFile string) []pkgT {
 	input := bufio.NewScanner(fd)
 
 	for input.Scan() {
-		fields := strings.Split(input.Text(), "\t")
+		fields := str.Split(input.Text(), "\t")
 		name := fields[1]
 		pkgSet := fields[2]
 		dep := getPkg(genC, name, pkgSet, "latest")
@@ -415,7 +536,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 		return
 	}
 	line = re.wSpaces.ReplaceAllString(line, "\t")
-	l := strings.Split(line, "\t")
+	l := str.Split(line, "\t")
 
 	if len(l) != 2 {
 		errExit(errors.New(""), "incorrect permissions: "+line)
@@ -426,18 +547,18 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 		slashTrail = "/"
 	}
 
-	if strings.Contains(l[0], ":") {
+	if str.Contains(l[0], ":") {
 		c := ""
 		permPath := l[1]
-		split := strings.Split(permPath, ":")
-		if len(split) > 1 && strings.HasPrefix(permPath, "c:") {
+		split := str.Split(permPath, ":")
+		if len(split) > 1 && str.HasPrefix(permPath, "c:") {
 			c = "c:"
 			permPath = split[1]
 		}
 		permPath = c + fp.Join(rootDir, permPath) + slashTrail
 		owners[permPath] = l[0]
 	} else if strDigitsOnly(l[0]) {
-		split := strings.Split(l[1], ":")
+		split := str.Split(l[1], ":")
 		if len(split) != 2 {
 			errExit(errors.New(""),
 				"incorrect permissions: "+line)
@@ -460,7 +581,7 @@ func getPkgCfgFiles(genC genCfgT, pkg pkgT) map[string]string {
 		files, err := walkDir(pkg.cfgDir, "files")
 		errExit(err, "can't walk pkg cfg dir: "+pkg.cfgDir)
 		for _, file := range files {
-			rootFile := strings.TrimPrefix(file, pkg.cfgDir)
+			rootFile := str.TrimPrefix(file, pkg.cfgDir)
 			if file == rootFile {
 				errExit(errors.New(""),
 					"file can't be copied from root dir")
@@ -480,7 +601,7 @@ func getPkgCfgFiles(genC genCfgT, pkg pkgT) map[string]string {
 		files, err := walkDir(pkgSysCfgDir, "files")
 		errExit(err, "can't walk sys cfg dir: "+pkgSysCfgDir)
 		for _, file := range files {
-			rootFile := strings.TrimPrefix(file, pkgSysCfgDir)
+			rootFile := str.TrimPrefix(file, pkgSysCfgDir)
 			if file == rootFile {
 				errExit(errors.New(""),
 					"file can't be copied from root dir")

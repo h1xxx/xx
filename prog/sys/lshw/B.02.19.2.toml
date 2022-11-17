@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://ezix.org/software/files/lshw-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ezix.org/software/files/lshw-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = ""
-build = "make SBINDIR=/usr/sbin"
-pkg_create = "make DESTDIR=<pkg_dir> SBINDIR=/usr/sbin install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure =
+build = make SBINDIR=/usr/sbin
+pkg_create = make DESTDIR=<pkg_dir> SBINDIR=/usr/sbin install

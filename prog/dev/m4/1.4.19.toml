@@ -1,75 +1,79 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # contains fixes introduced by glibc-2.28
-configure = "sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
+configure = sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
 	echo '#define _IO_IN_BACKUP 0x100' >> lib/stdio-impl.h &&
 	./configure
 	--prefix=/usr
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/info/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--bindir=/bin
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/info/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/info/
 
 
 
 [ bootstrap_cross ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # contains fixes introduced by glibc-2.28
-configure = "sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
+configure = sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
 	echo '#define _IO_IN_BACKUP 0x100' >> lib/stdio-impl.h &&
 	./configure
 	--prefix=/usr
 	--host=${TARGET_TRIPLET}
 	--build=$(build-aux/config.guess)
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
 
 # contains fixes introduced by glibc-2.28
-configure = "sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
+configure = sed -i 's|IO_ftrylockfile|IO_EOF_SEEN|' lib/*.c &&
 	echo '#define _IO_IN_BACKUP 0x100' >> lib/stdio-impl.h &&
 	./configure
 	--prefix=/usr
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install
 

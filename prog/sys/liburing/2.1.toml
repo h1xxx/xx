@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://github.com/axboe/liburing/archive/refs/tags/liburing-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<prog>-<ver>"
+url = https://github.com/axboe/liburing/archive/refs/tags/liburing-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
-	--mandir=/usr/share/man"
+	--mandir=/usr/share/man
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm <pkg_dir>/usr/lib/liburing.a &&
-	rm -r <pkg_dir>/usr/share/man/man{2,3}/"
+	rm -r <pkg_dir>/usr/share/man/man{2,3}/

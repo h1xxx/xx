@@ -1,27 +1,31 @@
 [ src ]
 
-url = "https://security.appspot.com/downloads/vsftpd-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://security.appspot.com/downloads/vsftpd-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "echo '#define VSF_BUILD_SSL' > builddefs.h &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = echo '#define VSF_BUILD_SSL' > builddefs.h &&
 	echo '#undef VSF_BUILD_PAM' >> builddefs.h &&
 	echo '#undef VSF_BUILD_TCPWRAPPERS' >> builddefs.h &&
 	echo '#undef VSF_SYSDEP_HAVE_LIBCAP' >> builddefs.h &&
-	sed -i '/libnsl/d' vsf_findlibs.sh"
+	sed -i '/libnsl/d' vsf_findlibs.sh
 
 
-build = "make"
-pkg_create = "mkdir -p <pkg_dir>/usr/sbin/
+build = make
+pkg_create = mkdir -p <pkg_dir>/usr/sbin/
 		<pkg_dir>/usr/share/man/man{5,8}
 		<pkg_dir>/etc &&
 	cp -a vsftpd <pkg_dir>/usr/sbin/ &&
 	cp -a vsftpd.conf.5 <pkg_dir>/usr/share/man/man5/ &&
 	cp -a vsftpd.8 <pkg_dir>/usr/share/man/man8/ &&
-	cp -a vsftpd.conf <pkg_dir>/etc/"
+	cp -a vsftpd.conf <pkg_dir>/etc/

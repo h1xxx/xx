@@ -1,20 +1,24 @@
 [ src ]
 
-url = "https://mediaarea.net/download/source/mediainfo/<ver>/mediainfo_<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "MediaInfo/Project/GNU/CLI"
+url = https://mediaarea.net/download/source/mediainfo/<ver>/mediainfo_<ver>.tar.xz
+src_type = tar
+src_dirname = MediaInfo/Project/GNU/CLI
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh && ./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh && ./configure
 	--prefix=/usr
 	--disable-static
 	--disable-dependency-tracking
-	"
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

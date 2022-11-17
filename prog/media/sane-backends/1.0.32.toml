@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://gitlab.com/sane-project/backends/-/archive/<ver>/backends-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "backends-<ver>"
+url = https://gitlab.com/sane-project/backends/-/archive/<ver>/backends-<ver>.tar.gz
+src_type = tar
+src_dirname = backends-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./autogen.sh &&
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./autogen.sh &&
 	sed -i 's|UNKNOWN|<ver>|g' configure &&
 	./configure BACKENDS='pixma'
 	--prefix=/usr
@@ -33,8 +37,8 @@ configure = "./autogen.sh &&
 	--disable-dynamic
 	--disable-locking
 	--disable-static
-	--disable-dependency-tracking"
+	--disable-dependency-tracking
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -r <pkg_dir>/usr/share/{doc,locale}/"
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -r <pkg_dir>/usr/share/{doc,locale}/

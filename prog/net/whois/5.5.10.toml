@@ -1,15 +1,19 @@
 [ src ]
 
-url = "https://ftp.debian.org/debian/pool/main/w/whois/whois_<ver>.tar.xz"
-src_type = "tar"
-src_dirname = "<prog>"
+url = https://ftp.debian.org/debian/pool/main/w/whois/whois_<ver>.tar.xz
+src_type = tar
+src_dirname = <prog>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "sed -i 's|cd po && $(MAKE).*|cd po|g' Makefile"
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install"
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = sed -i 's|cd po && $(MAKE).*|cd po|g' Makefile
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install

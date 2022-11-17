@@ -1,16 +1,20 @@
 [ src ]
 
-url = "https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz"
-src_type = "tar"
-src_dirname = "<prog>-<ver>"
+url = https://ftp.gnu.org/gnu/<prog>/<prog>-<ver>.tar.gz
+src_type = tar
+src_dirname = <prog>-<ver>
+
+
+
+[ vars ]
 
 
 
 [ std ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--sysconfdir=/etc
 	--bindir=/bin
@@ -31,22 +35,22 @@ configure = "./configure
 	--disable-disabled-builtins
 	--disable-net-redirections
 	--disable-progcomp
-	--disable-profiling"
+	--disable-profiling
 
 # parallel build workarounds
-build = "make y.tab.c && make builtins/libbuiltins.a && make"
+build = make y.tab.c && make builtins/libbuiltins.a && make
 
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm -f <pkg_dir>/bin/bashbug <pkg_dir>/usr/share/man/man1/*bug* &&
-	rm -r <pkg_dir>/usr/lib <pkg_dir>/usr/share/{doc,info}/"
+	rm -r <pkg_dir>/usr/lib <pkg_dir>/usr/share/{doc,info}/
 
 
 
 [ musl ]
 
-env = [ "CC=musl-gcc -static" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = CC="musl-gcc -static"
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=
 	--sysconfdir=/etc
 	--mandir=/share/man
@@ -65,42 +69,42 @@ configure = "./configure
 	--disable-disabled-builtins
 	--disable-net-redirections
 	--disable-progcomp
-	--disable-profiling"
+	--disable-profiling
 
 # parallel build workarounds
-build = "make y.tab.c && make builtins/libbuiltins.a && make"
+build = make y.tab.c && make builtins/libbuiltins.a && make
 
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	rm <pkg_dir>/bin/bashbug <pkg_dir>/share/man/man1/*bug* &&
-	rm -r <pkg_dir>/{share,lib} <pkg_dir>/share/doc/"
+	rm -r <pkg_dir>/{share,lib} <pkg_dir>/share/doc/
 
 
 
 [ bootstrap_cross ]
 
-env = [ "MAKEFLAGS=-j1" ]
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env = MAKEFLAGS=-j1
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--bindir=/bin
 	--sbindir=/sbin
 	--build=$(support/config.guess)
 	--host=${TARGET_TRIPLET}
 	--without-curses
-	--without-bash-malloc"
+	--without-bash-malloc
 
-build = "make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
+build = make
+pkg_create = make DESTDIR=<pkg_dir> install &&
 	ln -sfv bash <pkg_dir>/usr/bin/sh &&
-	rm -f <pkg_dir>/bin/bashbug"
+	rm -f <pkg_dir>/bin/bashbug
 
 
 
 [ bootstrap ]
 
-env = []
-prepare = "tar --no-same-owner -xf <src_path> -C <tmp_dir>"
-configure = "./configure
+env =
+prepare = tar --no-same-owner -xf <src_path> -C <tmp_dir>
+configure = ./configure
 	--prefix=/usr
 	--bindir=/bin
 	--sbindir=/sbin
@@ -108,9 +112,9 @@ configure = "./configure
 	--without-curses
 	--without-bash-malloc
 	--disable-nls
-	--with-installed-readline"
+	--with-installed-readline
 
 # parallel build workarounds
-build = "make y.tab.c && make builtins/libbuiltins.a && make"
-pkg_create = "make DESTDIR=<pkg_dir> install &&
-	rm -vf <pkg_dir>/bin/bashbug"
+build = make y.tab.c && make builtins/libbuiltins.a && make
+pkg_create = make DESTDIR=<pkg_dir> install &&
+	rm -vf <pkg_dir>/bin/bashbug
