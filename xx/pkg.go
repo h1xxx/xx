@@ -39,6 +39,7 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) (b
 	errExit(err, "couldn't create dir: "+pkg.newPkgDir)
 	execStep("pkg_create", genC, pkg, pkgC)
 
+	// todo: create subpkgs
 	moveLogs(pkg, pkgC)
 	saveHelp(genC, pkg, pkgC)
 	cleanup(pkg, pkgC)

@@ -1,3 +1,5 @@
+create subpkgs
+
 deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
 place default configs in a file (flags, env etc.), read defaults into genC
