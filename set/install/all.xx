@@ -48,7 +48,7 @@ dev/automake			std			latest
 dev/binutils			bootstrap_1_cross		latest
 dev/binutils			bootstrap_2_cross		latest
 dev/binutils			bootstrap			latest
-dev/binutils			musl_bootstrap		latest
+dev/binutils			muslbootstrap		latest
 dev/binutils			std			latest
 dev/bison			bootstrap			latest
 dev/bison			std			latest
@@ -73,11 +73,13 @@ dev/gcc				bootstrap_1_cross		latest
 dev/gcc				bootstrap_2_cross		latest
 dev/gcc				bootstrap			latest
 dev/gcc				bootstrap_libstdcpp_cross	latest
-dev/gcc-libgcc_s		std			latest
-dev/gcc-libgomp			std			latest
-dev/gcc-libstdc++		std			latest
 dev/gcc				musl			11.2.0
-dev/gcc				std			latest
+dev/gcc				std_headers		latest
+dev/gcc				std			latest	f
+dev/gcc				std_libgcc		latest
+dev/gcc				std_libgomp		latest
+dev/gcc				std_lib			latest
+dev/gcc				std_libstdc++		latest
 dev/gettext			std			latest
 dev/git				std			latest
 dev/glew			std			latest
@@ -413,7 +415,7 @@ sys/nvidia			std			latest
 sys/oath-toolkit		std			latest
 sys/openssh			std			latest
 sys/pam				std			latest
-sys/pciutils			std			latest
+sys/pciutils			std			latest	f
 sys/pciutils			std_lib			latest
 sys/pinentry			std			latest
 sys/pkgsrc			std			latest

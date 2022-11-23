@@ -1,4 +1,4 @@
-create subpkgs
+rem pkg and subpkg in case of errors in creating subpkg
 
 deploy default config files to usr//cnt/./home do use when no /var/lib/.
 

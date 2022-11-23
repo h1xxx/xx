@@ -4,9 +4,11 @@
 dev/glibc			std			latest
 #dev/musl			std			latest
 dev/gcc				std			latest
-dev/gcc-libgcc_s		std			latest
-dev/gcc-libgomp			std			latest
-dev/gcc-libstdc++		std			latest
+dev/gcc				std_headers		latest
+dev/gcc				std_lib			latest
+dev/gcc				std_libgcc		latest
+dev/gcc				std_libgomp		latest
+dev/gcc				std_libstdc++		latest
 
 # some sys libs and tools
 sys/busybox			std			latest
@@ -186,6 +188,6 @@ sys/pinentry			std			latest
 sys/gnupg			std			latest
 crypt/gpgme			std			latest
 sys/usbutils			std			latest
-sys/pciutils			std			latest	f
+sys/pciutils			std			latest
 sys/pciutils			std_lib			latest
 
