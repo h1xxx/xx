@@ -62,7 +62,7 @@ sys/mime-types			std			latest
 
 # sys libs
 sys/linux			headers			latest
-sys/linux			headers_static		latest
+sys/linux			headersstatic		latest
 sys/gdbm			std			latest
 #sys/gdbm			musl			latest
 sys/libseccomp			std			latest
@@ -98,7 +98,7 @@ dev/pycparser			std			latest
 dev/cffi			std			latest
 crypt/cryptography		std			latest
 sys/ca-certificates		std			latest
-crypt/libressl 			cert_pem		latest
+crypt/libressl 			certpem			latest
 net/libpcap			std			latest
 net/libnfnetlink		std			latest
 net/libmnl			std			latest
@@ -186,5 +186,6 @@ sys/pinentry			std			latest
 sys/gnupg			std			latest
 crypt/gpgme			std			latest
 sys/usbutils			std			latest
-sys/pciutils			std			latest
+sys/pciutils			std			latest	f
+sys/pciutils			std_lib			latest
 

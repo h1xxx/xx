@@ -90,6 +90,8 @@ func getBuildEnv(actionTarget string) string {
 	}
 }
 
+// get new release from pkg dir if pkg.setVerRel is empty;
+// get a release from setVerRel otherwise
 func getPkgRels(pkg pkgT) (string, string, string) {
 	var id int64
 	progPkgDir := fp.Join(pkg.progDir, "pkg")

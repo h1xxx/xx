@@ -21,11 +21,9 @@ import (
 	"unicode/utf8"
 )
 
-func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) (built bool) {
-	fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
-
+func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pkgT {
 	if pkg.newRel != "00" && !pkgC.force || pkgC.src.srcType == "files" {
-		return false
+		return pkg
 	}
 
 	makeBuildDirs(pkg, pkgC)
@@ -39,21 +37,96 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) (b
 	errExit(err, "couldn't create dir: "+pkg.newPkgDir)
 	execStep("pkg_create", genC, pkg, pkgC)
 
-	// todo: create subpkgs
 	moveLogs(pkg, pkgC)
 	saveHelp(genC, pkg, pkgC)
 	cleanup(pkg, pkgC)
 	dumpSHA256(pkg)
 
-	if !pkgC.crossBuild {
-		dumpSharedLibs(world, genC, pkg)
-	}
-
 	if dirIsEmpty(pkg.newPkgDir) {
 		fmt.Println("! pkg empty:", pkg.newPkgDir)
 	}
 
-	return true
+	for suffix, files := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, suffix)
+		fmt.Printf("  creating subpkg %s...\n", subPkg.set)
+		createSubPkg(pkg, subPkg, files)
+	}
+
+	// remove old pkg from world
+	delete(world["/"].pkgs, pkg)
+	for suffix, _ := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, suffix)
+		delete(world["/"].pkgs, subPkg)
+	}
+
+	// get new release info after the build
+	pkg.setVerRel = ""
+	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+	pkg = getPkgSetVers(pkg)
+	pkg = getPkgDirs(pkg)
+
+	// add a new pkg and all subpkgs to root of the world;
+	// no cnt here as only build step executes this
+	addPkgToWorldT(world, pkg, "/")
+	for suffix, _ := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, suffix)
+		addPkgToWorldT(world, subPkg, "/")
+	}
+
+	// dump shared libs for main pkg and for subpkgs
+	if !pkgC.crossBuild {
+		dumpSharedLibs(world, genC, pkg)
+	}
+	for suffix, _ := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, suffix)
+		dumpSharedLibs(world, genC, subPkg)
+		selfLibsExist(world, genC, subPkg)
+	}
+
+	return pkg
+}
+
+func getSubPkg(pkg pkgT, suffix string) pkgT {
+	subPkg := pkg
+	subPkg.set = pkg.set + "_" + suffix
+	subPkg = getPkgSetVers(subPkg)
+	subPkg = getPkgDirs(subPkg)
+	return subPkg
+}
+
+func createSubPkg(pkg, subPkg pkgT, files []string) {
+	for _, f := range files {
+		src := fp.Join(pkg.newPkgDir, f)
+		dest := fp.Join(subPkg.newPkgDir, f)
+		Mv(src, dest)
+		RemEmptyDirs(fp.Dir(src))
+		MoveShaInfo(pkg, subPkg, f)
+	}
+}
+
+func MoveShaInfo(pkg, subPkg pkgT, file string) {
+	src := fp.Join(pkg.progDir, "log", pkg.setVerNewRel, "sha256.log")
+	dest := fp.Join(subPkg.progDir, "log", subPkg.setVerNewRel, "sha256.log")
+
+	err := os.MkdirAll(fp.Dir(dest), 0750)
+	errExit(err, "can't create dest dir: "+fp.Dir(dest))
+
+	bb := "/home/xx/tools/busybox"
+	c := bb + " grep \t" + file + " " + src + " > " + dest
+
+	cmd := exec.Command(bb, "sh", "-c", c)
+	out, err := cmd.CombinedOutput()
+
+	errExit(err, "can't copy sha lines from "+src+" to "+dest+
+		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+
+	c = bb + " sed -i '\\|\t" + file + "|d' " + src
+
+	cmd = exec.Command(bb, "sh", "-c", c)
+	out, err = cmd.CombinedOutput()
+
+	errExit(err, "can't remove sha lines from "+src+
+		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
 }
 
 func getSrc(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
@@ -532,7 +605,7 @@ func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	}
 	fd.Close()
 
-	replMap := setReplMap(genC, pkg, pkgC)
+	replMap := setReplMap(genC, pkg, pkgC, pkgC.src)
 	for k, v := range replMap {
 		if k == "<root_dir>" && pkgC.src.srcType == "alpine" {
 			v = pkgC.steps.buildDir + "/rootfs"
@@ -657,19 +730,17 @@ func dumpSHA256(pkg pkgT) {
 		hashes += fmt.Sprintf("%s\t%s\n", sum, file)
 	}
 
-	aggHash := sha256.Sum256([]byte(hashes))
-
 	pathOut := fp.Join(pkg.progDir, "log", pkg.setVerNewRel, "sha256.log")
 	fOut, err := os.Create(pathOut)
 	errExit(err, "can't create hash log file")
 	defer fOut.Close()
 
-	fmt.Fprintf(fOut, "%x\t__aggregate_hash__\n%s", aggHash, hashes)
+	fmt.Fprintf(fOut, "%s", hashes)
 }
 
 // used only during build step
 func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
-	files, err := walkDir(pkg.newPkgDir, "files")
+	files, err := walkDir(pkg.pkgDir, "files")
 
 	sharedLibs := make(map[string]bool)
 	for _, file := range files {
@@ -694,7 +765,7 @@ func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 		return
 	}
 
-	pathOut := fp.Join(pkg.progDir, "log", pkg.setVerNewRel, "shared_libs")
+	pathOut := fp.Join(pkg.progDir, "log", pkg.setVerRel, "shared_libs")
 	fOut, err := os.Create(pathOut)
 	errExit(err, "can't create shared libs file")
 	defer fOut.Close()
@@ -714,7 +785,7 @@ func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 	}
 }
 
-// used only during build step
+// used only during pkg build
 func findLibPath(world map[string]worldT, genC genCfgT, lib string) string {
 	ldSoConf := fp.Join(genC.rootDir, "/etc/ld.so.conf")
 	if !fileExists(ldSoConf) {
@@ -739,8 +810,6 @@ func findLibPath(world map[string]worldT, genC genCfgT, lib string) string {
 }
 
 func cleanup(pkg pkgT, pkgC pkgCfgT) {
-	fmt.Println("  cleaning up...")
-
 	err := os.RemoveAll(pkgC.tmpDir)
 	errExit(err, "can't remove tmp dir")
 

@@ -95,32 +95,18 @@ func protectBaseDir() {
 
 func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
+		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		pkgC := pkgCfgs[i]
-		freshlyBuilt := createPkg(world, genC, pkg, pkgC)
 
-		if freshlyBuilt {
-			// remove the old pkg from world
-			delete(world["/"].pkgs, pkg)
-
-			// clear verRel et al + get new values after the build
+		if pkgC.subPkg {
+			// get the latest subpkg release in case when the main
+			// pkg was rebuilt
 			pkg.setVerRel = ""
-			progPkgDir := fp.Join(pkg.progDir, "pkg")
 			pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-			setVer := pkg.set + "-" + pkg.ver
-			pkg.setVerRel = setVer + "-" + pkg.rel
-			pkg.setVerPrevRel = setVer + "-" + pkg.prevRel
-			pkg.setVerNewRel = setVer + "-" + pkg.newRel
-			pkg.pkgDir = fp.Join(progPkgDir, pkg.setVerRel)
-			pkg.newPkgDir = fp.Join(progPkgDir, pkg.setVerNewRel)
-
-			// add a new pkg to root of the world; no cnt here as
-			// only build step executes this
-			addPkgToWorldT(world, pkg, "/")
-
-			// double check if shared libraries are ok
-			if genC.buildEnv != "bootstrap" {
-				selfLibsExist(world, genC, pkg)
-			}
+			pkg = getPkgSetVers(pkg)
+			pkg = getPkgDirs(pkg)
+		} else {
+			pkg = createPkg(world, genC, pkg, pkgC)
 		}
 
 		if strings.HasSuffix(pkg.set, "_tools_cross") {
@@ -138,6 +124,11 @@ func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs [
 				loc = pkgC.cntProg
 			}
 			addPkgToWorldT(world, pkg, loc)
+
+			// double check if shared libraries are ok
+			if genC.buildEnv != "bootstrap" {
+				selfLibsExist(world, genC, pkg)
+			}
 		}
 	}
 }
@@ -239,7 +230,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		errExit(err, "can't copy /etc/perms file to: "+pkgC.instDir+"/etc")
 	}
 
-	fmt.Println("  installing...")
+	fmt.Printf("  installing %s...\n", pkg.setVerRel)
 
 	// todo: move this out of this function
 	createRootDirs(rootDir)

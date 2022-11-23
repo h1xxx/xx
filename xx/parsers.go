@@ -133,7 +133,8 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 
 func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	var steps stepsT
-	var stepsSl = make(map[string]string)
+	steps.subPkgs = make(map[string][]string)
+	var stepsMap = make(map[string]string)
 	var src srcT
 	var section, step, varsVar string
 	vars := make(map[string]string)
@@ -174,7 +175,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		}
 
 		// replace predefined variables
-		line = replaceIniVars(line, genC, pkg, pkgC)
+		line = replaceIniVars(line, genC, pkg, pkgC, src)
 
 		switch {
 		// start of the new section
@@ -195,7 +196,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 				check["hasSet"] = true
 			}
 
-			if _, done := stepsSl["pkg_create"]; done {
+			if _, done := stepsMap["pkg_create"]; done {
 				break
 			}
 
@@ -204,7 +205,9 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			fileBase := path.Base(str.Split(src.url, " ")[0])
 			src.file = fp.Join(pkg.progDir, "src", fileBase)
 			step = "url"
-			check["hasUrl"] = true
+			if src.url != "" || src.srcType == "files" {
+				check["hasUrl"] = true
+			}
 
 		case section == "src" && str.HasPrefix(line, "src_type = "):
 			src.srcType = str.TrimPrefix(line, "src_type = ")
@@ -235,7 +238,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		case pkg.set == section && startStepLine(line):
 			before, after, found := str.Cut(line, " =")
 			step = before
-			stepsSl[step] = str.Trim(after, " ")
+			stepsMap[step] = str.Trim(after, " ")
 			if !found {
 				msg := "incorrect step in line %d of %s"
 				errExit(fmt.Errorf(msg, i, iniFile), "")
@@ -243,7 +246,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			check["has_"+step] = true
 
 		case pkg.set == section:
-			stepsSl[step] += " " + line
+			stepsMap[step] += " " + line
 		}
 	}
 
@@ -251,7 +254,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		check["nonEmptySrcType"] = true
 	}
 
-	if stepsSl["pkg_create"] != "" || src.srcType == "files" {
+	if stepsMap["pkg_create"] != "" || src.srcType == "files" {
 		check["nonEmptyPkgCreate"] = true
 	}
 
@@ -264,22 +267,29 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	}
 
 	// replace user defined vars in each step
-	for step, val := range stepsSl {
+	for step, val := range stepsMap {
 		for varsVar, varVal := range vars {
-			stepsSl[step] = str.Replace(val, varsVar, varVal, -1)
+			stepsMap[step] = str.Replace(val, varsVar, varVal, -1)
 		}
 	}
 
-	env, err := getIniEnv(stepsSl["env"])
+	env, err := getIniEnv(stepsMap["env"])
 	errExit(err, fmt.Sprintf("incorrect env %s", iniFile))
 
 	steps.env = prepareEnv(env, genC, pkg, pkgC)
 	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
 
-	steps.prepare = stepsSl["prepare"]
-	steps.configure = stepsSl["configure"]
-	steps.build = stepsSl["build"]
-	steps.pkg_create = stepsSl["pkg_create"]
+	steps.prepare = stepsMap["prepare"]
+	steps.configure = stepsMap["configure"]
+	steps.build = stepsMap["build"]
+	steps.pkg_create = stepsMap["pkg_create"]
+
+	for step, val := range stepsMap {
+		if str.HasPrefix(step, "subpkg_") {
+			subPkg := str.TrimPrefix(step, "subpkg_")
+			steps.subPkgs[subPkg] = str.Split(val, " ")
+		}
+	}
 
 	return src, steps
 }
@@ -340,11 +350,16 @@ func startStepLine(line string) bool {
 			return true
 		}
 	}
+
+	if str.HasPrefix(line, "subpkg_") && str.Contains(line, " = ") {
+		return true
+	}
+
 	return false
 }
 
-func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
-	replMap := setReplMap(genC, pkg, pkgC)
+func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) string {
+	replMap := setReplMap(genC, pkg, pkgC, src)
 
 	for k, v := range replMap {
 		if v != "" {
@@ -355,7 +370,7 @@ func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) string {
 	return s
 }
 
-func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT) map[string]string {
+func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) map[string]string {
 	return map[string]string{
 		"<root_dir>":    genC.rootDir,
 		"<prog>":        pkg.prog,
@@ -367,7 +382,7 @@ func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT) map[string]string {
 		"<prog_dir>":    pkg.progDir,
 		"<src_dir>":     fp.Join(pkg.progDir, "src"),
 		"<ver_pkgspec>": getPkgSpecVer(pkg),
-		"<src_path>":    pkgC.src.file,
+		"<src_path>":    src.file,
 		"<tmp_dir>":     pkgC.tmpDir,
 		"<build_dir>":   pkgC.steps.buildDir,
 	}

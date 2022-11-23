@@ -178,15 +178,8 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	fd, err := os.Open(shaLog)
 	errExit(err, "can't open file: "+fd.Name())
 
-	var i int
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		i++
-		// skip first line with aggregate hash
-		if i == 1 {
-			continue
-		}
-
 		split := strings.Split(input.Text(), "\t")
 		file := split[1]
 		hash := split[0]

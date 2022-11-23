@@ -47,7 +47,8 @@ replace walk with faster walkDir
 if sha256.log missing then create it, e.g. for sys/mime-types
 download sys/mime-types from somewhere, rn it's hardcoded in the pkg
 
-add a check in toml parsing to see if all <var_var> variables are converted
+add a check in ini parsing to see if all <var_var> variables are converted
+check if _boostrap and _cross has no subpkg_ step
 
 in .xx files allow spaces
 

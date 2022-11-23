@@ -4,6 +4,6 @@ dev/gmp				musl			latest
 dev/mpfr			musl			latest
 dev/mpc				musl			latest
 text/texinfo			std			latest
-dev/binutils			musl_bootstrap		latest
+dev/binutils			muslbootstrap		latest
 dev/gcc				musl			11.2.0
 

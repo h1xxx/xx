@@ -152,6 +152,7 @@ type pkgT struct {
 // cntPkg	root package for the container
 // cntProg	name of the pkg container in /cnt/rootfs/
 // crossBuild	program is compiled with host tools
+// subPkg	program set is a subpkg created during main build
 //
 // src		struct with source code location and type
 // steps	struct with shell commands to execute
@@ -171,6 +172,7 @@ type pkgCfgT struct {
 	cntPkg     pkgT
 	cntProg    string
 	crossBuild bool
+	subPkg     bool
 
 	src      srcT
 	steps    stepsT
@@ -197,6 +199,8 @@ type srcT struct {
 // stepsT stores shell commands from ini file to be executed in build steps
 // env		environment variables to use during build
 // buildDir	root build dir:	/tmp/xx/build/lvm2-2.35_build-00/lvm2-2.35
+//
+// subPkgs	sub packages to create with files to move from the main pkg
 type stepsT struct {
 	env      []string
 	buildDir string
@@ -205,6 +209,8 @@ type stepsT struct {
 	configure  string
 	build      string
 	pkg_create string
+
+	subPkgs map[string][]string
 }
 
 // reT contains regexes for various checks and subsitutions
@@ -465,14 +471,26 @@ func getPkg(genC genCfgT, name, pkgSet, ver string) pkgT {
 	pkg.verShort = getVerShort(pkg.ver)
 
 	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+	pkg = getPkgSetVers(pkg)
+	pkg = getPkgDirs(pkg)
+
+	return pkg
+}
+
+func getPkgSetVers(pkg pkgT) pkgT {
 	setVer := pkg.set + "-" + pkg.ver
 	pkg.setVerRel = setVer + "-" + pkg.rel
 	pkg.setVerPrevRel = setVer + "-" + pkg.prevRel
 	pkg.setVerNewRel = setVer + "-" + pkg.newRel
 
+	return pkg
+}
+
+func getPkgDirs(pkg pkgT) pkgT {
 	pkg.pkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerRel)
 	pkg.newPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerNewRel)
 	pkg.prevPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerPrevRel)
+
 	cfgDir := fp.Join(pkg.progDir, "cfg", pkg.set+"-"+pkg.ver)
 	if fileExists(cfgDir) {
 		pkg.cfgDir = cfgDir
@@ -512,7 +530,17 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 		pkgC.crossBuild = true
 	}
 
-	pkgC.src, pkgC.steps = parsePkgIni(genC, pkg, pkgC)
+	if strings.Contains(pkg.set, "_") && !pkgC.crossBuild {
+		pkgC.subPkg = true
+		if genC.action == "build" {
+			pkgC.force = false
+		}
+	}
+
+	if !pkgC.subPkg {
+		pkgC.src, pkgC.steps = parsePkgIni(genC, pkg, pkgC)
+	}
+
 	pkgC.cfgFiles = getPkgCfgFiles(genC, pkg)
 
 	_, pkgC.libDeps = getPkgLibDeps(genC, pkg)

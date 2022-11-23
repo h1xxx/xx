@@ -173,6 +173,30 @@ func Cp(src, dest string) {
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
 }
 
+func Mv(src, dest string) {
+	err := os.MkdirAll(fp.Dir(dest), 0750)
+	errExit(err, "can't create dest dir: "+fp.Dir(dest))
+
+	bb := "/home/xx/tools/busybox"
+	c := bb + " mv -f " + src + " " + dest
+
+	cmd := exec.Command(bb, "sh", "-c", c)
+	out, err := cmd.CombinedOutput()
+
+	errExit(err, "can't move "+src+" to "+dest+
+		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+}
+
+func RemEmptyDirs(dir string) {
+	bb := "/home/xx/tools/busybox"
+	c := bb + " rmdir -p --ignore-fail-on-non-empty " + dir
+
+	cmd := exec.Command(bb, "sh", "-c", c)
+	out, err := cmd.CombinedOutput()
+
+	errExit(err, "can't remove empty dir "+dir+"\n"+string(out)+"\n")
+}
+
 func isSymLink(file string) bool {
 	fStat, err := os.Stat(file)
 	if err != nil {
