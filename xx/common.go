@@ -157,8 +157,9 @@ func min(a, b int) int {
 }
 
 func Cp(src, dest string) {
-	err := os.MkdirAll(fp.Dir(dest), 0750)
-	errExit(err, "can't create dest dir: "+fp.Dir(dest))
+	dest = fp.Dir(dest)
+	err := os.MkdirAll(dest, 0750)
+	errExit(err, "can't create dest dir: "+dest)
 
 	bb := "/home/xx/tools/busybox"
 	c := bb + " cp -rf " + src + " " + dest
@@ -174,8 +175,9 @@ func Cp(src, dest string) {
 }
 
 func Mv(src, dest string) {
-	err := os.MkdirAll(fp.Dir(dest), 0750)
-	errExit(err, "can't create dest dir: "+fp.Dir(dest))
+	dest = fp.Dir(dest)
+	err := os.MkdirAll(dest, 0750)
+	errExit(err, "can't create dest dir: "+dest)
 
 	bb := "/home/xx/tools/busybox"
 	c := bb + " mv -f " + src + " " + dest

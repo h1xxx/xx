@@ -200,7 +200,7 @@ type srcT struct {
 // env		environment variables to use during build
 // buildDir	root build dir:	/tmp/xx/build/lvm2-2.35_build-00/lvm2-2.35
 //
-// subPkgs	sub packages to create with files to move from the main pkg
+// subPkgs	sub packages to create with files moved from the main pkg
 type stepsT struct {
 	env      []string
 	buildDir string
@@ -210,7 +210,12 @@ type stepsT struct {
 	build      string
 	pkg_create string
 
-	subPkgs map[string][]string
+	subPkgs []subPkgT
+}
+
+type subPkgT struct {
+	suffix string
+	files  []string
 }
 
 // reT contains regexes for various checks and subsitutions

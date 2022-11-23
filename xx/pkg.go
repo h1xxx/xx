@@ -46,16 +46,16 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 		fmt.Println("! pkg empty:", pkg.newPkgDir)
 	}
 
-	for suffix, files := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, suffix)
+	for _, s := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, s.suffix)
 		fmt.Printf("  creating subpkg %s...\n", subPkg.set)
-		createSubPkg(pkg, subPkg, files)
+		createSubPkg(pkg, subPkg, s.files)
 	}
 
 	// remove old pkg from world
 	delete(world["/"].pkgs, pkg)
-	for suffix, _ := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, suffix)
+	for _, s := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, s.suffix)
 		delete(world["/"].pkgs, subPkg)
 	}
 
@@ -68,8 +68,8 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 	// add a new pkg and all subpkgs to root of the world;
 	// no cnt here as only build step executes this
 	addPkgToWorldT(world, pkg, "/")
-	for suffix, _ := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, suffix)
+	for _, s := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, s.suffix)
 		addPkgToWorldT(world, subPkg, "/")
 	}
 
@@ -77,8 +77,8 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 	if !pkgC.crossBuild {
 		dumpSharedLibs(world, genC, pkg)
 	}
-	for suffix, _ := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, suffix)
+	for _, s := range pkgC.steps.subPkgs {
+		subPkg := getSubPkg(pkg, s.suffix)
 		dumpSharedLibs(world, genC, subPkg)
 		selfLibsExist(world, genC, subPkg)
 	}

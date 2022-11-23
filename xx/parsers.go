@@ -133,7 +133,6 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 
 func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	var steps stepsT
-	steps.subPkgs = make(map[string][]string)
 	var stepsMap = make(map[string]string)
 	var src srcT
 	var section, step, varsVar string
@@ -286,8 +285,10 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 
 	for step, val := range stepsMap {
 		if str.HasPrefix(step, "subpkg_") {
-			subPkg := str.TrimPrefix(step, "subpkg_")
-			steps.subPkgs[subPkg] = str.Split(val, " ")
+			var subPkg subPkgT
+			subPkg.suffix = str.TrimPrefix(step, "subpkg_")
+			subPkg.files = str.Split(val, " ")
+			steps.subPkgs = append(steps.subPkgs, subPkg)
 		}
 	}
 
