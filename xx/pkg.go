@@ -605,7 +605,7 @@ func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	}
 	fd.Close()
 
-	replMap := setReplMap(genC, pkg, pkgC, pkgC.src)
+	replMap := setReplMap(genC, pkg, pkgC, pkgC.src, pkgC.steps)
 	for k, v := range replMap {
 		if k == "<root_dir>" && pkgC.src.srcType == "alpine" {
 			v = pkgC.steps.buildDir + "/rootfs"
@@ -816,7 +816,9 @@ func cleanup(pkg pkgT, pkgC pkgCfgT) {
 	pkgFiles, err := walkDir(pkg.newPkgDir, "files")
 	errExit(err, "can't read pkg files")
 
-	rmStaticLibs(&pkgFiles, pkgC.crossBuild)
+	if !pkgC.crossBuild && !pkgC.muslBuild {
+		rmStaticLibs(&pkgFiles)
+	}
 	stripDebug(&pkgFiles, pkg)
 
 	rmEmptyLogs(pkg)
@@ -897,9 +899,9 @@ func saveHelp(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	}
 }
 
-func rmStaticLibs(pkgFiles *[]string, crossBuild bool) {
+func rmStaticLibs(pkgFiles *[]string) {
 	for _, file := range *pkgFiles {
-		if !crossBuild && strings.HasSuffix(file, ".la") {
+		if strings.HasSuffix(file, ".la") {
 			err := os.Remove(file)
 			errExit(err, "can't remove "+file)
 		}

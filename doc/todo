@@ -1,3 +1,6 @@
+cnt: add cnt-mpv command to start a shell with all devices mounted in the cnt
+cnt: fix how files are passed to the cnt
+
 rem pkg and subpkg in case of errors in creating subpkg
 
 deploy default config files to usr//cnt/./home do use when no /var/lib/.
@@ -5,6 +8,7 @@ deploy default config files to usr//cnt/./home do use when no /var/lib/.
 place default configs in a file (flags, env etc.), read defaults into genC
 
 add option to remove all not installed files
+
 
 finish perl musl pkg, probably needs gcc to be compiled with musl for c++, which
 needs a separate musl environment; remove /bin/perl workarounds from .toml files
@@ -49,6 +53,8 @@ download sys/mime-types from somewhere, rn it's hardcoded in the pkg
 
 add a check in ini parsing to see if all <var_var> variables are converted
 check if _boostrap and _cross has no subpkg_ step
+add a check if user var is not a reserved var
+check if all steps are there
 
 in .xx files allow spaces
 

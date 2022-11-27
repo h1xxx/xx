@@ -152,6 +152,7 @@ type pkgT struct {
 // cntPkg	root package for the container
 // cntProg	name of the pkg container in /cnt/rootfs/
 // crossBuild	program is compiled with host tools
+// muslBuild	program is compiled in musl libc environment
 // subPkg	program set is a subpkg created during main build
 //
 // src		struct with source code location and type
@@ -172,6 +173,7 @@ type pkgCfgT struct {
 	cntPkg     pkgT
 	cntProg    string
 	crossBuild bool
+	muslBuild  bool
 	subPkg     bool
 
 	src      srcT
@@ -533,6 +535,10 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 
 	if strings.HasSuffix(pkg.set, "_cross") {
 		pkgC.crossBuild = true
+	}
+
+	if strings.HasPrefix(pkg.set, "musl") || genC.buildEnv == "init_musl" {
+		pkgC.muslBuild = true
 	}
 
 	if strings.Contains(pkg.set, "_") && !pkgC.crossBuild {

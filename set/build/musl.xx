@@ -1,9 +1,0 @@
-# binutils and gcc don't compile yet
-# todo: make it compile
-dev/gmp				musl			latest
-dev/mpfr			musl			latest
-dev/mpc				musl			latest
-text/texinfo			std			latest
-dev/binutils			muslbootstrap		latest
-dev/gcc				musl			11.2.0
-

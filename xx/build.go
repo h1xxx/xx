@@ -39,6 +39,7 @@ func buildSetFile(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []
 	baseLinkFile := fp.Join(genC.rootDir, "base_linked")
 	baseLinked := fileExists(baseLinkFile)
 	baseBuild := genC.buildEnv == "base"
+	baseBuild = baseBuild || strings.Contains(genC.buildEnv, "musl")
 	alpineBuild := pkgs[0].categ == "alpine"
 
 	// base env must exist first
@@ -67,7 +68,7 @@ func buildSetFile(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []
 	fmt.Printf("\033[01m* processing %s...\033[00m\n", genC.setFileName)
 	buildInstPkgs(world, genC, pkgs, pkgCfgs)
 
-	if baseBuild {
+	if baseBuild && !strings.Contains(genC.buildEnv, "musl") {
 		protectBaseDir()
 	}
 }

@@ -148,16 +148,28 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 	var envOut []string
 	envMap := make(map[string]string)
 
-	if pkgC.crossBuild {
+	switch {
+	case !pkgC.muslBuild && pkgC.crossBuild:
 		envMap["PATH"] = genC.rootDir
 		envMap["PATH"] += "/tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-gnu"
-	} else {
+
+	case !pkgC.muslBuild:
 		envMap["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
+
+	case genC.buildEnv == "init_musl":
+		envMap["PATH"] = genC.rootDir + "/tools/bin"
+		envMap["PATH"] += ":" + genC.rootDir + "/cross_tools/bin"
+		envMap["PATH"] += ":/bin:/sbin:/usr/bin:/usr/sbin"
+		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-musl"
+
+	case pkgC.muslBuild:
+		envMap["PATH"] = "/bin:/sbin"
+		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-musl"
 	}
 
-	if !pkgC.crossBuild {
+	if !pkgC.crossBuild || pkgC.muslBuild {
 		envMap["CFLAGS"] = "-O2 -pipe -fpie -fPIE " +
 			"-fstack-protector-strong " +
 			"-fstack-clash-protection -Wformat " +
@@ -166,9 +178,13 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 		envMap["LDFLAGS"] = "-Wl,-z,now -Wl,-z,relro -Wl,-z,noexecstack"
 	}
 
-	if pkg.set == "musl" {
+	if pkgC.muslBuild && !pkgC.crossBuild {
+		envMap["CFLAGS"] += " -static-pie"
+	}
+
+	if pkgC.muslBuild && !pkgC.crossBuild {
 		envMap["PKG_CONFIG_PATH"] = "/lib/pkgconfig"
-	} else {
+	} else if !pkgC.crossBuild {
 		envMap["PKG_CONFIG_PATH"] = "/usr/lib/pkgconfig"
 	}
 

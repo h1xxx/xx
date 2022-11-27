@@ -174,7 +174,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		}
 
 		// replace predefined variables
-		line = replaceIniVars(line, genC, pkg, pkgC, src)
+		line = replaceIniVars(line, genC, pkg, pkgC, src, steps)
 
 		switch {
 		// start of the new section
@@ -224,7 +224,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 
 		case section == "vars" && str.HasPrefix(line, "var "):
 			before, after, found := str.Cut(line, " = ")
-			varsVar = before
+			varsVar = str.TrimPrefix(before, "var ")
 			vars[varsVar] = after
 			if !found {
 				msg := "incorrect var name in line %d of %s"
@@ -249,6 +249,11 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		}
 	}
 
+	if !check["hasSet"] {
+		msg := "config set %s missing in %s"
+		errExit(fmt.Errorf(msg, pkg.set, iniFile), "")
+	}
+
 	if src.srcType != "" {
 		check["nonEmptySrcType"] = true
 	}
@@ -268,6 +273,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	// replace user defined vars in each step
 	for step, val := range stepsMap {
 		for varsVar, varVal := range vars {
+			varsVar = "<" + varsVar + ">"
 			stepsMap[step] = str.Replace(val, varsVar, varVal, -1)
 		}
 	}
@@ -277,6 +283,11 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 
 	steps.env = prepareEnv(env, genC, pkg, pkgC)
 	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
+
+	// replace distro defined vars in each step (replaces <build_dir>)
+	for step, val := range stepsMap {
+		stepsMap[step] = replaceIniVars(val, genC, pkg, pkgC, src, steps)
+	}
 
 	steps.prepare = stepsMap["prepare"]
 	steps.configure = stepsMap["configure"]
@@ -359,8 +370,9 @@ func startStepLine(line string) bool {
 	return false
 }
 
-func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) string {
-	replMap := setReplMap(genC, pkg, pkgC, src)
+func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT,
+	steps stepsT) string {
+	replMap := setReplMap(genC, pkg, pkgC, src, steps)
 
 	for k, v := range replMap {
 		if v != "" {
@@ -371,7 +383,7 @@ func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) st
 	return s
 }
 
-func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) map[string]string {
+func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT, steps stepsT) map[string]string {
 	return map[string]string{
 		"<root_dir>":    genC.rootDir,
 		"<prog>":        pkg.prog,
@@ -385,7 +397,7 @@ func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT) map[string]strin
 		"<ver_pkgspec>": getPkgSpecVer(pkg),
 		"<src_path>":    src.file,
 		"<tmp_dir>":     pkgC.tmpDir,
-		"<build_dir>":   pkgC.steps.buildDir,
+		"<build_dir>":   steps.buildDir,
 	}
 }
 

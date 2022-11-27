@@ -1,0 +1,26 @@
+#dev/binutils			initmusl		latest
+#dev/gmp				initmusl		latest
+#dev/mpfr			initmusl		latest
+#dev/mpc				initmusl		latest
+#arch/zlib			initmusl		latest
+#arch/gzip			initmusl		latest
+#arch/bzip2			initmusl		latest
+#arch/xz				initmusl		latest
+#arch/zstd			initmusl		latest
+#arch/tar			initmusl		latest
+#dev/gcc				initmusl		12.2.0	f
+
+# tools in /cross_tools used to create /tools
+sys/linux			musl_headers_1_cross	latest
+dev/binutils			musl_1_cross		latest
+dev/gcc				musl_1_cross		11.2.0
+dev/musl			musl_1_cross		latest
+dev/gcc				musl_2_cross		11.2.0
+sys/file			musl_cross		latest
+
+
+# tools in /tools
+dev/musl			musl_2_cross		latest
+dev/binutils			musl_2_cross		latest
+dev/gcc				musl_3_cross		11.2.0	f
+sys/linux			musl_headers_2_cross	latest
