@@ -22,5 +22,5 @@ sys/file			musl_cross		latest
 # tools in /tools
 dev/musl			musl_2_cross		latest
 dev/binutils			musl_2_cross		latest
-dev/gcc				musl_3_cross		11.2.0	f
+dev/gcc				musl_3_cross		11.2.0
 sys/linux			musl_headers_2_cross	latest
