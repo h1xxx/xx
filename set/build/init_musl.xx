@@ -1,26 +1,59 @@
-#dev/binutils			initmusl		latest
-#dev/gmp				initmusl		latest
-#dev/mpfr			initmusl		latest
-#dev/mpc				initmusl		latest
-#arch/zlib			initmusl		latest
-#arch/gzip			initmusl		latest
-#arch/bzip2			initmusl		latest
-#arch/xz				initmusl		latest
-#arch/zstd			initmusl		latest
-#arch/tar			initmusl		latest
-#dev/gcc				initmusl		12.2.0	f
-
-# tools in /cross_tools used to create /tools
+# linked to host libc tools in /cross_tools that are used to create /tools
 sys/linux			musl_headers_1_cross	latest
 dev/binutils			musl_1_cross		latest
 dev/gcc				musl_1_cross		11.2.0
 dev/musl			musl_1_cross		latest
 dev/gcc				musl_2_cross		11.2.0
-sys/file			musl_cross		latest
+#sys/file			musl_1_cross		latest
 
-
-# tools in /tools
+# static, musl-based programs in /tools, cross-compiled from cross_tools
 dev/musl			musl_2_cross		latest
 dev/binutils			musl_2_cross		latest
 dev/gcc				musl_3_cross		11.2.0
 sys/linux			musl_headers_2_cross	latest
+dev/m4				musl_cross		latest
+sys/bash			musl_cross		latest
+sys/coreutils			musl_cross		latest
+sys/diffutils			musl_cross		latest
+sys/file			musl_2_cross		latest
+sys/findutils			musl_cross		latest
+text/gawk			musl_cross		latest
+text/grep			musl_cross		latest
+arch/gzip			musl_cross		latest
+dev/make			musl_cross		latest
+dev/patch			musl_cross		latest
+text/sed			musl_cross		latest
+arch/tar			musl_cross		latest
+arch/xz				musl_cross		latest
+arch/zstd			musl_cross		latest
+
+# here starts the build of pkgs in an isolated container with destdir '/'
+#dev/bison			musl_init			latest
+#lang/perl			musl_init			latest
+#lang/python			musl_init			latest
+#sys/shadow			musl_init			latest
+#sys/util-linux			musl_init			latest
+#text/man-pages			musl_init			latest
+#sys/iana-etc			musl_init			latest
+#dev/glibc			musl_init			latest
+#sys/tzdata			musl_init			latest
+#arch/zlib			musl_init			latest
+#arch/bzip2			musl_init			latest
+#arch/xz				musl_init			latest
+#arch/zstd			musl_init			latest
+#sys/file			musl_init			latest
+#dev/readline			musl_init			latest
+#dev/m4				musl_init			latest
+#lang/bc				musl_init			latest
+#dev/flex			musl_init			latest
+#lang/tcl			musl_init			latest
+#dev/expect			musl_init			latest
+#dev/dejagnu			musl_init			latest
+#text/texinfo			musl_init			latest
+#dev/binutils			musl_init			latest
+#dev/gmp				musl_init			latest
+#dev/mpfr			musl_init			latest
+#dev/mpc				musl_init			latest
+#dev/gcc				musl_init			latest
+#sys/bash			musl_init			latest
+#lang/go				musl_init			latest

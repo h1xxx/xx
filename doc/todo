@@ -5,6 +5,8 @@ rem pkg and subpkg in case of errors in creating subpkg
 
 deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
+warn about "configure: WARNING: unrecognized options: --disable-shared"
+
 place default configs in a file (flags, env etc.), read defaults into genC
 
 add option to remove all not installed files
