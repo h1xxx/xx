@@ -27,33 +27,34 @@ arch/tar			musl_cross		latest
 arch/xz				musl_cross		latest
 arch/zstd			musl_cross		latest
 
-# here starts the build of pkgs in an isolated container with destdir '/'
-#dev/bison			musl_init			latest
-#lang/perl			musl_init			latest
-#lang/python			musl_init			latest
-#sys/shadow			musl_init			latest
-#sys/util-linux			musl_init			latest
-#text/man-pages			musl_init			latest
-#sys/iana-etc			musl_init			latest
-#dev/glibc			musl_init			latest
-#sys/tzdata			musl_init			latest
-#arch/zlib			musl_init			latest
-#arch/bzip2			musl_init			latest
-#arch/xz				musl_init			latest
-#arch/zstd			musl_init			latest
-#sys/file			musl_init			latest
-#dev/readline			musl_init			latest
-#dev/m4				musl_init			latest
-#lang/bc				musl_init			latest
-#dev/flex			musl_init			latest
-#lang/tcl			musl_init			latest
-#dev/expect			musl_init			latest
-#dev/dejagnu			musl_init			latest
-#text/texinfo			musl_init			latest
-#dev/binutils			musl_init			latest
-#dev/gmp				musl_init			latest
-#dev/mpfr			musl_init			latest
-#dev/mpc				musl_init			latest
-#dev/gcc				musl_init			latest
-#sys/bash			musl_init			latest
-#lang/go				musl_init			latest
+# here starts the build of pkgs in an isolated container with destdir '/';
+# /cross_tools is removed from PATH, only /tools is used
+# first package also creates necessary links from /tools to /
+sys/linux			musl_headers_init	latest
+dev/musl			musl			latest
+dev/bison			musl			latest
+lang/perl			musl			latest
+lang/python			musl_init		latest
+sys/shadow			musl			latest
+sys/util-linux			musl			latest
+sys/coreutils			musl			latest
+sys/iana-etc			std			latest
+sys/tzdata			musl			latest
+arch/zlib			musl			latest
+arch/bzip2			musl			latest
+arch/xz				musl			latest
+arch/zstd			musl			latest
+sys/file			musl_init		latest
+dev/readline			musl_init		latest
+dev/m4				musl			latest
+lang/bc				musl			latest
+dev/flex			musl			latest
+text/texinfo			musl			latest
+dev/git				musl_init		latest
+dev/binutils			musl			latest
+dev/gmp				musl			latest
+dev/mpfr			musl			latest
+dev/mpc				musl			latest
+dev/gcc				musl			11.2.0
+sys/bash			musl_init		latest
+lang/go				musl_init		latest

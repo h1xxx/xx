@@ -11,6 +11,7 @@ place default configs in a file (flags, env etc.), read defaults into genC
 
 add option to remove all not installed files
 
+add verbose flag to the build step that shows also files, dirs, and their sizes
 
 finish perl musl pkg, probably needs gcc to be compiled with musl for c++, which
 needs a separate musl environment; remove /bin/perl workarounds from .toml files

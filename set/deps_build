@@ -636,9 +636,10 @@ dev/binutils				std			latest
 	text/texinfo			std			latest
 	arch/zlib			std			latest
 
-#dev/binutils				musl			latest
-#	text/texinfo			musl			latest
-#	arch/zlib			musl			latest
+dev/binutils				musl			latest
+	text/texinfo			musl			latest
+	arch/zlib			musl			latest
+	dev/git				musl			latest
 
 #text/texinfo				musl			latest
 #	lang/perl			musl			latest

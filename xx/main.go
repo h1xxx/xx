@@ -537,11 +537,12 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 		pkgC.crossBuild = true
 	}
 
-	if strings.HasPrefix(pkg.set, "musl") || genC.buildEnv == "init_musl" {
+	if strings.HasPrefix(pkg.set, "musl") {
 		pkgC.muslBuild = true
 	}
 
-	if strings.Contains(pkg.set, "_") && !pkgC.crossBuild {
+	initPkg := strings.HasSuffix(pkg.set, "_init")
+	if strings.Contains(pkg.set, "_") && !pkgC.crossBuild && !initPkg {
 		pkgC.subPkg = true
 		if genC.action == "build" {
 			pkgC.force = false

@@ -250,7 +250,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	}
 
 	if !check["hasSet"] {
-		msg := "config set %s missing in %s"
+		msg := "config set '%s' missing in %s"
 		errExit(fmt.Errorf(msg, pkg.set, iniFile), "")
 	}
 
@@ -271,10 +271,11 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	}
 
 	// replace user defined vars in each step
-	for step, val := range stepsMap {
+	for step, _ := range stepsMap {
 		for varsVar, varVal := range vars {
 			varsVar = "<" + varsVar + ">"
-			stepsMap[step] = str.Replace(val, varsVar, varVal, -1)
+			stepsMap[step] = str.Replace(stepsMap[step],
+				varsVar, varVal, -1)
 		}
 	}
 

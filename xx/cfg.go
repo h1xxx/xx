@@ -158,11 +158,15 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 		envMap["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
 
-	case genC.buildEnv == "init_musl":
+	case genC.buildEnv == "init_musl" && pkgC.crossBuild:
 		envMap["PATH"] = genC.rootDir + "/tools/bin"
 		envMap["PATH"] += ":" + genC.rootDir + "/cross_tools/bin"
 		envMap["PATH"] += ":/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-musl"
+
+	case genC.buildEnv == "init_musl" && !pkgC.crossBuild:
+		envMap["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin:/tools/bin"
+		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-musl"
 
 	case pkgC.muslBuild:
 		envMap["PATH"] = "/bin:/sbin"
@@ -179,7 +183,8 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 	}
 
 	if pkgC.muslBuild && !pkgC.crossBuild {
-		envMap["CFLAGS"] += " -static-pie"
+		envMap["CFLAGS"] += " -static-pie -I/include"
+		envMap["CXXFLAGS"] += " -static-pie -I/include"
 	}
 
 	if pkgC.muslBuild && !pkgC.crossBuild {

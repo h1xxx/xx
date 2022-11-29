@@ -127,7 +127,7 @@ func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs [
 			addPkgToWorldT(world, pkg, loc)
 
 			// double check if shared libraries are ok
-			if genC.buildEnv != "bootstrap" {
+			if genC.buildEnv != "bootstrap" && !pkgC.muslBuild {
 				selfLibsExist(world, genC, pkg)
 			}
 		}
@@ -235,6 +235,11 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 
 	// todo: move this out of this function
 	createRootDirs(rootDir)
+
+	// don't install dummy pkg creating temporary links during bootstrap
+	if pkg.set == "musl_init" && pkgC.src.srcType == "files" {
+		return
+	}
 
 	busybox := "/home/xx/tools/busybox"
 	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + pkgC.instDir
