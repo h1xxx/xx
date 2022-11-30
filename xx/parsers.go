@@ -137,6 +137,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	var src srcT
 	var section, step, varsVar string
 	vars := make(map[string]string)
+	set := pkg.set
 
 	check := map[string]bool{
 		"hasSrc":            false,
@@ -191,7 +192,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 				check["hasSrc"] = true
 			case "vars":
 				check["hasVars"] = true
-			case pkg.set:
+			case set:
 				check["hasSet"] = true
 			}
 
@@ -225,6 +226,10 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		case section == "vars" && str.HasPrefix(line, "var "):
 			before, after, found := str.Cut(line, " = ")
 			varsVar = str.TrimPrefix(before, "var ")
+			if varsVar == "pkgset_"+set {
+				set = after
+				continue
+			}
 			vars[varsVar] = after
 			if !found {
 				msg := "incorrect var name in line %d of %s"
@@ -234,7 +239,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		case section == "vars":
 			vars[varsVar] += " " + line
 
-		case pkg.set == section && startStepLine(line):
+		case set == section && startStepLine(line):
 			before, after, found := str.Cut(line, " =")
 			step = before
 			stepsMap[step] = str.Trim(after, " ")
@@ -244,7 +249,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 			}
 			check["has_"+step] = true
 
-		case pkg.set == section:
+		case set == section:
 			stepsMap[step] += " " + line
 		}
 	}
