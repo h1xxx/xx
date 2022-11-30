@@ -9,6 +9,8 @@ build sets
 - mode must be defined in pkg .toml file in square brackets
 - special varialbe definition is 'var pkgset_<set> = <set2>'; it defines a pkg
   set as exactly the same as another one, e.g. 'var pkgset_musl_init = musl'
+- special step for creating subpkgs example:
+	subpkg_headers = /usr/include /include/*.h
 
 
 

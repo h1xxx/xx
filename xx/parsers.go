@@ -131,7 +131,8 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 	return binCnt, cntIP
 }
 
-func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
+// returns src, steps and isSubPkg
+func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	var steps stepsT
 	var stepsMap = make(map[string]string)
 	var src srcT
@@ -255,6 +256,13 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 	}
 
 	if !check["hasSet"] {
+		// check if it's not a sub pkg before throwing an error
+		setFields := str.Split(set, "_")
+		for step, _ := range stepsMap {
+			if step == "subpkg_"+setFields[len(setFields)-1] {
+				return src, steps, true
+			}
+		}
 		msg := "config set '%s' missing in %s"
 		errExit(fmt.Errorf(msg, pkg.set, iniFile), "")
 	}
@@ -309,7 +317,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT) {
 		}
 	}
 
-	return src, steps
+	return src, steps, false
 }
 
 func getIniEnv(s string) ([]string, error) {

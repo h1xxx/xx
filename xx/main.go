@@ -541,18 +541,7 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 		pkgC.muslBuild = true
 	}
 
-	initPkg := strings.HasSuffix(pkg.set, "_init")
-	if strings.Contains(pkg.set, "_") && !pkgC.crossBuild && !initPkg {
-		pkgC.subPkg = true
-		if genC.action == "build" {
-			pkgC.force = false
-		}
-	}
-
-	if !pkgC.subPkg {
-		pkgC.src, pkgC.steps = parsePkgIni(genC, pkg, pkgC)
-	}
-
+	pkgC.src, pkgC.steps, pkgC.subPkg = parsePkgIni(genC, pkg, pkgC)
 	pkgC.cfgFiles = getPkgCfgFiles(genC, pkg)
 
 	_, pkgC.libDeps = getPkgLibDeps(genC, pkg)
