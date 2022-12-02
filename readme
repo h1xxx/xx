@@ -1,46 +1,61 @@
-
+============
 ---- xx ----
 ============
+
 
 
 general info
 ============
 
-A source-based Linux distro with emphasis on console, security, and simplicity.
+A source-based linux distro with emphasis on console, security, and simplicity.
 
 WARNING: xx is in early stages of development. Everything should work, but not
 necessarily. The documentation is also not guaranteed to be updated.
+
+If for some reason you'd like to run this distro please let me know - I will
+double check if everything compiles as expected and update the docs.
 
 
 
 features
 ========
 
-* Linux console as the main working environment
++ linux console as the main working environment
+  - desktop environment: tmux
+  - multimedia packages compiled without xorg support, but instead with
+    drm/framebuffer support
+  - xorg with a shell in dwm/st readily available from a container, but
+    mostly only to connect to qemu virtual machines via vnc or spice
+  - large gui programs (firefox, libreoffice, gimp etc.) expected to be run
+    temporarily and in a single window mode with seamless switching between
+    xorg and linux console (work in progress)
 
-* security
-  - minimizing attack-surface by compiling only needed features in programs
-    and in kernel
-  - programs transparently executed in separate containers with restricted
-    network access
-  - designed for a single user - limited use of suid binaries
-  - hardened compiler flags
-
-* flexibility
-  - git compatible configuration of all the components for multiple machines:
-    kernels, programs, permissions, etc.
-  - designed for easy and reproducible deployments
-  - available binary packages from alpine and arch Linux
-  - quickly available reproducible build environments
-
-* clean system
-  - minimal system without many widely used packages (sudo, nls, pam etc.)
-  - complex software deployed to containers
++ clean system
+  - lean, statically compiled, musl-based main system
+  - complex, glibc-based software (xorg, mpv, w3m etc.) deployed to containers
+  - minimal system without many packages unnecessary from a single user
+    perspective (sudo, nls, pam etc.)
   - designed for relatively low maintenance 
 
-* self-reliance
++ security
+  - minimizing attack-surface by radically reducing compiled features in
+    programs and in the kernel
+  - programs transparently executed in separate containers with restricted
+    network access when not needed
+  - designed for a single user - very limited use of suid binaries
+  - hardened compiler flags
+
++ flexibility
+  - git compatible configuration of all the components for multiple machines:
+    kernels, programs, permissions, etc.
+  - designed for easy, quick and reproducible, local and remote deployments
+  - available binary packages from alpine and arch linux (work in progress)
+  - quickly available, containerized and reproducible build environments
+
++ self-reliance
   - keeping all the source code and packages locally
-  - builds without network connection
+  - main system bootstrapped from c
+  - local, containerized builds without any network connection
 
 
 
@@ -50,34 +65,36 @@ support
 Unfortunately there is no support available for this distro. Users are expected
 to investigate and fix issues with their setup by themselves.
 
-Documentation requests and git patches are very much welcomed. Contact via irc
-on linuxconsole.net.
+Documentation requests and patches are very much welcomed.
+
+Contact via irc on linuxconsole.net.
 
 
 
 inspiration
 ===========
 
-* ms-dos
++ ms-dos
   - text-based user interface
   - each program is self-contained
   - graphical programs taking over the whole screen
+  - designed primarily for an offline use
 
-* gentoo
++ qubes
+  - radical process separation
+
++ gentoo
   - compile flags and dependency info on package-flag combinations
   - recipes for package compilation
 
-* linux from scratch
++ linux from scratch
   - cross compilation of initial toolchain and the final system afterwards
   - a lot of good info for many packages
 
-* oasis, sabotage
-  - musl recipes for package compilation
-  - general idea for a low maintenance distro
++ oasis, sabotage, alpine, void
+  - musl recipes and patches
+  - general idea for a low maintenance and lean distro
 
-* qubes
-  - radical process separation
-
-* openBSD, suckless, musl
++ openBSD, suckless software, musl
   - simplicity and elegance
 
