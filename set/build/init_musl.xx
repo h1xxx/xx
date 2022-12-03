@@ -4,7 +4,6 @@ dev/binutils			musl_1_cross		latest
 dev/gcc				musl_1_cross		11.2.0
 dev/musl			musl_1_cross		latest
 dev/gcc				musl_2_cross		11.2.0
-#sys/file			musl_1_cross		latest
 
 # static, musl-based programs in /tools, cross-compiled from cross_tools
 dev/musl			musl_2_cross		latest
@@ -34,21 +33,35 @@ sys/linux			musl_headers_init	latest
 dev/musl			musl_init		latest
 dev/bison			musl_init		latest
 lang/perl			musl_init		latest
-lang/python			musl_init		latest
 sys/shadow			musl_init		latest
 sys/util-linux			musl_init		latest
 sys/coreutils			musl_init		latest
+sys/diffutils			musl_init		latest
+sys/findutils			musl_init		latest
 sys/iana-etc			std			latest
 sys/tzdata			musl_init		latest
 arch/zlib			musl_init		latest
 arch/bzip2			musl_init		latest
 arch/xz				musl_init		latest
 arch/zstd			musl_init		latest
+arch/gzip			musl_init		latest
+arch/tar			musl_init		latest
+text/gawk			musl_init		latest
+text/grep			musl_init		latest
+text/sed			musl_init		latest
+dev/make			musl_init		latest
+dev/patch			musl_init		latest
 sys/file			musl_init		latest
 dev/readline			musl_init		latest
 dev/m4				musl_init		latest
+dev/autoconf			musl_init		latest
+dev/automake			musl_init		latest
+dev/libtool			musl_init		latest
+dev/pkgconf			musl_init		latest
 lang/bc				musl_init		latest
 dev/flex			musl_init		latest
+dev/gettext			musl_init		latest
+text/help2man			musl_init		latest
 text/texinfo			musl_init		latest
 dev/git				musl_init		latest
 dev/binutils			musl_init		latest

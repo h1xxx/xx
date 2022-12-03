@@ -1,8 +1,0 @@
-dev/musl			initmusl		latest
-dev/binutils			initmusl		latest
-dev/gmp				initmusl		latest
-dev/mpfr			initmusl		latest
-dev/mpc				initmusl		latest
-dev/gcc				initmusl		12.2.0
-
-dev/musl			musl			latest

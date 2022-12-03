@@ -16,6 +16,8 @@ add verbose flag to the build step that shows also files, dirs, and their sizes
 finish perl musl pkg, probably needs gcc to be compiled with musl for c++, which
 needs a separate musl environment; remove /bin/perl workarounds from .toml files
 
+cp INSTALL file if no  config-help available
+
 ncurses musl needs terminfo to be copied to /share, maybe reuse the one from std
 
 fix checksec /bin/bash with musl
@@ -23,6 +25,8 @@ fix checksec /bin/bash with musl
 args check: root dir parameter must be an absolute path
 
 move ld-linux-x86-64.so.2 linking to the pkg from xx/*.go
+
+subpkg can't end in _cross and _init
 
 design methods around worldT struct
 move genC params into worldT

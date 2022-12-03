@@ -1,0 +1,159 @@
+# base set of pkgs build from init toolchain or from existing base set
+
+# libc and a compiler
+dev/musl			musl			latest
+dev/musl-fts			musl			latest
+dev/musl-obstack		musl			latest
+dev/argp-standalone		musl			latest
+dev/gcc				musl			11.2.0
+
+# some sys libs and tools
+sys/busybox			musl			latest
+sys/coreutils			musl			latest
+dev/pkgconf			musl			latest
+arch/zlib			musl			latest
+dev/ncurses			musl			latest
+dev/readline			musl			latest
+
+# archiving programs
+arch/gzip			musl			latest
+arch/bzip2			musl			latest
+arch/xz				musl			latest
+arch/zstd			musl			latest
+arch/tar			musl			latest
+arch/cpio			musl			latest
+
+# dev tools and libs
+dev/gmp				musl			latest
+dev/mpfr			musl			latest
+dev/mpc				musl			latest
+dev/expat			musl			latest
+dev/libpipeline			musl			latest
+dev/elfutils			musl			latest
+dev/libffi			musl			latest
+dev/mpdecimal			musl			latest
+dev/gperf			musl			latest
+lang/bc				musl			latest
+dev/gettext			musl			latest
+text/help2man			musl			latest
+text/texinfo			musl			latest
+dev/binutils			musl			latest
+dev/bison			musl			latest
+dev/flex			musl			latest
+dev/m4				musl			latest
+
+# shell
+sys/bash			musl			latest
+sys/which			musl			latest
+
+# /etc, /usr/share
+sys/iana-etc			std			latest
+sys/tzdata			musl			latest
+sys/mime-types			std			latest
+
+# sys libs
+sys/linux			musl_headers		latest
+sys/gdbm			musl			latest
+sys/libseccomp			musl			latest
+crypt/openssl			musl			latest
+
+# core system tools
+sys/diffutils			musl			latest
+sys/findutils			musl			latest
+text/gawk			musl			latest
+text/grep			musl			latest
+text/sed			musl			latest
+sys/shadow			musl			latest
+sys/util-linux			musl			latest
+sys/kmod			musl			latest
+text/groff			musl			latest
+
+# languages
+lang/tcl			musl			latest
+dev/expect			musl			latest
+lang/perl			musl			latest
+libperl/XML-Parser		musl			latest
+lang/nasm			musl			latest
+lang/go				musl			latest
+
+# network tools and libs
+crypt/libressl 			cert_pem		latest
+net/libpcap			musl			latest
+net/libnfnetlink		musl			latest
+net/libmnl			musl			latest
+net/libnetfilter_conntrack	musl			latest
+net/libnet			musl			latest
+net/libbpf			musl			latest
+net/libnl			musl			latest
+sys/iptables			musl			latest
+sys/openssh			musl			latest
+sys/iproute2			musl			latest	f
+
+# dev tools
+#text/asciidoc			musl			latest
+#dev/make			musl			latest
+#dev/patch			musl			latest
+#dev/libtool			musl			latest
+#dev/autoconf			musl			latest
+#dev/automake			musl			latest
+#dev/ninja			musl			latest
+#dev/meson			musl			latest
+#dev/cmake			musl			latest
+#dev/strace			musl			latest
+#text/doxygen			musl			latest
+#net/curl			musl			latest
+#dev/git				musl			latest
+#text/libpcre2			musl			latest
+#dev/ctags			musl			latest
+
+# system tools
+#sys/kbd				musl			latest
+#sys/syslinux			musl			6.04-pre1
+#text/json-c			musl			latest
+#text/libxml2			musl			latest
+#dev/libaio			musl			latest
+#dev/popt			musl			latest
+#sys/gptfdisk			musl			latest
+#sys/lvm2			musl			2.02.188
+#crypt/argon2			musl			latest
+#sys/cryptsetup			musl			latest
+#sys/dosfstools			musl			latest
+#sys/e2fsprogs			musl			latest
+#sys/eudev			musl			latest
+#sys/file			musl			latest
+#sys/hwids			musl			latest
+#sys/mtools			musl			latest
+#sys/psmisc			musl			latest
+#sys/procps-ng			musl			latest
+#sys/busybox			sysinit			latest
+
+# misc libs
+#crypt/cyrus-sasl		musl			latest
+#crypt/libgpg-error		musl			latest
+#dev/libassuan			musl			latest
+#text/libestr			musl			latest
+#text/libfastjson		musl			latest
+#crypt/libgcrypt			musl			latest
+#crypt/libksba			musl			latest
+#text/libpcre			musl			latest
+#text/libpcre2			musl			latest
+#dev/libtasn1			musl			latest
+#sys/libusb			musl			latest
+#dev/libuv			musl			latest
+#crypt/nettle			musl			latest
+#dev/npth			musl			latest
+#net/nghttp2			musl			latest
+#crypt/p11-kit			musl			latest
+#crypt/gnutls			musl			latest
+
+# db
+#db/sqlite			musl			latest
+
+# misc
+#sys/pinentry			musl			latest
+#sys/gnupg			musl			latest
+#crypt/gpgme			musl			latest
+#sys/usbutils			musl			latest
+#sys/pciutils			musl			latest
+#sys/pciutils			musl_lib			latest
+

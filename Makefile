@@ -41,6 +41,11 @@ bootstrap_rebuild:
 	xx/xx build -f set/build/base.xx
 	rm -rf /tmp/xx/
 
+bootstrap_musl:
+	xx/xx b set/build/init_musl.xx
+	mv /tmp/xx/init_musl/ /tmp/xx/musl
+	rm -r /tmp/xx/musl/{cross_tools,tools,usr}
+
 base:
 	xx/xx build set/build/base.xx
 

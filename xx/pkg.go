@@ -927,6 +927,11 @@ func stripDebug(pkgFiles *[]string, pkg pkgT) {
 		var lib, usrLib, bin bool
 		ext := fp.Ext(file)
 
+		// do not touch go packages, these are not static libraries
+		if strings.Contains(file, "/go/pkg/") && strings.HasSuffix(file, ".a") {
+			continue
+		}
+
 		if strings.HasPrefix(file, pkg.newPkgDir+"/lib/") {
 			lib = true
 		} else if strings.HasPrefix(file, pkg.newPkgDir+"/usr/lib/") {

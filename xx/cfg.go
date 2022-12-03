@@ -183,8 +183,9 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 	}
 
 	if pkgC.muslBuild && !pkgC.crossBuild {
-		envMap["CFLAGS"] += " -static-pie -I/include"
-		envMap["CXXFLAGS"] += " -static-pie -I/include"
+		envMap["CFLAGS"] += " -fPIC -static-pie -I/include"
+		envMap["CXXFLAGS"] += " -fPIC -static-pie -I/include"
+		envMap["LDFLAGS"] += " -Wl,-static -Wl,--verbose"
 	}
 
 	if pkgC.muslBuild && !pkgC.crossBuild {

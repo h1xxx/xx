@@ -46,7 +46,14 @@ dev/ncurses				std			latest
 
 lang/python				std			latest
 	dev/libffi			std			latest
+	dev/expat			std			latest
 	crypt/openssl			std			latest
+
+lang/python				musl			latest
+	dev/libffi			musl			latest
+	dev/mpdecimal			musl			latest
+	dev/expat			musl			latest
+	crypt/openssl			musl			latest
 
 sys/syslinux				std			latest
 	lang/nasm			std			latest
@@ -57,6 +64,18 @@ net/curl				std			latest
 dev/git					std			latest
 	net/curl			std			latest
 	crypt/openssl			std			latest
+
+dev/automake				std			latest
+	dev/autoconf			std			latest
+
+dev/automake				musl			latest
+	dev/autoconf			musl			latest
+
+dev/autoconf				std			latest
+	dev/m4				std			latest
+
+dev/autoconf				musl			latest
+	dev/m4				musl			latest
 
 dev/popt				std			latest
 	dev/autoconf			std			latest
@@ -86,8 +105,8 @@ sys/cryptsetup				musl			latest
 sys/util-linux				std			latest
 	sys/linux			headers			latest
 
-#sys/util-linux				musl			latest
-#	sys/linux			headers_static		latest
+sys/util-linux				musl			latest
+	sys/linux			musl_headers		latest
 
 sys/lvm2				std			latest
 	sys/util-linux			std			latest
@@ -641,11 +660,15 @@ dev/binutils				musl			latest
 	arch/zlib			musl			latest
 	dev/git				musl			latest
 
-#text/texinfo				musl			latest
-#	lang/perl			musl			latest
+text/texinfo				musl			latest
+	lang/perl			musl			latest
+	dev/gettext			musl			latest
+	text/help2man			musl			latest
 
-#text/texinfo				std			latest
-#	lang/perl			std			latest
+text/texinfo				std			latest
+	lang/perl			std			latest
+	dev/gettext			std			latest
+	text/help2man			std			latest
 
 ### deprecated
 
