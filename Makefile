@@ -54,15 +54,15 @@ base:
 all:
 	xx/xx build set/dev.xx
 	xx/xx build set/lxc.xx
-	xx/xx build set/media_cd.xx
-	xx/xx build set/media_gfx.xx
-	xx/xx build set/media_sdl.xx
-	xx/xx build set/media_snapcast.xx
-	xx/xx build set/media_text.xx
-	xx/xx build set/media_video.xx
+	xx/xx build set/media/cd.xx
+	xx/xx build set/media/gfx.xx
+	xx/xx build set/media/sdl.xx
+	xx/xx build set/media/snapcast.xx
+	xx/xx build set/media/text.xx
+	xx/xx build set/media/video.xx
+	xx/xx build set/media/w3m.xx
 	xx/xx build set/misc.xx
 	xx/xx build set/net.xx
-	xx/xx build set/net_w3m.xx
 	xx/xx build set/qemu.xx
 	xx/xx build set/sys.xx
 	xx/xx build set/x11.xx
