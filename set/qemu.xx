@@ -21,5 +21,3 @@ emu/spice			std			latest
 
 emu/qemu			std			latest
 
-
-#app-emulation/spice

@@ -15,55 +15,57 @@ tools:
 bootstrap:
 	# cross-compiling compiler and libc from the host system and then
 	# rebuilding them in environment isolated from the host system
-	xx/xx build set/build/bootstrap.xx
+	xx/xx build set/bootstrap.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
 	# creating environment only with packages build in isolation from the
 	# host system
-	xx/xx build set/build/bootstrap-base.xx
+	xx/xx build set/bootstrap-base.xx
 	mv /tmp/xx/bootstrap /tmp/xx/base
 
 	# todo: run if prev step ok
 	# final build of all base packages
-	xx/xx build set/build/base.xx
+	xx/xx build set/base.xx
 	rm -rf /tmp/xx/
 
 bootstrap_rebuild:
-	xx/xx build -f set/build/bootstrap.xx
+	xx/xx build -f set/bootstrap.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
-	xx/xx build -f set/build/bootstrap-base.xx
+	xx/xx build -f set/bootstrap-base.xx
 	mv /tmp/xx/bootstrap /tmp/xx/base
 
 	# todo: run if prev step ok
-	xx/xx build -f set/build/base.xx
+	xx/xx build -f set/base.xx
 	rm -rf /tmp/xx/
 
 bootstrap_musl:
-	xx/xx b set/build/init_musl.xx
+	xx/xx b set/init_musl.xx
 	mv /tmp/xx/init_musl/ /tmp/xx/musl
 	rm -r /tmp/xx/musl/{cross_tools,tools,usr}
+	xx/xx b set/musl.xx
+	rm -rf /tmp/xx/
 
 base:
-	xx/xx build set/build/base.xx
+	xx/xx build set/base.xx
 
 all:
-	xx/xx build set/build/dev.xx
-	xx/xx build set/build/lxc.xx
-	xx/xx build set/build/media_cd.xx
-	xx/xx build set/build/media_gfx.xx
-	xx/xx build set/build/media_sdl.xx
-	xx/xx build set/build/media_snapcast.xx
-	xx/xx build set/build/media_text.xx
-	xx/xx build set/build/media_video.xx
-	xx/xx build set/build/misc.xx
-	xx/xx build set/build/net.xx
-	xx/xx build set/build/net_w3m.xx
-	xx/xx build set/build/qemu.xx
-	xx/xx build set/build/sys.xx
-	xx/xx build set/build/x11.xx
+	xx/xx build set/dev.xx
+	xx/xx build set/lxc.xx
+	xx/xx build set/media_cd.xx
+	xx/xx build set/media_gfx.xx
+	xx/xx build set/media_sdl.xx
+	xx/xx build set/media_snapcast.xx
+	xx/xx build set/media_text.xx
+	xx/xx build set/media_video.xx
+	xx/xx build set/misc.xx
+	xx/xx build set/net.xx
+	xx/xx build set/net_w3m.xx
+	xx/xx build set/qemu.xx
+	xx/xx build set/sys.xx
+	xx/xx build set/x11.xx
 
 clean_tmp:
 	tools/busybox sh -c 'chmod -fR +w /tmp/xx/ || :'

@@ -322,7 +322,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 
 func lineIsSubPkgDef(line, set, section string) bool {
 	setFields := str.Split(set, "_")
-        subName := "subpkg_"+setFields[len(setFields)-1]+" = "
+	subName := "subpkg_" + setFields[len(setFields)-1] + " = "
 
 	return str.HasPrefix(set, section+"_") && str.HasPrefix(line, subName)
 }

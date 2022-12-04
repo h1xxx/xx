@@ -52,7 +52,7 @@ func buildSetFile(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []
 		baseGenC.rootDir = "/tmp/xx/base"
 
 		createRootDirs("/tmp/xx/base")
-		baseFile := "/home/xx/set/build/base.xx"
+		baseFile := "/home/xx/set/base.xx"
 		basePkgs, basePkgCfgs := parsePkgEnvFile(baseFile, baseGenC)
 		for _, basePkgC := range basePkgCfgs {
 			basePkgC.force = false

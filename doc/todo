@@ -410,7 +410,7 @@ somewhere where w3m can read it
 build check if all deps and pkgs are available at the beginning of processing
 install check if all deps and pkgs are available at the beginning of process
 check if two files exist in the same loc during install
-./xx/xx b set/build/media_video results in panic coz file not exists, aslo when
+./xx/xx b set/media_video results in panic coz file not exists, aslo when
 package doesn't exist
 
 find full prog name based on name alone and also with prog

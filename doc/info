@@ -1,5 +1,5 @@
 
-build sets
+build/install sets
 
 - name packages to be built or deployed
 - located in /home/xx/set/
@@ -7,6 +7,11 @@ build sets
 - ver latest gets the latest version of the package
 - ver containing "_f" suffix forces rebuilding of the pkg
 - mode must be defined in pkg .toml file in square brackets
+
+
+
+pkg sets
+
 - special varialbe definition is 'var pkgset_<set> = <set2>'; it defines a pkg
   set as exactly the same as another one, e.g. 'var pkgset_musl_init = musl'
 - special step for creating subpkgs example:
@@ -27,6 +32,7 @@ init script: /etc/runit/2
 shutdown/restart with init 0 / init 6
 init script: /etc/runit/3
 	uses /etc/rc.d/*.stop and /etc/rc.conf for config
+
 
 
 dir structure

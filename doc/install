@@ -45,7 +45,7 @@ Sometimes sourceforge throws errors, in that case run this command again. If
 a pkg really doesn't want to be downloaded you'll need to find it on the
 internet and place it in src directory of that pkg with version as base name.
 
-	./xx/xx source -d set/build/base.xx
+	./xx/xx source -d set/base.xx
 
 You can also download source code for all the packages if you want.
 
@@ -60,12 +60,12 @@ You can also download source code for all the packages if you want.
 Don't forget to download the packages before running these commands to make sure
 that the build process is not interrupted by faulty download.
 
-	xx/xx build -d definitions/build/sys.xx
-	xx/xx build -d definitions/build/net.xx
-	xx/xx build -d definitions/build/media.xx
-	xx/xx build -d definitions/build/misc.xx
-	xx/xx build -d definitions/build/qemu.xx
-	xx/xx build -d definitions/build/x11.xx
+	xx/xx build -d set/sys.xx
+	xx/xx build -d set/net.xx
+	xx/xx build -d set/media.xx
+	xx/xx build -d set/misc.xx
+	xx/xx build -d set/qemu.xx
+	xx/xx build -d set/x11.xx
 
 * install xx on a pendrive or another disk
 
