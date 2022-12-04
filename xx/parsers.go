@@ -197,6 +197,8 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 				check["hasSet"] = true
 			}
 
+			// don't parse if next section starts and we have
+			// everything we need from the requested set
 			if _, done := stepsMap["pkg_create"]; done {
 				break
 			}
@@ -252,17 +254,15 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 
 		case set == section:
 			stepsMap[step] += " " + line
+
+		// if step is a subpkg defintion then stop parsing, no need
+		case lineIsSubPkgDef(line, set, section):
+			return src, steps, true
+
 		}
 	}
 
 	if !check["hasSet"] {
-		// check if it's not a sub pkg before throwing an error
-		setFields := str.Split(set, "_")
-		for step, _ := range stepsMap {
-			if step == "subpkg_"+setFields[len(setFields)-1] {
-				return src, steps, true
-			}
-		}
 		msg := "config set '%s' missing in %s"
 		errExit(fmt.Errorf(msg, pkg.set, iniFile), "")
 	}
@@ -318,6 +318,13 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	}
 
 	return src, steps, false
+}
+
+func lineIsSubPkgDef(line, set, section string) bool {
+	setFields := str.Split(set, "_")
+        subName := "subpkg_"+setFields[len(setFields)-1]+" = "
+
+	return str.HasPrefix(set, section+"_") && str.HasPrefix(line, subName)
 }
 
 func getIniEnv(s string) ([]string, error) {
@@ -407,6 +414,7 @@ func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT, steps stepsT) ma
 		"<set_ver_rel>": pkg.setVerNewRel,
 		"<pkg_dir>":     pkg.newPkgDir,
 		"<prog_dir>":    pkg.progDir,
+		"<patch_dir>":   pkg.patchDir,
 		"<src_dir>":     fp.Join(pkg.progDir, "src"),
 		"<ver_pkgspec>": getPkgSpecVer(pkg),
 		"<src_path>":    src.file,

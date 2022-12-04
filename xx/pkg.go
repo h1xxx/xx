@@ -528,7 +528,6 @@ func execStep(step string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 
 		// meson for some reason prints errors to stdout
 		if strings.Contains(pkgC.steps.configure, "meson") {
-
 			fd, _ = os.Open(pathOut)
 			defer fd.Close()
 			print := false

@@ -65,7 +65,6 @@ text/grep			musl			latest
 text/sed			musl			latest
 sys/shadow			musl			latest
 sys/util-linux			musl			latest
-sys/kmod			musl			latest
 text/groff			musl			latest
 
 # languages
@@ -87,73 +86,67 @@ net/libbpf			musl			latest
 net/libnl			musl			latest
 sys/iptables			musl			latest
 sys/openssh			musl			latest
-sys/iproute2			musl			latest	f
+sys/iproute2			musl			latest
 
 # dev tools
-#text/asciidoc			musl			latest
-#dev/make			musl			latest
-#dev/patch			musl			latest
-#dev/libtool			musl			latest
-#dev/autoconf			musl			latest
-#dev/automake			musl			latest
-#dev/ninja			musl			latest
-#dev/meson			musl			latest
-#dev/cmake			musl			latest
-#dev/strace			musl			latest
-#text/doxygen			musl			latest
-#net/curl			musl			latest
-#dev/git				musl			latest
-#text/libpcre2			musl			latest
-#dev/ctags			musl			latest
+dev/make			musl			latest
+dev/patch			musl			latest
+dev/libtool			musl			latest
+dev/autoconf			musl			latest
+dev/automake			musl			latest
+dev/cmake			musl			latest
+dev/strace			musl			latest
+net/curl			musl			latest
+dev/git				musl			latest
+text/libpcre2			musl			latest
+dev/ctags			musl			latest
 
 # system tools
-#sys/kbd				musl			latest
-#sys/syslinux			musl			6.04-pre1
-#text/json-c			musl			latest
-#text/libxml2			musl			latest
-#dev/libaio			musl			latest
-#dev/popt			musl			latest
-#sys/gptfdisk			musl			latest
-#sys/lvm2			musl			2.02.188
-#crypt/argon2			musl			latest
-#sys/cryptsetup			musl			latest
-#sys/dosfstools			musl			latest
-#sys/e2fsprogs			musl			latest
-#sys/eudev			musl			latest
-#sys/file			musl			latest
-#sys/hwids			musl			latest
-#sys/mtools			musl			latest
-#sys/psmisc			musl			latest
-#sys/procps-ng			musl			latest
-#sys/busybox			sysinit			latest
+sys/kbd				musl			latest
+text/json-c			musl			latest
+text/libxml2			musl			latest
+dev/libaio			musl			latest
+dev/popt			musl			latest
+sys/gptfdisk			musl			latest
+sys/lvm2			musl			latest
+crypt/argon2			musl			latest
+sys/cryptsetup			musl			latest
+sys/dosfstools			musl			latest
+sys/e2fsprogs			musl			latest
+sys/eudev			musl			latest
+sys/file			musl			latest
+sys/hwids			musl			latest
+sys/mtools			musl			latest
+sys/psmisc			musl			latest
+sys/procps-ng			musl			latest
 
 # misc libs
-#crypt/cyrus-sasl		musl			latest
-#crypt/libgpg-error		musl			latest
-#dev/libassuan			musl			latest
-#text/libestr			musl			latest
-#text/libfastjson		musl			latest
-#crypt/libgcrypt			musl			latest
-#crypt/libksba			musl			latest
-#text/libpcre			musl			latest
-#text/libpcre2			musl			latest
-#dev/libtasn1			musl			latest
-#sys/libusb			musl			latest
-#dev/libuv			musl			latest
-#crypt/nettle			musl			latest
-#dev/npth			musl			latest
-#net/nghttp2			musl			latest
-#crypt/p11-kit			musl			latest
-#crypt/gnutls			musl			latest
+crypt/cyrus-sasl		musl			latest
+crypt/libgpg-error		musl			latest
+dev/libassuan			musl			latest
+text/libestr			musl			latest
+text/libfastjson		musl			latest
+crypt/libgcrypt			musl			latest
+crypt/libksba			musl			latest
+text/libpcre			musl			latest
+dev/libtasn1			musl			latest
+sys/libusb			musl			latest
+dev/libuv			musl			latest
+crypt/nettle			musl			latest
+dev/npth			musl			latest
+net/nghttp2			musl			latest
+crypt/gnutls			musl			latest
 
 # db
-#db/sqlite			musl			latest
+db/sqlite			musl			latest
+db/sqlite			musl_lib		latest
+db/sqlite			musl_headers		latest
 
 # misc
-#sys/pinentry			musl			latest
-#sys/gnupg			musl			latest
-#crypt/gpgme			musl			latest
-#sys/usbutils			musl			latest
-#sys/pciutils			musl			latest
-#sys/pciutils			musl_lib			latest
+sys/pinentry			musl			latest
+sys/gnupg			musl			latest
+crypt/gpgme			musl			latest
+sys/usbutils			musl			latest
+sys/pciutils			musl			latest
+sys/pciutils			musl_lib		latest
 

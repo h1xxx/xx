@@ -114,6 +114,7 @@ type genCfgT struct {
 // setVerNewRel  combination of <pkg set>-<ver>-<new pkg rel>:	std-2.35-02
 //
 // progDir	progam dir:			/home/xx/sys/lvm2
+// patchDir	dir with patches:		/home/xx/sys/lvm2/patch/2.35
 // pkgDir	dir with current release:	<prog_dir>/pkg/std_1-2.35-09
 // newPkgDir	dir with new release:		<prog_dir>/pkg/std_1-2.35-0a
 // prevPkgDir	dir with new release:		<prog_dir>/pkg/std_1-2.35-08
@@ -135,6 +136,7 @@ type pkgT struct {
 	setVerNewRel  string
 
 	progDir    string
+	patchDir   string
 	pkgDir     string
 	newPkgDir  string
 	prevPkgDir string
@@ -494,6 +496,7 @@ func getPkgSetVers(pkg pkgT) pkgT {
 }
 
 func getPkgDirs(pkg pkgT) pkgT {
+	pkg.patchDir = fp.Join(pkg.progDir, "patch", pkg.ver)
 	pkg.pkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerRel)
 	pkg.newPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerNewRel)
 	pkg.prevPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerPrevRel)
