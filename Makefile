@@ -15,14 +15,14 @@ tools:
 bootstrap:
 	# cross-compiling compiler and libc from the host system and then
 	# rebuilding them in environment isolated from the host system
-	xx/xx build set/bootstrap.xx
+	xx/xx build set/init_glibc.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
 	# creating environment only with packages build in isolation from the
 	# host system
-	xx/xx build set/bootstrap-base.xx
-	mv /tmp/xx/bootstrap /tmp/xx/base
+	xx/xx build set/init_glibc_cp.xx
+	mv /tmp/xx/init_glibc /tmp/xx/base
 
 	# todo: run if prev step ok
 	# final build of all base packages
@@ -30,12 +30,12 @@ bootstrap:
 	rm -rf /tmp/xx/
 
 bootstrap_rebuild:
-	xx/xx build -f set/bootstrap.xx
+	xx/xx build -f set/init_glibc.xx
 	rm -rf /tmp/xx/
 
 	# todo: run if prev step ok
-	xx/xx build -f set/bootstrap-base.xx
-	mv /tmp/xx/bootstrap /tmp/xx/base
+	xx/xx build -f set/init_glibc_cp.xx
+	mv /tmp/xx/init_glibc /tmp/xx/base
 
 	# todo: run if prev step ok
 	xx/xx build -f set/base.xx

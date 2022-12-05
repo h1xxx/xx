@@ -11,7 +11,7 @@ import (
 	str "strings"
 )
 
-func parsePkgEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
+func parseBuildEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
 	var pkgs []pkgT
 	var pkgCfgs []pkgCfgT
 

@@ -1,3 +1,5 @@
+check for a /bin /lib dir in glibc pkgs and for musl for /usr
+
 cnt: add cnt-mpv command to start a shell with all devices mounted in the cnt
 cnt: fix how files are passed to the cnt
 

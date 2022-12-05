@@ -18,7 +18,7 @@ func actionBuild(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 	errExit(err, "can't create dir: /tmp/xx/build/")
 
 	switch {
-	case genC.buildEnv == "bootstrap" || genC.buildEnv == "bootstrap-base":
+	case genC.isInit:
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			genC.setFileName)
 		buildInstPkgs(world, genC, pkgs, pkgCfgs)
@@ -38,46 +38,75 @@ func buildSetFile(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []
 
 	baseLinkFile := fp.Join(genC.rootDir, "base_linked")
 	baseLinked := fileExists(baseLinkFile)
-	baseBuild := genC.buildEnv == "base"
-	baseBuild = baseBuild || strings.Contains(genC.buildEnv, "musl")
+	baseOkFile := fp.Join(genC.baseDir, "base_ok")
+	baseOk := fileExists(baseOkFile)
+
+	// todo: move this to genC, maybe name as genC.isSepEnv
 	alpineBuild := pkgs[0].categ == "alpine"
 
-	// base env must exist first
-	// todo: maybe move up and place in a function
-	if !fileExists("/tmp/xx/base") && !baseBuild {
-		fmt.Println("\033[01m* processing base.xx...\033[00m")
-
-		baseGenC := genC
-		baseGenC.buildEnv = "base"
-		baseGenC.rootDir = "/tmp/xx/base"
-
-		createRootDirs("/tmp/xx/base")
-		baseFile := "/home/xx/set/base.xx"
-		basePkgs, basePkgCfgs := parsePkgEnvFile(baseFile, baseGenC)
-		for _, basePkgC := range basePkgCfgs {
-			basePkgC.force = false
-		}
-		buildInstPkgs(world, baseGenC, basePkgs, basePkgCfgs)
-		protectBaseDir()
+	// base env must exist first, copy it if it's not in place
+	if !baseOk && !genC.isInit {
+		fmt.Println("\033[01m* copying base.xx...\033[00m")
+		installBase(world, genC)
 	}
 
-	if !baseLinked && !baseBuild && !alpineBuild {
-		linkBaseDir(genC.rootDir)
+	if !baseLinked && !genC.baseEnv && !alpineBuild {
+		linkBaseDir(genC.rootDir, genC.baseDir)
 	}
 
 	fmt.Printf("\033[01m* processing %s...\033[00m\n", genC.setFileName)
 	buildInstPkgs(world, genC, pkgs, pkgCfgs)
 
-	if baseBuild && !strings.Contains(genC.buildEnv, "musl") {
-		protectBaseDir()
+	if genC.baseEnv {
+		_, _ = os.Create(baseOkFile)
+		protectBaseDir(genC.baseDir)
 	}
 }
 
-func linkBaseDir(rootDir string) {
+func installBase(world map[string]worldT, genC genCfgT) {
+	baseGenC := genC
+	baseGenC.rootDir = genC.baseDir
+
+	createRootDirs(genC.baseDir)
+	pkgs, pkgCfgs := parseBuildEnvFile(genC.baseFile, baseGenC)
+
+	// find the latest built pkg, don't build anything new
+	for i, pkg := range pkgs {
+		pkgC := pkgCfgs[i]
+
+		if !fileExists(pkg.pkgDir) {
+			pkg = getPkgPrevVer(pkg)
+			pkgC = getPkgCfg(genC, pkg, "")
+		}
+
+		if !fileExists(pkg.pkgDir) {
+			msg := "can't find previous pkg version for %s %s"
+			errExit(fmt.Errorf(msg, pkg.name, pkg.ver), "")
+		}
+
+		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
+		instPkg(pkg, pkgC, genC.baseDir)
+		instPkgCfg(pkgC.cfgFiles, genC.baseDir, genC.verbose)
+		addPkgToWorldT(world, pkg, "/")
+
+		// double check if shared libraries are ok
+		if !genC.isInit && !pkgC.muslBuild {
+			selfLibsExist(world, genC, pkg)
+		}
+	}
+
+	baseOkFile := fp.Join(genC.baseDir, "base_ok")
+	_, err := os.Create(baseOkFile)
+	errExit(err, "can't create base_ok file in "+baseOkFile)
+
+	protectBaseDir(genC.baseDir)
+}
+
+func linkBaseDir(rootDir, baseDir string) {
 	bb := "/home/xx/tools/busybox"
-	cmd := exec.Command(bb, "cp", "-al", "/tmp/xx/base", rootDir)
+	cmd := exec.Command(bb, "cp", "-al", baseDir, rootDir)
 	err := cmd.Run()
-	errExit(err, "can't create link to /tmp/xx/base in:\n  "+rootDir)
+	errExit(err, "can't create link to "+baseDir+" in:\n  "+rootDir)
 
 	// remove the link to world dir in base system
 	os.RemoveAll(rootDir + "/var/xx")
@@ -87,11 +116,11 @@ func linkBaseDir(rootDir string) {
 	errExit(err, "can't create base_linked file in "+baseLinkFile)
 }
 
-func protectBaseDir() {
-	cmd := exec.Command("/home/xx/tools/busybox", "find", "/tmp/xx/base/",
+func protectBaseDir(baseDir string) {
+	cmd := exec.Command("/home/xx/tools/busybox", "find", baseDir,
 		"-type", "f", "-exec", "chmod", "a-w", "{}", "+")
 	err := cmd.Run()
-	errExit(err, "can't remove write permissions in /tmp/xx/base")
+	errExit(err, "can't remove write permissions in "+baseDir)
 }
 
 func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
@@ -127,7 +156,7 @@ func buildInstPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs [
 			addPkgToWorldT(world, pkg, loc)
 
 			// double check if shared libraries are ok
-			if genC.buildEnv != "bootstrap" && !pkgC.muslBuild {
+			if !genC.isInit && !pkgC.muslBuild {
 				selfLibsExist(world, genC, pkg)
 			}
 		}
@@ -231,13 +260,13 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		errExit(err, "can't copy /etc/perms file to: "+pkgC.instDir+"/etc")
 	}
 
-	fmt.Printf("  installing %s...\n", pkg.setVerRel)
+	fmt.Printf("  installing...\n")
 
 	// todo: move this out of this function
 	createRootDirs(rootDir)
 
 	// don't install dummy pkg creating temporary links during bootstrap
-	if pkg.set == "musl_init" && pkgC.src.srcType == "files" {
+	if strings.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
 		return
 	}
 

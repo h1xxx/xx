@@ -71,10 +71,53 @@ func getPkgPrev(genC genCfgT, pkg pkgT) pkgT {
 		fmt.Printf("\n\n+ %-32s %s => %s\n", pkg.name,
 			pkg.setVerPrevRel, pkg.setVerRel)
 	} else {
-		// todo: get prev version
-		return pkgPrev
+		return getPkgPrevVer(pkg)
 	}
 	return pkgPrev
+}
+
+func getPkgPrevVer(pkg pkgT) pkgT {
+	var versions []string
+
+	dirs, err := os.ReadDir(fp.Join(pkg.progDir, "pkg"))
+	errExit(err, "can't open package dir")
+
+	for _, dir := range dirs {
+		if strings.HasPrefix(dir.Name(), pkg.set+"-") {
+			var ver, sep string
+
+			fields := strings.Split(dir.Name(), "-")
+			if len(fields) < 3 {
+				msg := "can't extract ver from %s"
+				errExit(fmt.Errorf(msg, dir.Name()), "")
+			}
+
+			verRaw := strings.Join(fields[1:len(fields)-1], "-")
+			verFields := strings.Split(verRaw, ".")
+			for _, v := range verFields {
+				ver += fmt.Sprintf("%s%32s", sep, v)
+				sep = "."
+			}
+
+			versions = append(versions, ver)
+		}
+	}
+
+	sort.Strings(versions)
+
+	if len(versions) == 0 {
+		errExit(errors.New(""), "no pkg dirs available for "+pkg.name)
+	}
+
+	if len(versions) > 1 {
+		pkg.ver = strings.Replace(versions[len(versions)-2], " ", "", -1)
+		pkg.verShort = getVerShort(pkg.ver)
+		pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+		pkg = getPkgSetVers(pkg)
+		pkg = getPkgDirs(pkg)
+	}
+
+	return pkg
 }
 
 func getRes(fileHash, fileHashPrev map[string]string) (map[string][]string,

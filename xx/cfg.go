@@ -30,8 +30,8 @@ func getVer(pkg pkgT, fixedVer string) string {
 		if strings.HasSuffix(file.Name(), ".ini") {
 			var ver, sep string
 			verRaw := strings.Split(file.Name(), ".ini")[0]
-			verSplit := strings.Split(verRaw, ".")
-			for _, v := range verSplit {
+			verFields := strings.Split(verRaw, ".")
+			for _, v := range verFields {
 				ver += fmt.Sprintf("%s%32s", sep, v)
 				sep = "."
 			}
@@ -78,15 +78,21 @@ func getBuildEnv(actionTarget string) string {
 		file := fp.Base(actionTarget)
 		fields := strings.Split(file, ".")
 		buildEnv := strings.Join(fields[:len(fields)-1], ".")
-		switch {
-		case buildEnv == "bootstrap-base":
-			buildEnv = "bootstrap"
-		case buildEnv == "":
-			buildEnv = "base"
+		if buildEnv == "init_glibc_cp" {
+			buildEnv = "init_glibc"
+		}
+		if buildEnv == "" {
+			msg := "can't find build env in %s"
+			errExit(fmt.Errorf(msg, actionTarget), "")
 		}
 		return buildEnv
 	} else {
-		return strings.Split(actionTarget, "/")[1]
+		fields := strings.Split(actionTarget, "/")
+		if len(fields) == 1 {
+			msg := "incorrect pkg name: %s"
+			errExit(fmt.Errorf(msg, actionTarget), "")
+		}
+		return fields[1]
 	}
 }
 

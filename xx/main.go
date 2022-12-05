@@ -50,14 +50,19 @@ type argsT struct {
 //
 // rootDir	root system dir:		/, /mnt/xx, /tmp/xx/media
 // sysCfgDir	dir with system config:		/home/xx/conf/<machine>
-// setFileName	pkg env definition file:	[empty], base.xx, media.xx
-// buildEnv	name of the build environment:	base, bootstrap, net, media
+// setFileName	build env definition file:	[empty], base.xx, media.xx
+// buildEnv	name of the build environment:	base, init_musl, net, media
+// baseDir	dir with installed base pkgs:	/tmp/xx/musl_base, /tmp/xx/base
+// baseFile	file with a list of base pkgs:	/home/xx/set/base.xx
+// baseEnv	if build environment is base:	false, true
+// muslEnv	use musl build environment:	false, true
+// isInit	bootstrapping the build env:	false, true
 // actionTarget	package name or pkg env file:	sys/lvm2, base.xx, media.xx
 // action	action to perform:		build, install, update, diff
 // date		current calendar date:		2002-05-13
 //
 // forceAll	force action on all packages:	false, true
-// fixedSet	fixed pkg set for all packages:	[empty], std, bootstrap
+// fixedSet	fixed pkg set for all packages:	[empty], std, musl
 // fixedVer	fixed pkg ver for all packages:	[empty], latest, 2.35
 //
 // instPerms	only install sys permissions:	false, true
@@ -74,6 +79,11 @@ type genCfgT struct {
 	sysCfgDir    string
 	setFileName  string
 	buildEnv     string
+	baseDir      string
+	baseFile     string
+	baseEnv      bool
+	muslEnv      bool
+	isInit       bool
 	actionTarget string
 	action       string
 	actionOpts   string
@@ -102,7 +112,7 @@ type genCfgT struct {
 // name		package name (format <category/program>):	sys/lvm2
 // categ	program category: 				sys
 // prog		program name:					lvm2
-// set		package set:					std, bootstrap_cross
+// set		package set:					std, init_cross
 // ver		resolved program version, not 'latest':		2.35
 // verShort	short ver; in case of git repo, commit hash:	2, 4d21a91b
 // rel		current pkg release (build) version in hex:	01, 0a, 1e
@@ -337,8 +347,8 @@ func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
 	world := make(map[string]worldT)
 	initWorldEntry(world, "/")
 	worldPkgs := getWorldPkgs(genC, genC.rootDir)
-	if genC.action == "build" && genC.buildEnv != "base" {
-		basePkgs := getWorldPkgs(genC, "/tmp/xx/base")
+	if genC.action == "build" && !genC.baseEnv {
+		basePkgs := getWorldPkgs(genC, genC.baseDir)
 		worldPkgs = append(worldPkgs, basePkgs...)
 	}
 
@@ -396,7 +406,23 @@ func getGenCfg(args argsT) genCfgT {
 	}
 
 	genC.actionTarget = args.actionTarget
+
 	genC.buildEnv = getBuildEnv(genC.actionTarget)
+	genC.baseDir = "/tmp/xx/base"
+	genC.baseFile = "/home/xx/set/base.xx"
+	if genC.buildEnv == "base" || genC.buildEnv == "musl_base" {
+		genC.baseEnv = true
+	}
+	if strings.HasPrefix(genC.buildEnv, "musl_") {
+		genC.muslEnv = true
+		genC.baseDir = "/tmp/xx/musl_base"
+		genC.baseFile = "/home/xx/set/musl_base.xx"
+	}
+
+	if strings.HasPrefix(genC.buildEnv, "init_") {
+		genC.isInit = true
+	}
+
 	genC.rootDir = getRootDir(args, genC.buildEnv)
 
 	if !isPkgString(genC.actionTarget) {
@@ -444,7 +470,7 @@ func getPkgList(genC genCfgT) ([]pkgT, []pkgCfgT) {
 
 	// process a pkg env file
 	if genC.setFileName != "" {
-		pkgs, pkgCfgs = parsePkgEnvFile(genC.actionTarget, genC)
+		pkgs, pkgCfgs = parseBuildEnvFile(genC.actionTarget, genC)
 	}
 
 	// process a single package
