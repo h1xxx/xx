@@ -57,6 +57,8 @@ sys/mime-types			std			latest
 sys/linux			headers			latest
 sys/gdbm			std			latest
 sys/libseccomp			std			latest
+sys/libcap			std			latest
+sys/libcap-ng			std			latest
 crypt/openssl			std			latest
 
 # core system tools

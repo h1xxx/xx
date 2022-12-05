@@ -11,8 +11,6 @@ net/wget			std			latest
 
 net/dnsmasq			std			latest
 net/unbound			std			latest
-
-sys/libcap			std			latest
 net/chrony			std			latest
 
 sys/iw				std			latest

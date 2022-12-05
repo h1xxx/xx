@@ -10,7 +10,6 @@ sys/liburing			std			latest
 x11/pixman			std			latest
 
 sys/attr			std			latest
-sys/libcap-ng			std			latest
 net/libslirp			std			latest
 
 media/libjpeg-turbo		std			latest

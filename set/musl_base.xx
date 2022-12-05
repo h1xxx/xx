@@ -55,6 +55,8 @@ sys/mime-types			std			latest
 sys/linux			musl_headers		latest
 sys/gdbm			musl			latest
 sys/libseccomp			musl			latest
+sys/libcap			musl			latest
+sys/libcap-ng			musl			latest
 crypt/openssl			musl			latest
 
 # core system tools
