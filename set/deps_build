@@ -49,12 +49,6 @@ lang/python				std			latest
 	dev/expat			std			latest
 	crypt/openssl			std			latest
 
-lang/python				musl			latest
-	dev/libffi			musl			latest
-	dev/mpdecimal			musl			latest
-	dev/expat			musl			latest
-	crypt/openssl			musl			latest
-
 sys/syslinux				std			latest
 	lang/nasm			std			latest
 

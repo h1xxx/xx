@@ -53,6 +53,7 @@ sys/mime-types			std			latest
 
 # sys libs
 sys/linux			musl_headers		latest
+sys/attr			musl			latest
 sys/gdbm			musl			latest
 sys/libseccomp			musl			latest
 sys/libcap			musl			latest
@@ -74,6 +75,7 @@ lang/tcl			musl			latest
 dev/expect			musl			latest
 lang/perl			musl			latest
 libperl/XML-Parser		musl			latest
+lang/python			musl			latest
 lang/nasm			musl			latest
 lang/go				musl			latest
 
@@ -96,6 +98,13 @@ dev/patch			musl			latest
 dev/libtool			musl			latest
 dev/autoconf			musl			latest
 dev/automake			musl			latest
+dev/ninja			musl			latest
+dev/py-ordered-set		musl			latest
+dev/py-packaging		musl			latest
+dev/py-appdirs			musl			latest
+dev/py-parsing			musl			latest
+dev/py-setuptools		musl			latest
+dev/meson			musl			latest
 dev/cmake			musl			latest
 dev/strace			musl			latest
 net/curl			musl			latest

@@ -1,4 +1,4 @@
-emu/lxc				std			latest
+emu/lxc				musl			latest
 sys/numactl			musl			latest
 #sys/acpi			musl			latest
 #sys/cronie			musl			latest

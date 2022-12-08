@@ -55,6 +55,7 @@ sys/mime-types			std			latest
 
 # sys libs
 sys/linux			headers			latest
+sys/attr			std			latest
 sys/gdbm			std			latest
 sys/libseccomp			std			latest
 sys/libcap			std			latest

@@ -1,0 +1,22 @@
+sys/alsa-ucm-conf		musl			latest
+sys/alsa-topology-conf		musl			latest
+sys/alsa-lib			musl			latest
+
+media/libpng			musl			latest
+
+text/libxslt			musl			latest
+dev/glib			musl			latest
+sys/liburing			musl			latest
+x11/pixman			musl			latest
+
+net/libslirp			musl			latest
+
+media/libjpeg-turbo		musl			latest
+media/opus			musl			latest
+arch/lz4			musl			latest
+
+emu/spice-protocol		musl			latest
+emu/spice			musl			latest
+
+emu/qemu			musl			latest
+
