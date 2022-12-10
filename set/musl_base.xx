@@ -160,4 +160,6 @@ crypt/gpgme			musl			latest
 sys/usbutils			musl			latest
 sys/pciutils			musl			latest
 sys/pciutils			musl_lib		latest
+sys/pciutils			musl_headers		latest
+
 

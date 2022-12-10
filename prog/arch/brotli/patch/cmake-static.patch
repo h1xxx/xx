@@ -1,0 +1,115 @@
+--- brotli-1.0.9/CMakeLists.txt	2020-08-27 16:12:55.000000000 +0200
++++ CMakeLists.txt	2022-12-09 17:35:58.309506910 +0100
+@@ -160,7 +160,7 @@
+ transform_sources_list("scripts/sources.lst" "${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
+ include("${CMAKE_CURRENT_BINARY_DIR}/sources.lst.cmake")
+ 
+-if(BROTLI_EMSCRIPTEN)
++if(BROTLI_EMSCRIPTEN OR BUILD_STATIC_LIBS)
+   set(BROTLI_SHARED_LIBS "")
+ else()
+   set(BROTLI_SHARED_LIBS brotlicommon brotlidec brotlienc)
+@@ -171,8 +171,8 @@
+ 
+ set(BROTLI_STATIC_LIBS brotlicommon-static brotlidec-static brotlienc-static)
+ add_library(brotlicommon-static STATIC ${BROTLI_COMMON_C})
+-add_library(brotlidec-static STATIC ${BROTLI_DEC_C})
+-add_library(brotlienc-static STATIC ${BROTLI_ENC_C})
++add_library(brotlidec-static STATIC ${BROTLI_DEC_C} ${BROTLI_COMMON_C})
++add_library(brotlienc-static STATIC ${BROTLI_ENC_C} ${BROTLI_COMMON_C})
+ 
+ # Older CMake versions does not understand INCLUDE_DIRECTORIES property.
+ include_directories(${BROTLI_INCLUDE_DIRS})
+@@ -185,17 +185,16 @@
+ 
+ foreach(lib IN LISTS BROTLI_SHARED_LIBS BROTLI_STATIC_LIBS)
+   target_link_libraries(${lib} ${LIBM_LIBRARY})
+-  set_property(TARGET ${lib} APPEND PROPERTY INCLUDE_DIRECTORIES ${BROTLI_INCLUDE_DIRS})
+   set_target_properties(${lib} PROPERTIES
+     VERSION "${BROTLI_ABI_COMPATIBILITY}.${BROTLI_ABI_AGE}.${BROTLI_ABI_REVISION}"
+     SOVERSION "${BROTLI_ABI_COMPATIBILITY}")
+   if(NOT BROTLI_EMSCRIPTEN)
+     set_target_properties(${lib} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+   endif()
+-  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${BROTLI_INCLUDE_DIRS}")
++  set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>" $<INSTALL_INTERFACE:include>)
+ endforeach()
+ 
+-if(NOT BROTLI_EMSCRIPTEN)
++if(NOT BROTLI_EMSCRIPTEN AND NOT BUILD_STATIC_LIBS)
+ target_link_libraries(brotlidec brotlicommon)
+ target_link_libraries(brotlienc brotlicommon)
+ endif()
+@@ -223,27 +222,35 @@
+ if(NOT BROTLI_BUNDLED_MODE)
+   install(
+     TARGETS brotli
+-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++    RUNTIME DESTINATION tools/brotli
++    CONFIGURATIONS Release
+   )
+ 
++  if(BUILD_SHARED_LIBS STREQUAL "yez-give-this-shit" )
+   install(
+     TARGETS ${BROTLI_LIBRARIES_CORE}
++    EXPORT brotli
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
+-
++  else()
+   install(
+     TARGETS ${BROTLI_LIBRARIES_CORE_STATIC}
++    EXPORT brotli
+     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+   )
++  endif()
+ 
+   install(
+     DIRECTORY ${BROTLI_INCLUDE_DIRS}/brotli
+     DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
++    CONFIGURATIONS Release
+   )
++  
++  install(EXPORT brotli FILE unofficial-brotli-config.cmake NAMESPACE unofficial::brotli:: DESTINATION share/unofficial-brotli)
+ endif()  # BROTLI_BUNDLED_MODE
+ endif()  # BROTLI_EMSCRIPTEN
+ 
+@@ -381,7 +388,7 @@
+   set("${outvar}" "${${outvar}}" PARENT_SCOPE)
+ endfunction(generate_pkg_config_path)
+ 
+-function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
++function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION SHARED_TARGET STATIC_TARGET)
+   file(READ ${INPUT_FILE} TEXT)
+ 
+   set(PREFIX "${CMAKE_INSTALL_PREFIX}")
+@@ -395,15 +402,22 @@
+   string(REGEX REPLACE "@includedir@" "${INCLUDEDIR}" TEXT ${TEXT})
+ 
+   string(REGEX REPLACE "@PACKAGE_VERSION@" "${VERSION}" TEXT ${TEXT})
++  
++  if(BUILD_SHARED_LIBS STREQUAL "yez-give-this-shit")
++    set(LIB_NAME "${SHARED_TARGET}")
++  else()
++    set(LIB_NAME "${STATIC_TARGET}")
++  endif()
++  string(REGEX REPLACE "@lib_name@" "${LIB_NAME}" TEXT ${TEXT})
+ 
+   file(WRITE ${OUTPUT_FILE} ${TEXT})
+ endfunction()
+ 
+-transform_pc_file("scripts/libbrotlicommon.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlicommon.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlicommon.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlicommon.pc" "${BROTLI_VERSION}" brotlicommon-static brotlicommon-static)
+ 
+-transform_pc_file("scripts/libbrotlidec.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlidec.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlidec.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlidec.pc" "${BROTLI_VERSION}" brotlidec-static brotlidec-static)
+ 
+-transform_pc_file("scripts/libbrotlienc.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlienc.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc" "${BROTLI_VERSION}" brotlienc-static brotlienc-static)
+ 
+ if(NOT BROTLI_EMSCRIPTEN)
+ if(NOT BROTLI_BUNDLED_MODE)

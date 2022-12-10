@@ -1,120 +1,92 @@
 emu/lxc				musl			latest
 sys/numactl			musl			latest
-#sys/acpi			musl			latest
-#sys/cronie			musl			latest
-#sys/file			musl			latest
-#sys/input-utils			musl			latest
-#sys/libcgroup			musl			latest
-#sys/lsof			musl			latest
-#sys/rsyslog			musl			latest
-#sys/vlock			musl			latest
-#sys/which			musl			latest
-#
-#text/less			musl			latest
-#text/man-pages			musl			latest
-#text/man-db			musl			latest
-#
-#sys/libevent			musl			latest
-#sys/tmux			musl			latest
-#
-#dev/libx86			musl			latest
-#libperl/Switch			musl			latest
-#
-# fuse2 fails to build, but ntfs3g is not in kernel so probably can be dropped
-#sys/fuse2			musl			latest
-#sys/ntfs3g			musl			latest
-#
-#sys/ncdu			musl			latest
-#
-#sys/testdisk			musl			latest
-#text/vim			musl			latest
-#sys/fdupes			musl			latest
-#sys/vifm			musl			latest
-#text/dos2unix			musl			latest
-#
-#sys/dmidecode			musl			latest
-#sys/lm-sensors			musl			latest
-#
-#sys/libftdi			musl			latest
-#sys/flashrom			musl			latest
-#
-#arch/p7zip			musl			latest
-#arch/unrar			musl			latest
-#
-#sys/libunwind			musl			latest
-#dev/protobuf			musl			latest
-#dev/gtest			musl			latest
-#arch/brotli			musl			latest
-#arch/lz4			musl			latest
-#
-#libgo/net			musl		20190404232315-eb5bcb51f2a3
-#libgo/sys			musl		20190215142949-d0b11bdaac8a
-#libgo/sys			musl		20190412213103-97732733099d
-#libgo/crypto			musl		20190308221718-c2843e01d9a2
-#libgo/text			musl			0.3.0
-#libgo/crypto			musl		20200622213623-75b288015ac9
-#sys/android-tools		musl			latest
-#sys/android-file-transfer-linux	musl			latest
-#
-#sys/sysstat			musl			latest
-#sys/smartmontools		musl			latest
-#sys/hdparm			musl			latest
-#dev/libx86emu			musl			latest
-#sys/hwinfo			musl			latest
-#sys/lshw			musl			latest
-#sys/powertop			musl			latest
-#sys/iotop			musl			latest
-#sys/stress			musl			latest
-#
-#sys/oath-toolkit		musl			latest
-#sys/sl				musl			latest
-#
-#sys/cups			musl			latest
-#media/libjpeg-turbo		musl			latest
-#sys/hplip			musl			latest
-#dev/autoconf-archive		musl			latest
-#dev/gettext			musl			latest
-#media/sane-backends		musl			latest
-#
-#sys/alsa-ucm-conf		musl			latest
-#sys/alsa-topology-conf		musl			latest
-#sys/alsa-lib			musl			latest
-#sys/alsa-plugins		musl			latest
-#sys/alsa-utils			musl			latest
-#
-#text/nawk			musl			latest
-#
-# uefi tools
-#text/mandoc			musl			latest
-#sys/efivar			musl			latest
-#sys/efibootmgr			musl			latest
-#sys/gnu-efi			musl			latest
-#sys/efitools			musl			latest
-#
-#x11/util-macros			musl			latest
-#media/freetype			musl			latest
-#x11/xorg-proto			musl			latest
-#x11/libfontenc			musl			latest
-#x11/xtrans			musl			latest
-#x11/libXfont2			musl			latest
-#media/bdftopcf			musl			latest
-#media/bdf2psf			musl			latest
-#media/libpng			musl			latest
-#media/libjpeg-turbo		musl			latest
-#media/freetype			musl			latest
-#libperl/ExtUtils-PkgConfig	musl			latest
-#media/libgd			musl			latest
-#libperl/GD			musl			latest
-#sys/unifont			musl			latest
-#
-#
+sys/acpi			musl			latest
+sys/cronie			musl			latest
+sys/input-utils			musl			latest
+sys/libcgroup			musl			latest
+sys/lsof			musl			latest
+sys/rsyslog			musl			latest
+sys/vlock			musl			latest
+sys/which			musl			latest
+
+text/less			musl			latest
+text/man-pages			musl			latest
+text/man-db			musl			latest
+
+sys/libevent			musl			latest
+sys/tmux			musl			latest
+
+dev/libx86			musl			latest
+libperl/Switch			musl			latest
+
+sys/ncdu			musl			latest
+
+sys/testdisk			musl			latest
+text/vim			musl			latest
+sys/fdupes			musl			latest
+sys/vifm			musl			latest
+text/dos2unix			musl			latest
+
+sys/libftdi			musl			latest
+sys/flashrom			musl			latest
+
+arch/unrar			musl			latest
+
+sys/dmidecode			musl			latest
+sys/lm-sensors			musl			latest
+sys/sysstat			musl			latest
+sys/smartmontools		musl			latest
+sys/hdparm			musl			latest
+dev/libx86emu			musl			latest
+sys/hwinfo			musl			latest
+sys/lshw			musl			latest
+sys/powertop			musl			latest
+sys/iotop			musl			latest
+sys/stress			musl			latest
+
+# android utils
+sys/libunwind			musl			latest
+dev/protobuf			musl			latest
+dev/gtest			musl			latest
+arch/brotli			musl			latest
+arch/lz4			musl			latest
+libgo/net			musl		20190404232315-eb5bcb51f2a3
+libgo/sys			musl		20190215142949-d0b11bdaac8a
+libgo/sys			musl		20190412213103-97732733099d
+libgo/crypto			musl		20190308221718-c2843e01d9a2
+libgo/text			musl			0.3.0
+libgo/crypto			musl		20200622213623-75b288015ac9
+sys/android-tools		musl			latest
+sys/android-file-transfer-linux	musl			latest
+
+sys/oath-toolkit		musl			latest
+sys/sl				musl			latest
+
+# printting and scanning
+sys/cups			musl			latest
+media/libjpeg-turbo		musl			latest
+sys/hplip			musl			latest
+dev/autoconf-archive		musl			latest
+media/sane-backends		musl			latest
+
+# sound settings
+sys/alsa-ucm-conf		musl			latest
+sys/alsa-topology-conf		musl			latest
+sys/alsa-lib			musl			latest
+sys/alsa-plugins		musl			latest
+sys/alsa-utils			musl			latest
+
+text/nawk			musl			latest
+
+
+
+
 #fbdump 0.4.2
 # https://www.rcdrummond.net/$pkgname/$pkgname-$pkgver.tar.gz
 #
 #
 # https://github.com/qca/open-ath9k-htc-firmware
 #fbset
-#fbdump
 #	https://github.com/pixel/hexedit http://tim.stoakes.net/hexedit/
 #app-crypt/ccid
 #app-i18n/uchardet
@@ -138,8 +110,8 @@ sys/numactl			musl			latest
 #net/mktorrent
 #net-p2p/ncdc
 #sys-apps/pcsc-tools
-#
 #https://distfiles.gentoo.org/distfiles/throttle-1.2.tar.gz
+
 # for --enable-docs
 #libperl/XML-NamespaceSupport    std                     latest
 #libperl/XML-SAX-Base            std                     latest

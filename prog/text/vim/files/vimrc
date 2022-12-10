@@ -1,7 +1,7 @@
 " ---- general settings
 
 " execute defaults.vim before /etc/vimrc
-source /usr/share/vim/vim__vim_shortver__/defaults.vim
+source /share/vim/vim__vim_shortver__/defaults.vim
 let skip_defaults_vim = 1
 
 " disable vi compatible mode (noop in most cases)
