@@ -15,6 +15,7 @@ import (
 	"os/user"
 	"path"
 	fp "path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"unicode"
@@ -37,6 +38,7 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 	errExit(err, "couldn't create dir: "+pkg.newPkgDir)
 	execStep("pkg_create", genC, pkg, pkgC)
 
+	pkgBuildCheck(genC, pkg, pkgC)
 	moveLogs(pkg, pkgC)
 	saveHelp(genC, pkg, pkgC)
 	cleanup(pkg, pkgC)
@@ -84,6 +86,59 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 	}
 
 	return pkg
+}
+
+func pkgBuildCheck(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+	var noNoDirs []string
+	var noNoLibRe *regexp.Regexp
+
+	re := getRegexes()
+
+	muslNoNo := []string{"/usr", "/lib64", "/local", "/opt"}
+	glibcNoNo := []string{"/bin", "/sbin", "/lib", "/lib64", "/opt",
+		"/include", "/share", "/usr/lib64", "/usr/local"}
+
+	switch {
+	case pkgC.crossBuild:
+		return
+	case pkgC.muslBuild:
+		noNoDirs = muslNoNo
+		noNoLibRe = re.noNoSharedLib
+	default:
+		noNoDirs = glibcNoNo
+		noNoLibRe = re.noNoStaticLib
+	}
+
+	dirs, err := walkDir(pkg.newPkgDir, "dirs")
+	errExit(err, "can't read pkg dirs in "+pkg.newPkgDir)
+
+	for _, dir := range dirs {
+		dir = strings.TrimPrefix(dir, pkg.newPkgDir)
+		msg := "WARNING! incorrect dir: %s\n"
+		for _, noNo := range noNoDirs {
+			if strings.HasPrefix(dir, noNo) {
+				fmt.Printf(msg, dir)
+			}
+		}
+	}
+
+	files, err := walkDir(pkg.newPkgDir, "files")
+	errExit(err, "can't read pkg dirs in "+pkg.newPkgDir)
+	for _, file := range files {
+		f := strings.TrimPrefix(file, pkg.newPkgDir)
+		msg := "WARNING! incorrect lib: %s\n"
+
+		isNoNoLib := noNoLibRe.MatchString(f)
+		if isNoNoLib {
+			fmt.Printf(msg, f)
+		}
+
+		// todo: finish this someday
+		isStaticBin := re.staticBin.MatchString(f)
+		if isStaticBin {
+			continue
+		}
+	}
 }
 
 func getSubPkg(pkg pkgT, suffix string) pkgT {
@@ -737,24 +792,64 @@ func dumpSHA256(pkg pkgT) {
 	fmt.Fprintf(fOut, "%s", hashes)
 }
 
+// todo: use this to analyze binary header to check if it's static
+func FindTextProgHeader(f *elf.File) *elf.ProgHeader {
+	for _, s := range f.Sections {
+		if s.Name == ".text" {
+			// Find the LOAD segment containing the .text section.
+			for _, p := range f.Progs {
+				if p.Type == elf.PT_LOAD && p.Flags&elf.PF_X != 0 && s.Addr >= p.Vaddr && s.Addr < p.Vaddr+p.Memsz {
+					return &p.ProgHeader
+				}
+			}
+		}
+	}
+	return nil
+}
+
+// todo: use this to analyze binary header to check if it's static
+func getDynString(file string) []string {
+	var s []string
+	fd, err := os.Open(file)
+	errExit(err, "can't open "+file)
+
+	elfBin, err := elf.NewFile(fd)
+	if err != nil {
+		fd.Close()
+		return s
+	}
+
+	s, err = elfBin.DynString(elf.DT_SYMINFO)
+	errExit(err, "can't get dynamic strings from "+file)
+	fd.Close()
+
+	return s
+}
+
+func getSharedLibs(file string) []string {
+	var libs []string
+	fd, err := os.Open(file)
+	errExit(err, "can't open "+file)
+
+	elfBin, err := elf.NewFile(fd)
+	if err != nil {
+		fd.Close()
+		return libs
+	}
+	libs, err = elfBin.ImportedLibraries()
+	errExit(err, "can't get imported libraries from "+file)
+	fd.Close()
+
+	return libs
+}
+
 // used only during build step
 func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 	files, err := walkDir(pkg.pkgDir, "files")
 
 	sharedLibs := make(map[string]bool)
 	for _, file := range files {
-		fd, err := os.Open(file)
-		errExit(err, "can't open "+file)
-
-		elfBin, err := elf.NewFile(fd)
-		if err != nil {
-			fd.Close()
-			continue
-		}
-		libs, err := elfBin.ImportedLibraries()
-		errExit(err, "can't get imported libraries from "+file)
-		fd.Close()
-
+		libs := getSharedLibs(file)
 		for _, l := range libs {
 			sharedLibs[l] = true
 		}

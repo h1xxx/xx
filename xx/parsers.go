@@ -93,6 +93,7 @@ func parsePkgFlags(flags, pkgName string) (bool, bool) {
 func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 	binCnt := make(map[string]string)
 	cntIP := make(map[string]string)
+
 	re := getRegexes()
 
 	f, err := os.Open(cntConf)
@@ -156,9 +157,9 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		"nonEmptyPkgCreate": false,
 	}
 
-	iniFile := fp.Join(pkg.progDir, pkg.ver+".ini")
-
 	re := getRegexes()
+
+	iniFile := fp.Join(pkg.progDir, pkg.ver+".ini")
 	f, err := os.Open(iniFile)
 	errExit(err, "can't open file: "+iniFile)
 	defer f.Close()
@@ -465,6 +466,9 @@ func getRegexes() reT {
 	var re reT
 	re.wSpaces = regexp.MustCompile(`\s+`)
 	re.pkgName = regexp.MustCompile(`^[a-z0-9_]+/[\w-+]+$`)
+	re.noNoSharedLib = regexp.MustCompile(`^/lib/lib.*\.so.*$`)
+	re.noNoStaticLib = regexp.MustCompile(`^/usr/lib/lib.*\.a$`)
+	re.staticBin = regexp.MustCompile(`^/s*bin/`)
 
 	return re
 }

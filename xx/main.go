@@ -237,8 +237,11 @@ type subPkgT struct {
 // wSpaces		matches multiple whitespaces
 // pkgName		matches a correct package name
 type reT struct {
-	wSpaces *regexp.Regexp
-	pkgName *regexp.Regexp
+	wSpaces       *regexp.Regexp
+	pkgName       *regexp.Regexp
+	noNoSharedLib *regexp.Regexp
+	noNoStaticLib *regexp.Regexp
+	staticBin     *regexp.Regexp
 }
 
 func main() {
