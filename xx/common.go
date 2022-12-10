@@ -109,7 +109,7 @@ func fileExists(fPath string) bool {
 		host := split[0]
 		path := split[1]
 		c := "ssh " + host + " stat " + path
-		cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+		cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 		err := cmd.Run()
 		if err != nil {
 			return false
@@ -161,7 +161,7 @@ func Cp(src, dest string) {
 	err := os.MkdirAll(dest, 0750)
 	errExit(err, "can't create dest dir: "+dest)
 
-	bb := "/home/xx/tools/busybox"
+	bb := "/home/xx/bin/busybox"
 	c := bb + " cp -rf " + src + " " + dest
 	if strings.Contains(dest, ":/") {
 		c = "scp -q " + src + " " + dest
@@ -179,7 +179,7 @@ func Mv(src, dest string) {
 	err := os.MkdirAll(dest, 0750)
 	errExit(err, "can't create dest dir: "+dest)
 
-	bb := "/home/xx/tools/busybox"
+	bb := "/home/xx/bin/busybox"
 	c := bb + " mv -f " + src + " " + dest
 
 	cmd := exec.Command(bb, "sh", "-c", c)
@@ -190,7 +190,7 @@ func Mv(src, dest string) {
 }
 
 func RemEmptyDirs(dir string) {
-	bb := "/home/xx/tools/busybox"
+	bb := "/home/xx/bin/busybox"
 	c := bb + " rmdir -p --ignore-fail-on-non-empty " + dir
 
 	cmd := exec.Command(bb, "sh", "-c", c)

@@ -103,7 +103,7 @@ func installBase(world map[string]worldT, genC genCfgT) {
 }
 
 func linkBaseDir(rootDir, baseDir string) {
-	bb := "/home/xx/tools/busybox"
+	bb := "/home/xx/bin/busybox"
 	cmd := exec.Command(bb, "cp", "-al", baseDir, rootDir)
 	err := cmd.Run()
 	errExit(err, "can't create link to "+baseDir+" in:\n  "+rootDir)
@@ -117,7 +117,7 @@ func linkBaseDir(rootDir, baseDir string) {
 }
 
 func protectBaseDir(baseDir string) {
-	cmd := exec.Command("/home/xx/tools/busybox", "find", baseDir,
+	cmd := exec.Command("/home/xx/bin/busybox", "find", baseDir,
 		"-type", "f", "-exec", "chmod", "a-w", "{}", "+")
 	err := cmd.Run()
 	errExit(err, "can't remove write permissions in "+baseDir)
@@ -231,7 +231,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 			}
 		}
 
-		cmd := exec.Command("/home/xx/tools/busybox", "cp",
+		cmd := exec.Command("/home/xx/bin/busybox", "cp",
 			"/home/xx/xx/cntrun/cntrun", pkgC.instDir+"/../../bin/")
 		if strings.Contains(pkgC.instDir, ":/") {
 			cmd = exec.Command("scp", "-q",
@@ -243,7 +243,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		errExit(err, "can't copy cntrun file")
 
 		// install default shadow files
-		cmd = exec.Command("/home/xx/tools/busybox", "cp",
+		cmd = exec.Command("/home/xx/bin/busybox", "cp",
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/perms",
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/group",
 			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/passwd",
@@ -270,7 +270,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		return
 	}
 
-	busybox := "/home/xx/tools/busybox"
+	busybox := "/home/xx/bin/busybox"
 	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + pkgC.instDir
 	if strings.Contains(pkgC.instDir, ":/") {
 		c = "scp -q " + pkg.pkgDir + "/* " + pkgC.instDir
@@ -380,7 +380,7 @@ func createRootDirs(rootDir string) {
 	}
 	for _, dir := range dirs {
 		c := "mkdir -p " + rootDir + dir
-		cmd := exec.Command("/home/xx/tools/ksh", "-c", c)
+		cmd := exec.Command("/home/xx/bin/bash", "-c", c)
 		out, err := cmd.CombinedOutput()
 		errExit(err, "can't create dirs\n  "+string(out))
 	}
@@ -395,7 +395,7 @@ func createRootDirs(rootDir string) {
 		s := strings.Split(modDir, " ")
 		mod := s[0]
 		dir := s[1]
-		cmd := exec.Command("/home/xx/tools/busybox", "chmod", mod,
+		cmd := exec.Command("/home/xx/bin/busybox", "chmod", mod,
 			rootDir+dir)
 		out, err := cmd.CombinedOutput()
 		errExit(err, "can't change mode:\n  "+string(out))
@@ -407,7 +407,7 @@ func createRootDirs(rootDir string) {
 	}
 	for _, lnDir := range lnDirs {
 		d := strings.Split(lnDir, " ")
-		cmd := exec.Command("/home/xx/tools/busybox", "ln", "-s", d[0],
+		cmd := exec.Command("/home/xx/bin/busybox", "ln", "-s", d[0],
 			rootDir+d[1])
 		_, _ = cmd.Output()
 	}

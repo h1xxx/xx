@@ -10,7 +10,9 @@ install: xx
 
 tools:
 	xx/xx build -f -s xx_tools_cross sys/busybox
-	xx/xx build -f -s xx_tools_cross sys/oksh
+	xx/xx build -f -s xx_tools_cross dev/musl
+	xx/xx build -f -s xx_tools_cross sys/bash
+	xx/xx build -f -s xx_tools_cross sys/file
 
 bootstrap:
 	# cross-compiling compiler and libc from the host system and then
@@ -68,7 +70,7 @@ all:
 	xx/xx build set/x11.xx
 
 clean_tmp:
-	tools/busybox sh -c 'chmod -fR +w /tmp/xx/ || :'
+	bin/busybox sh -c 'chmod -fR +w /tmp/xx/ || :'
 	rm -rf /tmp/xx/
 
 clean_pkg:

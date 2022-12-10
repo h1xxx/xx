@@ -651,10 +651,10 @@ func testTools(args argsT) {
 	errExit(err, "can't create dir: /tmp/xx/build/")
 	instLxcConfig(genC, pkgT{}, pkgCfgT{})
 
-	c := `cd /home/xx/tools/ &&
+	c := `cd /home/xx/bin/ &&
 	./busybox mkdir -pv /tmp/xx/tools_test/home/xx &&
 	./busybox mkdir -pv /tmp/xx/tools_test/tmp &&
-	./ksh -c './busybox cp -av ksh busybox /tmp/xx/tools_test/'`
+	./bash -c './busybox cp -av bash busybox /tmp/xx/tools_test/'`
 
 	cmd := exec.Command("/bin/sh", "-c", c)
 	out, err := cmd.CombinedOutput()
@@ -664,13 +664,13 @@ func testTools(args argsT) {
 	err = os.Chmod("/home/xx", 0755)
 	errExit(err, "can't change permissions on /home/xx/")
 
-	c = "lxc-execute -n xx -P /tmp/ -- /ksh -c '/busybox ls /home/xx'"
+	c = "lxc-execute -n xx -P /tmp/ -- /bash -c '/busybox ls /home/xx'"
 	cmd = exec.Command("/bin/sh", "-c", c)
 	out, err = cmd.CombinedOutput()
 	outStr := string(out)
 	errExit(err, "lxc not functional:\n  "+outStr+
 		"\n\n  please configure lxc until you can successfully run:"+
-		"\n  $ lxc-execute -n xx -P /tmp/ -- /ksh"+
+		"\n  $ lxc-execute -n xx -P /tmp/ -- /bash"+
 		"\n\n  container path: /tmp/xx/tools_test"+
 		"\n  container config: /tmp/xx/config")
 

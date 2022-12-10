@@ -416,3 +416,8 @@ check if two files exist in the same loc during install
 package doesn't exist
 
 find full prog name based on name alone and also with prog
+
+:: on empty /tmp
+xx@ws: ~ $ xx/xx build -f -s xx_tools_cross sys/file
+error: can't open package dir
+open /tmp/xx/build/: no such file or directory

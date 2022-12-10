@@ -166,7 +166,7 @@ func MoveShaInfo(pkg, subPkg pkgT, file string) {
 	err := os.MkdirAll(fp.Dir(dest), 0750)
 	errExit(err, "can't create dest dir: "+fp.Dir(dest))
 
-	bb := "/home/xx/tools/busybox"
+	bb := "/home/xx/bin/busybox"
 	c := bb + " grep \t" + file + " " + src + " > " + dest
 
 	cmd := exec.Command(bb, "sh", "-c", c)
@@ -307,14 +307,14 @@ func getSrcGitMaster(pkg pkgT, pkgC pkgCfgT) {
 		return
 	}
 
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	err := cmd.Run()
 	errExit(err, "can't get source from git server: "+pkgC.src.url)
 }
 
 func gitCommitExists(gitRoot, commit string) bool {
 	c := "cd " + gitRoot + " && git rev-parse --quiet --verify " + commit
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	err := cmd.Run()
 
 	if err != nil {
@@ -339,7 +339,7 @@ func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
 	}
 
 	c := "go mod download " + uri
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	cmd.Env = []string{"GOPATH=" + srcDir,
 		"GOCACHE=/tmp/xx/gocache",
 		"PATH=/bin:/sbin:/usr/bin:/usr/sbin"}
@@ -388,7 +388,7 @@ func createApkRoot(rootFile, buildDir string, repos map[string]string) {
 	}
 	c += "'> etc/apk/repositories"
 
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	out, err := cmd.CombinedOutput()
 	errExit(err, "can't create apk root: "+buildDir+"\n"+string(out))
 }
@@ -475,7 +475,7 @@ func runApkDot(prog string) string {
 	c += "sed -e 's/^  //' -e 's/ -> /\\n/g' -e 's/\\[/ /g' | "
 	c += "cut -d' ' -f1 | tr '\n' ' '\""
 
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	out, err := cmd.CombinedOutput()
 	errExit(err, "can't get deps via apk: \n"+string(out))
 
@@ -486,7 +486,7 @@ func getAlpinePkgVer(prog string) string {
 	c := "lxc-execute -n xx -P /tmp/ -- sh -c \""
 	c += "apk list " + prog + " | cut -d' ' -f1 \""
 
-	cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	out, err := cmd.CombinedOutput()
 	errExit(err, "can't get deps via apk: \n"+string(out))
 
@@ -497,7 +497,7 @@ func getAlpinePkgRepo(name, ver string, repos map[string]string) string {
 	for repo, repoFile := range repos {
 		c := "tar xf " + repoFile + " APKINDEX -O | "
 		c += "grep -q ^P:" + name + "$"
-		cmd := exec.Command("/home/xx/tools/busybox", "sh", "-c", c)
+		cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 
 		pkgNotExists := cmd.Run()
 		if pkgNotExists == nil {
@@ -616,7 +616,7 @@ func prepareCmd(genC genCfgT, pkg pkgT, pkgC pkgCfgT, step, command, pwd string,
 		shCmdP = append(shCmdP, "-s")
 		shCmdP = append(shCmdP, "lxc.environment="+envVar)
 	}
-	shCmdP = append(shCmdP, []string{"--", "/home/xx/tools/ksh", "-c",
+	shCmdP = append(shCmdP, []string{"--", "/home/xx/bin/bash", "-c",
 		"cd " + pwd + " && " + command}...)
 
 	if pkgC.crossBuild {
@@ -625,7 +625,7 @@ func prepareCmd(genC genCfgT, pkg pkgT, pkgC pkgCfgT, step, command, pwd string,
 	}
 
 	if genC.rootDir == "/" {
-		shCmd = "/home/xx/tools/ksh"
+		shCmd = "/home/xx/bin/bash"
 		shCmdP = []string{"-c", command}
 	}
 
@@ -920,7 +920,7 @@ func cleanup(pkg pkgT, pkgC pkgCfgT) {
 
 func moveLogs(pkg pkgT, pkgC pkgCfgT) {
 	logDir := fp.Join(pkg.progDir, "log", pkg.setVerNewRel)
-	cmd := exec.Command("/home/xx/tools/busybox", "cp", "-rd",
+	cmd := exec.Command("/home/xx/bin/busybox", "cp", "-rd",
 		pkgC.tmpLogDir, logDir)
 	err := cmd.Run()
 	errExit(err, "can't move log dir")
@@ -986,7 +986,7 @@ func saveHelp(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 		errExit(err, "can't execute config help")
 
 	case "file":
-		cmd := exec.Command("/home/xx/tools/busybox", "cp", file,
+		cmd := exec.Command("/home/xx/bin/busybox", "cp", file,
 			pathOut)
 		err := cmd.Run()
 		errExit(err, "can't copy config-help file")
