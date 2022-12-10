@@ -135,10 +135,26 @@ func pkgBuildCheck(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 
 		// todo: finish this someday
 		isStaticBin := re.staticBin.MatchString(f)
-		if isStaticBin {
-			continue
+		if isStaticBin && binHasInterpreter(file) {
+			msg := "WARNING! non static bin: %s\n"
+			fmt.Printf(msg, f)
 		}
 	}
+}
+
+func binHasInterpreter(file string) bool {
+	binDir := "/home/xx/bin"
+	c := fmt.Sprintf("%s/file -m %s/magic.mgc %s", binDir, binDir, file)
+
+	cmd := exec.Command(binDir+"/bash", "-c", c)
+	out, err := cmd.CombinedOutput()
+	errExit(err, "can't run 'file' binary from xx tools")
+
+	if strings.Contains(string(out), "interpreter /") {
+		return true
+	}
+
+	return false
 }
 
 func getSubPkg(pkg pkgT, suffix string) pkgT {
@@ -790,40 +806,6 @@ func dumpSHA256(pkg pkgT) {
 	defer fOut.Close()
 
 	fmt.Fprintf(fOut, "%s", hashes)
-}
-
-// todo: use this to analyze binary header to check if it's static
-func FindTextProgHeader(f *elf.File) *elf.ProgHeader {
-	for _, s := range f.Sections {
-		if s.Name == ".text" {
-			// Find the LOAD segment containing the .text section.
-			for _, p := range f.Progs {
-				if p.Type == elf.PT_LOAD && p.Flags&elf.PF_X != 0 && s.Addr >= p.Vaddr && s.Addr < p.Vaddr+p.Memsz {
-					return &p.ProgHeader
-				}
-			}
-		}
-	}
-	return nil
-}
-
-// todo: use this to analyze binary header to check if it's static
-func getDynString(file string) []string {
-	var s []string
-	fd, err := os.Open(file)
-	errExit(err, "can't open "+file)
-
-	elfBin, err := elf.NewFile(fd)
-	if err != nil {
-		fd.Close()
-		return s
-	}
-
-	s, err = elfBin.DynString(elf.DT_SYMINFO)
-	errExit(err, "can't get dynamic strings from "+file)
-	fd.Close()
-
-	return s
 }
 
 func getSharedLibs(file string) []string {
