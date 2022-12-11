@@ -70,6 +70,11 @@ sys/shadow			musl			latest
 sys/util-linux			musl			latest
 text/groff			musl			latest
 
+# db
+db/sqlite			musl			latest
+db/sqlite			musl_lib		latest
+db/sqlite			musl_headers		latest
+
 # languages
 lang/tcl			musl			latest
 dev/expect			musl			latest
@@ -88,9 +93,6 @@ net/libnetfilter_conntrack	musl			latest
 net/libnet			musl			latest
 net/libbpf			musl			latest
 net/libnl			musl			latest
-sys/iptables			musl			latest
-sys/openssh			musl			latest
-sys/iproute2			musl			latest
 
 # dev tools
 dev/make			musl			latest
@@ -113,17 +115,10 @@ text/libpcre2			musl			latest
 dev/ctags			musl			latest
 
 # system tools
-sys/kbd				musl			latest
 text/json-c			musl			latest
 text/libxml2			musl			latest
 dev/libaio			musl			latest
 dev/popt			musl			latest
-sys/gptfdisk			musl			latest
-sys/lvm2			musl			latest
-crypt/argon2			musl			latest
-sys/cryptsetup			musl			latest
-sys/dosfstools			musl			latest
-sys/e2fsprogs			musl			latest
 sys/eudev			musl			latest
 sys/file			musl			latest
 sys/hwids			musl			latest
@@ -148,11 +143,6 @@ dev/npth			musl			latest
 net/nghttp2			musl			latest
 crypt/gnutls			musl			latest
 
-# db
-db/sqlite			musl			latest
-db/sqlite			musl_lib		latest
-db/sqlite			musl_headers		latest
-
 # misc
 sys/pinentry			musl			latest
 sys/gnupg			musl			latest
@@ -161,5 +151,4 @@ sys/usbutils			musl			latest
 sys/pciutils			musl			latest
 sys/pciutils			musl_lib		latest
 sys/pciutils			musl_headers		latest
-
 

@@ -53,6 +53,8 @@ You can also download source code for all the packages if you want.
 
 * cross-compile the base system
 
+If any errors occur remember to run 'make clean_tmp' before continuing.
+
 	make bootstrap
 
 * compile other parts of the system

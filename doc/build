@@ -1,0 +1,39 @@
+
+build steps 
+===========
+
+All build steps are defined in .ini files.
+Environment variables are defined in <todo: put default config location> and
+optionally modified in .ini files.
+
++ prepare
+  - not containerized, uses binaries from /home/xx/bin
+  - example actions: extracting tarballs, patching, editing files and paths
+
++ configure
+  - containerized to /tmp/xx/<build set name>
+  - example actions: running configure scripts, editing config files
+
++ build
+  - containerized to /tmp/xx/<build_set_name>
+  - example actions: compiling the program
+
++ pkg_create
+  - containerized to /tmp/xx/<build_set_name>
+  - example actions: creating a pkg in /home/xx/prog/<prog_name>
+
++ install
+  - not containerized, uses binaries from /home/xx/bin
+  - action: copying pkg files and setting permission in target root dir
+
+
+
+ini file spec
+=============
+
++ general rules
+  - each build step is concatenated to one line and then executed in bash
+    (no need to escape newlines or any other characters; each command needs to
+    be separated either by ';', '&&' or '||' even if they're placed on separate
+    lines)
+

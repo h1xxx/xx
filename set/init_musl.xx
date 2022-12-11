@@ -14,7 +14,7 @@ dev/m4				musl_cross		latest
 sys/bash			musl_cross		latest
 sys/coreutils			musl_cross		latest
 sys/diffutils			musl_cross		latest
-sys/file			musl_2_cross		latest
+sys/file			musl_cross		latest
 sys/findutils			musl_cross		latest
 text/gawk			musl_cross		latest
 text/grep			musl_cross		latest
@@ -38,7 +38,6 @@ sys/util-linux			musl_init		latest
 sys/coreutils			musl_init		latest
 sys/diffutils			musl_init		latest
 sys/findutils			musl_init		latest
-sys/iana-etc			std			latest
 sys/tzdata			musl_init		latest
 arch/zlib			musl_init		latest
 arch/bzip2			musl_init		latest
@@ -46,6 +45,7 @@ arch/xz				musl_init		latest
 arch/zstd			musl_init		latest
 arch/gzip			musl_init		latest
 arch/tar			musl_init		latest
+sys/iana-etc			std			latest
 text/gawk			musl_init		latest
 text/grep			musl_init		latest
 text/sed			musl_init		latest

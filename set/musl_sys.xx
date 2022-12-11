@@ -1,13 +1,23 @@
 emu/lxc				musl			latest
+sys/openssh			musl			latest
+sys/iptables			musl			latest
+sys/iproute2			musl			latest
 sys/numactl			musl			latest
 sys/acpi			musl			latest
 sys/cronie			musl			latest
+sys/kbd				musl			latest
 sys/input-utils			musl			latest
 sys/libcgroup			musl			latest
 sys/lsof			musl			latest
 sys/rsyslog			musl			latest
 sys/vlock			musl			latest
 sys/which			musl			latest
+sys/gptfdisk			musl			latest
+sys/lvm2			musl			latest
+crypt/argon2			musl			latest
+sys/cryptsetup			musl			latest
+sys/dosfstools			musl			latest
+sys/e2fsprogs			musl			latest
 
 text/less			musl			latest
 text/man-pages			musl			latest

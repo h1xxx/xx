@@ -1,4 +1,4 @@
-.PHONY: xx tools bootstrap base clean-tmp
+.PHONY: xx tools
 
 xx:
 	CGO_ENABLED=0 go build -o xx/cntrun/cntrun xx/cntrun/cntrun.go
@@ -14,40 +14,27 @@ tools:
 	xx/xx build -f -s xx_tools_cross sys/bash
 	xx/xx build -f -s xx_tools_cross sys/file
 
-bootstrap:
+bootstrap: clean_tmp
 	# cross-compiling compiler and libc from the host system and then
 	# rebuilding them in environment isolated from the host system
 	xx/xx build set/init_glibc.xx
 	rm -rf /tmp/xx/
 
-	# todo: run if prev step ok
 	# creating environment only with packages build in isolation from the
 	# host system
 	xx/xx build set/init_glibc_cp.xx
 	mv /tmp/xx/init_glibc /tmp/xx/base
 
-	# todo: run if prev step ok
 	# final build of all base packages
 	xx/xx build set/base.xx
 	rm -rf /tmp/xx/
 
-bootstrap_rebuild:
-	xx/xx build -f set/init_glibc.xx
-	rm -rf /tmp/xx/
-
-	# todo: run if prev step ok
-	xx/xx build -f set/init_glibc_cp.xx
-	mv /tmp/xx/init_glibc /tmp/xx/base
-
-	# todo: run if prev step ok
-	xx/xx build -f set/base.xx
-	rm -rf /tmp/xx/
-
-bootstrap_musl:
+bootstrap_musl: clean_tmp
 	xx/xx b set/init_musl.xx
-	mv /tmp/xx/init_musl/ /tmp/xx/musl
-	rm -r /tmp/xx/musl/{cross_tools,tools,usr}
-	xx/xx b set/musl.xx
+	mv /tmp/xx/init_musl/ /tmp/xx/musl_base
+	rm -rf /tmp/xx/musl/{cross_tools,tools,usr}
+	touch /tmp/xx/musl_base/base_ok
+	xx/xx b set/musl_base.xx
 	rm -rf /tmp/xx/
 
 base:

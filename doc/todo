@@ -1,3 +1,8 @@
+make prepare step use only bins from xx tools, also add this to path
+when doing cross compiling, also add git,tar, sed, zstd and patch commands,
+also cross compile magic file for 'file'
+and add links from busybox (mv, cp ln, etc.)
+
 check for a /bin /lib dir in glibc pkgs and for musl for /usr
 
 cnt: add cnt-mpv command to start a shell with all devices mounted in the cnt
@@ -23,6 +28,8 @@ cp INSTALL / README / README.md / readme file if no  config-help available
 ncurses musl needs terminfo to be copied to /share, maybe reuse the one from std
 
 fix checksec /bin/bash with musl
+
+xx command to list not used pkg sets
 
 args check: root dir parameter must be an absolute path
 
