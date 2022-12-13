@@ -99,7 +99,7 @@ func pkgBuildCheck(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 		"/include", "/share", "/usr/lib64", "/usr/local"}
 
 	switch {
-	case pkgC.crossBuild:
+	case pkgC.crossBuild && pkgC.muslBuild:
 		return
 	case pkgC.muslBuild:
 		noNoDirs = muslNoNo
@@ -133,10 +133,15 @@ func pkgBuildCheck(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 			fmt.Printf(msg, f)
 		}
 
-		// todo: finish this someday
 		isStaticBin := re.staticBin.MatchString(f)
 		if isStaticBin && binHasInterpreter(file) {
 			msg := "WARNING! non static bin: %s\n"
+			fmt.Printf(msg, f)
+		}
+
+		isGlibcBin := re.glibcBin.MatchString(f)
+		if isGlibcBin && binHasWeirdInterpreter(file) {
+			msg := "WARNING! incorrect interpreter: %s\n"
 			fmt.Printf(msg, f)
 		}
 	}
@@ -148,9 +153,25 @@ func binHasInterpreter(file string) bool {
 
 	cmd := exec.Command(binDir+"/bash", "-c", c)
 	out, err := cmd.CombinedOutput()
-	errExit(err, "can't run 'file' binary from xx tools")
+	errExit(err, "can't run 'file' binary from xx tools\n"+string(out))
 
 	if strings.Contains(string(out), "interpreter /") {
+		return true
+	}
+
+	return false
+}
+
+func binHasWeirdInterpreter(file string) bool {
+	binDir := "/home/xx/bin"
+	c := fmt.Sprintf("%s/file -m %s/magic.mgc %s", binDir, binDir, file)
+
+	cmd := exec.Command(binDir+"/bash", "-c", c)
+	out, err := cmd.CombinedOutput()
+	errExit(err, "can't run 'file' binary from xx tools")
+
+	if strings.Contains(string(out), "interpreter /lib") ||
+		strings.Contains(string(out), "interpreter /usr/lib64") {
 		return true
 	}
 
@@ -178,6 +199,7 @@ func createSubPkg(pkg, subPkg pkgT, files []string) {
 func MoveShaInfo(pkg, subPkg pkgT, file string) {
 	src := fp.Join(pkg.progDir, "log", pkg.setVerNewRel, "sha256.log")
 	dest := fp.Join(subPkg.progDir, "log", subPkg.setVerNewRel, "sha256.log")
+	file = strings.Replace(file, "*", ".*", -1)
 
 	err := os.MkdirAll(fp.Dir(dest), 0750)
 	errExit(err, "can't create dest dir: "+fp.Dir(dest))
@@ -768,7 +790,7 @@ func dumpSHA256(pkg pkgT) {
 	files, err := walkDir(pkg.newPkgDir, "files")
 	sort.Strings(files)
 	remNewPkg(pkg, err)
-	errExit(err, "can't get file list for: ")
+	errExit(err, "can't get file list for: "+pkg.name)
 
 	if len(files) == 0 {
 		errExit(errors.New(""), "no files in pkg dir: "+pkg.newPkgDir)
@@ -902,9 +924,12 @@ func cleanup(pkg pkgT, pkgC pkgCfgT) {
 
 func moveLogs(pkg pkgT, pkgC pkgCfgT) {
 	logDir := fp.Join(pkg.progDir, "log", pkg.setVerNewRel)
+	err := os.RemoveAll(logDir)
+	errExit(err, "can't remove existing log dir: "+logDir)
+
 	cmd := exec.Command("/home/xx/bin/busybox", "cp", "-rd",
 		pkgC.tmpLogDir, logDir)
-	err := cmd.Run()
+	err = cmd.Run()
 	errExit(err, "can't move log dir")
 }
 

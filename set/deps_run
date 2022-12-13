@@ -1,7 +1,6 @@
 x11/xorg-server				std			latest
 	sys/kbd				std			latest
 	sys/bash			std			latest
-	sys/oksh			std			latest
 	sys/busybox			std			latest
 	sys/util-linux			std			latest
 	sys/coreutils			std			latest
@@ -56,7 +55,7 @@ x11/gtk+				std			latest
 sys/vifm				std			latest
 	sys/fdupes			std			latest
 	sys/which			std			latest
-	sys/oksh			std			latest
+	sys/bash			std			latest
 
 sys/cryptsetup				std			latest
 	dev/gcc-libgcc_s		std			latest
@@ -73,7 +72,7 @@ media/mpv				std			latest
 
 net/yt-dlp				std			latest
 	sys/coreutils			std			latest
-	sys/oksh			std			latest
+	sys/bash			std			latest
 	lang/python			std			latest
 	crypt/openssl			std			latest
 
@@ -81,7 +80,7 @@ crypt/openssl				std			latest
 	sys/ca-certificates		std			latest
 
 text/vim				std			latest
-	sys/oksh			std			latest
+	sys/bash			std			latest
 
 sys/syslinux				std			latest
 	sys/e2fsprogs			std			latest
@@ -114,7 +113,7 @@ net/w3m					std			latest
 	sys/ca-certificates		std			latest
 	crypt/libressl 			cert_pem		latest
 	sys/tzdata			std			latest
-	sys/oksh			std			latest
+	sys/bash			std			latest
 	sys/coreutils			std			latest
 	net/privoxy			std			latest
 	net/tor				std			latest
@@ -157,7 +156,7 @@ emu/dosbox-x				x11			latest
 	sys/bash			std			latest
 	x11/xorg-server			std			latest
 	net/libpcap			std			latest
-	sys/oksh			std			latest
+	sys/bash			std			latest
 	dev/gcc-libstdc++		std			latest
 	x11/openbox			std			latest
 	media/harfbuzz			std			latest

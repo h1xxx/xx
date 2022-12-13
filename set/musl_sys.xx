@@ -18,6 +18,7 @@ crypt/argon2			musl			latest
 sys/cryptsetup			musl			latest
 sys/dosfstools			musl			latest
 sys/e2fsprogs			musl			latest
+sys/syslinux			musl			latest
 
 text/less			musl			latest
 text/man-pages			musl			latest

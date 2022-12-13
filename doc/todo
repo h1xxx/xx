@@ -428,3 +428,7 @@ find full prog name based on name alone and also with prog
 xx@ws: ~ $ xx/xx build -f -s xx_tools_cross sys/file
 error: can't open package dir
 open /tmp/xx/build/: no such file or directory
+
+add info on binary files included in src
+add info on pkg environment used for the build
+

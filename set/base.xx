@@ -42,6 +42,9 @@ dev/binutils			std			latest
 dev/bison			std			latest
 dev/flex			std			latest
 dev/m4				std			latest
+dev/libtool			std			latest
+dev/autoconf			std			latest
+dev/automake			std			latest
 
 
 # shell
@@ -73,6 +76,9 @@ sys/util-linux			std			latest
 sys/kmod			std			latest
 text/groff			std			latest
 
+# db
+db/sqlite			std			latest
+
 # languages
 lang/tcl			std			latest
 dev/expect			std			latest
@@ -94,17 +100,11 @@ net/libnfnetlink		std			latest
 net/libmnl			std			latest
 net/libnetfilter_conntrack	std			latest
 net/libnet			std			latest
-sys/iptables			std			latest
-sys/openssh			std			latest
-sys/iproute2			std			latest
 
 # dev tools
 text/asciidoc			std			latest
 dev/make			std			latest
 dev/patch			std			latest
-dev/libtool			std			latest
-dev/autoconf			std			latest
-dev/automake			std			latest
 dev/ninja			std			latest
 dev/meson			std			latest
 dev/cmake			std			latest
@@ -114,25 +114,16 @@ net/curl			std			latest
 dev/git				std			latest
 
 # system tools
-sys/kbd				std			latest
-sys/syslinux			std			6.04-pre1
 text/json-c			std			latest
 text/libxml2			std			latest
 dev/libaio			std			latest
 dev/popt			std			latest
-sys/gptfdisk			std			latest
-sys/lvm2			std			2.02.188
-crypt/argon2			std			latest
-sys/cryptsetup			std			latest
-sys/dosfstools			std			latest
-sys/e2fsprogs			std			latest
 sys/eudev			std			latest
 sys/file			std			latest
 sys/hwids			std			latest
 sys/mtools			std			latest
 sys/psmisc			std			latest
 sys/procps-ng			std			latest
-sys/busybox			sysinit			latest
 
 # misc libs
 crypt/cyrus-sasl		std			latest
@@ -154,9 +145,6 @@ net/nghttp2			std			latest
 crypt/p11-kit			std			latest
 crypt/gnutls			std			latest
 
-# db
-db/sqlite			std			latest
-
 # python libs			std			latest
 text/docutils			std			latest
 
@@ -167,4 +155,5 @@ crypt/gpgme			std			latest
 sys/usbutils			std			latest
 sys/pciutils			std			latest
 sys/pciutils			std_lib			latest
+sys/pciutils			std_headers		latest
 

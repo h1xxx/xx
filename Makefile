@@ -14,19 +14,25 @@ tools:
 	xx/xx build -f -s xx_tools_cross sys/bash
 	xx/xx build -f -s xx_tools_cross sys/file
 
-bootstrap: clean_tmp
+bootstrap: clean_tmp bootstrap-cross bootstrap-cp bootstrap-final
+
+bootstrap-cross:
 	# cross-compiling compiler and libc from the host system and then
 	# rebuilding them in environment isolated from the host system
 	xx/xx build set/init_glibc.xx
-	rm -rf /tmp/xx/
 
+bootstrap-cp: clean_tmp
 	# creating environment only with packages build in isolation from the
-	# host system
+	# host system; this step drops any leftover files from initial,
+	# cross-compiled packages
 	xx/xx build set/init_glibc_cp.xx
 	mv /tmp/xx/init_glibc /tmp/xx/base
+	touch /tmp/xx/base/bootstrap
 
+bootstrap-final:
 	# final build of all base packages
 	xx/xx build set/base.xx
+	bin/busybox sh -c 'chmod -fR +w /tmp/xx/ || :'
 	rm -rf /tmp/xx/
 
 bootstrap_musl: clean_tmp

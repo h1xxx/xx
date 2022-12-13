@@ -138,6 +138,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	var stepsMap = make(map[string]string)
 	var src srcT
 	var section, step, varsVar string
+	var subPkgList []string
 	vars := make(map[string]string)
 	set := pkg.set
 
@@ -245,13 +246,17 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 
 		case set == section && startStepLine(line):
 			before, after, found := str.Cut(line, " =")
+			val := str.Trim(after, " ")
 			step = before
-			stepsMap[step] = str.Trim(after, " ")
+			stepsMap[step] = val
 			if !found {
 				msg := "incorrect step in line %d of %s"
 				errExit(fmt.Errorf(msg, i, iniFile), "")
 			}
 			check["has_"+step] = true
+			if str.HasPrefix(step, "subpkg_") {
+				subPkgList = append(subPkgList, step)
+			}
 
 		case set == section:
 			stepsMap[step] += " " + line
@@ -309,13 +314,11 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	steps.build = stepsMap["build"]
 	steps.pkg_create = stepsMap["pkg_create"]
 
-	for step, val := range stepsMap {
-		if str.HasPrefix(step, "subpkg_") {
-			var subPkg subPkgT
-			subPkg.suffix = str.TrimPrefix(step, "subpkg_")
-			subPkg.files = str.Split(val, " ")
-			steps.subPkgs = append(steps.subPkgs, subPkg)
-		}
+	for _, step := range subPkgList {
+		var subPkg subPkgT
+		subPkg.suffix = str.TrimPrefix(step, "subpkg_")
+		subPkg.files = str.Split(stepsMap[step], " ")
+		steps.subPkgs = append(steps.subPkgs, subPkg)
 	}
 
 	return src, steps, false
@@ -469,6 +472,8 @@ func getRegexes() reT {
 	re.noNoSharedLib = regexp.MustCompile(`^/lib/lib.*\.so.*$`)
 	re.noNoStaticLib = regexp.MustCompile(`^/usr/lib/lib.*\.a$`)
 	re.staticBin = regexp.MustCompile(`^/s*bin/`)
+	r := `(^/usr/s*bin/|^/usr/lib/lib.*\.so.*|^/usr/libexec)`
+	re.glibcBin = regexp.MustCompile(r)
 
 	return re
 }
@@ -498,15 +503,15 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 	errExit(err, "can't walk world dir: "+worldDir)
 
 	for _, dir := range dirs {
-		dir := str.TrimPrefix(dir, worldDir+"/")
-		fields := str.Split(dir, "/")
-		if len(fields) != 3 {
+		d := str.TrimPrefix(dir, worldDir+"/")
+		fields := str.Split(d, "/")
+		if len(fields) != 3 || str.HasSuffix(dir, "/var/xx") {
 			continue
 		}
 		name, pkgSetVerRel := fields[0]+"/"+fields[1], fields[2]
 		fields = str.Split(pkgSetVerRel, "-")
 		if len(fields) < 3 {
-			errExit(errors.New(""), "can't parse line: "+dir)
+			errExit(errors.New(""), "can't parse line: "+d)
 		}
 
 		set := fields[0]

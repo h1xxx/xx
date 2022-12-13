@@ -159,10 +159,12 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 		envMap["PATH"] = genC.rootDir
 		envMap["PATH"] += "/tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-gnu"
+		envMap["LDFLAGS"] = "-Wl,-dynamic-linker,/usr/lib/ld-linux-x86-64.so.2 "
 
 	case !pkgC.muslBuild:
 		envMap["PATH"] = "/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
+		envMap["LDFLAGS"] = "-Wl,-dynamic-linker,/usr/lib/ld-linux-x86-64.so.2 "
 
 	case genC.buildEnv == "init_musl" && pkgC.crossBuild:
 		envMap["PATH"] = genC.rootDir + "/tools/bin"
@@ -185,7 +187,7 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 			"-fstack-clash-protection -Wformat " +
 			"-Wformat-security -D_FORTIFY_SOURCE=2"
 		envMap["CXXFLAGS"] = envMap["CFLAGS"]
-		envMap["LDFLAGS"] = "-Wl,-z,now -Wl,-z,relro -Wl,-z,noexecstack"
+		envMap["LDFLAGS"] += "-Wl,-z,now -Wl,-z,relro -Wl,-z,noexecstack"
 	}
 
 	if pkgC.muslBuild && !pkgC.crossBuild {

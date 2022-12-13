@@ -242,6 +242,7 @@ type reT struct {
 	noNoSharedLib *regexp.Regexp
 	noNoStaticLib *regexp.Regexp
 	staticBin     *regexp.Regexp
+	glibcBin      *regexp.Regexp
 }
 
 func main() {
@@ -326,6 +327,7 @@ func argsCheck(args argsT) {
 	if !isPkgString(args.actionTarget) {
 		path := args.actionTarget
 		stat, err := os.Stat(path)
+		errExit(err, "can't stat "+path)
 		if stat.IsDir() || !strings.HasSuffix(path, ".xx") {
 			errExit(err, msg)
 		}
@@ -423,6 +425,11 @@ func getGenCfg(args argsT) genCfgT {
 	}
 
 	if strings.HasPrefix(genC.buildEnv, "init_") {
+		genC.isInit = true
+	}
+
+	// this file shows that the base pkgs are currently being bootstrapped
+	if !genC.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
 		genC.isInit = true
 	}
 

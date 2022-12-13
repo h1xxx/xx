@@ -5,11 +5,14 @@ dev/binutils			bootstrap_1_cross		latest
 dev/gcc				bootstrap_1_cross		latest
 sys/linux			bootstrap_headers_cross		latest
 dev/glibc			bootstrap_cross			latest
-dev/glibc			bootstrap_headers_cross		latest
+
+# this needs to be always forced as it modifies files outside pkg dir
+# todo: copy the changes from root dir to pkg dir
+dev/glibc			bootstrap_headers_cross		latest	f
+
 dev/gcc				bootstrap_libstdcpp_cross	latest
 dev/m4				bootstrap_cross			latest
 sys/bash			bootstrap_cross			latest
-sys/oksh			bootstrap_cross			latest
 sys/coreutils			bootstrap_cross			latest
 sys/diffutils			bootstrap_cross			latest
 sys/file			bootstrap_cross			latest

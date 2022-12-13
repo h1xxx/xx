@@ -193,7 +193,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 			fp.Join(rootDir, "/cnt/home/", pkgC.cntProg): 0755,
 		}
 
-		topDirs := []string{"/bin", "/etc", "/home", "/lib", "/lib64",
+		topDirs := []string{"/bin", "/etc", "/home", "/lib",
 			"/sbin", "/usr", "/var/xx", "/mnt",
 			"/dev", "/proc", "/run", "/sys", "/tmp"}
 
@@ -212,8 +212,6 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		ldLib := "ld-linux-x86-64.so.2"
 		var symLinks = map[string]string{
 			"/lib/" + ldLib:        "../usr/lib/" + ldLib,
-			"/lib64/" + ldLib:      "../usr/lib/" + ldLib,
-			"/usr/lib64":           "lib",
 			"/cnt/bin/" + pkg.prog: "cntrun",
 		}
 
@@ -243,21 +241,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		errExit(err, "can't copy cntrun file")
 
 		// install default shadow files
-		cmd = exec.Command("/home/xx/bin/busybox", "cp",
-			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/perms",
-			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/group",
-			"/home/xx/prog/sys/shadow/cfg/std-latest/etc/passwd",
-			pkgC.instDir+"/etc/")
-		if strings.Contains(pkgC.instDir, ":/") {
-			etcDir := "/home/xx/prog/sys/shadow/cfg/std-latest/etc"
-			cmd = exec.Command("scp", "-q",
-				etcDir+"/perms",
-				etcDir+"/group",
-				etcDir+"/passwd",
-				pkgC.instDir+"/etc/")
-		}
-		err = cmd.Run()
-		errExit(err, "can't copy /etc/perms file to: "+pkgC.instDir+"/etc")
+		cpShadowFiles(pkgC.instDir)
 	}
 
 	fmt.Printf("  installing...\n")
@@ -279,9 +263,64 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 	out, err := cmd.Output()
 	errExit(err, "can't copy "+pkg.pkgDir+" to "+pkgC.instDir+
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+	
+	if !pkgC.muslBuild {
+		createBinLinks(pkg.pkgDir, pkgC.instDir)
+	}
 
 	// todo: move this outside
 	addPkgToWorldDir(pkg, pkgC.instDir)
+}
+
+func createBinLinks(pkgDir, instDir string) {
+	var files []string
+
+	srcDir := fp.Join(pkgDir, "/usr/bin")
+	if fileExists(srcDir) {
+		binFiles, err := walkDir(srcDir, "files")
+		errExit(err, "can't get file list for bin dir" )
+		files = append(files, binFiles...)
+	}
+
+	srcDir = fp.Join(pkgDir, "/usr/sbin")
+	if fileExists(srcDir) {
+		sbinFiles, err := walkDir(srcDir, "files")
+		errExit(err, "can't get file list for sbin dir" )
+		files = append(files, sbinFiles...)
+	}
+
+	for _, file := range files {
+		f := strings.TrimPrefix(file, pkgDir+"/usr")
+		dest := fp.Join(instDir, f)
+
+		destDir := path.Dir(dest)
+		err := os.MkdirAll(destDir, 0755)
+		errExit(err, "can't create dest dir "+destDir)
+
+		busybox := "/home/xx/bin/busybox"
+		c := busybox + " ln -fs ../usr" + f + " " + dest
+
+		cmd := exec.Command(busybox, "sh", "-c", c)
+		out, err := cmd.CombinedOutput()
+		errExit(err, "can't create links in "+dest+"\n"+string(out))
+	}
+
+	// todo: also handle remote hosts
+}
+
+func cpShadowFiles(targetDir string) {
+	etcDir := "/home/xx/prog/sys/shadow/cfg/std-latest/etc"
+	cmd := exec.Command("/home/xx/bin/busybox", "cp",
+		etcDir+"/perms", etcDir+"/group", etcDir+"/passwd",
+		targetDir+"/etc/")
+
+	if strings.Contains(targetDir, ":/") {
+		cmd = exec.Command("scp", "-q",
+			etcDir+"/perms", etcDir+"/group", etcDir+"/passwd",
+			targetDir+"/etc/")
+	}
+	err := cmd.Run()
+	errExit(err, "can't copy /etc/perms file to: "+targetDir+"/etc")
 }
 
 // installs config files for the pkg
@@ -363,21 +402,26 @@ func worldPkgExists(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfg
 }
 
 func createRootDirs(rootDir string) {
+	// todo: add /lib for musl
 	var dirs = []string{
-		"/{bin,etc,home,lib,lib64,mnt,root,sbin,usr,var}",
+		"/{bin,etc,home,mnt,root,sbin,var}",
 		"/{dev,proc,sys,run,tmp}",
 		"/etc/{xx,rc.d,perms.d,sysctl.d}",
 		"/home/{x,xx}",
 		"/cnt/{bin,home,rootfs}",
 		"/mnt/{misc,shared}",
-		"/usr/lib/firmware",
-		"/usr/{bin,include,lib,sbin,share}",
-		"/usr/share/{doc,locale,man,misc,terminfo,zoneinfo}",
-		"/usr/share/man/man{1,2,3,4,5,6,7,8}",
 		"/run/lock",
 		"/var/{cache,empty,lib,xx,log,spool,tmp}",
 		"/var/lib/{misc,locate}",
 	}
+
+	/* todo: add dirs for glibc
+		"/usr/lib/firmware",
+		"/usr/{bin,include,lib,sbin,share}",
+		"/usr/share/{doc,locale,man,misc,terminfo,zoneinfo}",
+		"/usr/share/man/man{1,2,3,4,5,6,7,8}",
+	*/
+
 	for _, dir := range dirs {
 		c := "mkdir -p " + rootDir + dir
 		cmd := exec.Command("/home/xx/bin/bash", "-c", c)
@@ -412,14 +456,14 @@ func createRootDirs(rootDir string) {
 		_, _ = cmd.Output()
 	}
 
+	/* todo: add dirs for glibc
 	var symLinks = map[string]string{
 		"/lib/ld-linux-x86-64.so.2":   "../usr/lib/ld-linux-x86-64.so.2",
-		"/lib64/ld-linux-x86-64.so.2": "../usr/lib/ld-linux-x86-64.so.2",
-		"/usr/lib64":                  "lib",
 	}
 	for symlink, target := range symLinks {
 		_ = os.Symlink(target, rootDir+"/"+symlink)
 	}
+	*/
 
 	if fileExists("/mnt/xx/boot") {
 		err := os.MkdirAll(rootDir+"/mnt/xx/boot", 0700)

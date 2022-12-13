@@ -9,6 +9,7 @@ dev/gcc				musl			11.2.0
 
 # some sys libs and tools
 sys/busybox			musl			latest
+sys/busybox			sysinit			latest
 sys/coreutils			musl			latest
 dev/pkgconf			musl			latest
 arch/zlib			musl			latest
