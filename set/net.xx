@@ -5,7 +5,6 @@ net/mtr				std			latest
 net/tcpdump			std			latest
 net/whois			std			latest
 net/rsync			std			latest
-net/dhcpcd			musl			latest
 net/telnet-bsd			std			latest
 net/wget			std			latest
 
@@ -53,7 +52,7 @@ net/vsftpd			std			latest
 net/libidn			std			latest
 net/prosody			std			latest
 net/nginx			std			latest
-net/stunnel			std			latest
+#net/stunnel			std			latest
 
 lang/lua			std			5.4.3
 net/diod			std			latest

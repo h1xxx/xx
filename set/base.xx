@@ -2,7 +2,7 @@
 
 # libc and a compiler
 dev/glibc			std			latest
-dev/gcc				std			latest
+dev/gcc				std			latest	f
 dev/gcc				std_headers		latest
 dev/gcc				std_lib			latest
 dev/gcc				std_libgcc		latest
@@ -78,6 +78,8 @@ text/groff			std			latest
 
 # db
 db/sqlite			std			latest
+db/sqlite			std_headers		latest
+db/sqlite			std_lib			latest
 
 # languages
 lang/tcl			std			latest

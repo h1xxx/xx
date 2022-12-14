@@ -782,8 +782,9 @@ func logCmd(pkg pkgT, pkgC pkgCfgT, cmd *exec.Cmd, step string) {
 	cmdStr = strings.Replace(cmdStr, " -- ", " -- \n\n", -1)
 	cmdStr = strings.Replace(cmdStr, "&& ", "&& \n\n", -1)
 
-	fmt.Fprintf(fd, "[ %s ]\nENV: %+v\n\n%s\n\n\n",
-		step, pkgC.steps.env, cmdStr)
+	envStr := strings.Join(pkgC.steps.env, "\n")
+
+	fmt.Fprintf(fd, "[ %s ]\n\n%+s\n\n%s\n\n\n", step, envStr, cmdStr)
 }
 
 func dumpSHA256(pkg pkgT) {
