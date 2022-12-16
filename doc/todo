@@ -10,9 +10,18 @@ cnt: fix how files are passed to the cnt
 
 rem pkg and subpkg in case of errors in creating subpkg
 
+when printing build error:
+- filter irrelevant lines 
+- find undefined references in all static libs (also dump objects to log)
+
 deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
 warn about "configure: WARNING: unrecognized options: --disable-shared"
+
+don't remove failed pkg dir, but place pkg_ok file when everything's ok, and
+use this file to get the latest pkg
+
+help log - list makefile targets 
 
 place default configs in a file (flags, env etc.), read defaults into genC
 

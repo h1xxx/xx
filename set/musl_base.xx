@@ -133,11 +133,14 @@ crypt/libgpg-error		musl			latest
 dev/libassuan			musl			latest
 text/libestr			musl			latest
 text/libfastjson		musl			latest
+text/libxslt			musl			latest
+text/docutils			musl			latest
 crypt/libgcrypt			musl			latest
 crypt/libksba			musl			latest
 text/libpcre			musl			latest
 dev/libtasn1			musl			latest
 sys/libusb			musl			latest
+sys/libevent			musl			latest
 dev/libuv			musl			latest
 crypt/nettle			musl			latest
 dev/npth			musl			latest

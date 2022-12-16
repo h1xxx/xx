@@ -1,25 +1,4 @@
-net/arping			std			latest
 net/bind			tools			latest
-net/fping			std			latest
-net/mtr				std			latest
-net/tcpdump			std			latest
-net/whois			std			latest
-net/rsync			std			latest
-net/telnet-bsd			std			latest
-net/wget			std			latest
-
-net/dnsmasq			std			latest
-net/unbound			std			latest
-net/chrony			std			latest
-
-sys/iw				std			latest
-net/wpa_supplicant		std			latest
-net/hostapd			std			latest
-
-net/wireguard-tools		std			latest
-arch/lzo			std			latest
-net/openvpn			std			latest
-net/iodine			std			latest
 
 text/libxslt			std			latest
 dev/glib			std			latest
@@ -27,68 +6,8 @@ net/c-ares			std			latest
 net/wireshark			std			latest
 
 lang/lua			std			5.2.4
-net/nmap			std			latest
-net/arp-scan			std			latest
-net/dnstracer			std			latest
-net/httpie			std			latest
-net/mitmproxy			std			latest
-
-net/macchanger			std			latest
-net/socat			std			latest
-sys/wol				std			latest
-sys/ethtool			std			latest
-
-net/siege			std			latest
-net/iperf			std			latest
-net/speedtest-cli		std			latest
-
-net/vnstat			std			latest
-net/iftop			std			latest
-net/nethogs			std			latest
-
-net/acme-sh			std			latest
-
-net/vsftpd			std			latest
 net/libidn			std			latest
 net/prosody			std			latest
-net/nginx			std			latest
-#net/stunnel			std			latest
-
-lang/lua			std			5.4.3
-net/diod			std			latest
-
-net/privoxy			std			latest
-sys/libevent			std			latest
-net/tor				std			latest
 
 net/mutt			std			latest
-net/mblaze			std			latest
-net/fetchmail			std			latest
 
-crypt/libotr			std			latest
-net/irssi			std			latest
-net/mktorrent			std			latest
-net/transmission		std			latest
-net/lftp			std			latest
-
-net/geoip			std			latest
-net/geoip-database		std			latest
-net/libmaxminddb		std			latest
-
-net/libnetfilter_queue		std			latest
-libgo/sys			std			latest
-libgo/gatt			std			latest
-libgo/bettercap			std			latest
-net/bettercap			std			latest
-net/lorcon			std			latest
-net/aircrack-ng			std			latest
-
-# github.com/secdev/scapy
-# https://github.com/gcla/termshark
-#iptraf-ng
-#net-analyzer/gvm-tools
-#net-analyzer/gvmd
-#net-analyzer/openvas-scanner
-#net-analyzer/ospd-openvas
-#BlueZ
-#iodine

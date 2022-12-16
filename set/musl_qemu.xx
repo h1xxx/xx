@@ -4,7 +4,6 @@ sys/alsa-lib			musl			latest
 
 media/libpng			musl			latest
 
-text/libxslt			musl			latest
 dev/glib			musl			latest
 sys/liburing			musl			latest
 x11/pixman			musl			latest

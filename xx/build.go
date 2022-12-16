@@ -263,7 +263,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 	out, err := cmd.Output()
 	errExit(err, "can't copy "+pkg.pkgDir+" to "+pkgC.instDir+
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
-	
+
 	if !pkgC.muslBuild {
 		createBinLinks(pkg.pkgDir, pkgC.instDir)
 	}
@@ -278,14 +278,14 @@ func createBinLinks(pkgDir, instDir string) {
 	srcDir := fp.Join(pkgDir, "/usr/bin")
 	if fileExists(srcDir) {
 		binFiles, err := walkDir(srcDir, "files")
-		errExit(err, "can't get file list for bin dir" )
+		errExit(err, "can't get file list for bin dir")
 		files = append(files, binFiles...)
 	}
 
 	srcDir = fp.Join(pkgDir, "/usr/sbin")
 	if fileExists(srcDir) {
 		sbinFiles, err := walkDir(srcDir, "files")
-		errExit(err, "can't get file list for sbin dir" )
+		errExit(err, "can't get file list for sbin dir")
 		files = append(files, sbinFiles...)
 	}
 
@@ -416,10 +416,10 @@ func createRootDirs(rootDir string) {
 	}
 
 	/* todo: add dirs for glibc
-		"/usr/lib/firmware",
-		"/usr/{bin,include,lib,sbin,share}",
-		"/usr/share/{doc,locale,man,misc,terminfo,zoneinfo}",
-		"/usr/share/man/man{1,2,3,4,5,6,7,8}",
+	"/usr/lib/firmware",
+	"/usr/{bin,include,lib,sbin,share}",
+	"/usr/share/{doc,locale,man,misc,terminfo,zoneinfo}",
+	"/usr/share/man/man{1,2,3,4,5,6,7,8}",
 	*/
 
 	for _, dir := range dirs {

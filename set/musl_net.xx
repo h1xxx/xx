@@ -1,0 +1,91 @@
+net/arping			musl			latest
+net/iputils			musl			latest
+net/fping			musl			latest
+net/mtr				musl			latest
+net/tcpdump			musl			latest
+net/whois			musl			latest
+net/rsync			musl			latest
+net/inetutils			musl			latest
+net/wget			musl			latest
+net/dhcpcd			musl			latest
+
+net/dnsmasq			musl			latest
+net/unbound			musl			latest
+net/chrony			musl			latest
+
+sys/iw				musl			latest
+net/wpa_supplicant		musl			latest
+net/hostapd			musl			latest
+
+net/wireguard-tools		musl			latest
+arch/lzo			musl			latest
+net/openvpn			musl			latest
+net/iodine			musl			latest
+
+net/nmap			musl			latest
+net/arp-scan			musl			latest
+net/dnstracer			musl			latest
+net/httpie			musl			latest
+net/mitmproxy			musl			latest
+
+net/macchanger			musl			latest
+net/socat			musl			latest
+sys/wol				musl			latest
+sys/ethtool			musl			latest
+
+net/siege			musl			latest
+net/iperf			musl			latest
+net/speedtest-cli		musl			latest
+
+net/vnstat			musl			latest
+net/iftop			musl			latest
+net/nethogs			musl			latest
+
+net/acme-sh			musl			latest
+
+net/vsftpd			musl			latest
+net/libidn			musl			latest
+lang/lua			musl			5.2.4
+net/nginx			musl			latest
+net/stunnel			musl			latest
+
+net/privoxy			musl			latest
+net/tor				musl			latest
+
+lang/lua			musl			5.4.3
+net/diod			musl			latest
+
+net/mblaze			musl			latest
+net/fetchmail			musl			latest
+
+crypt/libotr			musl			latest
+dev/glib			musl			latest
+net/irssi			musl			latest
+net/mktorrent			musl			latest
+net/transmission		musl			latest
+net/lftp			musl			latest
+
+net/geoip			musl			latest
+net/geoip-database		musl			latest
+net/libmaxminddb		musl			latest
+
+net/libnetfilter_queue		musl			latest
+libgo/sys			musl			latest
+libgo/gatt			musl			latest
+libgo/bettercap			musl			latest
+
+# todo: needs more work, not working currently
+#net/bettercap			musl			latest
+
+net/lorcon			musl			latest
+net/aircrack-ng			musl			latest
+
+
+# github.com/secdev/scapy
+# https://github.com/gcla/termshark
+#iptraf-ng
+#net-analyzer/gvm-tools
+#net-analyzer/gvmd
+#net-analyzer/openvas-scanner
+#net-analyzer/ospd-openvas
+#BlueZ

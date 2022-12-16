@@ -9,7 +9,7 @@ arch/p7zip			std			latest
 #sys/linux			perf			latest
 
 # uefi tools
-# todo: make static, musl doesn't werk for some reason
+# todo: make static, musl doesn't werk here for some reason as of yet
 text/mandoc			std			latest
 sys/efivar			std			latest
 sys/efibootmgr			std			latest
@@ -25,13 +25,10 @@ x11/libXfont2			std			latest
 media/bdftopcf			std			latest
 media/bdf2psf			std			latest
 media/libpng			std			latest
-#media/libjpeg-turbo		std			latest
-#media/freetype			std			latest
 libperl/ExtUtils-PkgConfig	std			latest
 media/libgd			std			latest
 libperl/GD			std			latest
 sys/unifont			std			latest
-
 
 
 # to build man for lxc
@@ -42,126 +39,3 @@ sys/unifont			std			latest
 #libperl/XML-SAX-Expat           std                     latest
 #text/docbook2x
 
-
-
-
-
-## rem
-#sys/numactl			std			latest
-#sys/acpi			std			latest
-#sys/cronie			std			latest
-#sys/file			std			latest
-#sys/input-utils			std			latest
-#sys/libcgroup			std			latest
-#sys/lsof			std			latest
-#sys/rsyslog			std			latest
-#sys/vlock			std			latest
-#sys/which			std			latest
-#
-#text/less			std			latest
-#text/man-pages			std			latest
-#text/man-db			std			latest
-#
-#sys/libevent			std			latest
-#sys/tmux			std			latest
-#
-#dev/libx86			std			latest
-#libperl/Switch			std			latest
-#
-## fuse2 fails to build, but ntfs3g is not in kernel so probably can be dropped
-##sys/fuse2			std			latest
-##sys/ntfs3g			std			latest
-#
-#sys/ncdu			std			latest
-#
-#sys/testdisk			std			latest
-#text/vim			std			latest
-#sys/fdupes			std			latest
-#sys/vifm			std			latest
-#text/dos2unix			std			latest
-#
-#sys/dmidecode			std			latest
-#sys/lm-sensors			std			latest
-#
-#sys/libftdi			std			latest
-#sys/flashrom			std			latest
-#
-#arch/unrar			std			latest
-#
-#sys/libunwind			std			latest
-#dev/protobuf			std			latest
-#dev/gtest			std			latest
-#arch/brotli			std			latest
-#arch/lz4			std			latest
-#
-#libgo/net			std		20190404232315-eb5bcb51f2a3
-#libgo/sys			std		20190215142949-d0b11bdaac8a
-#libgo/sys			std		20190412213103-97732733099d
-#libgo/crypto			std		20190308221718-c2843e01d9a2
-#libgo/text			std			0.3.0
-#libgo/crypto			std		20200622213623-75b288015ac9
-#sys/android-tools		std			latest
-#sys/android-file-transfer-linux	std			latest
-#
-#sys/sysstat			std			latest
-#sys/smartmontools		std			latest
-#sys/hdparm			std			latest
-#dev/libx86emu			std			latest
-#sys/hwinfo			std			latest
-#sys/lshw			std			latest
-#sys/powertop			std			latest
-#sys/iotop			std			latest
-#sys/stress			std			latest
-#
-#sys/oath-toolkit		std			latest
-#sys/sl				std			latest
-#
-#sys/cups			std			latest
-#media/libjpeg-turbo		std			latest
-#sys/hplip			std			latest
-#dev/autoconf-archive		std			latest
-#dev/gettext			std			latest
-#media/sane-backends		std			latest
-#
-#sys/alsa-ucm-conf		std			latest
-#sys/alsa-topology-conf		std			latest
-#sys/alsa-lib			std			latest
-#sys/alsa-plugins		std			latest
-#sys/alsa-utils			std			latest
-#
-#text/nawk			std			latest
-#
-#
-#
-##fbdump 0.4.2
-## https://www.rcdrummond.net/$pkgname/$pkgname-$pkgver.tar.gz
-#
-#
-## https://github.com/qca/open-ath9k-htc-firmware
-##fbset
-##fbdump
-##	https://github.com/pixel/hexedit http://tim.stoakes.net/hexedit/
-##app-crypt/ccid
-##app-i18n/uchardet
-##app-misc/jq
-##sys-apps/pv
-##app-text/bdf2psf
-##app-text/htmltidy
-##app-text/xmlstarlet
-##games-misc/cowsay
-##media-fonts/unifont psf only
-##media-gfx/chafa
-##media-sound/cmus
-##media-sound/shntool
-##media-sound/sox
-##net-dns/avahi
-##net-fs/sshfs
-##net-libs/libetpan
-##net-libs/libgsasl
-##net-misc/electrum
-##net-p2p/go-ethereum
-##net/mktorrent
-##net-p2p/ncdc
-##sys-apps/pcsc-tools
-#
-##https://distfiles.gentoo.org/distfiles/throttle-1.2.tar.gz

@@ -105,7 +105,6 @@ text/docbook-xml		std			4.4
 text/docbook-xml		std			4.5
 text/docbook-xsl		std			1.79.2
 text/docbook-catalog		std			latest
-text/libxslt			std			latest
 text/xmlto			std			latest
 dev/itstool			std			latest
 x11/shared-mime-info		std			latest

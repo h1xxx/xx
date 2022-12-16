@@ -177,7 +177,6 @@ crypt/p11-kit				std			latest
 
 net/nmap				std			latest
 	text/libpcre			std			latest
-	lang/lua			std			5.2.4
 	net/libpcap			std			latest
 
 net/prosody				std			latest
@@ -601,6 +600,7 @@ sys/efitools				std			latest
 
 net/irssi				std			latest
 	crypt/libotr			std			latest
+	dev/glib			std			latest
 
 sys/unifont				std			latest
 	libperl/GD			std			latest

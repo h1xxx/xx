@@ -2,7 +2,7 @@
 
 # libc and a compiler
 dev/glibc			std			latest
-dev/gcc				std			latest	f
+dev/gcc				std			latest
 dev/gcc				std_headers		latest
 dev/gcc				std_lib			latest
 dev/gcc				std_libgcc		latest
@@ -133,6 +133,7 @@ crypt/libgpg-error		std			latest
 dev/libassuan			std			latest
 text/libestr			std			latest
 text/libfastjson		std			latest
+text/libxslt			std			latest
 crypt/libgcrypt			std			latest
 crypt/libksba			std			latest
 net/libnl			std			latest
@@ -140,6 +141,7 @@ text/libpcre			std			latest
 text/libpcre2			std			latest
 dev/libtasn1			std			latest
 sys/libusb			std			latest
+sys/libevent			std			latest
 dev/libuv			std			latest
 crypt/nettle			std			latest
 dev/npth			std			latest

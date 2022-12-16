@@ -25,13 +25,11 @@ text/less			musl			latest
 text/man-pages			musl			latest
 text/man-db			musl			latest
 
-sys/libevent			musl			latest
-sys/tmux			musl			latest
-
 dev/libx86			musl			latest
 libperl/Switch			musl			latest
 
 sys/ncdu			musl			latest
+sys/tmux			musl			latest
 
 sys/testdisk			musl			latest
 text/vim			musl			latest
