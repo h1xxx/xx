@@ -1,12 +1,11 @@
 # ownership
+# =========
 
 root:root	/boot
 root:root	/boot/
 root:root	/etc
 root:root	/etc/
 root:root	/root
-root:root	/usr
-root:root	/usr/
 root:root	/var
 root:root	/var/
 root:log	/var/log
@@ -31,12 +30,18 @@ xx:xx		/home/xx/conf/kernel/setup
 xx:xx		/home/xx/conf/.keep
 root:root	/home/xx/conf/
 
-root:lxc	/usr/bin/newuidmap
-root:lxc	/usr/bin/newgidmap
+root:lxc	/bin/newuidmap
+root:lxc	/bin/newgidmap
+root:root	/cnt/
+cnt:cnt		/cnt/home/
+
+root:root	/usr
+root:root	/lib64
 
 
 
 # dir permissions
+# ===============
 
 0755	d:/bin
 0755	d:/bin/
@@ -44,15 +49,19 @@ root:lxc	/usr/bin/newgidmap
 0700	d:/boot/
 0755	d:/etc
 0755	d:/etc/
+0755	d:/include
+0755	d:/include/
 0755	d:/mnt
 0755	d:/sbin
 0755	d:/sbin/
+0755	d:/share
+0755	d:/share/
 0755	d:/lib
 0755	d:/lib/
+0755	d:/libexec
+0755	d:/libexec/
 0755	d:/lib64
 0755	d:/lib64/
-0755	d:/usr
-0755	d:/usr/
 0755	d:/var
 0755	d:/var/
 
@@ -74,16 +83,8 @@ root:lxc	/usr/bin/newgidmap
 
 0777	d:/mnt/shared
 
-0755	d:/cnt
-0755	d:/cnt/
-
-0777	d:/cnt/exiftool/files
-0777	d:/cnt/fbpdf/files
-0777	d:/cnt/fim/files
-0777	d:/cnt/mpv/files
-0777	d:/cnt/mutt/files
-0777	d:/cnt/w3m/files
-0777	d:/cnt/vim/files
+0777	d:/cnt/home/w3m
+0777	d:/cnt/home/w3m/
 
 0777	d:/var/lib/dosbox-x
 0777	d:/var/lib/dosbox-x/
@@ -100,9 +101,14 @@ root:lxc	/usr/bin/newgidmap
 0777	d:/var/lib/xorg-server
 0777	d:/var/lib/xorg-server/
 
+# these dirs shouldn't be created, so restrict access to them if they're there
+0700	d:/usr
+0700	d:/lib64
+
 
 
 # file permissions
+# ================
 
 0600	f:/boot/
 0440	f:/boot/syslinux/ldlinux.sys
@@ -126,22 +132,18 @@ root:lxc	/usr/bin/newgidmap
 0755	f:/bin/
 0755	f:/sbin/
 0755	f:/lib/
-0755	f:/lib64/
-0700	f:/sbin/busybox-sysinit
-0755	f:/usr/bin/
-0755	f:/usr/sbin/
-0755	f:/usr/libexec/
-0755	f:/usr/lib/
-0755	f:/usr/include/
-0755	f:/usr/share/
+0700	f:/sbin/sysinit
+0755	f:/libexec/
+0755	f:/include/
+0755	f:/share/
 0640	f:/var/log/
 
 0600	f:/etc/ssh/ssh_host_ed25519_key
 
-4755	f:/usr/bin/newuidmap
-4755	f:/usr/bin/newgidmap
-4755	f:/usr/libexec/lxc/lxc-user-nic
-0755	f:/cnt/w3m/usr/libexec
+4755	f:/bin/newuidmap
+4755	f:/bin/newgidmap
+4755	f:/libexec/lxc/lxc-user-nic
+0755	f:/cnt/rootfs/w3m/usr/libexec
 
 0755	f:/cnt/bin/
 
@@ -154,15 +156,23 @@ root:lxc	/usr/bin/newgidmap
 
 
 # permissions for containers in /cnt
+# ==================================
+
 x:x	c:/home
 x:x	c:/config
 
+0755	dc:/bin
+0755	dc:/bin/
 0755	dc:/etc
 0755	dc:/etc/
-0755	dc:/mnt
-0755	dc:/mnt/
+0755	dc:/lib
+0755	dc:/lib/
+0777	dc:/mnt
+0777	dc:/mnt/
 0755	dc:/run
 0755	dc:/run/
+0755	dc:/sbin
+0755	dc:/sbin/
 0755	dc:/usr
 0755	dc:/usr/
 0755	dc:/var
@@ -175,8 +185,14 @@ x:x	c:/config
 0777	dc:/run
 0777	dc:/var/log
 
+0777	d:/files
+0777	d:/files/
+
 0644	fc:/etc/
 0444	fc:/etc/mtab
+0755	fc:/bin/
+0755	fc:/lib/
+0755	fc:/sbin/
 0755	fc:/usr/bin/
 0755	fc:/usr/lib/
 0755	fc:/usr/sbin/

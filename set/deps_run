@@ -71,8 +71,8 @@ media/mpv				std			latest
 	net/yt-dlp			std			latest
 
 net/yt-dlp				std			latest
-	sys/coreutils			std			latest
-	sys/bash			std			latest
+	sys/coreutils			musl			latest
+	sys/bash			musl			latest
 	lang/python			std			latest
 	crypt/openssl			std			latest
 
@@ -80,7 +80,7 @@ crypt/openssl				std			latest
 	sys/ca-certificates		std			latest
 
 text/vim				std			latest
-	sys/bash			std			latest
+	sys/bash			musl			latest
 
 sys/syslinux				std			latest
 	sys/e2fsprogs			std			latest
@@ -101,18 +101,25 @@ sys/alsa-utils				std			latest
 	sys/alsa-ucm-conf		std			latest
 	sys/alsa-topology-conf		std			latest
 
+sys/alsa-utils				musl			latest
+	sys/alsa-lib			musl			latest
+	sys/alsa-plugins		musl			latest
+	sys/alsa-ucm-conf		musl			latest
+	sys/alsa-topology-conf		musl			latest
+
 net/w3m					std			latest
-	sys/busybox			std			latest
+	sys/busybox			sysinit			latest
 	arch/gzip			std			latest
 	media/fim			std			latest
 	media/mpv			std			latest
-	sys/alsa-utils			musl			latest
-	sys/shadow			musl			latest
+	sys/alsa-utils			std			latest
 	media/dejavu			std			latest
 	sys/mime-types			std			latest
 	sys/ca-certificates		std			latest
 	crypt/libressl 			cert_pem		latest
 	sys/tzdata			std			latest
+	sys/busybox			musl			latest
+	sys/shadow			musl			latest
 	sys/bash			musl			latest
 	sys/coreutils			musl			latest
 	net/privoxy			musl			latest
@@ -140,8 +147,8 @@ emu/dosbox-x				std			latest
 	sys/alsa-utils			std			latest
 	sys/shadow			std			latest
 	sys/eudev			std			latest
-	sys/busybox			std			latest
-	sys/bash			std			latest
+	sys/busybox			musl			latest
+	sys/bash			musl			latest
 	x11/xorg-server			std			latest
 	arch/zstd			std			latest
 
@@ -152,11 +159,11 @@ emu/dosbox-x				x11			latest
 	sys/alsa-utils			std			latest
 	sys/shadow			std			latest
 	sys/eudev			std			latest
-	sys/busybox			std			latest
-	sys/bash			std			latest
+	sys/busybox			musl			latest
+	sys/bash			musl			latest
 	x11/xorg-server			std			latest
 	net/libpcap			std			latest
-	sys/bash			std			latest
+	sys/bash			musl			latest
 	dev/gcc-libstdc++		std			latest
 	x11/openbox			std			latest
 	media/harfbuzz			std			latest
@@ -178,8 +185,8 @@ emu/dosbox-staging			std			latest
 	media/opusfile			std			latest
 	media/libpng			std			latest
 	media/libogg			std			latest
-	sys/busybox			std			latest
-	sys/bash			std			latest
+	sys/busybox			musl			latest
+	sys/bash			musl			latest
 	dev/gcc-libstdc++		std			latest
 
 text/fbpdf				std			latest

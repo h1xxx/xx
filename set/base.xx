@@ -95,8 +95,6 @@ lang/go				std			latest
 dev/pycparser			std			latest
 dev/cffi			std			latest
 crypt/cryptography		std			latest
-sys/ca-certificates		std			latest
-crypt/libressl 			cert_pem		latest
 net/libpcap			std			latest
 net/libnfnetlink		std			latest
 net/libmnl			std			latest
@@ -153,6 +151,8 @@ crypt/gnutls			std			latest
 text/docutils			std			latest
 
 # misc
+sys/ca-certificates		std			latest
+crypt/libressl 			cert_pem		latest
 sys/pinentry			std			latest
 sys/gnupg			std			latest
 crypt/gpgme			std			latest

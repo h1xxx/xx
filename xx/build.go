@@ -194,7 +194,8 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 		}
 
 		topDirs := []string{"/home", "/var/xx", "/mnt/shared",
-			"/dev", "/proc", "/run", "/sys", "/tmp"}
+			"/dev", "/proc", "/run", "/sys", "/tmp",
+			"/files"}
 
 		for _, dir := range topDirs {
 			dirsToCreate[fp.Join(pkgC.instDir, dir)] = 0755

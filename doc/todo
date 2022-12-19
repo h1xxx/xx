@@ -107,20 +107,11 @@ remove /sbin and /usr/sbin, keep only static bins in /bin, shared in /usr/bin
 
 rename w3mhelp-w3m.html to w3mhelp-w3m_en.html
 
-fine tune prog/sys/shadow/cfg/std-latest/etc/perms, drop uid 100000 for
-containers in favour of fixed user(s)
+fine tune prog/sys/shadow/cfg/std-latest/etc/perms
 limit perms in prog/sys/eudev/cfg/std-latest/etc/udev/rules.d/90-custom.rules
 make tty and console permissions more strict
-run containers as user cnt
-	lxc.idmap = u 0 100000 1002
-	lxc.idmap = u 1002 1002 1
-	lxc.idmap = u 1003 101003 64533
-	# map input, video and audio groups when needed
-	lxc.idmap = g 0 100000 65536
-	lxc.init.uid = 1002
-	lxc.init.gid = 0
-make cnt/files/* be readable only by group cnt
-limit other perms for input,video,audio groups in udev
+try to make  input, video and audio groups available for cnt user, maybe
+	via lxc-start and /sbin/init
 
 './xx/xx i -t /mnt/xx -c conf/x200/ sys/oksh' on almost empty dir breaks the
 permissions deployment

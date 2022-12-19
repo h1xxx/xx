@@ -36,3 +36,4 @@ dhcpcd:x:101:
 x:x:1000:
 xx:x:1001:x
 cnt:x:1002:x
+nil:x:65534:x

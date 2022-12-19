@@ -119,7 +119,7 @@ func main() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Run()
-	errExit(err, "can't run")
+	errExit(err, "can't execute program in the container")
 
 	// cleanup
 	clearDir(mntDir)
@@ -338,8 +338,17 @@ var cfgTemplate = `
 lxc.uts.name = xx
 lxc.arch = x86_64
 
-lxc.idmap = u 0 100000 65536
-lxc.idmap = g 0 100000 65536
+lxc.idmap = u 0 100000 1
+lxc.idmap = u 1002 1002 1
+
+lxc.idmap = g 0 100000 1
+lxc.idmap = g 5 100005 1
+lxc.idmap = g 6 6 1
+lxc.idmap = g 31 31 4
+lxc.idmap = g 1002 1002 1
+
+lxc.init.uid = 1002
+lxc.init.gid = 1002
 
 lxc.tty.max = 1
 lxc.pty.max = <max_pty>
