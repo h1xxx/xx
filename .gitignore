@@ -1,7 +1,6 @@
 /.*
 !.gitignore
 .*.swp
-/conf/
 /prog/*/*/log/
 /prog/*/*/pkg/
 /prog/*/*/src/
@@ -14,3 +13,4 @@
 /bin/
 /initramfs/build/
 /tmp/
+

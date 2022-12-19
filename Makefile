@@ -13,6 +13,7 @@ tools:
 	xx/xx build -f -s xx_tools_cross dev/musl
 	xx/xx build -f -s xx_tools_cross sys/bash
 	xx/xx build -f -s xx_tools_cross sys/file
+	xx/xx build -f -s xx_tools_cross arch/zstd
 
 bootstrap: clean_tmp bootstrap-cross bootstrap-cp bootstrap-final
 
@@ -74,9 +75,9 @@ clean_pkg:
 	git checkout prog/sys/mime-types/pkg/
 
 clean_bootstrap:
-	rm -fr prog/*/*/pkg/bootstrap_*cross-*/
-	rm -fr prog/*/*/pkg/bootstrap-*/
-	rm -fr prog/*/*/pkg/bootstrap_libstdcpp_2-*/
+	rm -fr prog/*/*/{log,pkg}/bootstrap*/
+	rm -fr prog/*/*/{log,pkg}/musl_init*
+	rm -fr prog/*/*/{log,pkg}/musl_*cross*
 
 clean_src:
 	rm -fr prog/*/*/src/*

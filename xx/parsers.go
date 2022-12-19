@@ -650,12 +650,7 @@ func getPkgCfgFiles(genC genCfgT, pkg pkgT) map[string]string {
 	}
 
 	// get files from system cfg dir for the pkg
-	pkgSysCfgDir := fp.Join(genC.sysCfgDir, pkg.prog, pkg.set+"-"+pkg.ver)
-	if !fileExists(pkgSysCfgDir) {
-		pkgSysCfgDir = fp.Join(genC.sysCfgDir, pkg.prog,
-			pkg.set+"-latest")
-	}
-
+	pkgSysCfgDir := findCfgDir(fp.Join(genC.sysCfgDir, pkg.prog), pkg)
 	if fileExists(pkgSysCfgDir) {
 		files, err := walkDir(pkgSysCfgDir, "files")
 		errExit(err, "can't walk sys cfg dir: "+pkgSysCfgDir)

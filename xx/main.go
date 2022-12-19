@@ -536,15 +536,31 @@ func getPkgDirs(pkg pkgT) pkgT {
 	pkg.pkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerRel)
 	pkg.newPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerNewRel)
 	pkg.prevPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerPrevRel)
-
-	cfgDir := fp.Join(pkg.progDir, "cfg", pkg.set+"-"+pkg.ver)
-	if fileExists(cfgDir) {
-		pkg.cfgDir = cfgDir
-	} else {
-		pkg.cfgDir = fp.Join(pkg.progDir, "cfg", pkg.set+"-latest")
-	}
+	pkg.cfgDir = findCfgDir(fp.Join(pkg.progDir, "cfg"), pkg)
 
 	return pkg
+}
+
+// searches for the best directory in program configs dir
+func findCfgDir(searchDir string, pkg pkgT) string {
+	var res string
+	cfgDir := fp.Join(searchDir, pkg.set+"-"+pkg.ver)
+	cfgLatestDir := fp.Join(searchDir, pkg.set+"-latest")
+	cfgAllSetsDir := fp.Join(searchDir, "all-"+pkg.ver)
+	cfgAllSetsLatestDir := fp.Join(searchDir, "all-latest")
+
+	switch {
+	case fileExists(cfgDir):
+		res = cfgDir
+	case fileExists(cfgLatestDir):
+		res = cfgLatestDir
+	case fileExists(cfgAllSetsDir):
+		res = cfgAllSetsDir
+	default:
+		res = cfgAllSetsLatestDir
+	}
+
+	return res
 }
 
 func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
@@ -684,10 +700,10 @@ func testTools(args argsT) {
 	err = os.Chmod("/home/xx", 0700)
 	errExit(err, "can't change permissions on /home/xx/")
 
-	homeDirs := []string{"conf", "doc", "initramfs", "xx", "misc", "set"}
+	homeDirs := []string{"cfg", "doc", "initramfs", "xx", "misc", "set"}
 	for _, dir := range homeDirs {
 		if !strings.Contains(outStr, dir) {
-			msg := "/home/xx in the container is not correct"
+			msg := "/home/xx in the container is mounted correctly"
 			errExit(errors.New(""), msg)
 		}
 	}

@@ -1,4 +1,0 @@
-#!/bin/bash
-
-
-ip -o a | grep -e "^.*: w" -e "^.*: e" | head -n1 | awk '{print $4}'

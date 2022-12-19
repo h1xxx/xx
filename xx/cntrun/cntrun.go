@@ -96,7 +96,7 @@ func main() {
 	// changes dir to the one that's shared between host and container,
 	// so  the downloaded files can be visible by host
 	case prog == "w3m" || prog == "youtube-dl" || prog == "mutt":
-		cmdLine = "/bin/ksh -c \"cd /mnt/shared && " + cmdLine + "\""
+		cmdLine = "/bin/bash -c \"cd /mnt/shared && " + cmdLine + "\""
 		lxcConfig += cfgShared
 
 	case prog == "startx":

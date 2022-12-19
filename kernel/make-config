@@ -3,7 +3,7 @@ set -euo pipefail
 
 KPATH=/usr/src/linux
 [ $# -gt 0 ] && KPATH="${1}"
-MACHINES="/home/xx/kernel/generic $(find /home/xx/conf/kernel/ -type f)"
+MACHINES="/home/xx/kernel/generic $(find /home/xx/cfg/kernel/ -type f)"
 cd "${KPATH}"
 KVER="$(make kernelversion)"
 

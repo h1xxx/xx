@@ -2,7 +2,13 @@
 # =======
 
 CONFIG_64BIT=y
-CONFIG_KERNEL_ZSTD=y
+
+# as of 5.15.83 there's a bug where ZSTD kerenl compression throws an error
+# "ZSTD-compressed data is probably corrupt; system halted"
+# in 5.15.67 this works fine; as a workaround use gzip
+CONFIG_KERNEL_GZIP=y
+#CONFIG_KERNEL_ZSTD=y
+
 CONFIG_SYSVIPC=y
 CONFIG_NO_HZ_IDLE=y
 CONFIG_HIGH_RES_TIMERS=y

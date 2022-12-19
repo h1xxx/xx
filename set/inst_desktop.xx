@@ -1,193 +1,192 @@
 sys/busybox			sysinit			latest
-sys/busybox			std			latest
+sys/busybox			musl			latest
 sys/bash			musl			latest
-sys/coreutils			std			latest
-text/man-pages			std			latest
+sys/coreutils			musl			latest
+text/man-pages			musl			latest
 sys/iana-etc			std			latest
-sys/tzdata			std			latest
-lang/bc				std			latest
+sys/tzdata			musl			latest
+lang/bc				musl			latest
+emu/lxc				musl			latest
 
 # archiving programs
-arch/cpio			std			latest
-arch/gzip			std			latest
-arch/bzip2			std			latest
-arch/xz				std			latest
-arch/zstd			std			latest
-arch/tar			std			latest
-arch/zip			std			latest
-arch/unzip			std			latest
-arch/unrar			std			latest
-arch/p7zip			std			latest
+arch/cpio			musl			latest
+arch/gzip			musl			latest
+arch/bzip2			musl			latest
+arch/xz				musl			latest
+arch/zstd			musl			latest
+arch/tar			musl			latest
+#arch/zip			musl			latest
+#arch/unzip			musl			latest
+arch/unrar			musl			latest
+arch/p7zip			std			latest	c
 
 # core system tools
-sys/diffutils			std			latest
-sys/findutils			std			latest
-text/nawk			std			latest
-text/grep			std			latest
-text/sed			std			latest
-sys/shadow			std			latest
-sys/util-linux			std			latest
-sys/kmod			std			latest
-text/groff			std			latest
-text/man-db			std			latest
-sys/file			std			latest
-text/less			std			latest
-sys/which			std			latest
-sys/numactl			std			latest
+sys/diffutils			musl			latest
+sys/findutils			musl			latest
+text/nawk			musl			latest
+text/gawk			musl			latest
+text/grep			musl			latest
+text/sed			musl			latest
+sys/shadow			musl			latest
+sys/util-linux			musl			latest
+text/groff			musl			latest
+text/man-db			musl			latest
+sys/file			musl			latest
+text/less			musl			latest
+sys/which			musl			latest
+sys/numactl			musl			latest
 
 # network tools and libs
-sys/iptables			std			latest
-sys/openssh			std			latest
-net/rsync			std			latest
-net/bind			tools			latest
-net/chrony			std			latest
-net/curl			std			latest
-net/wget			std			latest
-sys/iproute2			std			latest
+sys/iptables			musl			latest
+sys/openssh			musl			latest
+net/rsync			musl			latest
+net/chrony			musl			latest
+net/curl			musl			latest
+net/wget			musl			latest
+sys/iproute2			musl			latest
+net/bind			tools			latest	c
 
 # dev tools
-dev/git				std			latest
-dev/gcc				std			latest
-dev/flex			std			latest
-dev/m4				std			latest
-dev/make			std			latest
-dev/strace			std			latest
-lang/go				std			latest
-dev/mpc				std			latest
-dev/mpfr			std			latest
+dev/git				musl			latest
+dev/gcc				musl			11.2.0
+dev/make			musl			latest
+dev/strace			musl			latest
+lang/go				musl			latest
 sys/linux			headers			latest
 
 # network tools
-net/arping			std			latest
-net/mtr				std			latest
-net/fping			std			latest
-net/tcpdump			std			latest
+net/arping			musl			latest
+net/mtr				musl			latest
+net/iputils			musl			latest
+net/inetutils			musl			latest
+net/fping			musl			latest
+net/tcpdump			musl			latest
 
 # system tools
-sys/e2fsprogs			std			latest
-sys/kbd				std			latest
-sys/vlock			std			latest
-sys/syslinux			std			6.04-pre1
-sys/gptfdisk			std			latest
-sys/cryptsetup			std			latest
-sys/dosfstools			std			latest
-sys/eudev			std			latest
-sys/hwids			std			latest
-sys/cronie			std			latest
-sys/lsof			std			latest
-sys/mtools			std			latest
-sys/psmisc			std			latest
-sys/procps-ng			std			latest
-emu/lxc				std			latest
+sys/e2fsprogs			musl			latest
+sys/kbd				musl			latest
+sys/vlock			musl			latest
+sys/syslinux			musl			6.04-pre1
+sys/gptfdisk			musl			latest
+sys/cryptsetup			musl			latest
+sys/dosfstools			musl			latest
+sys/eudev			musl			latest
+sys/hwids			musl			latest
+sys/cronie			musl			latest
+sys/lsof			musl			latest
+sys/mtools			musl			latest
+sys/psmisc			musl			latest
+sys/procps-ng			musl			latest
+emu/lxc				musl			latest
 #sys/linux			perf			latest
 
 # monitoring
-sys/sysstat			std			latest
-sys/iotop			std			latest
+sys/sysstat			musl			latest
+sys/iotop			musl			latest
 
 # uefi
-sys/efitools			std			latest
-sys/efibootmgr			std			latest
+#sys/efivar			musl			latest	c
+#sys/efitools			std			latest	c
+#sys/efibootmgr			std			latest	c
 
 # misc
-sys/alsa-utils			std			latest
-sys/ca-certificates		std			latest
+sys/alsa-utils			musl			latest
+#sys/ca-certificates		musl			latest
 crypt/libressl 			cert_pem		latest
-sys/gnupg			std			latest
-sys/tmux			std			latest
-dev/checksec			std			latest
-sys/acpi			std			latest
-sys/rsyslog			std			latest
-sys/usbutils			std			latest
+sys/gnupg			musl			latest
+sys/tmux			musl			latest
+dev/ncurses			musl			latest
+dev/checksec			musl			latest
+sys/acpi			musl			latest
+sys/rsyslog			musl			latest
+sys/usbutils			musl			latest
 sys/linux			std			latest
 sys/unifont			std			latest
-text/vim			std			latest
 
-sys/iw				std			latest
-net/wpa_supplicant		std			latest
-net/hostapd			std			latest
-net/dhcpcd			std			latest
+sys/iw				musl			latest
+net/wpa_supplicant		musl			latest
+net/hostapd			musl			latest
+net/dhcpcd			musl			latest
 
-net/wireguard-tools		std			latest
-net/nmap			std			latest
-net/socat			std			latest
-sys/wol				std			latest
-sys/smartmontools		std			latest
-sys/hdparm			std			latest
-sys/flashrom			std			latest
+net/wireguard-tools		musl			latest
+net/nmap			musl			latest
+net/socat			musl			latest
+sys/wol				musl			latest
+sys/smartmontools		musl			latest
+sys/hdparm			musl			latest
+sys/flashrom			musl			latest
 
-sys/ncdu			std			latest
-sys/vifm			std			latest
-text/task			std			latest
+text/vim			musl			latest
+text/task			musl			latest
+sys/vifm			musl			latest
+sys/ncdu			musl			latest
 
-emu/qemu			std			latest
+emu/qemu			musl			latest
 
-net/transmission		std			latest
-net/geoip			std			latest
-net/geoip-database		std			latest
-sys/android-tools		std			latest
-net/mblaze			std			latest
+net/transmission		musl			latest
+net/geoip			musl			latest
+net/geoip-database		musl			latest
+sys/android-tools		musl			latest
+net/mblaze			musl			latest
 
-media/cdrdao			std			latest
-media/cdrtools			std			latest
-media/id3ted			std			latest
-media/sane-backends		std			latest
+media/cdrdao			std			latest	c
+media/cdrtools			std			latest	c
+media/id3ted			std			latest	c
+media/sane-backends		musl			latest
 
-net/acme-sh			std			latest
-net/aircrack-ng			std			latest
-net/arping			std			latest
-net/arp-scan			std			latest
-net/diod			std			latest
-net/dnsmasq			std			latest
-net/dnstracer			std			latest
-net/fetchmail			std			latest
-net/httpie			std			latest
-net/iftop			std			latest
-net/iodine			std			latest
-net/iperf			std			latest
-net/irssi			std			latest
-net/lftp			std			latest
-net/lorcon			std			latest
-net/macchanger			std			latest
-net/mblaze			std			latest
-net/mitmproxy			std			latest
-net/mktorrent			std			latest
-net/nethogs			std			latest
-net/siege			std			latest
-net/speedtest-cli		std			latest
-net/telnet-bsd			std			latest
-net/tor				std			latest
-net/vnstat			std			latest
-net/whois			std			latest
+net/acme-sh			musl			latest
+net/aircrack-ng			musl			latest
+net/arping			musl			latest
+net/arp-scan			musl			latest
+net/diod			musl			latest
+net/dnsmasq			musl			latest
+net/dnstracer			musl			latest
+net/fetchmail			musl			latest
+net/httpie			musl			latest
+net/iftop			musl			latest
+net/iodine			musl			latest
+net/iperf			musl			latest
+net/irssi			musl			latest
+net/lftp			musl			latest
+net/lorcon			musl			latest
+net/macchanger			musl			latest
+net/mblaze			musl			latest
+net/mitmproxy			musl			latest
+net/mktorrent			musl			latest
+net/nethogs			musl			latest
+net/siege			musl			latest
+net/speedtest-cli		musl			latest
+net/tor				musl			latest
+net/vnstat			musl			latest
+net/whois			musl			latest
 
-sys/ethtool			std			latest
-sys/efivar			std			latest
-sys/fdupes			std			latest
-sys/flashrom			std			latest
-sys/hplip			std			latest
-sys/lm-sensors			std			latest
-sys/lshw			std			latest
-sys/mtools			std			latest
-sys/powertop			std			latest
-sys/sl				std			latest
-sys/stress			std			latest
-sys/testdisk			std			latest
+sys/ethtool			musl			latest
+sys/fdupes			musl			latest
+sys/flashrom			musl			latest
+sys/hplip			musl			latest
+sys/lm-sensors			musl			latest
+sys/lshw			musl			latest
+sys/mtools			musl			latest
+sys/powertop			musl			latest
+sys/sl				musl			latest
+sys/stress			musl			latest
+sys/testdisk			musl			latest
 
-text/asciidoc			std			latest
-text/ebook-tools		std			latest
-text/xmlto			std			latest
+text/asciidoc			std			latest	c
+text/ebook-tools		std			latest	c
+text/xmlto			std			latest	c
 
-media/mpv			std			latest		c
-media/fim			std			latest		c
-text/fbpdf			std			latest		c
-text/vim			std			latest		c
-net/w3m				std			latest		c
-net/mutt			std			latest		c
-media/exiftool			std			latest		c
+media/mpv			std			latest	c
+media/fim			std			latest	c
+text/fbpdf			std			latest	c
+text/vim			musl			latest	c
+net/w3m				std			latest	c
+net/mutt			std			latest	c
+media/exiftool			std			latest	c
 
-x11/xorg-server			std			latest		c
+x11/xorg-server			std			latest	c
 
-#emu/dosbox-x			std			latest		c
-#emu/dosbox-staging		std			latest		c
-#emu/mednafen			std			latest		c
+#emu/dosbox-x			std			latest	c
+#emu/dosbox-staging		std			latest	c
+#emu/mednafen			std			latest	c
 

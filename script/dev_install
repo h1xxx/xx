@@ -1,5 +1,5 @@
-#!/bin/ksh
-set -e
+#!/bin/bash
+set -eo pipefail
 
 usage() {
 	printf 'usage: dev_install [ARGS]\n'
@@ -108,7 +108,7 @@ if [ ${dev_type} == 'file' ] && [ ${uefi} == 'true' ] ; then
 fi
 
 mbr=/usr/share/syslinux/gptmbr.bin
-[ ! -f ${mbr} ] && mbr=/home/xx/prog/sys/syslinux/pkg/std-6.04-pre1-00${mbr}
+[ ! -f ${mbr} ] && mbr=/home/xx/prog/sys/syslinux/pkg/musl-6.04-pre1-00${mbr}
 [ ! -f ${mbr} ] && printf "error: can't find gptmbr.bin file\n" && exit 1
 
 findmnt ${root_dir} && printf "error: ${root_dir} already mounted\n" && exit 1
@@ -241,11 +241,11 @@ fi
 printf '\n* configuring...\n'
 
 # getting fresh copies of xx config files
-cp /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/syslinux/syslinux.cfg \
+cp /home/xx/prog/sys/syslinux/cfg/all-latest/boot/syslinux/syslinux.cfg \
 	${root_dir}/boot/syslinux/
 cp /home/xx/prog/sys/busybox/cfg/sysinit-latest/etc/rc.conf ${root_dir}/etc/
-cp /home/xx/prog/sys/util-linux/cfg/std-latest/etc/fstab ${root_dir}/etc/
-cp /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/boot.conf ${root_dir}/boot/
+cp /home/xx/prog/sys/util-linux/cfg/all-latest/etc/fstab ${root_dir}/etc/
+cp /home/xx/prog/sys/syslinux/cfg/all-latest/boot/boot.conf ${root_dir}/boot/
 
 # setting rc.conf vars
 if [ "${cfg_name}" != '' ]; then
@@ -315,23 +315,23 @@ if [ -n "${cfg_dir}" ]; then
 	mkdir -p "${cfg_dir}/busybox/sysinit-latest/etc/"
 	cp -vb "${root_dir}/etc/rc.conf" "${cfg_dir}/busybox/sysinit-latest/etc/"
 
-	mkdir -p "${cfg_dir}/util-linux/std-latest/etc/"
-	cp -vb "${root_dir}/etc/fstab" "${cfg_dir}/util-linux/std-latest/etc/"
+	mkdir -p "${cfg_dir}/util-linux/all-latest/etc/"
+	cp -vb "${root_dir}/etc/fstab" "${cfg_dir}/util-linux/all-latest/etc/"
 
-	mkdir -p "${cfg_dir}/syslinux/std-latest/boot/syslinux/"
-	cp -vb "${root_dir}/boot/boot.conf" "${cfg_dir}/syslinux/std-latest/boot/"
+	mkdir -p "${cfg_dir}/syslinux/all-latest/boot/syslinux/"
+	cp -vb "${root_dir}/boot/boot.conf" "${cfg_dir}/syslinux/all-latest/boot/"
 	cp -vb "${root_dir}/boot/syslinux/syslinux.cfg" \
-		"${cfg_dir}/syslinux/std-latest/boot/syslinux/"
+		"${cfg_dir}/syslinux/all-latest/boot/syslinux/"
 
 	if [ ${initramfs} == 'true' ]; then
 		cp -vn "${root_dir}/boot/initramfs.cpio.zst" \
-			"${cfg_dir}/syslinux/std-latest/boot/"
+			"${cfg_dir}/syslinux/all-latest/boot/"
 	fi
 
 	if [ ${uefi} == 'true' ]; then
-		mkdir -p "${cfg_dir}/syslinux/std-latest/boot/efi/boot/"
+		mkdir -p "${cfg_dir}/syslinux/all-latest/boot/efi/boot/"
 		cp -vb "${root_dir}/boot/efi/boot/syslinux.cfg" \
-			"${cfg_dir}/syslinux/std-latest/boot/efi/boot/"
+			"${cfg_dir}/syslinux/all-latest/boot/efi/boot/"
 	fi
 fi
 

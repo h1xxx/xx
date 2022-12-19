@@ -105,3 +105,9 @@ notes:
 - boot partition must contain boot.conf in root dir from
   /home/xx/prog/sys/syslinux/cfg/std-6.04-pre1/boot/boot.conf
 
+
+# qemu install
+
+./script/dev_install -t /tmp/vm.img -s set/inst_desktop.xx -i
+qemu-system-x86_64 -m 256M -drive file=/tmp/vm.img,if=virtio,format=raw -display curses
+

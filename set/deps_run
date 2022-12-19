@@ -1,12 +1,12 @@
 x11/xorg-server				std			latest
-	sys/kbd				std			latest
-	sys/bash			std			latest
-	sys/busybox			std			latest
-	sys/util-linux			std			latest
-	sys/coreutils			std			latest
+	sys/kbd				musl			latest
+	sys/bash			musl			latest
+	sys/busybox			musl			latest
+	sys/util-linux			musl			latest
+	sys/coreutils			musl			latest
+	text/sed			musl			latest
+	text/grep			musl			latest
 	sys/eudev			std			latest
-	text/sed			std			latest
-	text/grep			std			latest
 	x11/xauth			std			latest
 	x11/xkeyboard-config		std			latest
 	x11/util-macros			std			latest
@@ -106,17 +106,17 @@ net/w3m					std			latest
 	arch/gzip			std			latest
 	media/fim			std			latest
 	media/mpv			std			latest
-	sys/alsa-utils			std			latest
-	sys/shadow			std			latest
+	sys/alsa-utils			musl			latest
+	sys/shadow			musl			latest
 	media/dejavu			std			latest
 	sys/mime-types			std			latest
 	sys/ca-certificates		std			latest
 	crypt/libressl 			cert_pem		latest
 	sys/tzdata			std			latest
-	sys/bash			std			latest
-	sys/coreutils			std			latest
-	net/privoxy			std			latest
-	net/tor				std			latest
+	sys/bash			musl			latest
+	sys/coreutils			musl			latest
+	net/privoxy			musl			latest
+	net/tor				musl			latest
 
 sys/kbd					std			latest
 	arch/gzip			std			latest
@@ -133,7 +133,7 @@ hack/hashcat-utils			std			latest
 
 net/mutt				std			latest
 	net/w3m				std			latest
-	text/vim			std			latest
+	text/vim			musl			latest
 
 emu/dosbox-x				std			latest
 	media/mesa			std			latest

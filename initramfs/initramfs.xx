@@ -1,6 +1,8 @@
-sys/busybox			std			latest
+sys/busybox			musl			latest
 sys/shadow			musl			latest
 sys/cryptsetup			musl			latest
 sys/openssh			musl			latest
 sys/e2fsprogs			musl			latest
+sys/util-linux			musl			latest
 net/dhcpcd			musl			latest
+

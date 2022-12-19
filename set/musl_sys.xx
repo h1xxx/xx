@@ -87,6 +87,8 @@ sys/alsa-plugins		musl			latest
 sys/alsa-utils			musl			latest
 
 text/nawk			musl			latest
+text/task			musl			latest
+dev/checksec			musl			latest
 
 
 
