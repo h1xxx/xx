@@ -370,7 +370,7 @@ lxc.mount.entry = /dev/tty dev/tty none bind,create=file 0 0
 
 var cfgSnd = "lxc.mount.entry = /dev/snd dev/snd none bind,create=dir 0 0\n"
 var cfgFb = "lxc.mount.entry = /dev/fb0 dev/fb0 none bind,create=file 0 0\n"
-var cfgDri = "lxc.mount.entry = /dev/dri/card0 dev/dri/card0 none bind,create=file 0 0\n"
+var cfgDri = "lxc.mount.entry = /dev/dri dev/dri none bind,create=dir 0 0\n"
 var cfgInput = "lxc.mount.entry = /dev/input dev/input none bind,create=dir 0 0\n"
 var cfgUdev = "lxc.mount.entry = /run/udev/data run/udev/data none bind,create=dir 0 0\n"
 var cfgTty0 = "lxc.mount.entry = /dev/tty0 dev/tty0 none bind,create=file 0 0\n"

@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"path/filepath"
-	fp "path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 // worldT stores information on all files and packages installed in the env;
@@ -328,7 +328,7 @@ func argsCheck(args argsT) {
 		path := args.actionTarget
 		stat, err := os.Stat(path)
 		errExit(err, "can't stat "+path)
-		if stat.IsDir() || !strings.HasSuffix(path, ".xx") {
+		if stat.IsDir() || !str.HasSuffix(path, ".xx") {
 			errExit(err, msg)
 		}
 	}
@@ -418,13 +418,13 @@ func getGenCfg(args argsT) genCfgT {
 	if genC.buildEnv == "base" || genC.buildEnv == "musl_base" {
 		genC.baseEnv = true
 	}
-	if strings.HasPrefix(genC.buildEnv, "musl_") {
+	if str.HasPrefix(genC.buildEnv, "musl_") {
 		genC.muslEnv = true
 		genC.baseDir = "/tmp/xx/musl_base"
 		genC.baseFile = "/home/xx/set/musl_base.xx"
 	}
 
-	if strings.HasPrefix(genC.buildEnv, "init_") {
+	if str.HasPrefix(genC.buildEnv, "init_") {
 		genC.isInit = true
 	}
 
@@ -436,7 +436,7 @@ func getGenCfg(args argsT) genCfgT {
 	genC.rootDir = getRootDir(args, genC.buildEnv)
 
 	if !isPkgString(genC.actionTarget) {
-		genC.setFileName = filepath.Base(genC.actionTarget)
+		genC.setFileName = fp.Base(genC.actionTarget)
 	}
 
 	if *args.set != "std" {
@@ -451,7 +451,7 @@ func getGenCfg(args argsT) genCfgT {
 	fStr := "%d-%.2d-%.2d"
 	genC.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
 
-	genC.sysCfgDir = filepath.Clean(*args.c)
+	genC.sysCfgDir = fp.Clean(*args.c)
 	genC.forceAll = *args.forceAll
 
 	genC.instPerms = *args.P
@@ -497,7 +497,7 @@ func getPkgList(genC genCfgT) ([]pkgT, []pkgCfgT) {
 
 func getPkg(genC genCfgT, name, pkgSet, ver string) pkgT {
 	var pkg pkgT
-	fields := strings.Split(name, "/")
+	fields := str.Split(name, "/")
 
 	pkg.name = name
 	pkg.categ = fields[0]
@@ -588,11 +588,11 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 	pkgC.tmpDir = buildPath + fmt.Sprintf("%0.2x", buildID)
 	pkgC.tmpLogDir = pkgC.tmpDir + "/log/"
 
-	if strings.HasSuffix(pkg.set, "_cross") {
+	if str.HasSuffix(pkg.set, "_cross") {
 		pkgC.crossBuild = true
 	}
 
-	if strings.HasPrefix(pkg.set, "musl") {
+	if str.HasPrefix(pkg.set, "musl") {
 		pkgC.muslBuild = true
 	}
 
@@ -615,16 +615,16 @@ func getRootDir(args argsT, buildEnv string) string {
 	var rootDir string
 
 	if *args.rootDir == "" {
-		rootDir = "/tmp/xx/" + buildEnv
-	} else if strings.Contains(*args.rootDir, ":/") {
+		rootDir = fp.Join("/tmp/xx/", buildEnv)
+	} else if str.Contains(*args.rootDir, ":/") {
 		// just clean up the path when the host is remote
-		split := strings.Split(*args.rootDir, ":")
+		split := str.Split(*args.rootDir, ":")
 		host := split[0]
 		path := split[1]
-		path = filepath.Clean(path)
+		path = fp.Clean(path)
 		rootDir = host + ":" + path
 	} else {
-		rootDir = filepath.Clean(*args.rootDir)
+		rootDir = fp.Clean(*args.rootDir)
 	}
 
 	return rootDir
@@ -702,7 +702,7 @@ func testTools(args argsT) {
 
 	homeDirs := []string{"cfg", "doc", "initramfs", "xx", "misc", "set"}
 	for _, dir := range homeDirs {
-		if !strings.Contains(outStr, dir) {
+		if !str.Contains(outStr, dir) {
 			msg := "/home/xx in the container is mounted correctly"
 			errExit(errors.New(""), msg)
 		}

@@ -3,155 +3,170 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"os"
 	"os/user"
-	fp "path/filepath"
 	"sort"
 	"strconv"
-	"strings"
 	"syscall"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 func setSysPerm(rootDir string) {
-	// set permissions for root dir
-	fmt.Println("  " + rootDir)
-	setTargetPerm(rootDir, false)
+	perms, owners := getPermOwner(rootDir)
+	recPaths, fixedPaths := getFixedPaths(rootDir, perms, owners)
+	rootDirs := getRootDirs(recPaths, rootDir)
 
-	// set permissions for containers in /cnt/rootfs
-	cntPathList, err := os.ReadDir(rootDir + "/cnt/rootfs")
-	errExit(err, "can't read dir: "+rootDir+"/cnt/rootfs")
-
-	for _, cntPath := range cntPathList {
-		cntName := cntPath.Name()
-		targetPath := fp.Join(rootDir, "/cnt/rootfs/", cntName)
-		fmt.Println("  " + targetPath)
-		if !fileExists(targetPath + "/etc/perms") {
-			continue
-		}
-		setTargetPerm(targetPath, true)
-	}
-}
-
-func setTargetPerm(targetDir string, cnt bool) {
-	perms, owners := getPermOwner(targetDir)
-	recDirs, definedFiles := getDefinedFiles(perms, owners, cnt)
-	rootDirs := getRootDirs(recDirs, targetDir)
-
-	var files []string
+	// get files and dirs only for root directories defined in /etc/perms
+	var paths []string
 	for _, dir := range rootDirs {
 		if !fileExists(dir) {
 			continue
 		}
-		walkedFiles, err := walkDir(dir, "all")
-		errExit(err, "couldn't list all files in:\n  "+targetDir)
-		files = append(files, walkedFiles...)
+		walkedPaths, err := walkDir(dir, "all")
+		errExit(err, "couldn't list all paths in:\n  "+rootDir)
+		paths = append(paths, walkedPaths...)
 	}
-	files = append(files, definedFiles...)
-	sort.Strings(files)
-	files = uniqueSlice(files)
+	paths = append(paths, fixedPaths...)
+	sort.Strings(paths)
+	paths = uniqueSlice(paths)
 
 	currentUser, err := user.Current()
 	errExit(err, "can't get current user uid")
 	setOwner := currentUser.Uid == "0"
+	//fmt.Println("zzzzzzz", perms)
 
-	for _, file := range files {
-		if isSymLink(file) || file == targetDir {
+	for _, fullPath := range paths {
+		if isSymLink(fullPath) || fullPath == rootDir || fullPath == "." {
 			continue
 		}
 
-		// xxFile is a file in the xx system without the prefix dir
-		// from the host system
-		xxFile := file
-		if targetDir != "/" {
-			xxFile = strings.TrimPrefix(file, targetDir)
-		}
-
-		info, err := os.Stat(file)
-		errExit(err, "can't stat file\n:  "+file)
+		info, err := os.Stat(fullPath)
+		errExit(err, "can't stat file\n:  "+fullPath)
 
 		if setOwner {
-			newUid, newGid := getOwner(xxFile, targetDir,
-				owners, cnt)
+			newUid, newGid := getOwner(fullPath, rootDir, owners)
 			stat := info.Sys().(*syscall.Stat_t)
 			uid := int(stat.Uid)
 			gid := int(stat.Gid)
 
 			if uid != newUid || gid != newGid {
-				err = os.Chown(file, newUid, newGid)
-				errExit(err, "can't change owner for:\n  "+file)
+				err = os.Chown(fullPath, newUid, newGid)
+				errExit(err, "can't change owner:\n"+fullPath)
 			}
 		}
 
-		newMode := getMode(xxFile, targetDir, perms, cnt)
+		newMode := getMode(fullPath, rootDir, perms)
 
 		if info.Mode() != newMode && newMode != 0 {
-			err := os.Chmod(file, newMode)
-			errExit(err, "can't change mode for:\n  "+file)
+			err := os.Chmod(fullPath, newMode)
+			errExit(err, "can't change mode:\n"+fullPath)
 		}
 	}
 }
 
-func getDefinedFiles(perms, owners map[string]string, cnt bool) ([]string, []string) {
-	var recDirs, definedFiles []string
+// returns a list fixed paths from /etc/perms and a list of paths to use
+// for recursive matching;
+// paths returned are relative to root directory
+func getFixedPaths(rootDir string, perms, owners map[string]string) ([]string, []string) {
+	var recPaths, fixedPaths []string
+	cntList := getCntList(fp.Join(rootDir, "/cnt/rootfs/"))
 
 	for path := range perms {
-		pathSplit := strings.Split(path, ":")
-		if !cnt && strings.Contains(pathSplit[0], "c") {
-			continue
-		}
-		if strings.HasSuffix(pathSplit[1], "/") {
-			recDirs = append(recDirs, pathSplit[1])
-		} else {
-			definedFiles = append(definedFiles, pathSplit[1])
+		// path for container is prefixed with "fc:" or "dc:"
+		pForCnt := string(path[1]) == "c"
+
+		// path ends with a slash for recursive matching
+		slashSuffix := str.HasSuffix(path, "/")
+
+		// extract the path without any prefixes
+		_, path, _ := str.Cut(path, ":")
+		path = fp.Clean(path)
+
+		switch {
+		case pForCnt:
+			path = str.TrimPrefix(path, rootDir)
+			for _, cnt := range cntList {
+				cntPath := fp.Join(rootDir, "/cnt/rootfs",
+					cnt, path)
+				if slashSuffix {
+					recPaths = append(recPaths, cntPath)
+				} else {
+					fixedPaths = append(fixedPaths, cntPath)
+				}
+			}
+
+		case slashSuffix:
+			recPaths = append(recPaths, path)
+
+		default:
+			fixedPaths = append(fixedPaths, path)
 		}
 	}
 
 	for path := range owners {
-		pathSplit := strings.Split(path, ":")
-		if !cnt && len(pathSplit) == 2 {
-			continue
-		}
-		if len(pathSplit) == 2 {
-			path = pathSplit[1]
-		}
-		if strings.HasSuffix(path, "/") {
-			recDirs = append(recDirs, path)
-		} else {
-			definedFiles = append(definedFiles, path)
+		// path for container is prefixed with "c:"
+		pForCnt := str.HasPrefix(path, "c:")
+
+		// path ends with a slash for recursive matching
+		slashSuffix := str.HasSuffix(path, "/")
+
+		// extract the path without any prefixes
+		_, path, _ := str.Cut(path, ":")
+		path = fp.Clean(path)
+
+		switch {
+		case pForCnt:
+			path = str.TrimPrefix(path, rootDir)
+			for _, cnt := range cntList {
+				cntPath := fp.Join(rootDir, "/cnt/rootfs",
+					cnt, path)
+				if slashSuffix {
+					recPaths = append(recPaths, cntPath)
+				} else {
+					fixedPaths = append(fixedPaths, cntPath)
+				}
+			}
+
+		case slashSuffix:
+			recPaths = append(recPaths, path)
+
+		default:
+			fixedPaths = append(fixedPaths, path)
 		}
 	}
 
-	sort.Strings(recDirs)
-	sort.Strings(definedFiles)
-	recDirs = uniqueSlice(recDirs)
-	definedFiles = uniqueSlice(definedFiles)
+	sort.Strings(recPaths)
+	sort.Strings(fixedPaths)
+	recPaths = uniqueSlice(recPaths)
+	fixedPaths = uniqueSlice(fixedPaths)
 
-	return recDirs, definedFiles
+	return recPaths, fixedPaths
 }
 
-func getRootDirs(recDirs []string, targetDir string) []string {
+func getRootDirs(recPaths []string, rootDir string) []string {
 	var rootDirs []string
-	targetDir = fp.Clean(targetDir)
+	rootDir = fp.Clean(rootDir)
 
-	for _, dir := range recDirs {
-		d := fp.Dir(fp.Clean(dir))
+	for _, dir := range recPaths {
+		d := fp.Dir(dir)
 
-		for d != targetDir {
-			if stringExists(d+"/", recDirs) {
+		for d != rootDir {
+			if stringExists(d, recPaths) {
 				break
 			}
 			d = fp.Dir(d)
 		}
 
 		upDir := fp.Dir(d)
-		pathExists := stringExists(d+"/", rootDirs)
-		pathExists = pathExists || stringExists(upDir+"/", rootDirs)
+		pathExists := stringExists(d, rootDirs)
+		pathExists = pathExists || stringExists(upDir, rootDirs)
 		pathExists = pathExists || stringExists(dir, rootDirs)
 
-		if d != targetDir && !pathExists {
-			rootDirs = append(rootDirs, d+"/")
-		} else if d == targetDir && !pathExists {
+		if d != rootDir && d != "." && !pathExists {
+			rootDirs = append(rootDirs, d)
+		} else if d == rootDir && dir != "." && !pathExists {
 			rootDirs = append(rootDirs, dir)
 		}
 	}
@@ -159,40 +174,38 @@ func getRootDirs(recDirs []string, targetDir string) []string {
 	return rootDirs
 }
 
-// return map of paths to permission/ownership info
-func getPermOwner(targetDir string) (map[string]string, map[string]string) {
+// return maps of paths to permission/ownership info
+func getPermOwner(rootDir string) (map[string]string, map[string]string) {
 	perms := make(map[string]string)
 	owners := make(map[string]string)
 
 	// read the main perms file
-	file := targetDir + "/etc/perms"
-	readPermsFile(file, targetDir, perms, owners)
+	file := rootDir + "/etc/perms"
+	readPermsFile(file, rootDir, perms, owners)
 
-	if !fileExists(targetDir + "/etc/perms.d") {
+	if !fileExists(rootDir + "/etc/perms.d") {
 		return perms, owners
 	}
 
 	// read files in perms.d
-	permsPathList, err := os.ReadDir(targetDir + "/etc/perms.d")
-	errExit(err, "can't read dir: "+targetDir+"/etc/perms.d")
+	permsPathList, err := os.ReadDir(rootDir + "/etc/perms.d")
+	errExit(err, "can't read dir: "+rootDir+"/etc/perms.d")
 
 	for _, permsPath := range permsPathList {
 		name := permsPath.Name()
-		targetPath := fp.Join(targetDir, "/etc/perms.d/", name)
-		readPermsFile(targetPath, targetDir, perms, owners)
+		targetPath := fp.Join(rootDir, "/etc/perms.d/", name)
+		readPermsFile(targetPath, rootDir, perms, owners)
 	}
 
 	return perms, owners
 }
 
-func getMode(path, targetDir string, permsMap map[string]string, cnt bool) os.FileMode {
+func getMode(fullPath, rootDir string, permsMap map[string]string) os.FileMode {
 	var pType, perms string
 	var permExists bool
-	targetDir = fp.Clean(targetDir)
 
-	p := fp.Join(targetDir, path)
-	pStat, err := os.Stat(p)
-	errExit(err, "can't get stat:\n  "+p)
+	pStat, err := os.Stat(fullPath)
+	errExit(err, "can't get stat:\n  "+fullPath)
 
 	switch {
 	case pStat.IsDir():
@@ -201,28 +214,18 @@ func getMode(path, targetDir string, permsMap map[string]string, cnt bool) os.Fi
 		pType = "f"
 	}
 
-	if !cnt && strings.HasPrefix(path, "/cnt/rootfs") {
-		pathLen := len(strings.Split(path, "/"))
-		if pathLen >= 6 {
-			return 0
-		}
-	}
-
-	if cnt {
-		pType += "c"
-	}
-
 	// find direct definitions of perms
-	perms = permsMap[pType+":"+p]
+	perms = permsMap[pType+":"+fullPath]
 
 	// find recursive permissions (the ones with a trailing slash)
+	path := fullPath
 	if perms == "" {
-		for p != targetDir {
-			perms, permExists = permsMap[pType+":"+p+"/"]
+		for path != rootDir {
+			perms, permExists = permsMap[pType+":"+path+"/"]
 			if permExists {
 				break
 			}
-			p = fp.Dir(p)
+			path = fp.Dir(path)
 		}
 	}
 
@@ -231,7 +234,7 @@ func getMode(path, targetDir string, permsMap map[string]string, cnt bool) os.Fi
 	}
 
 	mode64, err := strconv.ParseUint(perms[1:4], 8, 32)
-	errExit(err, "cannot parse mode for file\n  "+path)
+	errExit(err, "cannot parse mode for file:\n"+fullPath)
 	mode := os.FileMode(mode64)
 
 	switch rune(perms[0]) {
@@ -258,46 +261,32 @@ func getMode(path, targetDir string, permsMap map[string]string, cnt bool) os.Fi
 	return mode
 }
 
-func getOwner(path, targetDir string, ownerMap map[string]string, cnt bool) (int, int) {
-	var owner, pType string
+func getOwner(fullPath, rootDir string, ownerMap map[string]string) (int, int) {
+	var owner string
 	var ownerExists bool
-	path = fp.Clean(path)
-	targetDir = fp.Clean(targetDir)
-
-	p := fp.Join(targetDir, path)
-
-	if !cnt && strings.HasPrefix(path, "/cnt/rootfs") {
-		pathLen := len(strings.Split(path, "/"))
-		if pathLen >= 6 {
-			return 0, 0
-		}
-	}
-
-	if cnt {
-		pType = "c:"
-	}
 
 	// find direct definitions of owners
-	owner = ownerMap[pType+p]
+	owner = ownerMap[fullPath]
 
 	// find recursive ownerships (the ones with a trailing slash)
+	path := fullPath
 	if owner == "" {
-		for p != targetDir {
-			owner, ownerExists = ownerMap[pType+p+"/"]
+		for path != rootDir {
+			owner, ownerExists = ownerMap[path+"/"]
 			if ownerExists {
 				break
 			}
-			p = fp.Dir(p)
+			path = fp.Dir(path)
 		}
 	}
 
 	if owner == "" {
 		return 0, 0
 	}
-	o := strings.Split(owner, ":")
 
-	uid := ugIdLookup(o[0], targetDir+"/etc/passwd")
-	gid := ugIdLookup(o[1], targetDir+"/etc/group")
+	o := str.Split(owner, ":")
+	uid := ugIdLookup(o[0], rootDir+"/etc/passwd")
+	gid := ugIdLookup(o[1], rootDir+"/etc/group")
 
 	return uid, gid
 }
@@ -313,7 +302,7 @@ func ugIdLookup(name, lookupFile string) int {
 
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		passLine := strings.Split(input.Text(), ":")
+		passLine := str.Split(input.Text(), ":")
 		if passLine[0] == name {
 			ugId, err := strconv.ParseInt(passLine[2], 10, 64)
 			errExit(err, "can't parse uid/gid for "+name)
@@ -324,4 +313,112 @@ func ugIdLookup(name, lookupFile string) int {
 
 	errExit(err, "can't find uid/gid for "+name)
 	return 0
+}
+
+func readPermsFile(file, rootDir string, perms, owners map[string]string) {
+	f, err := os.Open(file)
+	errExit(err, "can't open file: "+file)
+	defer f.Close()
+
+	re := getRegexes()
+	cntList := getCntList(fp.Join(rootDir, "/cnt/rootfs/"))
+
+	input := bufio.NewScanner(f)
+	for input.Scan() {
+		line := input.Text()
+		parsePermLine(line, rootDir, perms, owners, cntList, re)
+	}
+}
+
+func parsePermLine(line, rootDir string, perms, owners map[string]string,
+	cntList []string, re reT) {
+
+	line = str.Trim(line, " ")
+	if line == "" || string(line[0]) == "#" {
+		return
+	}
+	line = re.wSpaces.ReplaceAllString(line, "\t")
+	fields := str.Split(line, "\t")
+	if len(fields) != 2 {
+		errExit(errors.New(""), "incorrect permissions: "+line)
+	}
+	definedMsg := "permission already defined:\n" + line
+
+	perm := fields[0]
+	path := fields[1]
+
+	// paths for containers always have prefix "fc:", "dc:" or "c:"
+	var pForCnt bool
+	if str.Contains(path, "c:") {
+		pForCnt = true
+	}
+
+	// slash suffix in the path marks directories for recursive processing
+	var slashTrail string
+	if str.HasSuffix(path, "/") {
+		slashTrail = "/"
+	}
+
+	// create full and valid paths for all the entries in /etc/perms
+	switch {
+
+	// ownerhsip has always first elemnt containing ':"
+	// path field can have 'c:' prefix denoting path for /cnt/rootfs
+	case str.Contains(perm, ":"):
+		path = str.TrimPrefix(path, "c:")
+
+		switch {
+		case pForCnt:
+			for _, cnt := range cntList {
+				cntPath := fp.Join(rootDir, "/cnt/rootfs",
+					cnt, path)
+				_, pathExists := owners[cntPath+slashTrail]
+				if pathExists {
+					errExit(errors.New(""), definedMsg)
+				}
+				owners[cntPath+slashTrail] = perm
+			}
+		default:
+			path = fp.Join(rootDir, path)
+			_, pathExists := owners[path+slashTrail]
+			if pathExists {
+				errExit(errors.New(""), definedMsg)
+			}
+			owners[path+slashTrail] = perm
+		}
+
+	// file permissions have only digits
+	case strDigitsOnly(perm):
+		pType, path, found := str.Cut(path, ":")
+		if !found || (pType[0] != 'f' && pType[0] != 'd') {
+			errExit(errors.New(""), "incorrect permissions: "+line)
+		}
+
+		// exclude "c" in "fc:" and "dc:"
+		pType = string(pType[0])
+
+		switch {
+		case pForCnt:
+			for _, cnt := range cntList {
+				cntPath := pType + ":" + fp.Join(rootDir,
+					"/cnt/rootfs", cnt, path)
+				_, pathExists := perms[cntPath+slashTrail]
+				if pathExists {
+					errExit(errors.New(""), definedMsg)
+				}
+				perms[cntPath+slashTrail] = perm
+			}
+		default:
+			path = pType + ":" + fp.Join(rootDir, path)
+			_, pathExists := perms[path+slashTrail]
+			if pathExists {
+				errExit(errors.New(""), definedMsg)
+			}
+			perms[path+slashTrail] = perm
+		}
+
+	// no other case allowed
+	default:
+		errExit(errors.New(""), "incorrect permissions: "+line)
+	}
 }

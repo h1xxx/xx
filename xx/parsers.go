@@ -568,66 +568,13 @@ func getCntList(cntDir string) []string {
 		if !cntDirEntry.IsDir() {
 			continue
 		}
+		if cntDirName == "common" || str.HasPrefix(cntDirName, ".") {
+			continue
+		}
 		cntList = append(cntList, cntDirName)
 	}
 
 	return cntList
-}
-
-func readPermsFile(file, rootDir string, perms, owners map[string]string) {
-	f, err := os.Open(file)
-	errExit(err, "can't open file: "+file)
-	defer f.Close()
-
-	re := getRegexes()
-
-	input := bufio.NewScanner(f)
-	for input.Scan() {
-		line := input.Text()
-		parsePermLine(line, rootDir, perms, owners, re)
-	}
-}
-
-func parsePermLine(line, rootDir string, perms, owners map[string]string,
-	re reT) {
-
-	if line == "" || string(line[0]) == "#" {
-		return
-	}
-	line = re.wSpaces.ReplaceAllString(line, "\t")
-	l := str.Split(line, "\t")
-
-	if len(l) != 2 {
-		errExit(errors.New(""), "incorrect permissions: "+line)
-	}
-
-	var slashTrail string
-	if line[len(line)-1] == '/' {
-		slashTrail = "/"
-	}
-
-	if str.Contains(l[0], ":") {
-		c := ""
-		permPath := l[1]
-		split := str.Split(permPath, ":")
-		if len(split) > 1 && str.HasPrefix(permPath, "c:") {
-			c = "c:"
-			permPath = split[1]
-		}
-		permPath = c + fp.Join(rootDir, permPath) + slashTrail
-		owners[permPath] = l[0]
-	} else if strDigitsOnly(l[0]) {
-		split := str.Split(l[1], ":")
-		if len(split) != 2 {
-			errExit(errors.New(""),
-				"incorrect permissions: "+line)
-		}
-		pathType := split[0]
-		permPath := split[1]
-		perms[pathType+":"+fp.Join(rootDir, permPath)+slashTrail] = l[0]
-	} else {
-		errExit(errors.New(""), "incorrect permissions: "+line)
-	}
 }
 
 // returns a map of config files to be installed with a pkg

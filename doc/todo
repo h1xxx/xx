@@ -172,6 +172,8 @@ create a process to update pkgs versions
 	http://cdn.netbsd.org/pub/NetBSD/packages/vulns/pkg-vulnerabilities.bz2
 	https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-2021.json.gz
 	https://nvd.nist.gov/feeds/json/cpematch/1.0/nvdcpematch-1.0.json.gz
+	https://osv.dev
+	https://github.com/google/osv-scanner
 
 script to test deps and lxc
 test lxc config by creating container with busybox and testing ls output
@@ -180,6 +182,8 @@ test as xx user and as root
 add lib name to infodeps for shared libs
 
 add description to toml files
+
+set ownership for links e.g. /sbin/poweroff
 
 when building individual packages make sure that base dir is there
 

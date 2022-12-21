@@ -4,14 +4,14 @@ set -eo pipefail
 usage() {
 	printf 'usage: dev_install [ARGS]\n'
 	printf ''
-	printf '-t, --target <path>  path to target device or file\n'
-	printf '-s, --set <path>     path to xx set file\n'
-	printf '-c, --config <path>  path to xx system config dir\n'
-	printf '-e, --encrypt        (optional) encrypt root partition\n'
-	printf '-i, --initramfs      (optional) include initramfs\n'
-	printf '-l, --lxc-net        (optional) set LXC_NET in rc.conf\n'
-	printf '-n, --conf           (optional) config only from conf/\n'
-	printf '-u, --uefi           (optional) create uefi parition/\n'
+	printf ' -t, --target <path>  path to target device or file\n'
+	printf ' -s, --set <path>     path to xx set file\n'
+	printf ' -c, --config <path>  path to xx system config dir\n'
+	printf ' -e, --encrypt        (optional) encrypt root partition\n'
+	printf ' -i, --initramfs      (optional) include initramfs\n'
+	printf ' -l, --lxc-net        (optional) set LXC_NET in rc.conf\n'
+	printf ' -n, --conf           (optional) config only from conf/\n'
+	printf ' -u, --uefi           (optional) create uefi parition/\n'
 	exit 0
 }
 
@@ -107,7 +107,7 @@ if [ ${dev_type} == 'file' ] && [ ${uefi} == 'true' ] ; then
 	exit 1
 fi
 
-mbr=/usr/share/syslinux/gptmbr.bin
+mbr=/share/syslinux/gptmbr.bin
 [ ! -f ${mbr} ] && mbr=/home/xx/prog/sys/syslinux/pkg/musl-6.04-pre1-00${mbr}
 [ ! -f ${mbr} ] && printf "error: can't find gptmbr.bin file\n" && exit 1
 
@@ -224,7 +224,7 @@ printf '\n* installing bootloader...\n'
 if [ ${uefi} == 'false' ]; then
 	mkdir -p ${root_dir}/boot/syslinux
 	extlinux --install ${root_dir}/boot/syslinux/
-	cp /usr/share/syslinux/{menu.c32,libutil.c32} ${root_dir}/boot/syslinux/
+	cp /share/syslinux/{menu.c32,libutil.c32} ${root_dir}/boot/syslinux/
 elif [ ${uefi} == 'true' ]; then
 	mkdir -p ${root_dir}/boot/efi/boot ${root_dir}/boot/syslinux
 	umount ${root_dir}/boot
@@ -298,9 +298,9 @@ if [ ${initramfs} == 'true' ]; then
 fi
 
 if [ ${uefi} == 'true' ]; then
-	cp /usr/share/syslinux/efi64/syslinux.efi \
+	cp /share/syslinux/efi64/syslinux.efi \
 		${root_dir}/boot/efi/boot/bootx64.efi
-	cp /usr/share/syslinux/efi64/{ldlinux.e64,menu.c32,libutil.c32} \
+	cp /share/syslinux/efi64/{ldlinux.e64,menu.c32,libutil.c32} \
 		${root_dir}/boot/efi/boot/
 	cp ${root_dir}/boot/syslinux/syslinux.cfg \
 		${root_dir}/boot/efi/boot/
