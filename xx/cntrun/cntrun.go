@@ -39,7 +39,7 @@ func main() {
 		}
 	}
 
-	homeDir := "/cnt/rootfs/" + binCnt[prog] + "/home"
+	homeDir := "/cnt/rootfs/" + binCnt[prog] + "/home/cnt"
 	mntDir := "/cnt/rootfs/" + binCnt[prog] + "/mnt"
 	paths := getPathsFromArgs(initArgs)
 
@@ -69,7 +69,7 @@ func main() {
 	}
 
 	// bind /cnt/home/<prog> to /home in a container
-	bindFile("/cnt/home/"+binCnt[prog], "/home", &lxcConfig)
+	bindFile("/cnt/home/"+binCnt[prog], "/home/cnt", &lxcConfig)
 
 	// prepare cmd
 	var args []string
@@ -217,9 +217,9 @@ func bindFile(p, cntLink string, lxcConfig *string) {
 	fileBase := filepath.Base(p)
 	fileBase = strings.Replace(fileBase, "'", "", -1)
 	targetDir := "files/"
-	if cntLink == "/home" {
+	if cntLink == "/home/cnt" {
 		fileBase = ""
-		targetDir = "home/"
+		targetDir = "home/cnt"
 	}
 
 	fileAbs, err := filepath.Abs(p)
@@ -361,7 +361,7 @@ lxc.mount.auto = cgroup:ro proc:rw sys:ro
 lxc.autodev = 1
 
 lxc.environment = TERM=linux
-lxc.environment = HOME=/home
+lxc.environment = HOME=/home/cnt
 lxc.environment = PATH=/bin:/sbin:/usr/bin:/usr/sbin
 lxc.environment = LC_ALL=en_US.utf8
 
@@ -372,7 +372,7 @@ var cfgSnd = "lxc.mount.entry = /dev/snd dev/snd none bind,create=dir 0 0\n"
 var cfgFb = "lxc.mount.entry = /dev/fb0 dev/fb0 none bind,create=file 0 0\n"
 var cfgDri = "lxc.mount.entry = /dev/dri dev/dri none bind,create=dir 0 0\n"
 var cfgInput = "lxc.mount.entry = /dev/input dev/input none bind,create=dir 0 0\n"
-var cfgUdev = "lxc.mount.entry = /run/udev/data run/udev/data none bind,create=dir 0 0\n"
+var cfgUdev = "lxc.mount.entry = /run/udev run/udev none bind,create=dir 0 0\n"
 var cfgTty0 = "lxc.mount.entry = /dev/tty0 dev/tty0 none bind,create=file 0 0\n"
 var cfgTty4 = "lxc.mount.entry = /dev/tty4 dev/tty4 none bind,create=file 0 0\n"
 var cfgSdl = "lxc.environment = SDL_VIDEO_GL_DRIVER=/usr/lib/libGLESv2.so\n"

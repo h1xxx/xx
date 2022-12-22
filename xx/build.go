@@ -193,7 +193,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 			fp.Join(rootDir, "/cnt/home/", pkgC.cntProg): 0755,
 		}
 
-		topDirs := []string{"/home", "/var/xx", "/mnt/shared",
+		topDirs := []string{"/home/cnt", "/var/xx", "/mnt/shared",
 			"/dev", "/proc", "/run", "/sys", "/tmp",
 			"/files"}
 

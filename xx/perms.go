@@ -208,10 +208,10 @@ func getMode(fullPath, rootDir string, permsMap map[string]string) os.FileMode {
 	errExit(err, "can't get stat:\n  "+fullPath)
 
 	switch {
-	case pStat.IsDir():
-		pType = "d"
 	case !pStat.IsDir():
 		pType = "f"
+	case pStat.IsDir():
+		pType = "d"
 	}
 
 	// find direct definitions of perms
