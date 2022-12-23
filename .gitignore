@@ -13,4 +13,4 @@
 /bin/
 /initramfs/build/
 /tmp/
-
+/cfg/kernel
