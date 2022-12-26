@@ -11,8 +11,10 @@ CONFIG_SCHED_MC=y
 # machine check / overheating reporting
 CONFIG_X86_MCE=y
 
-# mtrr (memory type range register) support
+# mtrr (memory type range register) support, disable PAT if boot errors or
+# restarts occur
 CONFIG_MTRR=y
+CONFIG_X86_PAT=y
 
 # x86 architectural random number generator
 CONFIG_ARCH_RANDOM=y
@@ -22,5 +24,4 @@ CONFIG_LEGACY_VSYSCALL_NONE=y
 
 # todo: ???
 #CONFIG_LEGACY_VSYSCALL_XONLY=n
-
 
