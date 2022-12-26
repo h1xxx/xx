@@ -38,3 +38,6 @@ text/chmlib			std			latest
 text/djvu			std			latest
 text/fbpdf			std			latest
 text/cmark			std			latest
+
+# github.com/pdfcpu/pdfcpu
+

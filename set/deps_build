@@ -692,3 +692,5 @@ text/texinfo				std			latest
 #	x11/libice			std			latest
 
 
+# nvidia requires
+# CONFIG_X86_PAT=y

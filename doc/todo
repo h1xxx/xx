@@ -5,6 +5,10 @@ and add links from busybox (mv, cp ln, etc.)
 
 drop warning WARNING! incorrect dir: /bin for xx_tools_cross
 
+tar pkgs:
+allow to search for files in all pkgs
+view text files e.g. pkg::/etc/config.conf
+
 check for a /bin /lib dir in glibc pkgs and for musl for /usr
 
 cnt: add cnt-mpv command to start a shell with all devices mounted in the cnt
@@ -53,6 +57,9 @@ move genC params into worldT
 rename pkg to p, pkgC to pc, and world to w
 
 check for unpacked directories in src/
+
+when downloading go vendor pkgs check how popular are they or if they come from
+reputable source or what are the new deps compared to previous versions
 
 add correct cfg perms during deployment
 deployCfg and deployPkg may use install with perms per file instead of cp 

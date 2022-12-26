@@ -1,7 +1,3 @@
-sys/linux			source			latest
-sys/nvidia			std			latest
-sys/cuda			std			latest
-sys/clinfo			std			latest
 hack/hashcat			std			latest
 hack/hashcat-utils		std			latest
 
