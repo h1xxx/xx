@@ -1,0 +1,6 @@
+# drivers -> power supply
+# =======================
+
+CONFIG_POWER_SUPPLY=y
+CONFIG_POWER_SUPPLY_HWMON=y
+

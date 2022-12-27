@@ -1,0 +1,20 @@
+# drivers -> sensors amd
+# ======================
+
+CONFIG_SENSORS_FAM15H_POWER=y
+CONFIG_SENSORS_K10TEMP=y
+CONFIG_SENSORS_W83627EHF=y
+CONFIG_SENSORS_W83627HF=y
+CONFIG_SENSORS_W83795=y
+CONFIG_I2C_CHARDEV=y
+CONFIG_I2C_PIIX4=y
+
+# possible deps
+#CONFIG_HWMON_VID=y
+
+# drivers -> sensors intel
+# ========================
+
+CONFIG_I2C_I801=y
+CONFIG_SENSORS_CORETEMP=y
+CONFIG_SENSORS_IT87=y

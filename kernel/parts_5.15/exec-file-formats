@@ -1,0 +1,7 @@
+# exec file formats
+# =================
+
+CONFIG_BINFMT_ELF=y
+CONFIG_BINFMT_MISC=y
+CONFIG_BINFMT_SCRIPT=y
+

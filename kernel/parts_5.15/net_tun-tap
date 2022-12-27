@@ -1,0 +1,10 @@
+# drivers -> net -> tun & tap
+# ===========================
+
+CONFIG_TAP=y
+CONFIG_TUN=y
+CONFIG_GENEVE=y
+CONFIG_MACVLAN=y
+CONFIG_MACVTAP=y
+CONFIG_VETH=y
+

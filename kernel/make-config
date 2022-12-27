@@ -10,6 +10,7 @@ kpath="${1}"
 setup_file="${2}"
 cd "${kpath}"
 kver="$(make kernelversion)"
+kver_short="$(echo "${kver}" | cut -d. -f1,2)"
 
 make defconfig > /dev/null
 mkdir -p build
@@ -35,7 +36,7 @@ grep -v -e '^$' -e '^#' ${setup_file} | while read -r line; do
 		echo "${line}" >> "${setup_parts}"
 		continue
 	fi
-	cat "/home/xx/kernel/parts/${line}" >> "${setup_parts}"
+	cat "/home/xx/kernel/parts_${kver_short}/${line}" >> "${setup_parts}"
 done
 
 # create final config

@@ -1,0 +1,7 @@
+# exec file formats
+# =================
+
+CONFIG_ELF_CORE=y
+CONFIG_COREDUMP=y
+CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS=y
+

@@ -1,0 +1,6 @@
+# drivers -> net -> ethernet -> intel
+# ===================================
+
+CONFIG_IGB=y
+CONFIG_IGB_HWMON=y
+

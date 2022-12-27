@@ -1,0 +1,6 @@
+# 9pfs
+# ====
+
+CONFIG_NET_9P=y
+CONFIG_9P_FS=y
+

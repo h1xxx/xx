@@ -1,0 +1,9 @@
+# drivers -> hid
+# ==============
+
+CONFIG_HID=y
+CONFIG_HIDRAW=y
+CONFIG_HID_GENERIC=y
+
+CONFIG_INPUT_KEYBOARD=y
+CONFIG_KEYBOARD_ATKBD=y

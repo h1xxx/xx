@@ -1,0 +1,11 @@
+# net -> options -> tcp/ip -> ip2ip tunnelling
+# ============================================
+
+CONFIG_NET_IPIP=y
+
+# possible deps
+#CONFIG_NET_IP_TUNNEL=y
+#CONFIG_INET_TUNNEL=y
+#CONFIG_DST_CACHE=y
+#CONFIG_GRO_CELLS=y
+

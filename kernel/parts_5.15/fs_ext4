@@ -1,0 +1,13 @@
+# filesystems -> ext4
+# ===================
+
+CONFIG_EXT4_FS=y
+CONFIG_EXT4_FS_SECURITY=y
+
+# possible deps
+#CONFIG_CRC16=y
+#CONFIG_CRYPTO_CRC32C=y
+#CONFIG_FS_IOMAP=y
+#CONFIG_FS_MBCACHE=y
+#CONFIG_JBD2=y
+

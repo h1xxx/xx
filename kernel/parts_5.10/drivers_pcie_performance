@@ -1,0 +1,6 @@
+# drivers -> pcie support
+# ======================
+
+# set the default mode of operation for pci-e to performance
+CONFIG_PCIEASPM_PERFORMANCE=y
+

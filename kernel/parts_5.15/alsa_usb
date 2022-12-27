@@ -1,0 +1,10 @@
+# drivers -> sound -> alsa usb
+# ============================
+
+CONFIG_SND_USB=y
+CONFIG_SND_USB_AUDIO=y
+
+# possible deps
+#CONFIG_SND_HWDEP=y
+#CONFIG_SND_RAWMIDI=y
+

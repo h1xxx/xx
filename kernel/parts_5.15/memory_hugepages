@@ -1,0 +1,13 @@
+# memory management -> hugepages
+# ==============================
+
+CONFIG_TRANSPARENT_HUGEPAGE=y
+CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS=y
+
+# hugepages fs
+CONFIG_HUGETLBFS=y
+CONFIG_HUGETLB_PAGE=y
+
+# possible deps
+#CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION=y
+

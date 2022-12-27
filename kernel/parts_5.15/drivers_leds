@@ -1,0 +1,8 @@
+# drivers -> led support
+# ======================
+
+CONFIG_INPUT_LEDS=y
+CONFIG_LEDS_CLASS=y
+CONFIG_LEDS_TRIGGERS=y
+CONFIG_NEW_LEDS=y
+

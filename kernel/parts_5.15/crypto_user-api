@@ -1,0 +1,11 @@
+# crypto -> user api
+# ==================
+
+# required by bluez
+CONFIG_CRYPTO_USER_API=y
+CONFIG_CRYPTO_USER_API_HASH=y
+CONFIG_CRYPTO_USER_API_SKCIPHER=y
+
+# todo: maybe remove?
+CONFIG_CRYPTO_USER_API_ENABLE_OBSOLETE=y
+

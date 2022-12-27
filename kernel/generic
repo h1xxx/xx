@@ -56,6 +56,7 @@ drivers_multiple-devices
 
 drivers_pci
 drivers_pcie
+drivers_pcie_performance
 drivers_vga-arbitration
 
 drivers_acpi-laptop
@@ -69,6 +70,7 @@ drivers_power
 drivers_rtc
 drivers_sensors
 drivers_sensors_sata
+drivers_serial
 drivers_tty
 
 drivers_hid
@@ -77,6 +79,7 @@ drivers_mouse-laptop
 drivers_lirc
 
 drivers_usb
+drivers_usb-serial
 drivers_usb-storage
 drivers_virtio-net
 
@@ -97,6 +100,9 @@ net_bridge
 
 net_ethernet
 net_ethernet_intel
+net_ethernet_intel_e1000
+net_ethernet_intel_e1000e
+net_ethernet_intel_igb
 net_ethernet_realtek
 
 net_wireless

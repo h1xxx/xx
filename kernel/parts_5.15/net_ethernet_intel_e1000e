@@ -1,0 +1,9 @@
+# drivers -> net -> ethernet -> intel
+# ===================================
+
+CONFIG_E1000E=y
+CONFIG_E1000E_HWTS=y
+
+# possible deps
+CONFIG_I2C_ALGOBIT=y
+

@@ -1,0 +1,5 @@
+# processor -> cpu microcode loading support
+
+CONFIG_MICROCODE=y
+CONFIG_MICROCODE_INTEL=y
+

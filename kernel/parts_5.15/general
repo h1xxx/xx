@@ -1,0 +1,38 @@
+# general
+# =======
+
+CONFIG_64BIT=y
+
+# as of 5.15.83 there's a bug where ZSTD kerenl compression throws an error
+# "ZSTD-compressed data is probably corrupt; system halted"
+# in 5.15.67 this works fine; as a workaround use gzip
+CONFIG_KERNEL_GZIP=y
+#CONFIG_KERNEL_ZSTD=y
+
+CONFIG_SYSVIPC=y
+CONFIG_NO_HZ_IDLE=y
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_PREEMPT_NONE=y
+CONFIG_CPU_ISOLATION=y
+
+CONFIG_RSEQ=y
+CONFIG_SLAB_FREELIST_RANDOM=y
+CONFIG_SLAB_FREELIST_HARDENED=y
+CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+
+# enable posix file locking api
+CONFIG_FILE_LOCKING=y
+
+# set default kernel options
+CONFIG_CMDLINE_BOOL=y
+CONFIG_CMDLINE="net.ifnames=0 rootwait consoleblank=60"
+
+CONFIG_EMBEDDED=n
+
+# todo: verify if can be disabled
+CONFIG_SYSVIPC_SYSCTL=y
+CONFIG_SLUB_CPU_PARTIAL=y
+
+# todo: verifiy if should be enabled
+#CONFIG_PREEMPT_VOLUNTARY=y
+

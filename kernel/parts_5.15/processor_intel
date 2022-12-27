@@ -31,29 +31,6 @@ CONFIG_CPU_IDLE_GOV_MENU=y
 
 
 CONFIG_X86_INTEL_PSTATE=y
-
-
-
-# processor -> supported cpu vendors -> amd
-# =========================================
-
-CONFIG_CPU_SUP_AMD=y
-
-# amd_acpi2platform
-CONFIG_X86_AMD_PLATFORM_DEVICE=y
-#CONFIG_PINCTRL=y
-
-# amd mce features
-CONFIG_X86_MCE_AMD=y
-
-# amd processor power reporting mechanism
-CONFIG_PERF_EVENTS_AMD_POWER=y
-
-CONFIG_PERF_EVENTS_AMD_UNCORE=y
-
-
-# power management -> cpu frequency scaling / cpu idle
-# ====================================================
-
 CONFIG_X86_ACPI_CPUFREQ=y
+
 

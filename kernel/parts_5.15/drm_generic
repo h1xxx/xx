@@ -1,0 +1,15 @@
+# drivers -> graphics -> intel 8xx/9xx/g3x/g4x/hd graphics
+# ========================================================
+
+CONFIG_DRM_I915=y
+CONFIG_DRM_I915_USERPTR=y
+
+# drivers -> graphics -> nouveau (nvidia) cards
+# =============================================
+
+CONFIG_DRM_NOUVEAU=y
+
+# drivers -> graphics -> amd gpu
+# ==============================
+
+CONFIG_DRM_AMDGPU=y

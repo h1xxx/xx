@@ -1,0 +1,6 @@
+# drivers -> sound -> alsa jack
+# =============================
+
+CONFIG_SND_JACK=y
+CONFIG_SND_JACK_INPUT_DEV=y
+

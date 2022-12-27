@@ -1,0 +1,4 @@
+# drivers -> net -> ethernet -> intel
+# ===================================
+
+CONFIG_NET_VENDOR_INTEL=y

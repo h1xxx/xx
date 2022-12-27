@@ -1,0 +1,6 @@
+# drivers -> /dev filesystem
+# ==========================
+
+CONFIG_DEVTMPFS=y
+CONFIG_DEVTMPFS_MOUNT=y
+

@@ -1,0 +1,16 @@
+# memory management
+# =================
+
+# enable bounce buffers
+# todo: verify if needed, check perf, needs also HIGHMEM
+#CONFIG_BOUNCE=y
+
+# sparse memory virtual memmap
+CONFIG_SPARSEMEM_VMEMMAP=y
+
+# enable ksm for page merging
+CONFIG_KSM=y
+
+# enable cleancache driver to cache clean pages if tmem is present
+CONFIG_CLEANCACHE=y
+

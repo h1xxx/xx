@@ -1,0 +1,10 @@
+CONFIG_IOMMU_DEFAULT_PASSTHROUGH=y
+CONFIG_AMD_IOMMU_V2=y
+CONFIG_DMAR_TABLE=y
+CONFIG_IRQ_REMAP=y
+
+# todo: check and maybe move somewhere?
+# to allow users to taskset and to prevent error:
+# operation not permitted. failed to set pid 0's policy
+CONFIG_RT_GROUP_SCHED=y
+

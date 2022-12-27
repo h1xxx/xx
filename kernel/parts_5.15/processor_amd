@@ -16,7 +16,6 @@ CONFIG_X86_MCE_THRESHOLD=y
 # amd processor power reporting mechanism
 CONFIG_PERF_EVENTS_AMD_POWER=y
 
-
 # processor -> Performance monitoring
 CONFIG_PERF_EVENTS_AMD_UNCORE=y
 # intel/amd rapl performance events

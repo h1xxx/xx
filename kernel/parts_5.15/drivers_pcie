@@ -1,0 +1,7 @@
+# drivers -> pcie support
+# ======================
+
+CONFIG_PCIEPORTBUS=y
+CONFIG_PCIEAER=y
+CONFIG_PCIEASPM=y
+
