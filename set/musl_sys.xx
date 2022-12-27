@@ -39,7 +39,8 @@ text/dos2unix			musl			latest
 
 sys/libftdi			musl			latest
 sys/flashrom			musl			latest
-
+dev/inih			musl			latest
+sys/tio				musl			latest
 arch/unrar			musl			latest
 
 sys/dmidecode			musl			latest
