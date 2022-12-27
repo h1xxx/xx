@@ -104,7 +104,8 @@ func installBase(world map[string]worldT, genC genCfgT) {
 
 func linkBaseDir(rootDir, baseDir string) {
 	bb := "/home/xx/bin/busybox"
-	cmd := exec.Command(bb, "cp", "-al", baseDir, rootDir)
+	c := bb + " cp -al " + baseDir + "/* " + rootDir + "/"
+	cmd := exec.Command(bb, "sh", "-c", c)
 	err := cmd.Run()
 	errExit(err, "can't create link to "+baseDir+" in:\n  "+rootDir)
 
