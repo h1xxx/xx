@@ -6,7 +6,8 @@ msg() {
 
 get_dev_mapper() {
 	luks_dev="$(basename "${1}")"
-	virt_dev="$(find /sys/devices/virtual/block/ -name "${luks_dev}" | cut -d'/' -f6)"
+	virt_dev="$(find /sys/devices/virtual/block/ -name "${luks_dev}" |
+		cut -d'/' -f6)"
 	if [ -z "${virt_dev}" ]; then
 		printf ''
 	else
@@ -90,6 +91,14 @@ if [ -z "${NET}" ] || [ -z "${ENC}" ] || [ -z "${MACHINE}" ]; then
 	err "error: incorrect ${conf}"
 fi
 
+# start a tty on serial
+if [ "${SERIAL}" == 'true' ]; then
+	for f in /dev/ttyS*; do
+		ttyS="$(basename "${f}")"
+		setsid agetty 115200 "${ttyS}" vt100
+	done
+fi
+
 # network configuration
 if [ "${NET}" == 'static' ]; then
 	msg 'setting static network config...'
@@ -150,6 +159,12 @@ fi
 if [ "${SSHD}" == 'true' ]; then
 	msg 'killing ssh server...'
 	killall -TERM sshd
+	sleep 0.5
+fi
+
+if [ "${SERIAL}" == 'true' ]; then
+	msg 'killing agetty for serial connections...'
+	killall -TERM agetty
 	sleep 0.5
 fi
 

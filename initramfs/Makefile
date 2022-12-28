@@ -17,8 +17,10 @@ initramfs:
 		bin/lsirq \
 		bin/lsmem \
 		bin/scp \
+		bin/setsid \
 		bin/ssh \
 		bin/ssh-keygen \
+		sbin/agetty \
 		sbin/blkid \
 		sbin/badblocks \
 		sbin/blockdev \
@@ -45,8 +47,20 @@ initramfs:
 	cp -a files/ash.rc build/ramfs_root/root/
 	cp -a files/unifont-apl8x16.psf.gz build/ramfs_root/share/
 
+	[ -f /home/xx/cfg/user_initramfs/authorized_keys ] && \
+	install -dm700 build/ramfs_root/root/.ssh/ && \
+	install -m600 /home/xx/cfg/user_initramfs/authorized_keys \
+		build/ramfs_root/root/.ssh && \
 	ssh-keygen -N '' -t ed25519 \
 		-f build/ramfs_root/etc/ssh/ssh_host_ed25519_key || :
+
+	[ -f /home/xx/cfg/user_initramfs/passwd ] && \
+	install -m600 /home/xx/cfg/user_initramfs/passwd \
+		build/ramfs_root/etc/
+
+	[ -f /home/xx/cfg/user_initramfs/shadow ] && \
+	install -m600 /home/xx/cfg/user_initramfs/shadow \
+		build/ramfs_root/etc/
 
 	# creating cpio file
 	cd build/ramfs_root && find * -print0 | \
