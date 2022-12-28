@@ -1,12 +1,8 @@
-text/task			std			latest
-
 #
 ## misc
+# visidata
 #hxx=''
 #hxx+='app-crypt/johntheripper '         # password cracker
-##hxx+='app-crypt/hashcat '              # password cracker
-##hxx+='app-crypt/hashcat-utils '                # password cracking utils
-#oth+='net-misc/electrum '               # bitcoin client
 #https://github.com/andmarti1424/sc-im
 #https://github.com/jrnl-org/jrnl
 #text/nawk                   std                     latest

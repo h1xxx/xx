@@ -118,7 +118,6 @@ dev/checksec			musl			latest
 #net-fs/sshfs
 #net-libs/libetpan
 #net-libs/libgsasl
-#net-misc/electrum
 #net-p2p/go-ethereum
 #net/mktorrent
 #net-p2p/ncdc

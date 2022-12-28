@@ -24,6 +24,8 @@ deploy default config files to usr//cnt/./home do use when no /var/lib/.
 
 warn about "configure: WARNING: unrecognized options: --disable-shared"
 
+doing 'xx/xx b -s custom -V 5.10.161 -f sys/linux' without base doesn't work
+
 don't remove failed pkg dir, but place pkg_ok file when everything's ok, and
 use this file to get the latest pkg
 

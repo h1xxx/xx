@@ -13,4 +13,6 @@
 /bin/
 /initramfs/build/
 /tmp/
-/cfg/kernel
+/cfg/user_initramfs
+/cfg/user_kernel
+/cfg/user_set
