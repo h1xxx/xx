@@ -36,6 +36,9 @@ func buildSetFile(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []
 		return
 	}
 
+	err := os.MkdirAll(genC.rootDir, 0700)
+	errExit(err, "can't create dir: "+genC.rootDir)
+
 	baseLinkFile := fp.Join(genC.rootDir, "base_linked")
 	baseLinked := fileExists(baseLinkFile)
 	baseOkFile := fp.Join(genC.baseDir, "base_ok")
