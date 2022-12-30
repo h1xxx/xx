@@ -115,6 +115,9 @@ net_bridge
 
 net_ethernet
 net_ethernet_intel
+net_ethernet_intel_e1000
+net_ethernet_intel_e1000e
+net_ethernet_intel_igb
 net_ethernet_realtek
 
 net_wireless
@@ -144,3 +147,5 @@ vm-guest_9p
 verify
 
 CONFIG_EXTRA_FIRMWARE=""
+CONFIG_EXTRA_FIRMWARE_DIR="/usr/lib/firmware"
+

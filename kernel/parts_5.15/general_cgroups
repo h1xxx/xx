@@ -23,3 +23,7 @@ CONFIG_PROC_PID_CPUSET=y
 # needed for lxc
 CONFIG_POSIX_MQUEUE=y
 
+# to allow users to taskset and to prevent error:
+# operation not permitted. failed to set pid 0's policy
+CONFIG_RT_GROUP_SCHED=y
+

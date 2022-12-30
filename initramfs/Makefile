@@ -49,10 +49,16 @@ initramfs:
 
 	[ -f /home/xx/cfg/user_initramfs/authorized_keys ] && \
 	install -dm700 build/ramfs_root/root/.ssh/ && \
+	install -dm700 build/ramfs_root/var/empty/ && \
+	chmod 700 build/ramfs_root/root && \
 	install -m600 /home/xx/cfg/user_initramfs/authorized_keys \
 		build/ramfs_root/root/.ssh && \
 	ssh-keygen -N '' -t ed25519 \
 		-f build/ramfs_root/etc/ssh/ssh_host_ed25519_key || :
+
+	[ -f /home/xx/cfg/user_initramfs/sshd_config ] && \
+	install -m600 /home/xx/cfg/user_initramfs/sshd_config \
+		build/ramfs_root/etc/ssh/
 
 	[ -f /home/xx/cfg/user_initramfs/passwd ] && \
 	install -m600 /home/xx/cfg/user_initramfs/passwd \

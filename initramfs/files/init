@@ -93,9 +93,11 @@ fi
 
 # start a tty on serial
 if [ "${SERIAL}" == 'true' ]; then
+	msg 'starting agetty for serial connection...'
 	for f in /dev/ttyS*; do
 		ttyS="$(basename "${f}")"
-		setsid agetty 115200 "${ttyS}" vt100
+		agetty 115200 "${ttyS}" vt100 &
+		sleep 0.1
 	done
 fi
 
@@ -112,8 +114,7 @@ fi
 
 if [ "${SSHD}" == 'true' ]; then
 	msg 'starting ssh server...'
-	/usr/sbin/sshd -f /etc/ssh/sshd_config \
-		-o 'AuthorizedKeysFile=/mnt/boot/authorized_keys'
+	/bin/sshd -f /etc/ssh/sshd_config
 
 	msg 'waiting for decrypting from net...'
 	echo "press 'q' to cancel"

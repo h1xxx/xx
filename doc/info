@@ -34,6 +34,15 @@ init script: /etc/runit/3
 	uses /etc/rc.d/*.stop and /etc/rc.conf for config
 
 
+serial connection in initramfs to decrypt root
+- cryptsetup open /dev/sda2 root
+- ps aux | grep -vF '['
+- kill cryptsetup
+- ps aux | grep -vF '['
+- kill latest shell with 'sleep 10 && kill -9 <sh pid> &'
+- exit serial tty before sleep ends
+
+
 
 dir structure
 =============
@@ -132,4 +141,17 @@ adding 4th tty
 
 	- xx/cntrun/cntrun.go
 	change cfgTty4 to cfgTty5 and tty4 to tty5 everywhere
+
+
+microcode
+=========
+
+for intel get family-model-stepping in hex format
+from lscpu get each value and do printf '%x' ${value}
+
+for amd /usr/lib/firmware/amd-ucode/README
+values are also in hex
+
+put bins in CONFIG_EXTRA_FIRMWARE without /usr/lib/firmware prefix
+and define CONFIG_EXTRA_FIRMWARE_DIR=/usr/lib/firmware
 

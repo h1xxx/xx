@@ -27,7 +27,7 @@ out_dir="$(dirname "${setup_dir}")/config"
 
 printf "\n* ${machine}\n"
 
-printf 'creating config...\n'
+printf "creating config ${kver}...\n"
 > "${setup_parts}"
 
 # create partial kernel config
