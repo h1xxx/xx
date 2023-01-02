@@ -3,7 +3,7 @@
 sys/linux			bootstrap_headers_cross		latest
 sys/bash			bootstrap_cross			latest
 sys/coreutils			bootstrap_cross			latest
-sys/diffutils			bootstrap_cross			latest
+text/diffutils			bootstrap_cross			latest
 sys/findutils			bootstrap_cross			latest
 text/gawk			bootstrap_cross			latest
 text/grep			bootstrap_cross			latest

@@ -13,7 +13,7 @@ sys/linux			musl_headers_2_cross	latest
 dev/m4				musl_cross		latest
 sys/bash			musl_cross		latest
 sys/coreutils			musl_cross		latest
-sys/diffutils			musl_cross		latest
+text/diffutils			musl_cross		latest
 sys/file			musl_cross		latest
 sys/findutils			musl_cross		latest
 text/gawk			musl_cross		latest
@@ -36,7 +36,7 @@ lang/perl			musl_init		latest
 sys/shadow			musl_init		latest
 sys/util-linux			musl_init		latest
 sys/coreutils			musl_init		latest
-sys/diffutils			musl_init		latest
+text/diffutils			musl_init		latest
 sys/findutils			musl_init		latest
 sys/tzdata			musl_init		latest
 arch/zlib			musl_init		latest

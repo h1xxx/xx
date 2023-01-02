@@ -1,84 +1,87 @@
-sys/busybox			std			latest
+# core system pkgs
+sys/linux			generic			latest
 sys/bash			std			latest
+sys/busybox			sysinit			latest
+sys/busybox			std			latest
 sys/coreutils			std			latest
-text/man-pages			std			latest
 sys/iana-etc			std			latest
+sys/shadow			std			latest
+sys/syslinux			std			6.04-pre1
 sys/tzdata			std			latest
+sys/util-linux			std			latest
 
-# archiving programs
-arch/cpio			std			latest
+# system pkgs
+sys/acpi			std			latest
+sys/eudev			std			latest
+sys/hwids			std			latest
+sys/kbd				std			latest
+sys/pciutils			std			latest
+sys/procps-ng			std			latest
+sys/psmisc			std			latest
+sys/usbutils			std			latest
+sys/hdparm			std			latest
+sys/smartmontools		std			latest
+
+# filesystem
+sys/cryptsetup			std			latest
+sys/dosfstools			std			latest
+sys/e2fsprogs			std			latest
+sys/findutils			std			latest
+sys/file			std			latest
+sys/gptfdisk			std			latest
+sys/lsof			std			latest
+sys/which			std			latest
+
+# text utils
+text/diffutils			std			latest
+text/gawk			std			latest
+text/grep			std			latest
+text/less			std			latest
+text/man-db			std			latest
+text/sed			std			latest
+
+# system networking pkgs
+sys/iptables			std			latest
+sys/openssh			std			latest
+sys/iproute2			std			latest
+sys/iw				std			latest
+sys/wol				std			latest
+sys/wpa_supplicant		std			latest
+sys/hostapd			std			latest
+
+# networking pkgs
+net/arping			std			latest
+net/dhcpcd			std			latest
+net/mtr				std			latest
+net/fping			std			latest
+net/curl			std			latest
+net/wget			std			latest
+net/rsync			std			latest
+sys/ca-certificates		std			latest
+crypt/libressl 			cert_pem		latest
+net/wireguard-tools		std			latest
+net/nmap			std			latest
+net/socat			std			latest
+
+# archiving
 arch/gzip			std			latest
 arch/bzip2			std			latest
 arch/xz				std			latest
 arch/zstd			std			latest
 arch/tar			std			latest
 
-# core system tools
-sys/diffutils			std			latest
-sys/findutils			std			latest
-text/nawk			std			latest
-text/grep			std			latest
-text/sed			std			latest
-sys/shadow			std			latest
-sys/util-linux			std			latest
-text/man-db			std			latest
-sys/file			std			latest
-text/less			std			latest
-sys/which			std			latest
-
-# network tools and libs
-sys/iptables			std			latest
-sys/openssh			std			latest
-net/rsync			std			latest
-net/curl			std			latest
-net/wget			std			latest
-sys/iproute2			std			latest
-
-# network tools
-net/arping			std			latest
-net/mtr				std			latest
-net/fping			std			latest
-
-# system tools
-sys/e2fsprogs			std			latest
-sys/kbd				std			latest
-sys/vlock			std			latest
-sys/syslinux			std			6.04-pre1
-sys/gptfdisk			std			latest
-sys/cryptsetup			std			latest
-sys/dosfstools			std			latest
-sys/eudev			std			latest
-sys/hwids			std			latest
-sys/lsof			std			latest
-sys/psmisc			std			latest
-sys/procps-ng			std			latest
-sys/busybox			sysinit			latest
-
-# monitoring
+# monitoring/logging
 sys/sysstat			std			latest
 sys/iotop			std			latest
+sys/rsyslog			std			latest
 
-# misc
-sys/ca-certificates		std			latest
-crypt/libressl 			cert_pem		latest
+# user
 sys/gnupg			std			latest
 sys/tmux			std			latest
-sys/acpi			std			latest
-sys/rsyslog			std			latest
 sys/unifont			std			latest
-sys/usbutils			std			latest
-sys/linux			std			latest
+sys/vlock			std			latest
 text/vim			std			latest
 
-sys/iw				std			latest
-net/wpa_supplicant		std			latest
-net/hostapd			std			latest
-net/dhcpcd			std			latest
-
-net/wireguard-tools		std			latest
-net/nmap			std			latest
-net/socat			std			latest
-sys/wol				std			latest
-sys/smartmontools		std			latest
-sys/hdparm			std			latest
+# man pages
+text/man-pages			std			latest
 

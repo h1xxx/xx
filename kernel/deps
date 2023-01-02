@@ -9,6 +9,13 @@ kvm-intel
 io-accounting
 	general_taskstats
 
+wireless
+	power
+	drivers_pci
+	drivers_pcie
+	drivers_usb
+	drivers_leds
+
 # processor-microcode-{amd,intel} depends on FIRMWARE=
 # FIRMWARE= depends on drivers-firmware
 

@@ -14,8 +14,8 @@ net/unbound			musl			latest
 net/chrony			musl			latest
 
 sys/iw				musl			latest
-net/wpa_supplicant		musl			latest
-net/hostapd			musl			latest
+sys/wpa_supplicant		musl			latest
+sys/hostapd			musl			latest
 
 net/wireguard-tools		musl			latest
 arch/lzo			musl			latest

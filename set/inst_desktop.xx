@@ -21,7 +21,7 @@ arch/unrar			musl			latest
 arch/p7zip			std			latest	c
 
 # core system tools
-sys/diffutils			musl			latest
+text/diffutils			musl			latest
 sys/findutils			musl			latest
 text/nawk			musl			latest
 text/gawk			musl			latest
@@ -104,8 +104,8 @@ sys/linux			std			latest
 sys/unifont			std			latest
 
 sys/iw				musl			latest
-net/wpa_supplicant		musl			latest
-net/hostapd			musl			latest
+sys/wpa_supplicant		musl			latest
+sys/hostapd			musl			latest
 net/dhcpcd			musl			latest
 
 net/wireguard-tools		musl			latest

@@ -14,7 +14,7 @@ dev/gcc				bootstrap_libstdcpp_cross	latest
 dev/m4				bootstrap_cross			latest
 sys/bash			bootstrap_cross			latest
 sys/coreutils			bootstrap_cross			latest
-sys/diffutils			bootstrap_cross			latest
+text/diffutils			bootstrap_cross			latest
 sys/file			bootstrap_cross			latest
 sys/findutils			bootstrap_cross			latest
 text/gawk			bootstrap_cross			latest

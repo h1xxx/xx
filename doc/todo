@@ -5,6 +5,9 @@ and add links from busybox (mv, cp ln, etc.)
 
 drop warning WARNING! incorrect dir: /bin for xx_tools_cross
 
+when building kernel create pkgs based on the name of kernel configs
+add an option to build a kernel just for one specific machine
+
 tar pkgs:
 allow to search for files in all pkgs
 view text files e.g. pkg::/etc/config.conf

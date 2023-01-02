@@ -62,7 +62,7 @@ sys/libcap-ng			musl			latest
 crypt/openssl			musl			latest
 
 # core system tools
-sys/diffutils			musl			latest
+text/diffutils			musl			latest
 sys/findutils			musl			latest
 text/gawk			musl			latest
 text/grep			musl			latest
