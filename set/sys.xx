@@ -2,7 +2,7 @@ sys/linux			headers			latest
 sys/linux-firmware-bin		std			latest
 sys/intel-microcode-bin		std			latest
 sys/linux			generic			latest
-sys/linux			custom			latest	f
+sys/linux			custom			latest
 
 arch/p7zip			std			latest
 

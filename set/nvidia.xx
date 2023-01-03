@@ -1,5 +1,6 @@
+sys/linux			generic			latest
 sys/linux			generic_source		latest
-sys/nvidia			std			latest	f
+sys/nvidia			std			latest
 sys/cuda			std			latest
 sys/opencl-headers		std			latest
 sys/clinfo			std			latest

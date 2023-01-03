@@ -1,87 +1,87 @@
 # core system pkgs
 sys/linux			generic			latest
-sys/bash			std			latest
+sys/bash			musl			latest
 sys/busybox			sysinit			latest
-sys/busybox			std			latest
-sys/coreutils			std			latest
+sys/busybox			musl			latest
+sys/coreutils			musl			latest
 sys/iana-etc			std			latest
-sys/shadow			std			latest
-sys/syslinux			std			6.04-pre1
+sys/shadow			musl			latest
+sys/syslinux			musl			6.04-pre1
 sys/tzdata			std			latest
-sys/util-linux			std			latest
+sys/util-linux			musl			latest
 
 # system pkgs
-sys/acpi			std			latest
-sys/eudev			std			latest
-sys/hwids			std			latest
-sys/kbd				std			latest
-sys/pciutils			std			latest
-sys/procps-ng			std			latest
-sys/psmisc			std			latest
-sys/usbutils			std			latest
-sys/hdparm			std			latest
-sys/smartmontools		std			latest
+sys/acpi			musl			latest
+sys/eudev			musl			latest
+sys/hwids			musl			latest
+sys/kbd				musl			latest
+sys/pciutils			musl			latest
+sys/procps-ng			musl			latest
+sys/psmisc			musl			latest
+sys/usbutils			musl			latest
+sys/hdparm			musl			latest
+sys/smartmontools		musl			latest
 
 # filesystem
-sys/cryptsetup			std			latest
-sys/dosfstools			std			latest
-sys/e2fsprogs			std			latest
-sys/findutils			std			latest
-sys/file			std			latest
-sys/gptfdisk			std			latest
-sys/lsof			std			latest
-sys/which			std			latest
+sys/cryptsetup			musl			latest
+sys/dosfstools			musl			latest
+sys/e2fsprogs			musl			latest
+sys/findutils			musl			latest
+sys/file			musl			latest
+sys/gptfdisk			musl			latest
+sys/lsof			musl			latest
+sys/which			musl			latest
 
 # text utils
-text/diffutils			std			latest
-text/gawk			std			latest
-text/grep			std			latest
-text/less			std			latest
-text/man-db			std			latest
-text/sed			std			latest
+text/diffutils			musl			latest
+text/gawk			musl			latest
+text/grep			musl			latest
+text/less			musl			latest
+text/man-db			musl			latest
+text/sed			musl			latest
 
 # system networking pkgs
-sys/iptables			std			latest
-sys/openssh			std			latest
-sys/iproute2			std			latest
-sys/iw				std			latest
-sys/wol				std			latest
-sys/wpa_supplicant		std			latest
-sys/hostapd			std			latest
+sys/iptables			musl			latest
+sys/openssh			musl			latest
+sys/iproute2			musl			latest
+sys/iw				musl			latest
+sys/wol				musl			latest
+sys/wpa_supplicant		musl			latest
+sys/hostapd			musl			latest
 
 # networking pkgs
-net/arping			std			latest
-net/dhcpcd			std			latest
-net/mtr				std			latest
-net/fping			std			latest
-net/curl			std			latest
-net/wget			std			latest
-net/rsync			std			latest
+net/arping			musl			latest
+net/dhcpcd			musl			latest
+net/mtr				musl			latest
+net/fping			musl			latest
+net/curl			musl			latest
+net/wget			musl			latest
+net/rsync			musl			latest
 sys/ca-certificates		std			latest
 crypt/libressl 			cert_pem		latest
-net/wireguard-tools		std			latest
-net/nmap			std			latest
-net/socat			std			latest
+net/wireguard-tools		musl			latest
+net/nmap			musl			latest
+net/socat			musl			latest
 
 # archiving
-arch/gzip			std			latest
-arch/bzip2			std			latest
-arch/xz				std			latest
-arch/zstd			std			latest
-arch/tar			std			latest
+arch/gzip			musl			latest
+arch/bzip2			musl			latest
+arch/xz				musl			latest
+arch/zstd			musl			latest
+arch/tar			musl			latest
 
 # monitoring/logging
-sys/sysstat			std			latest
-sys/iotop			std			latest
-sys/rsyslog			std			latest
+sys/sysstat			musl			latest
+sys/iotop			musl			latest
+sys/rsyslog			musl			latest
 
 # user
-sys/gnupg			std			latest
-sys/tmux			std			latest
-sys/unifont			std			latest
-sys/vlock			std			latest
-text/vim			std			latest
+sys/gnupg			musl			latest
+sys/tmux			musl			latest
+sys/unifont			musl			latest
+sys/vlock			musl			latest
+text/vim			musl			latest
 
 # man pages
-text/man-pages			std			latest
+text/man-pages			musl			latest
 

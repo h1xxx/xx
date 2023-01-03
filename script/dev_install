@@ -221,10 +221,15 @@ ${xx_bin} install ${cfg_arg} -r ${root_dir} ${xx_set}
 
 printf '\n* installing bootloader...\n'
 
+usr=''
+[ -e /usr/share/syslinux/menu.c32 ] && usr='/usr'
+
 if [ ${uefi} == 'false' ]; then
 	mkdir -p ${root_dir}/boot/syslinux
 	extlinux --install ${root_dir}/boot/syslinux/
-	cp /share/syslinux/{menu.c32,libutil.c32} ${root_dir}/boot/syslinux/
+	cp ${usr}/share/syslinux/{menu.c32,libutil.c32} \
+		${root_dir}/boot/syslinux/
+
 elif [ ${uefi} == 'true' ]; then
 	mkdir -p ${root_dir}/boot/efi/boot ${root_dir}/boot/syslinux
 	umount ${root_dir}/boot
@@ -298,9 +303,9 @@ if [ ${initramfs} == 'true' ]; then
 fi
 
 if [ ${uefi} == 'true' ]; then
-	cp /share/syslinux/efi64/syslinux.efi \
+	cp ${usr}/share/syslinux/efi64/syslinux.efi \
 		${root_dir}/boot/efi/boot/bootx64.efi
-	cp /share/syslinux/efi64/{ldlinux.e64,menu.c32,libutil.c32} \
+	cp ${usr}/share/syslinux/efi64/{ldlinux.e64,menu.c32,libutil.c32} \
 		${root_dir}/boot/efi/boot/
 	cp ${root_dir}/boot/syslinux/syslinux.cfg \
 		${root_dir}/boot/efi/boot/

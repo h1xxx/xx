@@ -134,6 +134,7 @@ media/exiftool				std			latest
 hack/hashcat				std			latest
 	sys/nvidia			std			latest
 	sys/cuda			std			latest
+	sys/kmod			std			latest
 
 hack/hashcat-utils			std			latest
 	lang/perl			std			latest

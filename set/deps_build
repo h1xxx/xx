@@ -149,7 +149,7 @@ net/bind				std			latest
 	dev/libuv			std			latest
 	net/nghttp2			std			latest
 
-net/wpa_supplicant			std			latest
+sys/wpa_supplicant			std			latest
 	net/libnl			std			latest
 
 net/mutt				std			latest
