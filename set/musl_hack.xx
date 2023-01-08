@@ -1,0 +1,10 @@
+hack/hcxdumptool		musl			latest
+hack/hcxtools			musl			latest
+
+
+# https://github.com/alufers/mitmproxy2swagger
+# https://github.com/DominicBreuker/pspy
+
+# osint
+# https://github.com/megadose/toutatis
+# https://github.com/megadose/holehe
