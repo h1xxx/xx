@@ -1,0 +1,6 @@
+# drivers -> net -> ethernet -> usb network adapters ->
+# -> multi-purpose usb networking framework
+# =========================================
+
+CONFIG_USB_USBNET=y
+

@@ -109,14 +109,16 @@ if [ "${NET}" == 'static' ]; then
 elif [ "${NET}" == 'dhcp' ]; then
 	msg 'getting network config through dhcp...'
 	ip link set "${NET_DHCP_IFACE}" up
-	dhcpcd -1 -4 --waitip=4 -B "${NET_DHCP_IFACE}"
+	dhcpcd -1 -4 -b "${NET_DHCP_IFACE}"
 fi
 
 if [ "${SSHD}" == 'true' ]; then
 	msg 'starting ssh server...'
 	/bin/sshd -f /etc/ssh/sshd_config
+fi
 
-	msg 'waiting for decrypting from net...'
+if [ "${SSHD}" == 'true' ] || [ "${SERIAL}" == 'true' ]; then
+	msg 'waiting for decrypting from net or serial...'
 	echo "press 'q' to cancel"
 	while [ ! -e /dev/mapper/root ]; do
 		read -n 1 -t 0.10 key_press
@@ -159,18 +161,20 @@ fi
 # cleanup
 if [ "${SSHD}" == 'true' ]; then
 	msg 'killing ssh server...'
-	killall -TERM sshd
-	sleep 0.5
+	killall -9 sshd
+	sleep 0.1
 fi
 
 if [ "${SERIAL}" == 'true' ]; then
 	msg 'killing agetty for serial connections...'
-	killall -TERM agetty
-	sleep 0.5
+	killall -9 agetty
+	sleep 0.1
 fi
 
 if [ "${NET}" != 'none' ]; then
 	msg 'flushing network interfaces...'
+	killall -9 dhcpcd
+	sleep 0.1
 	for iface in $(ls /sys/class/net/); do
 		ip addr flush "${iface}"
 		ip link set "${iface}" down

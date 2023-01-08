@@ -34,10 +34,10 @@ init script: /etc/runit/3
 	uses /etc/rc.d/*.stop and /etc/rc.conf for config
 
 
-serial connection in initramfs to decrypt root
+serial connection in initramfs to decrypt root if no network is set
 - cryptsetup open /dev/sda2 root
 - ps aux | grep -vF '['
-- kill cryptsetup
+- killall cryptsetup
 - ps aux | grep -vF '['
 - kill latest shell with 'sleep 10 && kill -9 <sh pid> &'
 - exit serial tty before sleep ends

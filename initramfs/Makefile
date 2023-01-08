@@ -50,6 +50,7 @@ initramfs:
 	[ -f /home/xx/cfg/user_initramfs/authorized_keys ] && \
 	install -dm700 build/ramfs_root/root/.ssh/ && \
 	install -dm700 build/ramfs_root/var/empty/ && \
+	install -dm700 build/ramfs_root/var/run/dhcpcd/ && \
 	chmod 700 build/ramfs_root/root && \
 	install -m600 /home/xx/cfg/user_initramfs/authorized_keys \
 		build/ramfs_root/root/.ssh && \

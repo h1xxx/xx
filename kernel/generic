@@ -81,6 +81,7 @@ drivers_lirc
 drivers_usb
 drivers_usb-serial
 drivers_usb-storage
+drivers_usb-webcam
 drivers_virtio-net
 
 drivers_bluetooth
@@ -104,6 +105,9 @@ net_ethernet_intel_e1000
 net_ethernet_intel_e1000e
 net_ethernet_intel_igb
 net_ethernet_realtek
+net_ethernet_usb
+net_ethernet_usb_asix
+net_ethernet_usb_cdc
 
 net_wireless
 net_wireless_ath9k
