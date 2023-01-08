@@ -1,5 +1,18 @@
-sys/linux			generic			latest
-sys/linux			generic_source		latest
+# libs for egl
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+x11/libva			std			latest
+x11/libva-intel-driver		std			latest
+media/libva-utils		std			latest
+
+# mesa
+media/mako			std			latest
+lang/ocaml			std			latest
+dev/llvm			std			latest
+media/mesa			std			latest
+
+sys/linux			nvidia			latest
+sys/linux			nvidia_source		latest
 sys/nvidia			std			latest
 sys/cuda			std			latest
 sys/opencl-headers		std			latest

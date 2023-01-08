@@ -563,7 +563,7 @@ dev/cffi				std			latest
         dev/pycparser			std			latest
 
 sys/nvidia				std			latest
-	sys/linux			source			latest
+	sys/linux			nvidia			latest
 
 net/yt-dlp				std			latest
 	arch/zip			std			latest
