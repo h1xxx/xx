@@ -82,8 +82,9 @@ crypt/openssl				std			latest
 text/vim				std			latest
 	sys/bash			musl			latest
 
-sys/syslinux				std			latest
-	sys/e2fsprogs			std			latest
+sys/syslinux				musl			latest
+	sys/memtest86plus		musl			latest
+	sys/e2fsprogs			musl			latest
 
 text/man-db				std			latest
 	text/groff			std			latest

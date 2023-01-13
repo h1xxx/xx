@@ -19,6 +19,7 @@ sys/cryptsetup			musl			latest
 sys/dosfstools			musl			latest
 sys/e2fsprogs			musl			latest
 sys/syslinux			musl			latest
+sys/memtest86plus		musl			latest
 net/dhcpcd			musl			latest
 
 text/less			musl			latest
