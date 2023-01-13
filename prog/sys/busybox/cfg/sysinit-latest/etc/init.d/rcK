@@ -3,6 +3,9 @@
 . /etc/init.d/rc.rc
 . /etc/rc.conf
 
+sleep 0.1
+${BB} printf '\n\033[0m+ system shutdown initiated...\n'
+
 stop process
 
 # write a wtmp record

@@ -3,7 +3,6 @@
 . /etc/init.d/rc.rc
 . /etc/rc.conf
 
-echo
 msg "sending SIGHUP to login shells..."
 ${BB} pkill -1 -f -- -bash
 ${BB} pkill -1 -f -- -sh

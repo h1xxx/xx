@@ -27,13 +27,13 @@ func actionInst(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []pk
 		errExit(errors.New(""), "please provide a system config dir")
 
 	case genC.instPerms:
-		fmt.Println("* setting system permissions for...")
+		fmt.Println("* setting system permissions...")
 		setSysPerm(genC.rootDir)
 
 	case genC.instSysCfg:
 		fmt.Println("* installing config files...")
 		instSysCfg(world, genC)
-		fmt.Println("\n* setting system permissions for...")
+		fmt.Println("\n* setting system permissions...")
 		setSysPerm(genC.rootDir)
 
 	default:
@@ -85,7 +85,7 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 		fmt.Println()
 	}
 
-	fmt.Println("* setting system permissions for...")
+	fmt.Println("* setting system permissions...")
 	setSysPerm(genC.rootDir)
 }
 

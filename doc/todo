@@ -1,3 +1,19 @@
+prepare rescue and add freedos and an example iso system to syslinux:
+# Hardware Detection Tool from iso image (with 'iso' parameter)
+LABEL hdt_iso
+LINUX memdisk
+INITRD hdt.iso
+APPEND iso
+# DOS from floppy image (with 'raw' parameter)
+LABEL dos_floppy_with_raw
+LINUX memdisk
+INITRD dosboot.img
+APPEND raw
+
+bump syslinux, maybe from debian? to fix hdt.c32
+move syslinux install files from dev_install to separate pkg also for uefi
+combine uefi with mbr
+
 make prepare step use only bins from xx tools, also add this to path
 when doing cross compiling, also add git,tar, sed, zstd and patch commands,
 also cross compile magic file for 'file'
