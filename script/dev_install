@@ -34,7 +34,13 @@ lxc_net=false
 # add files for uefi
 uefi=false
 
-# default size of the file created for qemu VM
+# setup serial connection in inittab and syslinux.cfg
+serial=false
+
+# size of the boot partition
+boot_size=128M
+
+# size of the file created for qemu VM
 vm_size=4G
 
 # default paths
@@ -60,10 +66,32 @@ uuid_p1="$(uuidgen | sed 's|.*-.*-.*-.*-.\{4\}|00000000-0000-0000-0000-0000|')"
 uuid_p2="$(uuidgen | sed 's|.*-.*-.*-.*-.\{4\}|00000000-0000-0000-0000-0000|')"
 partuuid_p2="${uuid_p2}"
 
+# first free loop device to use for dev_type 'file'
+loop_dev=
+
 # just a helper function defined early
 function err_exit() {
 	printf 'ERROR: %s\n' "${1}"
 	exit 1
+}
+
+function usage() {
+	echo 'usage: dev_install [ARGS]'
+	echo
+	echo ' -t, --target <path>  path to target device or file'
+	echo ' -s, --set <path>     path to xx set file'
+	echo ' -c, --config <path>  path to xx system config dir'
+	echo ' -k, --kernel         (optional) kernel suffix'
+	echo ' -S, --services       (optional) services to start on boot'
+	echo ' -e, --encrypt        (optional) encrypt root partition'
+	echo ' -i, --initramfs      (optional) include initramfs'
+	echo ' -l, --lxc-net        (optional) set LXC_NET in rc.conf'
+	echo ' -u, --uefi           (optional) create uefi parition'
+	echo ' -r, --rs232          (optional) setup serial connection'
+	echo ' -b, --boot-size      (optional) size of the boot partition e.g. 64M, 4G'
+	echo ' -v, --vm-size        (optional) size of the VM disk e.g. 64M, 4G'
+
+	exit 0
 }
 
 
@@ -116,6 +144,15 @@ while [[ ${#} -gt 0 ]]; do
 		;;
 	-u|--uefi)
 		uefi=true
+		shift
+		;;
+	-r|--rs232)
+		serial=true
+		shift
+		;;
+	-b|--boot-size)
+		boot_size="${2}"
+		shift
 		shift
 		;;
 	-v|--vm-size)
@@ -191,7 +228,9 @@ if [ ${dev_type} == 'file' ] && [ ${uefi} == true ] ; then
 	err_exit "uefi install is available only for disks in /dev"
 fi
 
-[[ "${vm_size}" =~ [^0-9MG] ]] && err_exit 'incorrect VM size format'
+[[ "${boot_size}" =~ ^[0-9]{1,4}[MG]$ ]] || err_exit 'incorrect boot size'
+
+[[ "${vm_size}" =~ ^[0-9]{1,4}[MG]$ ]] || err_exit 'incorrect VM size'
 if [ ${dev_type} == 'device' ] && [ ${vm_size} != '4G' ]; then
 	err_exit "VM size can't be specified for a device file"
 fi
@@ -202,30 +241,13 @@ findmnt "${root_dir}" && err_exit "${root_dir} already mounted"
 
 [ ! -f "${mbr}" ] && err_exit "can't find gptmbr.bin file"
 
-[[ "${loop_dev}" != /dev/loop* ]] &&
+[ ${dev_type} == 'file' ] && [[ "${loop_dev}" != /dev/loop* ]] &&
 	err_exit "loop device should like like '/dev/loop*', not '${loop_dev}'"
 
 
 
 # define functions
 # ================
-
-function usage() {
-	echo 'usage: dev_install [ARGS]'
-	echo
-	echo ' -t, --target <path>  path to target device or file'
-	echo ' -s, --set <path>     path to xx set file'
-	echo ' -c, --config <path>  path to xx system config dir'
-	echo ' -k, --kernel         (optional) kernel suffix'
-	echo ' -S, --services       (optional) services to start on boot'
-	echo ' -e, --encrypt        (optional) encrypt root partition'
-	echo ' -i, --initramfs      (optional) include initramfs'
-	echo ' -l, --lxc-net        (optional) set LXC_NET in rc.conf'
-	echo ' -u, --uefi           (optional) create uefi parition'
-	echo ' -v, --vm-size        (optional) size of the VM disk e.g. 64M, 4G'
-
-	exit 0
-}
 
 function read_syslinux_cfg() {
 	# fstab must also exist in sys config dir
@@ -313,7 +335,7 @@ function prepare_disk() {
 }
 
 function create_partitions() {
-	sgdisk --new 1:+1M:+128M -u "1:${uuid_p1}" "${dev}"
+	sgdisk --new "1:+1M:+${boot_size}" -u "1:${uuid_p1}" "${dev}"
 	sgdisk --new 2::-0 -u "2:${partuuid_p2}" "${dev}"
 
 	[ ${uefi} == false ] && sgdisk -t 1:ef02 "${dev}"
@@ -424,6 +446,13 @@ function set_syslinux_cfg() {
 		cp "${syscfg_file}" "${efisyscfg_file}"
 	fi
 
+	if [ ${serial} == true ]; then
+		local args='console=tty0 console=ttyS0,115200'
+		sed -i "/APPEND/ s|$| ${args}|" "${syscfg_file}"
+		sed -i "s|MENU LABEL memtest|&\n\tAPPEND ${args}|" \
+			"${syscfg_file}"
+	fi
+
 	sed -i "/APPEND/ s|$| bootdev=${uuid_p1}|g" "${syscfg_file}"
 	sed -i "s|vmlinuz-generic|vmlinuz-${kernel}|g" "${syscfg_file}"
 
@@ -478,12 +507,28 @@ function set_rc_conf() {
 
 function set_boot_conf() {
 	if [ ${encrypt} == true ]; then
-		sed -i -e 's|ENC=false|ENC=true|g' "${syscfg_file}"
+		sed -i 's|ENC=false|ENC=true|g' "${syscfg_file}"
+	fi
+
+	if [ ${serial} == true ]; then
+		sed -i 's|SERIAL=false|SERIAL=true|g' "${syscfg_file}"
 	fi
 
 	# save newly created file
 	mkdir -p "$(dirname "${cfg_file}")"
 	cp "${syscfg_file}" "${cfg_file}"
+}
+
+function set_inittab() {
+	local line='ttyS0::respawn:/bin/busybox getty 115200 ttyS0 vt100'
+
+	if [ ${serial} == true ]; then
+		sed -i "s|^::ctrlaltdel:|${line}\n\n&|" "${syscfg_file}"
+
+		# save newly created file
+		mkdir -p "$(dirname "${cfg_file}")"
+		cp "${syscfg_file}" "${cfg_file}"
+	fi
 }
 
 function unmount() {
@@ -603,6 +648,14 @@ cfg_file="${cfg_dir}/syslinux/all-latest/boot/boot.conf"
 syscfg_file="${root_dir}/boot/boot.conf"
 if [ ! -f "${cfg_file}" ]; then
 	set_boot_conf
+fi
+
+# inittab
+
+cfg_file="${cfg_dir}/busybox/sysinit-latest/etc/inittab"
+syscfg_file="${root_dir}/etc/inittab"
+if [ ! -f "${cfg_file}" ]; then
+	set_inittab
 fi
 
 unset cfg_file syscfg_file
