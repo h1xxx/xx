@@ -100,7 +100,9 @@ dev/checksec			musl			latest
 sys/acpi			musl			latest
 sys/rsyslog			musl			latest
 sys/usbutils			musl			latest
-sys/linux			std			latest
+sys/linux			generic			latest
+sys/linux			custom			latest
+sys/linux			nvidia			latest
 sys/unifont			std			latest
 
 sys/iw				musl			latest

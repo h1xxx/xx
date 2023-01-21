@@ -18,4 +18,5 @@ emu/spice-protocol		musl			latest
 emu/spice			musl			latest
 
 emu/qemu			musl			latest
+emu/qemu			musl_server		latest
 

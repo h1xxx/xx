@@ -33,6 +33,7 @@ sys/lsof			musl			latest
 sys/which			musl			latest
 
 # text utils
+dev/ncurses			musl			latest
 text/diffutils			musl			latest
 text/gawk			musl			latest
 text/grep			musl			latest
