@@ -35,6 +35,8 @@ cnt: fix how files are passed to the cnt
 
 rem pkg and subpkg in case of errors in creating subpkg
 
+dev_install check 'xx install' before anything happends
+
 when printing build error:
 - filter irrelevant lines 
 - find undefined references in all static libs (also dump objects to log)

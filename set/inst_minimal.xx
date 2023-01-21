@@ -79,7 +79,7 @@ sys/rsyslog			musl			latest
 # user
 sys/gnupg			musl			latest
 sys/tmux			musl			latest
-sys/unifont			musl			latest
+sys/unifont			std			latest
 sys/vlock			musl			latest
 text/vim			musl			latest
 
