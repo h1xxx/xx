@@ -87,9 +87,12 @@ done
 . ${conf} && umount /mnt/boot || err "${conf} not loaded"
 
 # check if boot.conf variables exist
-if [ -z "${NET}" ] || [ -z "${ENC}" ] || [ -z "${MACHINE}" ]; then
+if [ -z "${NET}" ] || [ -z "${ENC}" ] || [ -z "${SERIAL}" ]; then
 	err "error: incorrect ${conf}"
 fi
+
+# execute commands defined in boot.conf
+[ -n "${CMD}" ] && sh -c "${CMD}"
 
 # start a tty on serial
 if [ "${SERIAL}" == 'true' ]; then
