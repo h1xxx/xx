@@ -36,6 +36,7 @@ cnt: fix how files are passed to the cnt
 rem pkg and subpkg in case of errors in creating subpkg
 
 dev_install check 'xx install' before anything happends
+dev_install if kernel is specified change syslinux.cfg if exists
 
 when printing build error:
 - filter irrelevant lines 
