@@ -400,7 +400,7 @@ function install_bootloader() {
 			"${root_dir}/boot/syslinux/modules/"
 
 	else
-		mkdir -p "${root_dir}/boot/efi/boot"
+		mkdir -p "${root_dir}/boot/efi/boot/modules" \
 			"${root_dir}/boot/syslinux/modules"
 		umount "${root_dir}/boot"
 		syslinux --directory syslinux --install "${boot_part}"
@@ -412,6 +412,10 @@ function install_bootloader() {
 			"${root_dir}/boot/efi/boot/"
 		cp "${syslinux_dir}"/efi64/*.c32 \
 			"${root_dir}/boot/efi/boot/modules/"
+		cp "${syslinux_dir}"/*.c32 \
+			"${root_dir}/boot/syslinux/modules/"
+		cp "${root_dir}/boot/syslinux/syslinux.cfg" \
+			"${root_dir}/boot/efi/boot/"
 	fi
 	sync "${boot_part}"
 }
@@ -438,14 +442,6 @@ function set_syslinux_cfg() {
 		cp "${initramfs_file}" "${root_dir}/boot/"
 	fi
 
-	local efisyscfg_file="${root_dir}/boot/efi/boot/syslinux.cfg"
-	local eficfg_dir="${cfg_dir}/syslinux/all-latest/boot/efi/boot/"
-
-	if [ ${uefi} == true ]; then
-		mkdir -p "$(dirname "${efisyscfg_file}")"
-		cp "${syscfg_file}" "${efisyscfg_file}"
-	fi
-
 	if [ ${serial} == true ]; then
 		local args='console=tty0 console=ttyS0,115200'
 		sed -i "/APPEND/ s|$| ${args}|" "${syscfg_file}"
@@ -455,6 +451,16 @@ function set_syslinux_cfg() {
 
 	sed -i "/APPEND/ s|$| bootdev=${uuid_p1}|g" "${syscfg_file}"
 	sed -i "s|vmlinuz-generic|vmlinuz-${kernel}|g" "${syscfg_file}"
+
+	local efisyscfg_file="${root_dir}/boot/efi/boot/syslinux.cfg"
+	local eficfg_dir="${cfg_dir}/syslinux/all-latest/boot/efi/boot/"
+
+	if [ ${uefi} == true ]; then
+		mkdir -p "$(dirname "${efisyscfg_file}")"
+		cp "${syscfg_file}" "${efisyscfg_file}"
+		sed -i 's|/syslinux/modules|/efi/boot/modules|g' \
+			"${efisyscfg_file}"
+	fi
 
 	# save newly created files
 
