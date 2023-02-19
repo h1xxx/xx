@@ -75,6 +75,7 @@ drivers_multiple-devices
 
 drivers_pci
 drivers_pcie
+drivers_pcie_performance
 drivers_vga-arbitration
 
 drivers_acpi-laptop
@@ -131,8 +132,9 @@ net_wireless_carl9170
 
 drivers_hdmi
 drm
-drm_nouveau
+drm_amdgpu
 drm_intel
+drm_nouveau
 
 alsa
 alsa_usb

@@ -21,7 +21,6 @@ io-accounting
 kernel-hacking
 memory
 memory_hugepages
-kvm_vfio
 
 processor
 
@@ -57,9 +56,7 @@ drivers_multiple-devices
 drivers_pci
 drivers_pcie
 drivers_pcie_performance
-drivers_vga-arbitration
 
-drivers_acpi-laptop
 drivers_devmem
 drivers_evdev
 drivers_firmware
@@ -87,6 +84,8 @@ drivers_virtio-net
 drivers_bluetooth
 drivers_rfkill
 
+drm
+
 net_netfilter
 net_netfilter_extended
 net_netfilter_nat
@@ -104,6 +103,7 @@ net_ethernet_intel
 net_ethernet_intel_e1000
 net_ethernet_intel_e1000e
 net_ethernet_intel_igb
+net_ethernet_intel_igc
 net_ethernet_realtek
 net_ethernet_usb
 net_ethernet_usb_asix
@@ -113,10 +113,7 @@ net_wireless
 net_wireless_ath9k
 net_wireless_ath10k
 net_wireless_carl9170
-
-drm
-drm_intel
-drm_nouveau
+net_wireless_iwlwifi
 
 alsa
 alsa_usb
@@ -125,10 +122,5 @@ alsa_hda-intel
 
 power
 power_acpi
-
-vm-guest_keyboard
-vm-guest_processor
-vm-guest_virtio
-vm-guest_9p
 
 verify

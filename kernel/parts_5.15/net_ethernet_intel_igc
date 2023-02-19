@@ -1,0 +1,5 @@
+# drivers -> net -> ethernet -> intel
+# ===================================
+
+CONFIG_IGC=y
+
