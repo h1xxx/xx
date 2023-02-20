@@ -1,7 +1,7 @@
 HISTSIZE=32768
 HISTFILE="${HOME}/.bash_history"
 HISTCONTROL=ignoredups:ignorespace
-HISTIGNORE='ls -l:ls -la:l:ls:ll:la:lx:lm:d:du:dusort:df:free:top'
+HISTIGNORE='l:ls:ll:la:lx:lm:d'
 HISTTIMEFORMAT='%Y-%m-%d %H:%M:%S : '
 
 green='\[\033[32m\]'
@@ -22,7 +22,6 @@ shopt -s autocd
 shopt -s checkhash
 shopt -s histappend
 
-alias ..='cd ..'
 alias d='pwd'
 alias x='exit'
 alias watch='watch'
@@ -43,4 +42,5 @@ alias df='df -h'
 alias free='free -h'
 alias psgrep='ps aux | grep'
 
-dusort(){ du -h "${@}" | sort -h ;}
+dusort() { du -h "${@}" | sort -h ;}
+
