@@ -4,7 +4,6 @@ net/fping			musl			latest
 net/mtr				musl			latest
 net/tcpdump			musl			latest
 net/whois			musl			latest
-net/rsync			musl			latest
 net/inetutils			musl			latest
 net/wget			musl			latest
 net/dhcpcd			musl			latest

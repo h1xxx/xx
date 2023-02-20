@@ -57,7 +57,6 @@ net/mtr				musl			latest
 net/fping			musl			latest
 net/curl			musl			latest
 net/wget			musl			latest
-net/rsync			musl			latest
 sys/ca-certificates		std			latest
 crypt/libressl 			cert_pem		latest
 net/wireguard-tools		musl			latest

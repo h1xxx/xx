@@ -1,6 +1,7 @@
 hack/hashcat			std			latest
 hack/hashcat-utils		std			latest
 
+# radare--ired
 
 # tsunami scanner from google
 

@@ -29,14 +29,15 @@ text/man-db			musl			latest
 dev/libx86			musl			latest
 libperl/Switch			musl			latest
 
-sys/ncdu			musl			latest
-sys/tmux			musl			latest
-
-sys/testdisk			musl			latest
 text/vim			musl			latest
+text/dos2unix			musl			latest
+sys/tmux			musl			latest
+sys/ncdu			musl			latest
+sys/testdisk			musl			latest
 sys/fdupes			musl			latest
 sys/vifm			musl			latest
-text/dos2unix			musl			latest
+sys/rsync			musl			latest
+sys/rsnapshot			musl			latest
 
 sys/libftdi			musl			latest
 sys/flashrom			musl			latest
