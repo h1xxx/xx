@@ -110,6 +110,7 @@ net_ethernet_usb_asix
 net_ethernet_usb_cdc
 
 net_wireless
+net_wireless_ext
 net_wireless_ath9k
 net_wireless_ath10k
 net_wireless_carl9170
