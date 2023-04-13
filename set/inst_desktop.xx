@@ -186,6 +186,7 @@ text/vim			musl			latest	c
 net/w3m				std			latest	c
 net/mutt			std			latest	c
 media/exiftool			std			latest	c
+sys/ansible			std			latest	c
 
 x11/xorg-server			std			latest	c
 

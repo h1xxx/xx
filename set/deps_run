@@ -204,3 +204,18 @@ media/mesa				std			latest
 
 media/mesa				x11			latest
 	dev/llvm			std			latest
+
+
+sys/ansible				std			latest
+	dev/libffi			std			latest
+	dev/py-cparser			std			latest
+	dev/cffi			std			latest
+	sys/ansible-core		std			latest
+	dev/py-jinja2			std			latest
+	dev/py-markupsafe		std			latest
+	dev/py-yaml			std			latest
+	dev/py-paramiko			std			latest
+	dev/py-bcrypt			std			latest
+	dev/py-pynacl			std			latest
+	dev/py-resolvelib		std			latest
+
