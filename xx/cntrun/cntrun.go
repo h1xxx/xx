@@ -40,7 +40,7 @@ func main() {
 	}
 
 	homeDir := "/cnt/rootfs/" + binCnt[prog] + "/home/cnt"
-	mntDir := "/cnt/rootfs/" + binCnt[prog] + "/mnt"
+	mntDir := "/cnt/rootfs/" + binCnt[prog] + "/files"
 	paths := getPathsFromArgs(initArgs)
 
 	// remove all files in a dir for links
