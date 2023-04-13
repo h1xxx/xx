@@ -54,6 +54,9 @@ net/tor				musl			latest
 lang/lua			musl			5.4.3
 net/diod			musl			latest
 
+net/libtirpc			musl			latest
+net/nfs-utils			musl			latest
+
 net/mblaze			musl			latest
 net/fetchmail			musl			latest
 
