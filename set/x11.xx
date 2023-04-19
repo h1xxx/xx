@@ -72,12 +72,6 @@ media/liberation-fonts		std			latest
 #media-fonts/terminus-font	std			latest
 #media-fonts/ubuntu-font-family	std			latest
 
-# window manager
-x11/libXft			std			latest
-x11/libXinerama			std			latest
-x11/st				std			latest
-x11/dwm				std			latest
-
 # x11 apps
 x11/libICE			std			latest
 x11/libSM			std			latest
@@ -117,7 +111,27 @@ x11/adwaita-icon-theme		std			latest
 x11/hicolor-icon-theme		std			latest
 x11/gtk+			std			latest
 
+# window managers
+x11/libXft			std			latest
+x11/libXinerama			std			latest
+x11/st				std			latest
+x11/dwm				std			latest
 x11/openbox			std			latest
+
+x11/xcb-util			std			latest
+
+x11/xcb-util-image		std			latest
+x11/xcb-util-renderutil		std			latest
+x11/xcb-util-cursor		std			latest
+
+x11/xcb-util-keysyms		std			latest
+x11/xcb-util-wm			std			latest
+x11/xcb-util-xrm		std			latest
+x11/startup-notification	std			latest
+x11/libxkbcommon		std			latest
+dev/yajl			std			latest
+dev/libev			std			latest
+x11/i3				std			latest
 
 # alsa for rdp and vnc		std			latest
 sys/alsa-ucm-conf		std			latest
