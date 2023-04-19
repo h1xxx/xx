@@ -133,6 +133,9 @@ dev/yajl			std			latest
 dev/libev			std			latest
 x11/i3				std			latest
 
+dev/confuse			std			latest
+sys/i3status			std			latest
+
 # alsa for rdp and vnc		std			latest
 sys/alsa-ucm-conf		std			latest
 sys/alsa-topology-conf		std			latest

@@ -30,9 +30,21 @@ text/man-db			musl			latest
 dev/libx86			musl			latest
 libperl/Switch			musl			latest
 
+# sound settings
+sys/alsa-ucm-conf		musl			latest
+sys/alsa-topology-conf		musl			latest
+sys/alsa-lib			musl			latest
+sys/alsa-plugins		musl			latest
+sys/alsa-utils			musl			latest
+
+dev/yajl			musl			latest
+dev/confuse			musl			latest
+sys/linux			musl_headers		latest
+sys/i3status			musl			latest
+sys/tmux			musl			latest
+
 text/vim			musl			latest
 text/dos2unix			musl			latest
-sys/tmux			musl			latest
 sys/ncdu			musl			latest
 sys/testdisk			musl			latest
 sys/fdupes			musl			latest
@@ -82,13 +94,6 @@ media/libjpeg-turbo		musl			latest
 sys/hplip			musl			latest
 dev/autoconf-archive		musl			latest
 media/sane-backends		musl			latest
-
-# sound settings
-sys/alsa-ucm-conf		musl			latest
-sys/alsa-topology-conf		musl			latest
-sys/alsa-lib			musl			latest
-sys/alsa-plugins		musl			latest
-sys/alsa-utils			musl			latest
 
 text/nawk			musl			latest
 text/task			musl			latest
