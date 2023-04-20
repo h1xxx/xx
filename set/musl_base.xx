@@ -110,8 +110,9 @@ dev/py-setuptools		musl			latest
 dev/meson			musl			latest
 dev/cmake			musl			latest
 dev/strace			musl			latest
+net/nghttp2			musl			latest
 net/curl			musl			latest
-dev/git				musl			latest
+dev/git				musl			latest	f
 text/libpcre2			musl			latest
 dev/ctags			musl			latest
 
@@ -144,7 +145,6 @@ sys/libevent			musl			latest
 dev/libuv			musl			latest
 crypt/nettle			musl			latest
 dev/npth			musl			latest
-net/nghttp2			musl			latest
 crypt/gnutls			musl			latest
 
 # misc

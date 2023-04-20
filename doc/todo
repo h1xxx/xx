@@ -1,3 +1,7 @@
+check CONFIG_CFG80211_CRDA_SUPPORT=y
+
+UniqueSlice is not working on [xx, xx], returns empty slice
+
 prepare rescue and add freedos and an example iso system to syslinux:
 # Hardware Detection Tool from iso image (with 'iso' parameter)
 LABEL hdt_iso
@@ -37,6 +41,8 @@ rem pkg and subpkg in case of errors in creating subpkg
 
 dev_install check 'xx install' before anything happends
 dev_install if kernel is specified change syslinux.cfg if exists
+
+move rootfs to squashfs
 
 when printing build error:
 - filter irrelevant lines 
@@ -201,10 +207,12 @@ create a process to update pkgs versions
 	update also gcc libraries together with gcc version via mapping to gcc
 	parse vulnerabilities from
 	http://cdn.netbsd.org/pub/NetBSD/packages/vulns/pkg-vulnerabilities.bz2
+	https://ftp.netbsd.org/pub/NetBSD/packages/vulns/pkg-vulnerabilities
 	https://nvd.nist.gov/feeds/json/cve/1.1/nvdcve-1.1-2021.json.gz
 	https://nvd.nist.gov/feeds/json/cpematch/1.0/nvdcpematch-1.0.json.gz
 	https://osv.dev
 	https://github.com/google/osv-scanner
+	try snyk
 
 script to test deps and lxc
 test lxc config by creating container with busybox and testing ls output
@@ -469,3 +477,7 @@ open /tmp/xx/build/: no such file or directory
 add info on binary files included in src
 add info on pkg environment used for the build
 
+in initramfs stop umounting /dev and /proc and /sys, instead check in rc.conf if
+this is already mounted
+
+check https://fedoraproject.org/wiki/Security_Features_Matrix

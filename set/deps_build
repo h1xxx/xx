@@ -61,6 +61,7 @@ sys/syslinux				std			latest
 
 net/curl				std			latest
 	crypt/openssl			std			latest
+	net/nghttp2			std			latest
 
 dev/git					std			latest
 	net/curl			std			latest
