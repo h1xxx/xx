@@ -86,6 +86,7 @@ lang/nasm			musl			latest
 lang/go				musl			latest
 
 # network tools and libs
+sys/ca-certificates		musl			latest
 crypt/libressl 			cert_pem		latest
 net/libpcap			musl			latest
 net/libnfnetlink		musl			latest
@@ -112,7 +113,7 @@ dev/cmake			musl			latest
 dev/strace			musl			latest
 net/nghttp2			musl			latest
 net/curl			musl			latest
-dev/git				musl			latest	f
+dev/git				musl			latest
 text/libpcre2			musl			latest
 dev/ctags			musl			latest
 
