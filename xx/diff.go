@@ -109,13 +109,16 @@ func getPkgPrevVer(pkg pkgT) pkgT {
 		errExit(errors.New(""), "no pkg dirs available for "+pkg.name)
 	}
 
+	verIdx := len(versions) - 1
 	if len(versions) > 1 {
-		pkg.ver = strings.Replace(versions[len(versions)-2], " ", "", -1)
-		pkg.verShort = getVerShort(pkg.ver)
-		pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-		pkg = getPkgSetVers(pkg)
-		pkg = getPkgDirs(pkg)
+		verIdx = len(versions) - 2
 	}
+
+	pkg.ver = strings.Replace(versions[verIdx], " ", "", -1)
+	pkg.verShort = getVerShort(pkg.ver)
+	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+	pkg = getPkgSetVers(pkg)
+	pkg = getPkgDirs(pkg)
 
 	return pkg
 }
