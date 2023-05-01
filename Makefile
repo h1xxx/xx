@@ -1,8 +1,8 @@
 .PHONY: xx tools
 
 xx:
-	CGO_ENABLED=0 go build -o xx/cntrun/cntrun xx/cntrun/cntrun.go
-	cd xx/ && CGO_ENABLED=0 go build -o xx *.go
+	cd crun/ && CGO_ENABLED=0 go build -o ../bin/crun *.go
+	cd xx/ && CGO_ENABLED=0 go build -o ../bin/xx *.go
 
 install: xx
 	install -m 0750 -o root -g xx xx/xx /sbin/
