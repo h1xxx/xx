@@ -63,6 +63,8 @@ func (r *runT) parseArgs() {
 				r.download = true
 			case "+s":
 				r.shell = true
+			case "+n":
+				r.writeCfg = false
 			case "+D":
 				r.debug = true
 			default:

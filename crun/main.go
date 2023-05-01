@@ -16,8 +16,6 @@ import (
 )
 
 // todo:
-// add +shell
-// add +no_write_conf
 // move/link newly created files to current dir
 //case prog == "startx":
 //	cmdLine += "-- vt4"
@@ -44,6 +42,7 @@ type runT struct {
 	download bool
 	link     bool
 	shell    bool
+	writeCfg bool
 }
 
 type cntConfT struct {
@@ -68,7 +67,11 @@ type dirsT struct {
 func main() {
 	var r runT
 	r.cntCfgFile = "/etc/cnt.conf"
+	r.writeCfg = true
 	r.parseArgs()
+	if !r.shell {
+		r.writeCfg = true
+	}
 	r.parseConf()
 
 	syscall.Umask(0)
@@ -98,7 +101,9 @@ func main() {
 	r.makeLxcConfig()
 
 	// write lxc configuration
-	r.writeLxcConfig()
+	if r.writeCfg {
+		r.writeLxcConfig()
+	}
 
 	// write cmd file
 	r.writeCmd()
