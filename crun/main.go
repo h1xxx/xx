@@ -16,13 +16,9 @@ import (
 )
 
 // todo:
-// add +no_write_conf
 // add +shell
-// add -links create in /cnt/bin
-// check if fileAbs is readable by container
+// add +no_write_conf
 // move/link newly created files to current dir
-// add custom /etc/conf loc
-
 //case prog == "startx":
 //	cmdLine += "-- vt4"
 
@@ -47,6 +43,7 @@ type runT struct {
 	debug    bool
 	download bool
 	link     bool
+	shell    bool
 }
 
 type cntConfT struct {
@@ -115,6 +112,10 @@ func main() {
 	}
 
 	argv := []string{"-n", r.cnt, "-P", "/cnt/rootfs"}
+
+	if r.shell {
+		argv = append(argv, []string{"--", "/bin/bash", "-l"}...)
+	}
 
 	err := syscall.Exec("/bin/lxc-execute", argv, env)
 	errExit(err)

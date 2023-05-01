@@ -38,20 +38,18 @@ func (r *runT) parseArgs() {
 			switch arg {
 			case "-l", "--links":
 				r.link = true
-				continue
 			case "-c", "--config":
 				if len(os.Args)-1 >= i+1 {
 					r.cntCfgFile = os.Args[i+1]
 					skipArg = true
 				}
-				continue
 			case "-D", "--debug":
 				r.debug = true
-				continue
 			default:
 				msg := "undefined arg: %s"
 				errExit(fmt.Errorf(msg, arg))
 			}
+			continue
 		}
 
 		if !cRunArgsDone && arg[0] == '+' {
@@ -61,13 +59,12 @@ func (r *runT) parseArgs() {
 					r.cntCfgFile = os.Args[i+1]
 					skipArg = true
 				}
-				continue
 			case "+d":
 				r.download = true
-				continue
+			case "+s":
+				r.shell = true
 			case "+D":
 				r.debug = true
-				continue
 			default:
 				msg := "undefined arg in crun: %s"
 				errExit(fmt.Errorf(msg, arg))
