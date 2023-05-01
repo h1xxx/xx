@@ -46,13 +46,18 @@ func (r *runT) parseArgs() {
 			cRunArgsDone = true
 		}
 
+		if str.ContainsAny(arg, "\n\t\\") {
+			formatS := "arg can't contain \\n, \\t and \\: %s"
+			errExit(fmt.Errorf(formatS, arg))
+		}
+
 		if fileExists(arg) {
 			absPath, err := fp.Abs(arg)
 			errExit(err)
 
-			quotedArg := escapePath(fp.Join("/bind", absPath))
+			bindPath := fp.Join("/bind", absPath)
 
-			r.args = append(r.args, quotedArg)
+			r.args = append(r.args, quoteArg(bindPath))
 			r.bindTargets = append(r.bindTargets, absPath)
 		} else {
 			quotedArg := quoteArg(arg)

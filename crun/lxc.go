@@ -84,11 +84,12 @@ func addEnv(envVar string) string {
 	return fmt.Sprintf("lxc.environment = %s\n", envVar)
 }
 
-func (r *runT) addBind(t string) {
-	bindPath := fp.Join("bind", t)
-	bindFullDir := fp.Join(r.dirs.bind, fp.Dir(t))
+func (r *runT) addBind(path string) {
+	path = getNoSpacePath(path)
+	bindPath := fp.Join("bind", path)
 
-	// todo: try 770, add cnt user to x group
+	bindFullDir := fp.Join(r.dirs.bind, fp.Dir(path))
+
 	if r.debug {
 		pr("creating %s...", bindFullDir)
 	}
@@ -97,15 +98,24 @@ func (r *runT) addBind(t string) {
 	err := os.MkdirAll(bindFullDir, 0777)
 	errExit(err)
 
-	bindPath = escapePath(bindPath)
-
 	pType := "file"
-	if isDir(t) {
+	bindType := "bind"
+	if isDir(path) {
 		pType = "dir"
+		bindType = "rbind"
 	}
 
-	formatS := "lxc.mount.entry = %s %s none bind,create=%s 0 0\n"
-	r.lxcConfig += fmt.Sprintf(formatS, escapePath(t), bindPath, pType)
+	formatS := "lxc.mount.entry = %s %s none %s,create=%s 0 0\n"
+	r.lxcConfig += fmt.Sprintf(formatS, path, bindPath, bindType, pType)
+}
+
+// finds last subpath that doesn't have spaces
+func getNoSpacePath(path string) string {
+	for str.Contains(path, " ") {
+		path = fp.Dir(path)
+	}
+
+	return path
 }
 
 func (r *runT) bindHome() {
@@ -114,10 +124,18 @@ func (r *runT) bindHome() {
 }
 
 func escapePath(path string) string {
-	r := str.NewReplacer(
-		" ", "\\040",
-		"\t", "\\011",
-		"\n", "\\012",
-		"\\", "\\\\")
+	r := str.NewReplacer(" ", "__")
+
+	/*
+		todo: to be used once lxc config can support \040 as a space
+		in lxc.mount.entry
+
+		r := str.NewReplacer(
+			" ", "\\040",
+			"\t", "\\011",
+			"\n", "\\012",
+			"\\", "\\\\")
+	*/
+
 	return r.Replace(path)
 }

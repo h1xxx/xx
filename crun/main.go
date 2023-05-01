@@ -108,9 +108,6 @@ func main() {
 
 	err := syscall.Exec("/bin/lxc-execute", argv, env)
 	errExit(err)
-
-	// clean up
-	//clearDir(r.dirs.bind, r.debug)
 }
 
 func (r *runT) doChecks() {

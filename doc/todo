@@ -481,3 +481,6 @@ in initramfs stop umounting /dev and /proc and /sys, instead check in rc.conf if
 this is already mounted
 
 check https://fedoraproject.org/wiki/Security_Features_Matrix
+
+make lxc config support \040 as a space  in lxc.mount.entry
+
