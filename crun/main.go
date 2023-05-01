@@ -1,17 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
-
-	//"os/exec"
 	"os/user"
 	"path"
+	"regexp"
 	"syscall"
 
 	fp "path/filepath"
+	str "strings"
 )
 
 // todo:
@@ -30,6 +31,8 @@ type runT struct {
 	bin  string
 	args []string
 
+	cntCfgFile string
+
 	cntId      int
 	cntConfStr string
 	cntConf    cntConfT
@@ -41,7 +44,9 @@ type runT struct {
 
 	lxcConfig string
 
-	debug bool
+	debug    bool
+	download bool
+	link     bool
 }
 
 type cntConfT struct {
@@ -65,8 +70,9 @@ type dirsT struct {
 
 func main() {
 	var r runT
+	r.cntCfgFile = "/etc/cnt.conf"
 	r.parseArgs()
-	r.parseConf("/etc/cnt.conf")
+	r.parseConf()
 
 	syscall.Umask(0)
 
@@ -78,11 +84,15 @@ func main() {
 		r.printDebug()
 	}
 
-	r.doChecks()
-
 	if r.bin == "crun" {
+		switch {
+		case r.link:
+			r.createLinks()
+		}
 		return
 	}
+
+	r.doChecks()
 
 	// remove all files in a dir for binds
 	clearDir(r.dirs.bind, r.debug)
@@ -126,6 +136,63 @@ func (r *runT) doChecks() {
 	if r.bin != "crun" && r.cnt == "" {
 		r.printDebug()
 		errExit(fmt.Errorf("no container detected"))
+	}
+}
+
+func (r *runT) createLinks() {
+	fd, err := os.Open(r.cntCfgFile)
+	errExit(err)
+	defer fd.Close()
+
+	clearLinks()
+
+	var binSection bool
+	reWSpace := regexp.MustCompile(`\s+`)
+
+	input := bufio.NewScanner(fd)
+	for input.Scan() {
+		line := str.TrimSpace(input.Text())
+
+		if line == "" || line[0] == '#' {
+			continue
+		}
+
+		if line == "[ container bins ]" {
+			binSection = true
+			continue
+		}
+
+		if !binSection {
+			continue
+		}
+
+		if str.HasPrefix(line, "[") {
+			break
+		}
+
+		_, bin := getKeyVal(line, reWSpace)
+		target := fp.Join("/cnt/bin", bin)
+
+		if bin == "crun" {
+			continue
+		}
+
+		pr("creating symlink %s => crun", target)
+		err := os.Symlink("crun", target)
+		errExit(err)
+	}
+}
+
+func clearLinks() {
+	files, err := os.ReadDir("/cnt/bin")
+	errExit(err)
+	pr("removing symlinks...")
+
+	for _, file := range files {
+		if file.Name() != "crun" {
+			err := os.Remove(fp.Join("/cnt/bin", file.Name()))
+			errExit(err)
+		}
 	}
 }
 

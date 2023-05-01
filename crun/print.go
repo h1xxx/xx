@@ -11,6 +11,8 @@ func (r *runT) printDebug() {
 	prStr("program", r.bin)
 	prStr("program args", str.Join(r.args, " "))
 	br()
+	prStr("config file", r.cntCfgFile)
+	br()
 	prInt("container id", r.cntId)
 	prStr("config", r.cntConfStr)
 	prStr("ip address", r.cntIP)

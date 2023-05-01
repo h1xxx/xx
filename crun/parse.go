@@ -34,10 +34,43 @@ func (r *runT) parseArgs() {
 			continue
 		}
 
+		if r.bin == "crun" && arg[0] == '-' {
+			switch arg {
+			case "-l", "--links":
+				r.link = true
+				continue
+			case "-c", "--config":
+				if len(os.Args)-1 >= i+1 {
+					r.cntCfgFile = os.Args[i+1]
+					skipArg = true
+				}
+				continue
+			case "-D", "--debug":
+				r.debug = true
+				continue
+			default:
+				msg := "undefined arg: %s"
+				errExit(fmt.Errorf(msg, arg))
+			}
+		}
+
 		if !cRunArgsDone && arg[0] == '+' {
 			switch arg {
+			case "+c":
+				if len(os.Args)-1 >= i+1 {
+					r.cntCfgFile = os.Args[i+1]
+					skipArg = true
+				}
+				continue
 			case "+d":
+				r.download = true
+				continue
+			case "+D":
 				r.debug = true
+				continue
+			default:
+				msg := "undefined arg in crun: %s"
+				errExit(fmt.Errorf(msg, arg))
 			}
 			continue
 		}
@@ -83,8 +116,8 @@ func quoteArg(arg string) string {
 	return "'" + arg + "'"
 }
 
-func (r *runT) parseConf(cntConf string) {
-	fd, err := os.Open(cntConf)
+func (r *runT) parseConf() {
+	fd, err := os.Open(r.cntCfgFile)
 	errExit(err)
 	defer fd.Close()
 
