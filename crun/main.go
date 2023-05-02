@@ -290,12 +290,3 @@ func errExit(err error) {
 		os.Exit(1)
 	}
 }
-
-func printUsage() {
-	fmt.Println(`
-usage: cntrun <program> [program args]
--n	disable net at all times (not implemented yet)
-
-link name to cntrun is also interpreted as a program name
-`)
-}

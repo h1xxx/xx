@@ -43,8 +43,10 @@ func (r *runT) parseArgs() {
 					r.cntCfgFile = os.Args[i+1]
 					skipArg = true
 				}
-			case "-D", "--debug":
+			case "-d", "--debug":
 				r.debug = true
+			case "-h", "--help":
+				printHelp()
 			default:
 				msg := "undefined arg: %s"
 				errExit(fmt.Errorf(msg, arg))
@@ -54,12 +56,19 @@ func (r *runT) parseArgs() {
 
 		if !cRunArgsDone && arg[0] == '+' {
 			switch arg {
-			case "+c":
+			case "+b", "++bind":
+				if len(os.Args)-1 >= i+1 {
+					absPath, err := fp.Abs(os.Args[i+1])
+					errExit(err)
+					r.bindWork = append(r.bindWork, absPath)
+					skipArg = true
+				}
+			case "+c", "++config":
 				if len(os.Args)-1 >= i+1 {
 					r.cntCfgFile = os.Args[i+1]
 					skipArg = true
 				}
-			case "+g":
+			case "+g", "++get":
 				r.get = true
 				if len(os.Args)-1 >= i+1 {
 					absPath, err := fp.Abs(os.Args[i+1])
@@ -67,19 +76,14 @@ func (r *runT) parseArgs() {
 					r.getDest = absPath
 					skipArg = true
 				}
-			case "+s":
+			case "+s", "++shell":
 				r.shell = true
-			case "+n":
+			case "+n", "++no-config":
 				r.writeCfg = false
-			case "+b":
-				if len(os.Args)-1 >= i+1 {
-					absPath, err := fp.Abs(os.Args[i+1])
-					errExit(err)
-					r.bindWork = append(r.bindWork, absPath)
-					skipArg = true
-				}
-			case "+d":
+			case "+d", "++debug":
 				r.debug = true
+			case "+h", "++help":
+				printHelp()
 			default:
 				msg := "undefined arg in crun: %s"
 				errExit(fmt.Errorf(msg, arg))

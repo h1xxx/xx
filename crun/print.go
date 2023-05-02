@@ -52,3 +52,28 @@ func prD(formatS string, a ...any) {
 func br() {
 	fmt.Println()
 }
+
+func printHelp() {
+	fmt.Println(`usage: crun <program> [crun args] [program args]
+usage: <link to crun named after program> [crun args] [program args]
+
+crun args:
+
++b, ++bind <path>   - bind mount a path to the container work dir
++c, ++config <file> - path to a cnt config file (default: /etc/cnt.conf)
++g, ++get <dest>    - copy all files from container work dir
++s, ++shell         - start a shell in the container
++n, ++no-config     - don't write a new lxc config file (only with ++shell)
++d, ++debug         - print info on crun variables and execution
++h, ++help          - this help
+
+
+usage: crun [crun args]
+
+-l, --links         - recreate links to crun in /cnt/bin based on cnt config
+-c, --config <file> - path to a cnt config file (default: /etc/cnt.conf)
+-d, --debug         - print info on crun variables and execution
+-h, --help          - this help
+
+`)
+}
