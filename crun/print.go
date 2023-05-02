@@ -45,6 +45,10 @@ func pr(formatS string, a ...any) {
 	fmt.Printf(formatS+"\n", a...)
 }
 
+func prD(formatS string, a ...any) {
+	fmt.Printf("debug: "+formatS+"\n", a...)
+}
+
 func br() {
 	fmt.Println()
 }

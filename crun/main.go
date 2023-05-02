@@ -35,6 +35,7 @@ type runT struct {
 
 	dirs        dirsT
 	bindTargets []string
+	bindWork    []string
 
 	lxcConfig string
 

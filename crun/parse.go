@@ -65,6 +65,13 @@ func (r *runT) parseArgs() {
 				r.shell = true
 			case "+n":
 				r.writeCfg = false
+			case "+b":
+				if len(os.Args)-1 >= i+1 {
+					absPath, err := fp.Abs(os.Args[i+1])
+					errExit(err)
+					r.bindWork = append(r.bindWork, absPath)
+					skipArg = true
+				}
 			case "+D":
 				r.debug = true
 			default:

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	fp "path/filepath"
@@ -54,12 +55,20 @@ func (r *runT) makeLxcConfig() {
 	}
 
 	// add bind mounts for files and dirs in command arguments
-	for _, t := range r.bindTargets {
-		r.addBind(t)
+	for _, path := range r.bindTargets {
+		r.addBind(path)
 	}
 
 	// bind /cnt/home/<cnt> to /home/cnt in a container
 	r.bindHome()
+
+	// clear /home/cnt/work_dir from previous emtpy mountpoints
+	r.clearWork()
+
+	// add work dir bind mounts for files and dirs specified via '+b'
+	for _, path := range r.bindWork {
+		r.addBindWork(path)
+	}
 
 	r.lxcConfig += "\nlxc.execute.cmd = /cmd"
 }
@@ -118,6 +127,47 @@ func getNoSpacePath(path string) string {
 	return path
 }
 
+func (r *runT) addBindWork(path string) {
+	if str.Contains(path, " ") {
+		msg := "arg for a mount can't have any spaces in the path: %s"
+		errExit(fmt.Errorf(msg, path))
+	}
+	bindPath := fp.Join("home/cnt/work_dir", fp.Base(path))
+
+	pType := "file"
+	bindType := "bind"
+	if isDir(path) {
+		pType = "dir"
+		bindType = "rbind"
+	}
+
+	formatS := "lxc.mount.entry = %s %s none %s,create=%s 0 0\n"
+	r.lxcConfig += fmt.Sprintf(formatS, path, bindPath, bindType, pType)
+}
+
+func (r *runT) clearWork() {
+	files, err := os.ReadDir(fp.Join(r.dirs.home, "work_dir"))
+	errExit(err)
+
+	for _, file := range files {
+		path := fp.Join(r.dirs.home, "work_dir", file.Name())
+
+		if isDir(path) && dirIsEmpty(path) {
+			if r.debug {
+				prD("removing empty dir %s...", path)
+			}
+			err := os.Remove(path)
+			errExit(err)
+		} else if !isDir(path) && fileIsEmpty(path) {
+			if r.debug {
+				prD("removing empty file %s...", path)
+			}
+			err := os.Remove(path)
+			errExit(err)
+		}
+	}
+}
+
 func (r *runT) bindHome() {
 	formatS := "lxc.mount.entry = %s home/cnt none bind,create=dir 0 0\n"
 	r.lxcConfig += fmt.Sprintf(formatS, r.dirs.home)
@@ -138,4 +188,27 @@ func escapePath(path string) string {
 	*/
 
 	return r.Replace(path)
+}
+
+func fileIsEmpty(file string) bool {
+	fi, err := os.Stat(file)
+	errExit(err)
+
+	if fi.Size() == 0 {
+		return true
+	}
+	return false
+}
+
+func dirIsEmpty(name string) bool {
+	fd, err := os.Open(name)
+	errExit(err)
+	defer fd.Close()
+
+	_, err = fd.Readdirnames(1)
+	if err == io.EOF {
+		return true
+	}
+	errExit(err)
+	return false
 }
