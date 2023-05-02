@@ -59,6 +59,7 @@ usage: <link to crun named after program> [crun args] [program args]
 
 crun args:
 
++a, ++add-dev       - mount all devices to the container
 +b, ++bind <path>   - bind mount a path to the container work dir
 +c, ++config <file> - path to a cnt config file (default: /etc/cnt.conf)
 +g, ++get <dest>    - copy all files from container work dir
