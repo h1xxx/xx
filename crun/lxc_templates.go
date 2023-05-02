@@ -1,6 +1,6 @@
 package main
 
-var cfgTemplate = `lxc.uts.name = xx
+var cfgTemplate = `lxc.uts.name = cnt-%s
 lxc.arch = x86_64
 
 lxc.idmap = u 0 100000 1
@@ -27,7 +27,8 @@ lxc.autodev = 1
 
 lxc.environment = TERM=linux
 lxc.environment = HOME=/home/cnt
-lxc.environment = PATH=/bin:/sbin:/usr/bin:/usr/sbin
+lxc.environment = PATH=/bin:/sbin
+lxc.environment = BASH_ENV=/home/cnt/.profile
 lxc.environment = LC_ALL=en_US.utf8
 
 lxc.mount.entry = /dev/tty dev/tty none bind,create=file 0 0

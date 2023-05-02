@@ -59,8 +59,14 @@ func (r *runT) parseArgs() {
 					r.cntCfgFile = os.Args[i+1]
 					skipArg = true
 				}
-			case "+d":
-				r.download = true
+			case "+g":
+				r.get = true
+				if len(os.Args)-1 >= i+1 {
+					absPath, err := fp.Abs(os.Args[i+1])
+					errExit(err)
+					r.getDest = absPath
+					skipArg = true
+				}
 			case "+s":
 				r.shell = true
 			case "+n":
@@ -72,7 +78,7 @@ func (r *runT) parseArgs() {
 					r.bindWork = append(r.bindWork, absPath)
 					skipArg = true
 				}
-			case "+D":
+			case "+d":
 				r.debug = true
 			default:
 				msg := "undefined arg in crun: %s"

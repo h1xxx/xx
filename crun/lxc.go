@@ -10,7 +10,7 @@ import (
 )
 
 func (r *runT) makeLxcConfig() {
-	r.lxcConfig = fmt.Sprintf(cfgTemplate, r.dirs.cnt)
+	r.lxcConfig = fmt.Sprintf(cfgTemplate, r.cnt, r.dirs.cnt)
 
 	if r.cntConf.tty0 {
 		r.lxcConfig += addMount("/dev/tty0", "file")
@@ -63,7 +63,7 @@ func (r *runT) makeLxcConfig() {
 	r.bindHome()
 
 	// clear /home/cnt/work_dir from previous emtpy mountpoints
-	r.clearWork()
+	r.clearWorkDir()
 
 	// add work dir bind mounts for files and dirs specified via '+b'
 	for _, path := range r.bindWork {
@@ -97,15 +97,9 @@ func (r *runT) addBind(path string) {
 	path = getNoSpacePath(path)
 	bindPath := fp.Join("bind", path)
 
-	bindFullDir := fp.Join(r.dirs.bind, fp.Dir(path))
-
 	if r.debug {
-		pr("creating %s...", bindFullDir)
+		prD("creating bind mount on %s...", bindPath)
 	}
-
-	// todo: use 770, add cnt user to x group
-	err := os.MkdirAll(bindFullDir, 0777)
-	errExit(err)
 
 	pType := "file"
 	bindType := "bind"
@@ -145,7 +139,7 @@ func (r *runT) addBindWork(path string) {
 	r.lxcConfig += fmt.Sprintf(formatS, path, bindPath, bindType, pType)
 }
 
-func (r *runT) clearWork() {
+func (r *runT) clearWorkDir() {
 	files, err := os.ReadDir(fp.Join(r.dirs.home, "work_dir"))
 	errExit(err)
 

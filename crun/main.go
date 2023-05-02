@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"os/user"
 	"path"
 	"regexp"
@@ -40,10 +41,11 @@ type runT struct {
 	lxcConfig string
 
 	debug    bool
-	download bool
 	link     bool
 	shell    bool
 	writeCfg bool
+	get      bool
+	getDest  string
 }
 
 type cntConfT struct {
@@ -75,8 +77,6 @@ func main() {
 	}
 	r.parseConf()
 
-	syscall.Umask(0)
-
 	r.dirs.cnt = "/cnt/rootfs/" + r.cnt
 	r.dirs.home = fp.Join("/cnt/home/", r.cnt)
 	r.dirs.bind = fp.Join(r.dirs.cnt, "bind")
@@ -93,9 +93,14 @@ func main() {
 		return
 	}
 
+	if r.get {
+		r.getFiles()
+		return
+	}
+
 	r.doChecks()
 
-	// remove all files in a dir for binds
+	// remove all files in a dir for bind mounts
 	clearDir(r.dirs.bind, r.debug)
 
 	// create lxc configuration
@@ -108,6 +113,11 @@ func main() {
 
 	// write cmd file
 	r.writeCmd()
+
+	// create bind mount points
+	oldUmask := syscall.Umask(0)
+	r.createBindDirs()
+	syscall.Umask(oldUmask)
 
 	// run
 	env := []string{
@@ -143,6 +153,16 @@ func (r *runT) doChecks() {
 	if r.bin != "crun" && r.cnt == "" {
 		r.printDebug()
 		errExit(fmt.Errorf("no container detected"))
+	}
+}
+
+func (r *runT) createBindDirs() {
+	for _, path := range r.bindTargets {
+		bindFullDir := fp.Join(r.dirs.bind, fp.Dir(path))
+
+		// todo: use 770, add cnt user to x group, change umask first
+		err := os.MkdirAll(bindFullDir, 0777)
+		errExit(err)
 	}
 }
 
@@ -203,6 +223,36 @@ func clearLinks() {
 	}
 }
 
+func (r *runT) getFiles() {
+	if r.getDest == "" || r.getDest[0] == '+' || r.getDest[0] == '-' {
+		errExit(fmt.Errorf("target dir not specified"))
+	}
+
+	r.clearWorkDir()
+
+	err := os.MkdirAll(r.getDest, 0777)
+	errExit(err)
+
+	workDir := fp.Join(r.dirs.home, "work_dir")
+	files, err := os.ReadDir(workDir)
+	errExit(err)
+
+	for _, file := range files {
+		path := fp.Join(workDir, file.Name())
+
+		cmd := exec.Command("cp", "-vrd",
+			"--preserve=all", "--no-preserve=ownership",
+			path, r.getDest)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+
+		err := cmd.Run()
+		errExit(err)
+	}
+
+	clearDir(workDir, r.debug)
+}
+
 func fileExists(arg string) bool {
 	_, err := os.Stat(arg)
 	if errors.Is(err, os.ErrNotExist) {
@@ -222,7 +272,7 @@ func isDir(p string) bool {
 
 func clearDir(dir string, debug bool) {
 	if debug {
-		pr("debug: clearing dir %s...", dir)
+		prD("clearing dir %s...", dir)
 	}
 
 	names, err := ioutil.ReadDir(dir)
