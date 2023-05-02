@@ -56,6 +56,8 @@ func (r *runT) parseArgs() {
 
 		if !cRunArgsDone && arg[0] == '+' {
 			switch arg {
+			case "+a", "++all-dev":
+				r.allDev = true
 			case "+b", "++bind":
 				if len(os.Args)-1 >= i+1 {
 					absPath, err := fp.Abs(os.Args[i+1])
@@ -245,6 +247,19 @@ func (r *runT) parseConfCnt(line string, reWSpace *regexp.Regexp) bool {
 	}
 
 	return true
+}
+
+func (r *runT) setAllDev() {
+	r.cntConf.tty0 = true
+	r.cntConf.tty4 = true
+	r.cntConf.fb = true
+	r.cntConf.dri = true
+	r.cntConf.snd = true
+	r.cntConf.input = true
+	r.cntConf.net = true
+	r.cntConf.udev = true
+	r.cntConf.sdl = true
+	r.cntConf.shared = true
 }
 
 func getKeyVal(line string, reWSpace *regexp.Regexp) (string, string) {

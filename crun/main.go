@@ -40,12 +40,13 @@ type runT struct {
 
 	lxcConfig string
 
+	allDev   bool
 	debug    bool
+	get      bool
+	getDest  string
 	link     bool
 	shell    bool
 	writeCfg bool
-	get      bool
-	getDest  string
 }
 
 type cntConfT struct {
@@ -80,6 +81,10 @@ func main() {
 	r.dirs.cnt = "/cnt/rootfs/" + r.cnt
 	r.dirs.home = fp.Join("/cnt/home/", r.cnt)
 	r.dirs.bind = fp.Join(r.dirs.cnt, "bind")
+
+	if r.allDev {
+		r.setAllDev()
+	}
 
 	if r.debug {
 		r.printDebug()
