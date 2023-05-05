@@ -46,7 +46,7 @@ type argsT struct {
 	v            *bool
 }
 
-// genCfgT stores general configuration for the command
+// runT stores global variables for each run of the command
 //
 // rootDir	root system dir:		/, /mnt/xx, /tmp/xx/media
 // sysCfgDir	dir with system config:		/home/xx/conf/<machine>
@@ -65,8 +65,8 @@ type argsT struct {
 // fixedSet	fixed pkg set for all packages:	[empty], std, musl
 // fixedVer	fixed pkg ver for all packages:	[empty], latest, 2.35
 //
-// instPerms	only install sys permissions:	false, true
-// instSysCfg	only install system config:	false, true
+// toInstPerms	only install sys permissions:	false, true
+// toInstSysCfg	only install system config:	false, true
 // verbose	verbose messages:		false, true
 //
 // diffBuild	show diff to previous build:	false, true
@@ -74,7 +74,7 @@ type argsT struct {
 //
 // infoDeps	show info on dependencies	false, true
 // infoInteg	check system integrity		false, true
-type genCfgT struct {
+type runT struct {
 	rootDir      string
 	sysCfgDir    string
 	setFileName  string
@@ -93,9 +93,9 @@ type genCfgT struct {
 	fixedSet string
 	fixedVer string
 
-	instPerms  bool
-	instSysCfg bool
-	verbose    bool
+	toInstPerms  bool
+	toInstSysCfg bool
+	verbose      bool
 
 	diffBuild bool
 	diffHours int64
@@ -281,9 +281,9 @@ func main() {
 
 	argsCheck(args)
 
-	genC := getGenCfg(args)
-	pkgs, pkgCfgs := getPkgList(genC)
-	world := getWorld(genC, pkgCfgs)
+	r := getRunVars(args)
+	pkgs, pkgCfgs := r.getPkgList()
+	world := r.getWorld(pkgCfgs)
 
 	switch {
 	case flag.NArg() > 0:
@@ -291,25 +291,34 @@ func main() {
 			"  first parameter must be one of: "+
 			"(b)uild, (d)iff, (i)nstall, (r)emove, "+
 			"(u)pdate, (s)ource, (c)heck, i(n)fo")
-	case genC.action == "build":
-		actionBuild(world, genC, pkgs, pkgCfgs)
-	case genC.action == "diff":
-		actionDiff(genC, pkgs, pkgCfgs)
-	case genC.action == "install":
-		actionInst(world, genC, pkgs, pkgCfgs)
-	//case genC.action == "remove":
-	//	actionInst(pkg, pkgCfgs)
-	case genC.action == "update":
-		actionUpdate(pkgs, pkgCfgs)
-	case genC.action == "source":
-		actionSource(genC, pkgs, pkgCfgs)
-	case genC.action == "check":
-		actionCheck(genC)
-	case genC.action == "info":
-		actionInfo(genC, pkgs, pkgCfgs)
-	case genC.action == "--help" || args.action == "-h" ||
+	case r.action == "build":
+		r.actionBuild(world, pkgs, pkgCfgs)
+
+	case r.action == "diff":
+		r.actionDiff(pkgs, pkgCfgs)
+
+	case r.action == "install":
+		r.actionInst(world, pkgs, pkgCfgs)
+
+	//case r.action == "remove":
+	//	r.actionInst(pkg, pkgCfgs)
+
+	case r.action == "update":
+		r.actionUpdate(pkgs, pkgCfgs)
+
+	case r.action == "source":
+		r.actionSource(pkgs, pkgCfgs)
+
+	case r.action == "check":
+		r.actionCheck()
+
+	case r.action == "info":
+		r.actionInfo(pkgs, pkgCfgs)
+
+	case r.action == "--help" || args.action == "-h" ||
 		args.action == "help":
 		printUsage()
+
 	default:
 		errExit(errors.New(""), "unrecognized action\n"+
 			"  first parameter must be one of: "+
@@ -348,12 +357,12 @@ func argsCheck(args argsT) {
 	}
 }
 
-func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
+func (r *runT) getWorld(pkgCfgs []pkgCfgT) map[string]worldT {
 	world := make(map[string]worldT)
 	initWorldEntry(world, "/")
-	worldPkgs := getWorldPkgs(genC, genC.rootDir)
-	if genC.action == "build" && !genC.baseEnv {
-		basePkgs := getWorldPkgs(genC, genC.baseDir)
+	worldPkgs := r.getWorldPkgs(r.rootDir)
+	if r.action == "build" && !r.baseEnv {
+		basePkgs := r.getWorldPkgs(r.baseDir)
 		worldPkgs = append(worldPkgs, basePkgs...)
 	}
 
@@ -361,7 +370,7 @@ func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
 		addPkgToWorldT(world, pkg, "/")
 	}
 
-	cntDir := fp.Join(genC.rootDir, "/cnt/rootfs")
+	cntDir := fp.Join(r.rootDir, "/cnt/rootfs")
 	cntList := getCntList(cntDir)
 	for _, pkgC := range pkgCfgs {
 		if pkgC.cnt && !stringExists(pkgC.cntProg, cntList) {
@@ -374,8 +383,8 @@ func getWorld(genC genCfgT, pkgCfgs []pkgCfgT) map[string]worldT {
 	}
 
 	for _, cntProg := range cntList {
-		cntRootDir := fp.Join(genC.rootDir, "/cnt/rootfs/", cntProg)
-		cntWorldPkgs := getWorldPkgs(genC, cntRootDir)
+		cntRootDir := fp.Join(r.rootDir, "/cnt/rootfs/", cntProg)
+		cntWorldPkgs := r.getWorldPkgs(cntRootDir)
 
 		for _, pkg := range cntWorldPkgs {
 			addPkgToWorldT(world, pkg, cntProg)
@@ -394,8 +403,8 @@ func initWorldEntry(world map[string]worldT, entry string) {
 	}
 }
 
-func getGenCfg(args argsT) genCfgT {
-	var genC genCfgT
+func getRunVars(args argsT) runT {
+	var r runT
 
 	abbr := make(map[string]string)
 	abbr["b"] = "build"
@@ -405,88 +414,88 @@ func getGenCfg(args argsT) genCfgT {
 	abbr["n"] = "info"
 	abbr["u"] = "update"
 
-	genC.action = args.action
-	if len(genC.action) == 1 {
-		genC.action = abbr[genC.action]
+	r.action = args.action
+	if len(r.action) == 1 {
+		r.action = abbr[r.action]
 	}
 
-	genC.actionTarget = args.actionTarget
+	r.actionTarget = args.actionTarget
 
-	genC.buildEnv = getBuildEnv(genC.actionTarget)
-	genC.baseDir = "/tmp/xx/base"
-	genC.baseFile = "/home/xx/set/base.xx"
-	if genC.buildEnv == "base" || genC.buildEnv == "musl_base" {
-		genC.baseEnv = true
+	r.buildEnv = getBuildEnv(r.actionTarget)
+	r.baseDir = "/tmp/xx/base"
+	r.baseFile = "/home/xx/set/base.xx"
+	if r.buildEnv == "base" || r.buildEnv == "musl_base" {
+		r.baseEnv = true
 	}
-	if str.HasPrefix(genC.buildEnv, "musl_") {
-		genC.muslEnv = true
-		genC.baseDir = "/tmp/xx/musl_base"
-		genC.baseFile = "/home/xx/set/musl_base.xx"
+	if str.HasPrefix(r.buildEnv, "musl_") {
+		r.muslEnv = true
+		r.baseDir = "/tmp/xx/musl_base"
+		r.baseFile = "/home/xx/set/musl_base.xx"
 	}
 
-	if str.HasPrefix(genC.buildEnv, "init_") {
-		genC.isInit = true
+	if str.HasPrefix(r.buildEnv, "init_") {
+		r.isInit = true
 	}
 
 	// this file shows that the base pkgs are currently being bootstrapped
-	if !genC.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
-		genC.isInit = true
+	if !r.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
+		r.isInit = true
 	}
 
-	genC.rootDir = getRootDir(args, genC.buildEnv)
+	r.rootDir = getRootDir(args, r.buildEnv)
 
-	if !isPkgString(genC.actionTarget) {
-		genC.setFileName = fp.Base(genC.actionTarget)
+	if !isPkgString(r.actionTarget) {
+		r.setFileName = fp.Base(r.actionTarget)
 	}
 
 	if *args.set != "std" {
-		genC.fixedSet = *args.set
+		r.fixedSet = *args.set
 	}
 
 	if *args.Ver != "latest" {
-		genC.fixedVer = *args.Ver
+		r.fixedVer = *args.Ver
 	}
 
 	t := time.Now()
 	fStr := "%d-%.2d-%.2d"
-	genC.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
+	r.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
 
-	genC.sysCfgDir = fp.Clean(*args.c)
-	genC.forceAll = *args.forceAll
+	r.sysCfgDir = fp.Clean(*args.c)
+	r.forceAll = *args.forceAll
 
-	genC.instPerms = *args.P
-	genC.instSysCfg = *args.C
-	genC.verbose = *args.v
+	r.toInstPerms = *args.P
+	r.toInstSysCfg = *args.C
+	r.verbose = *args.v
 
 	h, err := strconv.Atoi(*args.hours)
 	errExit(err, "can't convert hours parameter to integer: "+*args.hours)
-	genC.diffHours = int64(h)
-	genC.diffBuild = *args.b
+	r.diffHours = int64(h)
+	r.diffBuild = *args.b
 
-	genC.infoDeps = *args.d
-	genC.infoInteg = *args.i
+	r.infoDeps = *args.d
+	r.infoInteg = *args.i
 
-	if !isPkgString(genC.actionTarget) {
-		genC.runDeps = readDeps(genC, "run")
-		genC.buildDeps = readDeps(genC, "build")
+	if !isPkgString(r.actionTarget) {
+		r.runDeps = r.readDeps("run")
+		r.buildDeps = r.readDeps("build")
 	}
 
-	return genC
+	return r
 }
 
-func getPkgList(genC genCfgT) ([]pkgT, []pkgCfgT) {
+func (r *runT) getPkgList() ([]pkgT, []pkgCfgT) {
 	var pkgs []pkgT
 	var pkgCfgs []pkgCfgT
 
 	// process a pkg env file
-	if genC.setFileName != "" {
-		pkgs, pkgCfgs = parseBuildEnvFile(genC.actionTarget, genC)
+	if r.setFileName != "" {
+		pkgs, pkgCfgs = r.parseBuildEnvFile(r.actionTarget)
 	}
 
 	// process a single package
-	if genC.setFileName == "" {
-		pkg := getPkg(genC, genC.actionTarget, "std", "latest")
-		pkgC := getPkgCfg(genC, pkg, "")
+	if r.setFileName == "" {
+		pkg := r.getPkg(r.actionTarget, "std", "latest")
+		pkgC := r.getPkgCfg(pkg, "")
 
 		pkgs = append(pkgs, pkg)
 		pkgCfgs = append(pkgCfgs, pkgC)
@@ -495,7 +504,7 @@ func getPkgList(genC genCfgT) ([]pkgT, []pkgCfgT) {
 	return pkgs, pkgCfgs
 }
 
-func getPkg(genC genCfgT, name, pkgSet, ver string) pkgT {
+func (r *runT) getPkg(name, pkgSet, ver string) pkgT {
 	var pkg pkgT
 	fields := str.Split(name, "/")
 
@@ -504,14 +513,14 @@ func getPkg(genC genCfgT, name, pkgSet, ver string) pkgT {
 	pkg.prog = fields[1]
 
 	pkg.set = pkgSet
-	if genC.fixedSet != "" && genC.fixedSet != "std" {
-		pkg.set = genC.fixedSet
+	if r.fixedSet != "" && r.fixedSet != "std" {
+		pkg.set = r.fixedSet
 	}
 
 	pkg.progDir = fp.Join("/home/xx/prog", pkg.name)
 	pkg.ver = getVer(pkg, ver)
-	if genC.fixedVer != "" && genC.fixedVer != "latest" {
-		pkg.ver = genC.fixedVer
+	if r.fixedVer != "" && r.fixedVer != "latest" {
+		pkg.ver = r.fixedVer
 	}
 	pkg.verShort = getVerShort(pkg.ver)
 
@@ -563,21 +572,21 @@ func findCfgDir(searchDir string, pkg pkgT) string {
 	return res
 }
 
-func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
+func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
 	var pkgC pkgCfgT
 	pkgC.force, pkgC.cnt = parsePkgFlags(flags, pkg.name)
 
-	if genC.forceAll {
+	if r.forceAll {
 		pkgC.force = true
 	}
 
 	if pkgC.cnt {
 		pkgC.cntPkg = pkg
 		pkgC.cntProg = pkg.prog
-		pkgC.instDir = fp.Join(genC.rootDir, "/cnt/rootfs/",
+		pkgC.instDir = fp.Join(r.rootDir, "/cnt/rootfs/",
 			pkgC.cntProg)
 	} else {
-		pkgC.instDir = genC.rootDir
+		pkgC.instDir = r.rootDir
 	}
 
 	buildPath := "/tmp/xx/build/" + pkg.prog + "-" + pkg.ver + "_build-"
@@ -596,12 +605,12 @@ func getPkgCfg(genC genCfgT, pkg pkgT, flags string) pkgCfgT {
 		pkgC.muslBuild = true
 	}
 
-	pkgC.src, pkgC.steps, pkgC.subPkg = parsePkgIni(genC, pkg, pkgC)
-	pkgC.cfgFiles = getPkgCfgFiles(genC, pkg)
+	pkgC.src, pkgC.steps, pkgC.subPkg = r.parsePkgIni(pkg, pkgC)
+	pkgC.cfgFiles = r.getPkgCfgFiles(pkg)
 
-	_, pkgC.libDeps = getPkgLibDeps(genC, pkg)
-	pkgC.runDeps = genC.runDeps[pkg]
-	pkgC.buildDeps = genC.buildDeps[pkg]
+	_, pkgC.libDeps = r.getPkgLibDeps(pkg)
+	pkgC.runDeps = r.runDeps[pkg]
+	pkgC.buildDeps = r.buildDeps[pkg]
 	pkgC.allRunDeps = append(pkgC.libDeps, pkgC.runDeps...)
 
 	sort.Slice(pkgC.allRunDeps, func(i, j int) bool {
@@ -667,12 +676,12 @@ general parameters:
 
 func testTools(args argsT) {
 
-	var genC genCfgT
-	genC.rootDir = "/tmp/xx/tools_test"
+	var r runT
+	r.rootDir = "/tmp/xx/tools_test"
 
 	err := os.MkdirAll("/tmp/xx/build", 0700)
 	errExit(err, "can't create dir: /tmp/xx/build/")
-	instLxcConfig(genC, pkgT{}, pkgCfgT{})
+	r.instLxcConfig(pkgT{}, pkgCfgT{})
 
 	c := `cd /home/xx/bin/ &&
 	./busybox mkdir -pv /tmp/xx/tools_test/home/xx &&
@@ -711,7 +720,7 @@ func testTools(args argsT) {
 	err = os.RemoveAll("/tmp/xx/tools_test")
 	errExit(err, "can't remove /tmp/xx/tools_test/")
 
-	genC.rootDir = "/tmp/xx/" + genC.buildEnv
-	genC.rootDir = "/tmp/xx/" + genC.buildEnv
-	instLxcConfig(genC, pkgT{}, pkgCfgT{})
+	r.rootDir = "/tmp/xx/" + r.buildEnv
+	r.rootDir = "/tmp/xx/" + r.buildEnv
+	r.instLxcConfig(pkgT{}, pkgCfgT{})
 }

@@ -4,11 +4,11 @@ import (
 	"fmt"
 )
 
-func actionCheck(genC genCfgT) {
-	checkAllPkgs(genC)
+func (r *runT) actionCheck() {
+	r.checkAllPkgs()
 }
 
-func checkAllPkgs(genC genCfgT) {
+func (r *runT) checkAllPkgs() {
 	return
 }
 

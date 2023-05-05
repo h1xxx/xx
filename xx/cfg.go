@@ -150,13 +150,13 @@ func getLastRel(pkgDir, dirPrefix string) int64 {
 	return id
 }
 
-func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
+func (r *runT) prepareEnv(envIn []string, pkg pkgT, pkgC pkgCfgT) []string {
 	var envOut []string
 	envMap := make(map[string]string)
 
 	switch {
 	case !pkgC.muslBuild && pkgC.crossBuild:
-		envMap["PATH"] = genC.rootDir
+		envMap["PATH"] = r.rootDir
 		envMap["PATH"] += "/tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-gnu"
 
@@ -164,13 +164,13 @@ func prepareEnv(envIn []string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) []string {
 		envMap["PATH"] = "/bin:/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
 
-	case genC.buildEnv == "init_musl" && pkgC.crossBuild:
-		envMap["PATH"] = genC.rootDir + "/tools/bin"
-		envMap["PATH"] += ":" + genC.rootDir + "/cross_tools/bin"
+	case r.buildEnv == "init_musl" && pkgC.crossBuild:
+		envMap["PATH"] = r.rootDir + "/tools/bin"
+		envMap["PATH"] += ":" + r.rootDir + "/cross_tools/bin"
 		envMap["PATH"] += ":/bin:/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-musl"
 
-	case genC.buildEnv == "init_musl" && !pkgC.crossBuild:
+	case r.buildEnv == "init_musl" && !pkgC.crossBuild:
 		envMap["PATH"] = "/bin:/sbin:/tools/bin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-musl"
 

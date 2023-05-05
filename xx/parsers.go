@@ -11,7 +11,7 @@ import (
 	str "strings"
 )
 
-func parseBuildEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
+func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 	var pkgs []pkgT
 	var pkgCfgs []pkgCfgT
 
@@ -28,7 +28,7 @@ func parseBuildEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
 			continue
 		}
 
-		pkg, pkgC := parseSetLine(line, genC, re)
+		pkg, pkgC := r.parseSetLine(line, re)
 
 		pkgs = append(pkgs, pkg)
 		pkgCfgs = append(pkgCfgs, pkgC)
@@ -36,7 +36,7 @@ func parseBuildEnvFile(xxFile string, genC genCfgT) ([]pkgT, []pkgCfgT) {
 	return pkgs, pkgCfgs
 }
 
-func parseSetLine(line string, genC genCfgT, re reT) (pkgT, pkgCfgT) {
+func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	line = re.wSpaces.ReplaceAllString(line, "\t")
 	fields := str.Split(line, "\t")
 	len := len(fields)
@@ -62,8 +62,8 @@ func parseSetLine(line string, genC genCfgT, re reT) (pkgT, pkgCfgT) {
 		errExit(err, "incorrect pkg name:\n  "+name)
 	}
 
-	pkg := getPkg(genC, name, pkgSet, ver)
-	pkgC := getPkgCfg(genC, pkg, flags)
+	pkg := r.getPkg(name, pkgSet, ver)
+	pkgC := r.getPkgCfg(pkg, flags)
 
 	// todo: implement check pkg and pkgC functions
 	// e.g. (*args.ver != "latest" || *args.set != "std")
@@ -133,7 +133,7 @@ func parseCntConf(cntConf string) (map[string]string, map[string]string) {
 }
 
 // returns src, steps and isSubPkg
-func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
+func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	var steps stepsT
 	var stepsMap = make(map[string]string)
 	var src srcT
@@ -178,7 +178,7 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		}
 
 		// replace predefined variables
-		line = replaceIniVars(line, genC, pkg, pkgC, src, steps)
+		line = r.replaceIniVars(line, pkg, pkgC, src, steps)
 
 		switch {
 		// start of the new section
@@ -301,12 +301,12 @@ func parsePkgIni(genC genCfgT, pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	env, err := getIniEnv(stepsMap["env"])
 	errExit(err, fmt.Sprintf("incorrect env %s", iniFile))
 
-	steps.env = prepareEnv(env, genC, pkg, pkgC)
+	steps.env = r.prepareEnv(env, pkg, pkgC)
 	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
 
 	// replace distro defined vars in each step (replaces <build_dir>)
 	for step, val := range stepsMap {
-		stepsMap[step] = replaceIniVars(val, genC, pkg, pkgC, src, steps)
+		stepsMap[step] = r.replaceIniVars(val, pkg, pkgC, src, steps)
 	}
 
 	steps.prepare = stepsMap["prepare"]
@@ -395,9 +395,9 @@ func startStepLine(line string) bool {
 	return false
 }
 
-func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT,
+func (r *runT) replaceIniVars(s string, pkg pkgT, pkgC pkgCfgT, src srcT,
 	steps stepsT) string {
-	replMap := setReplMap(genC, pkg, pkgC, src, steps)
+	replMap := r.setReplMap(pkg, pkgC, src, steps)
 
 	for k, v := range replMap {
 		if v != "" {
@@ -408,9 +408,9 @@ func replaceIniVars(s string, genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT,
 	return s
 }
 
-func setReplMap(genC genCfgT, pkg pkgT, pkgC pkgCfgT, src srcT, steps stepsT) map[string]string {
+func (r *runT) setReplMap(pkg pkgT, pkgC pkgCfgT, src srcT, steps stepsT) map[string]string {
 	return map[string]string{
-		"<root_dir>":    genC.rootDir,
+		"<root_dir>":    r.rootDir,
 		"<prog>":        pkg.prog,
 		"<ver>":         pkg.ver,
 		"<ver_short>":   pkg.verShort,
@@ -490,7 +490,7 @@ func isStepStart(line string) bool {
 	return false
 }
 
-func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
+func (r *runT) getWorldPkgs(instDir string) []pkgT {
 	var worldPkgs []pkgT
 	pkgVerMap := make(map[string]string)
 
@@ -526,7 +526,7 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 		fields := str.Split(nameSet, "\t")
 		name := fields[0]
 		set := fields[1]
-		pkg := getPkg(genC, name, set, ver)
+		pkg := r.getPkg(name, set, ver)
 
 		worldPkgs = append(worldPkgs, pkg)
 	}
@@ -535,7 +535,7 @@ func getWorldPkgs(genC genCfgT, instDir string) []pkgT {
 }
 
 //
-func parseSharedLibsFile(genC genCfgT, sharedLibsFile string) []pkgT {
+func (r *runT) parseSharedLibsFile(sharedLibsFile string) []pkgT {
 	var deps []pkgT
 
 	fd, err := os.Open(sharedLibsFile)
@@ -547,7 +547,7 @@ func parseSharedLibsFile(genC genCfgT, sharedLibsFile string) []pkgT {
 		fields := str.Split(input.Text(), "\t")
 		name := fields[1]
 		pkgSet := fields[2]
-		dep := getPkg(genC, name, pkgSet, "latest")
+		dep := r.getPkg(name, pkgSet, "latest")
 		deps = append(deps, dep)
 	}
 
@@ -579,7 +579,7 @@ func getCntList(cntDir string) []string {
 
 // returns a map of config files to be installed with a pkg
 // file in root dir -> location of the file
-func getPkgCfgFiles(genC genCfgT, pkg pkgT) map[string]string {
+func (r *runT) getPkgCfgFiles(pkg pkgT) map[string]string {
 	cfgFiles := make(map[string]string)
 
 	// get files from pkg cfg dir
@@ -597,7 +597,7 @@ func getPkgCfgFiles(genC genCfgT, pkg pkgT) map[string]string {
 	}
 
 	// get files from system cfg dir for the pkg
-	pkgSysCfgDir := findCfgDir(fp.Join(genC.sysCfgDir, pkg.prog), pkg)
+	pkgSysCfgDir := findCfgDir(fp.Join(r.sysCfgDir, pkg.prog), pkg)
 	if fileExists(pkgSysCfgDir) {
 		files, err := walkDir(pkgSysCfgDir, "files")
 		errExit(err, "can't walk sys cfg dir: "+pkgSysCfgDir)

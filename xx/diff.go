@@ -12,23 +12,23 @@ import (
 	"time"
 )
 
-func actionDiff(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	diffPkgs(genC, pkgs, pkgCfgs)
+func (r *runT) actionDiff(pkgs []pkgT, pkgCfgs []pkgCfgT) {
+	r.diffPkgs(pkgs, pkgCfgs)
 }
 
-func diffPkgs(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) diffPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
-		diffPkg(genC, pkg, pkgCfgs[i])
+		r.diffPkg(pkg, pkgCfgs[i])
 	}
 }
 
-func diffPkg(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
-	if isOldBuild(genC, pkg) {
+func (r *runT) diffPkg(pkg pkgT, pkgC pkgCfgT) {
+	if r.isOldBuild(pkg) {
 		return
 	}
 
-	pkgPrev := getPkgPrev(genC, pkg)
-	pkgCPrev := getPkgCfg(genC, pkgPrev, "")
+	pkgPrev := r.getPkgPrev(pkg)
+	pkgCPrev := r.getPkgCfg(pkgPrev, "")
 
 	if pkg == pkgPrev {
 		return
@@ -49,7 +49,7 @@ func diffPkg(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	printDiffRes(res)
 }
 
-func isOldBuild(genC genCfgT, pkg pkgT) bool {
+func (r *runT) isOldBuild(pkg pkgT) bool {
 	// time since last build in hours
 	shaLog := fp.Join(pkg.progDir, "log", pkg.setVerRel, "sha256.log")
 	stats, err := os.Stat(shaLog)
@@ -58,12 +58,12 @@ func isOldBuild(genC genCfgT, pkg pkgT) bool {
 	}
 	timeDiff := (time.Now().Unix() - stats.ModTime().Unix()) / 60 / 60
 
-	return timeDiff > genC.diffHours
+	return timeDiff > r.diffHours
 }
 
-func getPkgPrev(genC genCfgT, pkg pkgT) pkgT {
+func (r *runT) getPkgPrev(pkg pkgT) pkgT {
 	pkgPrev := pkg
-	if genC.diffBuild {
+	if r.diffBuild {
 		pkgPrev.setVerRel = pkg.setVerPrevRel
 		if pkg.setVerRel == pkg.setVerPrevRel {
 			return pkgPrev

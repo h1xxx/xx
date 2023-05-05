@@ -6,11 +6,11 @@ import (
 	fp "path/filepath"
 )
 
-func actionSource(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	getAllSrc(genC, pkgs, pkgCfgs)
+func (r *runT) actionSource(pkgs []pkgT, pkgCfgs []pkgCfgT) {
+	r.getAllSrc(pkgs, pkgCfgs)
 }
 
-func getAllSrc(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) getAllSrc(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
 		pkgC := pkgCfgs[i]
 
@@ -20,6 +20,6 @@ func getAllSrc(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		err := os.MkdirAll(srcDir, 0700)
 		errExit(err, "couldn't create dir: "+srcDir)
 
-		getSrc(genC, pkg, pkgC)
+		r.getSrc(pkg, pkgC)
 	}
 }

@@ -12,38 +12,38 @@ import (
 	"unicode"
 )
 
-func actionInst(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) actionInst(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 	switch {
 
 	// todo: move to argsCheck
-	case !fileExists(genC.rootDir):
+	case !fileExists(r.rootDir):
 		errExit(errors.New(""), "target dir doesn't exist")
 
 	// todo: move to argsCheck
-	case genC.instPerms && genC.sysCfgDir == "":
+	case r.toInstPerms && r.sysCfgDir == "":
 		errExit(errors.New(""), "please provide a system config dir")
-	case genC.instSysCfg && genC.sysCfgDir == "":
+	case r.toInstSysCfg && r.sysCfgDir == "":
 		errExit(errors.New(""), "please provide a system config dir")
 
-	case genC.instPerms:
+	case r.toInstPerms:
 		fmt.Println("* setting system permissions...")
-		setSysPerm(genC.rootDir)
+		setSysPerm(r.rootDir)
 
-	case genC.instSysCfg:
+	case r.toInstSysCfg:
 		fmt.Println("* installing config files...")
-		instSysCfg(world, genC)
+		r.instSysCfg(world)
 		fmt.Println("\n* setting system permissions...")
-		setSysPerm(genC.rootDir)
+		setSysPerm(r.rootDir)
 
 	default:
-		checkPkgAvail(genC, pkgs, pkgCfgs)
-		instDefPkgs(world, genC, pkgs, pkgCfgs)
+		r.checkPkgAvail(pkgs, pkgCfgs)
+		r.instDefPkgs(world, pkgs, pkgCfgs)
 		fmt.Println("\n* installation complete.")
 	}
 }
 
-func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) instDefPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
 		var cntInfo string
 		pkgC := pkgCfgs[i]
@@ -57,7 +57,7 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 			loc = pkgC.cntProg
 		}
 
-		deps := getAllDeps(genC, pkg, pkgC.allRunDeps, []pkgT{},
+		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{},
 			"all", 1)
 		sort.Slice(deps, func(i, j int) bool {
 			return deps[i].name <= deps[j].name
@@ -65,20 +65,20 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 
 		for _, dep := range deps {
 			fmt.Printf("%-34s %s\n", dep.name, dep.setVerRel)
-			if !worldPkgExists(world, genC, dep, pkgC) && !pkgC.force {
-				depCfgFiles := getPkgCfgFiles(genC, dep)
+			if !r.worldPkgExists(world, dep, pkgC) && !pkgC.force {
+				depCfgFiles := r.getPkgCfgFiles(dep)
 
-				instPkg(dep, pkgC, genC.rootDir)
-				instPkgCfg(depCfgFiles, pkgC.instDir, genC.verbose)
+				instPkg(dep, pkgC, r.rootDir)
+				instPkgCfg(depCfgFiles, pkgC.instDir, r.verbose)
 
 				addPkgToWorldT(world, dep, loc)
 			}
 		}
 
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
-		if !worldPkgExists(world, genC, pkg, pkgC) && !pkgC.force {
-			instPkg(pkg, pkgC, genC.rootDir)
-			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, genC.verbose)
+		if !r.worldPkgExists(world, pkg, pkgC) && !pkgC.force {
+			instPkg(pkg, pkgC, r.rootDir)
+			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, r.verbose)
 
 			addPkgToWorldT(world, pkg, loc)
 		}
@@ -86,12 +86,12 @@ func instDefPkgs(world map[string]worldT, genC genCfgT, pkgs []pkgT, pkgCfgs []p
 	}
 
 	fmt.Println("* setting system permissions...")
-	setSysPerm(genC.rootDir)
+	setSysPerm(r.rootDir)
 }
 
 // returns a list of dependencies
 // depType possible vaules: "all", "run", "lib", "build"
-func getAllDeps(genC genCfgT, pkg pkgT, deps, res []pkgT, depType string, depth int) []pkgT {
+func (r *runT) getAllDeps(pkg pkgT, deps, res []pkgT, depType string, depth int) []pkgT {
 	if pkgExists(pkg, res) && len(deps) == 0 {
 		return res
 	}
@@ -104,7 +104,7 @@ func getAllDeps(genC genCfgT, pkg pkgT, deps, res []pkgT, depType string, depth 
 		res = append(res, dep)
 
 		var depDeps []pkgT
-		depC := getPkgCfg(genC, dep, "")
+		depC := r.getPkgCfg(dep, "")
 		switch depType {
 		case "all":
 			depDeps = depC.allRunDeps
@@ -116,18 +116,18 @@ func getAllDeps(genC genCfgT, pkg pkgT, deps, res []pkgT, depType string, depth 
 			depDeps = depC.buildDeps
 		}
 
-		res = getAllDeps(genC, dep, depDeps, res, depType, depth+1)
+		res = r.getAllDeps(dep, depDeps, res, depType, depth+1)
 	}
 
 	return res
 }
 
-func checkPkgAvail(genC genCfgT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
 		pkgCheck(pkg)
 
 		pkgC := pkgCfgs[i]
-		deps := getAllDeps(genC, pkg, pkgC.allRunDeps, []pkgT{},
+		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{},
 			"all", 1)
 		for _, dep := range deps {
 			pkgCheck(dep)
@@ -194,7 +194,7 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 
 // return a map of pkgs and list of lib names, and a list of packages
 // containing needed shared libraries
-func getPkgLibDeps(genC genCfgT, pkg pkgT) (map[pkgT][]string, []pkgT) {
+func (r *runT) getPkgLibDeps(pkg pkgT) (map[pkgT][]string, []pkgT) {
 	var deps []pkgT
 	depLibs := make(map[pkgT][]string)
 	file := fp.Join(pkg.progDir, "log", pkg.setVerRel, "shared_libs")
@@ -225,8 +225,8 @@ func getPkgLibDeps(genC genCfgT, pkg pkgT) (map[pkgT][]string, []pkgT) {
 		}
 
 		// todo: this logic ignores newer, but not latest versions
-		dep := getPkg(genC, name, pkgSet, ver)
-		depLatest := getPkg(genC, name, pkgSet, "latest")
+		dep := r.getPkg(name, pkgSet, ver)
+		depLatest := r.getPkg(name, pkgSet, "latest")
 		if dep != depLatest && pkgHasLib(depLatest, libName) {
 			dep = depLatest
 		}
@@ -268,7 +268,7 @@ func pkgHasLib(pkg pkgT, libName string) bool {
 
 // read dependencies from xx configuration files
 // depType can be "run" or "build"
-func readDeps(genC genCfgT, depType string) map[pkgT][]pkgT {
+func (r *runT) readDeps(depType string) map[pkgT][]pkgT {
 	var file string
 	var currentPkg pkgT
 	deps := make(map[pkgT][]pkgT)
@@ -294,12 +294,12 @@ func readDeps(genC genCfgT, depType string) map[pkgT][]pkgT {
 			continue
 
 		case unicode.IsLetter(rune(line[0])):
-			currentPkg, _ = parseSetLine(line, genC, re)
+			currentPkg, _ = r.parseSetLine(line, re)
 			deps[currentPkg] = []pkgT{}
 
 		case rune(line[0]) == '\t':
 			line = strings.Trim(line, "\t")
-			dep, _ := parseSetLine(line, genC, re)
+			dep, _ := r.parseSetLine(line, re)
 			deps[currentPkg] = append(deps[currentPkg], dep)
 		}
 	}
@@ -314,22 +314,22 @@ func readDeps(genC genCfgT, depType string) map[pkgT][]pkgT {
 	return deps
 }
 
-func instSysCfg(world map[string]worldT, genC genCfgT) {
-	instTargetCfg(genC, genC.rootDir, world["/"].pkgs)
+func (r *runT) instSysCfg(world map[string]worldT) {
+	r.instTargetCfg(r.rootDir, world["/"].pkgs)
 
-	cntDir := fp.Join(genC.rootDir, "/cnt/rootfs/")
+	cntDir := fp.Join(r.rootDir, "/cnt/rootfs/")
 	cntList := getCntList(cntDir)
 	for _, cntName := range cntList {
-		instTargetCfg(genC, "/cnt/rootfs/"+cntName, world[cntName].pkgs)
+		r.instTargetCfg("/cnt/rootfs/"+cntName, world[cntName].pkgs)
 	}
 }
 
-func instTargetCfg(genC genCfgT, instDir string, worldPkgs map[pkgT]bool) {
+func (r *runT) instTargetCfg(instDir string, worldPkgs map[pkgT]bool) {
 	for pkg, _ := range worldPkgs {
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.set)
 
 		// install configs
-		cfgFiles := getPkgCfgFiles(genC, pkg)
-		instPkgCfg(cfgFiles, instDir, genC.verbose)
+		cfgFiles := r.getPkgCfgFiles(pkg)
+		instPkgCfg(cfgFiles, instDir, r.verbose)
 	}
 }

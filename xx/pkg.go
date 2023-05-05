@@ -22,25 +22,25 @@ import (
 	"unicode/utf8"
 )
 
-func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pkgT {
+func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 	if pkg.newRel != "00" && !pkgC.force || pkgC.src.srcType == "files" {
 		return pkg
 	}
 
 	makeBuildDirs(pkg, pkgC)
-	getSrc(genC, pkg, pkgC)
+	r.getSrc(pkg, pkgC)
 
-	execStep("prepare", genC, pkg, pkgC)
-	execStep("configure", genC, pkg, pkgC)
-	execStep("build", genC, pkg, pkgC)
+	r.execStep("prepare", pkg, pkgC)
+	r.execStep("configure", pkg, pkgC)
+	r.execStep("build", pkg, pkgC)
 
 	err := os.MkdirAll(pkg.newPkgDir, 0700)
 	errExit(err, "couldn't create dir: "+pkg.newPkgDir)
-	execStep("pkg_create", genC, pkg, pkgC)
+	r.execStep("pkg_create", pkg, pkgC)
 
-	pkgBuildCheck(genC, pkg, pkgC)
+	r.pkgBuildCheck(pkg, pkgC)
 	moveLogs(pkg, pkgC)
-	saveHelp(genC, pkg, pkgC)
+	r.saveHelp(pkg, pkgC)
 	cleanup(pkg, pkgC)
 	dumpSHA256(pkg)
 
@@ -77,18 +77,18 @@ func createPkg(world map[string]worldT, genC genCfgT, pkg pkgT, pkgC pkgCfgT) pk
 
 	// dump shared libs for main pkg and for subpkgs
 	if !pkgC.crossBuild {
-		dumpSharedLibs(world, genC, pkg)
+		r.dumpSharedLibs(world, pkg)
 	}
 	for _, s := range pkgC.steps.subPkgs {
 		subPkg := getSubPkg(pkg, s.suffix)
-		dumpSharedLibs(world, genC, subPkg)
-		selfLibsExist(world, genC, subPkg)
+		r.dumpSharedLibs(world, subPkg)
+		r.selfLibsExist(world, subPkg)
 	}
 
 	return pkg
 }
 
-func pkgBuildCheck(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) pkgBuildCheck(pkg pkgT, pkgC pkgCfgT) {
 	var noNoDirs []string
 	var noNoLibRe *regexp.Regexp
 
@@ -222,7 +222,7 @@ func MoveShaInfo(pkg, subPkg pkgT, file string) {
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
 }
 
-func getSrc(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) getSrc(pkg pkgT, pkgC pkgCfgT) {
 	switch pkgC.src.srcType {
 	case "tar":
 		getSrcTar(pkg, pkgC)
@@ -231,7 +231,7 @@ func getSrc(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	case "go-mod":
 		getViaGoMod(pkg, pkgC)
 	case "alpine":
-		getAlpinePkgs(genC, pkg, pkgC)
+		r.getAlpinePkgs(pkg, pkgC)
 	}
 }
 
@@ -385,12 +385,12 @@ func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
 	errExit(err, "can't get source with:\n  'go mod download "+uri+"'\n"+string(out))
 }
 
-func getAlpinePkgs(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
-	repos := getAlpineRepos(genC, pkg, pkgC)
+func (r *runT) getAlpinePkgs(pkg pkgT, pkgC pkgCfgT) {
+	repos := r.getAlpineRepos(pkg, pkgC)
 	rootFile := getAlpineRoot(pkg)
 	createApkRoot(rootFile, pkgC.steps.buildDir, repos)
 
-	instLxcConfig(genC, pkg, pkgC)
+	r.instLxcConfig(pkg, pkgC)
 
 	pkgMap := makeAlpinePkgMap(pkg, pkgC, repos)
 	for repoName, url := range pkgMap {
@@ -444,7 +444,7 @@ func getAlpineRoot(pkg pkgT) string {
 	return fPath
 }
 
-func getAlpineRepos(genC genCfgT, pkg pkgT, pkgC pkgCfgT) map[string]string {
+func (r *runT) getAlpineRepos(pkg pkgT, pkgC pkgCfgT) map[string]string {
 	urls := strings.Split(pkgC.src.url, " ")
 	repos := make(map[string]string)
 
@@ -455,7 +455,7 @@ func getAlpineRepos(genC genCfgT, pkg pkgT, pkgC pkgCfgT) map[string]string {
 		}
 
 		repoName := urlSplit[len(urlSplit)-3]
-		repoDir := fp.Join(pkg.progDir, "src/repo_"+genC.date,
+		repoDir := fp.Join(pkg.progDir, "src/repo_"+r.date,
 			repoName, "x86_64")
 
 		err := os.MkdirAll(repoDir, 0755)
@@ -571,7 +571,7 @@ func makeBuildDirs(pkg pkgT, pkgC pkgCfgT) {
 	}
 }
 
-func execStep(step string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
 	var command string
 	pwd := pkgC.steps.buildDir
 
@@ -606,8 +606,8 @@ func execStep(step string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	errExit(err, "can't create log file")
 	defer fErr.Close()
 
-	instLxcConfig(genC, pkg, pkgC)
-	cmd := prepareCmd(genC, pkg, pkgC, step, command, pwd, fOut, fErr)
+	r.instLxcConfig(pkg, pkgC)
+	cmd := r.prepareCmd(pkg, pkgC, step, command, pwd, fOut, fErr)
 	err = cmd.Run()
 	if err != nil {
 		// print error log when a step fails
@@ -645,7 +645,7 @@ func execStep(step string, genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	}
 }
 
-func prepareCmd(genC genCfgT, pkg pkgT, pkgC pkgCfgT, step, command, pwd string, fOut, fErr *os.File) *exec.Cmd {
+func (r *runT) prepareCmd(pkg pkgT, pkgC pkgCfgT, step, command, pwd string, fOut, fErr *os.File) *exec.Cmd {
 
 	shCmd := "lxc-execute"
 	shCmdP := []string{"-n", "xx", "-P", "/tmp/xx/../"}
@@ -662,7 +662,7 @@ func prepareCmd(genC genCfgT, pkg pkgT, pkgC pkgCfgT, step, command, pwd string,
 		shCmdP = []string{"-c", command}
 	}
 
-	if genC.rootDir == "/" {
+	if r.rootDir == "/" {
 		shCmd = "/home/xx/bin/bash"
 		shCmdP = []string{"-c", command}
 	}
@@ -678,7 +678,7 @@ func prepareCmd(genC genCfgT, pkg pkgT, pkgC pkgCfgT, step, command, pwd string,
 	return cmd
 }
 
-func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) instLxcConfig(pkg pkgT, pkgC pkgCfgT) {
 	var config string
 
 	user, err := user.Current()
@@ -697,7 +697,7 @@ func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	}
 	fd.Close()
 
-	replMap := setReplMap(genC, pkg, pkgC, pkgC.src, pkgC.steps)
+	replMap := r.setReplMap(pkg, pkgC, pkgC.src, pkgC.steps)
 	for k, v := range replMap {
 		if k == "<root_dir>" && pkgC.src.srcType == "alpine" {
 			v = pkgC.steps.buildDir + "/rootfs"
@@ -707,11 +707,11 @@ func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 	repl(&config, "<user_id>", user.Uid)
 	repl(&config, "<group_id>", user.Gid)
 
-	dev := getMountDev(genC.rootDir)
-	devBoot := getMountDev(genC.rootDir + "/boot")
+	dev := getMountDev(r.rootDir)
+	devBoot := getMountDev(r.rootDir + "/boot")
 
 	// add entries to pass devices from target dir mountpoints
-	if dev != "" && devBoot != "" && genC.rootDir != "" {
+	if dev != "" && devBoot != "" && r.rootDir != "" {
 		devCfg := "lxc.mount.entry = " + dev + " " +
 			strings.Trim(dev, "/") +
 			" none bind,create=file 0 0\n" +
@@ -721,7 +721,7 @@ func instLxcConfig(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 		config += devCfg
 	}
 
-	if fileExists(genC.rootDir + "/mnt/xx/boot") {
+	if fileExists(r.rootDir + "/mnt/xx/boot") {
 		config += "lxc.mount.entry = /mnt/xx mnt/xx none bind 0 0\n"
 		config += "lxc.mount.entry = /mnt/xx/boot mnt/xx/boot none bind 0 0"
 	}
@@ -849,7 +849,7 @@ func getSharedLibs(file string) []string {
 }
 
 // used only during build step
-func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
+func (r *runT) dumpSharedLibs(world map[string]worldT, pkg pkgT) {
 	files, err := walkDir(pkg.pkgDir, "files")
 
 	sharedLibs := make(map[string]bool)
@@ -875,7 +875,7 @@ func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 			continue
 		}
 
-		libPath := findLibPath(world, genC, lib)
+		libPath := r.findLibPath(world, lib)
 		dep := world["/"].files[libPath]
 		if libPath == "" {
 			dep = pkg
@@ -885,8 +885,8 @@ func dumpSharedLibs(world map[string]worldT, genC genCfgT, pkg pkgT) {
 }
 
 // used only during pkg build
-func findLibPath(world map[string]worldT, genC genCfgT, lib string) string {
-	ldSoConf := fp.Join(genC.rootDir, "/etc/ld.so.conf")
+func (r *runT) findLibPath(world map[string]worldT, lib string) string {
+	ldSoConf := fp.Join(r.rootDir, "/etc/ld.so.conf")
 	if !fileExists(ldSoConf) {
 		return ""
 	}
@@ -934,7 +934,7 @@ func moveLogs(pkg pkgT, pkgC pkgCfgT) {
 	errExit(err, "can't move log dir")
 }
 
-func saveHelp(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) saveHelp(pkg pkgT, pkgC pkgCfgT) {
 	var c, helpType, file string
 	switch {
 	case fileExists(pkgC.steps.buildDir+"/configure") &&
@@ -988,7 +988,7 @@ func saveHelp(genC genCfgT, pkg pkgT, pkgC pkgCfgT) {
 		errExit(err, "can't create config help file")
 		defer fOut.Close()
 
-		cmd := prepareCmd(genC, pkg, pkgC, "save_help", c,
+		cmd := r.prepareCmd(pkg, pkgC, "save_help", c,
 			pkgC.steps.buildDir, fOut, fOut)
 		err = cmd.Run()
 		errExit(err, "can't execute config help")
