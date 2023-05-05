@@ -86,7 +86,6 @@ type runT struct {
 	isInit       bool
 	actionTarget string
 	action       string
-	actionOpts   string
 	date         string
 
 	forceAll bool
@@ -284,6 +283,8 @@ func main() {
 	r := getRunVars(args)
 	pkgs, pkgCfgs := r.getPkgList()
 	world := r.getWorld(pkgCfgs)
+
+	r.printRunParams()
 
 	switch {
 	case flag.NArg() > 0:
