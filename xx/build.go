@@ -7,9 +7,10 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	fp "path/filepath"
 	"sort"
-	"strings"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 func (r *runT) actionBuild() {
@@ -21,17 +22,17 @@ func (r *runT) actionBuild() {
 	case r.isInit:
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			r.setFileName)
-		r.buildInstPkgs(r.pkgs, r.pkgCfgs)
+		r.buildInstPkgs()
 	default:
-		r.buildSetFile(r.pkgs, r.pkgCfgs)
+		r.buildSetFile()
 	}
 }
 
-func (r *runT) buildSetFile(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	if len(pkgs) == 1 && strings.HasSuffix(pkgs[0].set, "_cross") {
+func (r *runT) buildSetFile() {
+	if len(r.pkgs) == 1 && str.HasSuffix(r.pkgs[0].set, "_cross") {
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			r.setFileName)
-		r.buildInstPkgs(pkgs, pkgCfgs)
+		r.buildInstPkgs()
 
 		return
 	}
@@ -45,7 +46,7 @@ func (r *runT) buildSetFile(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	baseOk := fileExists(baseOkFile)
 
 	// todo: move this to runT, maybe name as r.isSepEnv
-	alpineBuild := pkgs[0].categ == "alpine"
+	alpineBuild := r.pkgs[0].categ == "alpine"
 
 	// base env must exist first, copy it if it's not in place
 	if !baseOk && !r.isInit {
@@ -58,7 +59,7 @@ func (r *runT) buildSetFile(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	}
 
 	fmt.Printf("\033[01m* processing %s...\033[00m\n", r.setFileName)
-	r.buildInstPkgs(pkgs, pkgCfgs)
+	r.buildInstPkgs()
 
 	if r.baseEnv {
 		_, _ = os.Create(baseOkFile)
@@ -127,10 +128,10 @@ func protectBaseDir(baseDir string) {
 	errExit(err, "can't remove write permissions in "+baseDir)
 }
 
-func (r *runT) buildInstPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
+func (r *runT) buildInstPkgs() {
+	for i, pkg := range r.pkgs {
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
-		pkgC := pkgCfgs[i]
+		pkgC := r.pkgCfgs[i]
 
 		if pkgC.subPkg {
 			// get the latest subpkg release in case when the main
@@ -143,7 +144,7 @@ func (r *runT) buildInstPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			pkg = r.createPkg(pkg, pkgC)
 		}
 
-		if strings.HasSuffix(pkg.set, "_tools_cross") {
+		if str.HasSuffix(pkg.set, "_tools_cross") {
 			continue
 		} else if r.worldPkgExists(pkg, pkgC) && !pkgC.force {
 			continue
@@ -233,7 +234,7 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 
 		cmd := exec.Command("/home/xx/bin/busybox", "cp",
 			"/home/xx/xx/cntrun/cntrun", pkgC.instDir+"/../../bin/")
-		if strings.Contains(pkgC.instDir, ":/") {
+		if str.Contains(pkgC.instDir, ":/") {
 			cmd = exec.Command("scp", "-q",
 				"/home/xx/xx/cntrun/cntrun",
 				pkgC.instDir+"/../../bin/")
@@ -255,19 +256,19 @@ func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
 	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
 
 	// don't install dummy pkg creating temporary links during bootstrap
-	if strings.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
+	if str.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
 		return
 	}
 
 	busybox := "/home/xx/bin/busybox"
 	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + pkgC.instDir
-	if strings.Contains(pkgC.instDir, ":/") {
+	if str.Contains(pkgC.instDir, ":/") {
 		c = "scp -q " + pkg.pkgDir + "/* " + pkgC.instDir
 	}
 	cmd := exec.Command(busybox, "sh", "-c", c)
 	out, err := cmd.Output()
 	errExit(err, "can't copy "+pkg.pkgDir+" to "+pkgC.instDir+
-		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+		"\n"+string(out)+"\n"+str.Join(cmd.Args, " "))
 
 	if !pkgC.muslBuild {
 		createBinLinks(pkg.pkgDir, pkgC.instDir)
@@ -295,7 +296,7 @@ func createBinLinks(pkgDir, instDir string) {
 	}
 
 	for _, file := range files {
-		f := strings.TrimPrefix(file, pkgDir+"/usr")
+		f := str.TrimPrefix(file, pkgDir+"/usr")
 		dest := fp.Join(instDir, f)
 
 		destDir := path.Dir(dest)
@@ -413,7 +414,7 @@ func createRootDirs(rootDir string) {
 	}
 
 	for _, modDir := range modDirs {
-		s := strings.Split(modDir, " ")
+		s := str.Split(modDir, " ")
 		mod := s[0]
 		dir := s[1]
 		cmd := exec.Command("/home/xx/bin/busybox", "chmod", mod,
@@ -428,7 +429,7 @@ func createRootDirs(rootDir string) {
 	}
 
 	for _, lnDir := range lnDirs {
-		d := strings.Split(lnDir, " ")
+		d := str.Split(lnDir, " ")
 		cmd := exec.Command("/home/xx/bin/busybox", "ln", "-s", d[0],
 			rootDir+d[1])
 		_, _ = cmd.Output()

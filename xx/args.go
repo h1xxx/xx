@@ -154,12 +154,24 @@ func (r *runT) parseInstallArgs(args []string) {
 		errExit(fmt.Errorf("dir doesn't exist: %s", r.sysCfgDir), "")
 	}
 
+	if r.toInstPerms && r.sysCfgDir == "" {
+		errExit(fmt.Errorf("missing system config dir"), "")
+	}
+
+	if r.toInstSysCfg && r.sysCfgDir == "" {
+		errExit(fmt.Errorf("missing system config dir"), "")
+	}
+
 	if r.rootDir == "" {
 		errExit(fmt.Errorf("root dir not defined"), "")
 	}
 
 	if r.rootDir[0] != '/' {
 		errExit(fmt.Errorf("root dir must be an absolute path"), "")
+	}
+
+	if !fileExists(r.rootDir) {
+		errExit(fmt.Errorf("root dir doesn't exist"), "")
 	}
 }
 

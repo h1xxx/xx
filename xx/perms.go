@@ -13,10 +13,10 @@ import (
 	str "strings"
 )
 
-func setSysPerm(rootDir string) {
-	perms, owners := getPermOwner(rootDir)
-	recPaths, fixedPaths := getFixedPaths(rootDir, perms, owners)
-	rootDirs := getRootDirs(recPaths, rootDir)
+func (r *runT) setSysPerm() {
+	perms, owners := getPermOwner(r.rootDir)
+	recPaths, fixedPaths := getFixedPaths(r.rootDir, perms, owners)
+	rootDirs := getRootDirs(recPaths, r.rootDir)
 
 	// get files and dirs only for root directories defined in /etc/perms
 	var paths []string
@@ -25,7 +25,7 @@ func setSysPerm(rootDir string) {
 			continue
 		}
 		walkedPaths, err := walkDir(dir, "all")
-		errExit(err, "couldn't list all paths in:\n  "+rootDir)
+		errExit(err, "couldn't list all paths in:\n  "+r.rootDir)
 		paths = append(paths, walkedPaths...)
 	}
 	paths = append(paths, fixedPaths...)
@@ -38,7 +38,7 @@ func setSysPerm(rootDir string) {
 	//fmt.Println("zzzzzzz", perms)
 
 	for _, fullPath := range paths {
-		if isSymLink(fullPath) || fullPath == rootDir || fullPath == "." {
+		if isSymLink(fullPath) || fullPath == r.rootDir || fullPath == "." {
 			continue
 		}
 
@@ -46,7 +46,7 @@ func setSysPerm(rootDir string) {
 		errExit(err, "can't stat file\n:  "+fullPath)
 
 		if setOwner {
-			newUid, newGid := getOwner(fullPath, rootDir, owners)
+			newUid, newGid := getOwner(fullPath, r.rootDir, owners)
 			stat := info.Sys().(*syscall.Stat_t)
 			uid := int(stat.Uid)
 			gid := int(stat.Gid)
@@ -57,7 +57,7 @@ func setSysPerm(rootDir string) {
 			}
 		}
 
-		newMode := getMode(fullPath, rootDir, perms)
+		newMode := getMode(fullPath, r.rootDir, perms)
 
 		if info.Mode() != newMode && newMode != 0 {
 			err := os.Chmod(fullPath, newMode)

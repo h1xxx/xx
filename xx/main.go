@@ -440,38 +440,6 @@ func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
 	return pkgC
 }
 
-func printUsage() {
-	fmt.Println(`usage: xx <action> [parameters] <xx set file or a program>
-
-actions/parameters:
-
-(b)uild		build packages
--f		force build of all packages
--s		build set to build for a single package (default: std)
--V		version to build for a single package
-
-(i)nstall	install already built packages
--f		force installation of all packages
--r		root dir to install packages to
--c		system config dir
--P		only set system permissions
--C		only install configs from the system config dir
-
-(s)ource	download and verify source files
-
-(d)iff		show diff between pkg builds
--h		time horizon in hours to search for diffs (default: 24)
--b		show diff against previous build (default: previous version)
-
-i(n)fo		show additional information on xx system
--a		information on all package, incl. dependencies
--i		verify system integrity
-
-(u)pdate	update ini files
--i		get information on latest packages available
-`)
-}
-
 func testTools() {
 	var r runT
 	r.rootDir = "/tmp/xx/tools_test"

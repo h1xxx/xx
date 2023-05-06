@@ -2,38 +2,25 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"sort"
-	"strings"
 
 	fp "path/filepath"
+	str "strings"
 )
 
 func (r *runT) actionInst() {
-
 	switch {
-
-	// todo: move to argsCheck
-	case !fileExists(r.rootDir):
-		errExit(errors.New(""), "target dir doesn't exist")
-
-	// todo: move to argsCheck
-	case r.toInstPerms && r.sysCfgDir == "":
-		errExit(errors.New(""), "please provide a system config dir")
-	case r.toInstSysCfg && r.sysCfgDir == "":
-		errExit(errors.New(""), "please provide a system config dir")
-
 	case r.toInstPerms:
 		fmt.Println("* setting system permissions...")
-		setSysPerm(r.rootDir)
+		r.setSysPerm()
 
 	case r.toInstSysCfg:
 		fmt.Println("* installing config files...")
 		r.instSysCfg()
 		fmt.Println("\n* setting system permissions...")
-		setSysPerm(r.rootDir)
+		r.setSysPerm()
 
 	default:
 		r.checkPkgAvail(r.pkgs, r.pkgCfgs)
@@ -56,8 +43,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			loc = pkgC.cntProg
 		}
 
-		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{},
-			"all", 1)
+		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{}, "all", 1)
 		sort.Slice(deps, func(i, j int) bool {
 			return deps[i].name <= deps[j].name
 		})
@@ -85,7 +71,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	}
 
 	fmt.Println("* setting system permissions...")
-	setSysPerm(r.rootDir)
+	r.setSysPerm()
 }
 
 func pkgExists(pkg pkgT, pkgs []pkgT) bool {
@@ -126,7 +112,7 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		split := strings.Split(input.Text(), "\t")
+		split := str.Split(input.Text(), "\t")
 		file := split[1]
 		hash := split[0]
 
