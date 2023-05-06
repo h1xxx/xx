@@ -2,14 +2,11 @@ package main
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"os"
 	"os/exec"
 	"regexp"
 	"sort"
-	"strconv"
-	"time"
 
 	fp "path/filepath"
 	str "strings"
@@ -26,24 +23,6 @@ type worldT struct {
 	fileHash map[string]string
 	pkgFiles map[pkgT][]string
 	pkgs     map[pkgT]bool
-}
-
-type argsT struct {
-	action       string
-	actionTarget string
-	set          *string
-	Ver          *string
-	rootDir      *string
-	hours        *string
-	forceAll     *bool
-	c            *string
-	b            *bool
-	B            *bool
-	d            *bool
-	P            *bool
-	C            *bool
-	i            *bool
-	v            *bool
 }
 
 // runT stores global variables for each run of the command
@@ -74,6 +53,8 @@ type argsT struct {
 //
 // infoDeps	show info on dependencies	false, true
 // infoInteg	check system integrity		false, true
+//
+// actionArgs
 type runT struct {
 	rootDir      string
 	sysCfgDir    string
@@ -245,53 +226,15 @@ type reT struct {
 }
 
 func main() {
-	var args argsT
-
-	args.set = flag.String("s", "std", "b,i: pkg config set to build")
-	args.Ver = flag.String("V", "latest", "b,i: program version")
-	args.forceAll = flag.Bool("f", false, "b,i: force action")
-	args.rootDir = flag.String("r", "", "i: root dir for xx install")
-	args.hours = flag.String("h", "24", "time horizon to search for diffs")
-	args.c = flag.String("c", "", "i: cfg dir to apply on install")
-	args.d = flag.Bool("d", false, "s: download source; i: show deps")
-	args.b = flag.Bool("b", false, "d: show diff against previous build")
-	args.P = flag.Bool("P", false, "i: only set permissions for root dir")
-	args.C = flag.Bool("C", false, "i: only install configs for root dir")
-	args.i = flag.Bool("i", false, "n: verify system integrity")
-	args.v = flag.Bool("v", false, "all: verbose messages")
-
-	// todo: move args check to a central place
-	if len(os.Args) < 3 {
-		printUsage()
-		os.Exit(1)
-	}
-
-	args.action = os.Args[1]
-	lastArgPos := len(os.Args) - 1
-	args.actionTarget = os.Args[lastArgPos]
-
-	os.Args = append(os.Args[:1], os.Args[2:lastArgPos]...)
-	flag.Usage = printUsage
-	flag.Parse()
-
-	if *args.set != "xx_tools_cross" {
-		testTools(args)
-	}
-
-	argsCheck(args)
-
-	r := getRunVars(args)
-	pkgs, pkgCfgs := r.getPkgList()
-	world := r.getWorld(pkgCfgs)
+	r := parseArgs()
 
 	r.printRunParams()
 
+	os.Exit(1)
+	pkgs, pkgCfgs := r.getPkgList()
+	world := r.getWorld(pkgCfgs)
+
 	switch {
-	case flag.NArg() > 0:
-		errExit(errors.New(""), "unrecognized parameter\n"+
-			"  first parameter must be one of: "+
-			"(b)uild, (d)iff, (i)nstall, (r)emove, "+
-			"(u)pdate, (s)ource, (c)heck, i(n)fo")
 	case r.action == "build":
 		r.actionBuild(world, pkgs, pkgCfgs)
 
@@ -316,8 +259,7 @@ func main() {
 	case r.action == "info":
 		r.actionInfo(pkgs, pkgCfgs)
 
-	case r.action == "--help" || args.action == "-h" ||
-		args.action == "help":
+	case r.action == "--help" || r.action == "-h" || r.action == "help":
 		printUsage()
 
 	default:
@@ -325,36 +267,6 @@ func main() {
 			"  first parameter must be one of: "+
 			"(b)uild, (d)iff, (i)nstall, (r)emove, "+
 			"(u)pdate, (s)ource, (c)heck, i(n)fo")
-	}
-}
-
-func argsCheck(args argsT) {
-	msg := "last argument must be a path to a pkg dir or a definition file"
-
-	// todo: errExit(errors.New(""), "no xx file or pkg name provided")
-
-	// checks for when the final arg is a pkg env file
-	if !isPkgString(args.actionTarget) {
-		path := args.actionTarget
-		stat, err := os.Stat(path)
-		errExit(err, "can't stat "+path)
-		if stat.IsDir() || !str.HasSuffix(path, ".xx") {
-			errExit(err, msg)
-		}
-	}
-
-	// checks for when the final arg is a pkg name
-	if isPkgString(args.actionTarget) {
-		path := "/home/xx/prog/" + args.actionTarget
-		stat, err := os.Stat(path)
-		if err != nil || !stat.IsDir() {
-			errExit(err, msg)
-		}
-	}
-
-	// todo: add checks per action
-	if *args.rootDir == "" && (args.action == "install" || args.action == "i") {
-		errExit(errors.New(""), "root dir argument (-r) missing")
 	}
 }
 
@@ -402,86 +314,6 @@ func initWorldEntry(world map[string]worldT, entry string) {
 		pkgFiles: make(map[pkgT][]string),
 		pkgs:     make(map[pkgT]bool),
 	}
-}
-
-func getRunVars(args argsT) runT {
-	var r runT
-
-	abbr := make(map[string]string)
-	abbr["b"] = "build"
-	abbr["i"] = "install"
-	abbr["s"] = "source"
-	abbr["d"] = "diff"
-	abbr["n"] = "info"
-	abbr["u"] = "update"
-
-	r.action = args.action
-	if len(r.action) == 1 {
-		r.action = abbr[r.action]
-	}
-
-	r.actionTarget = args.actionTarget
-
-	r.buildEnv = getBuildEnv(r.actionTarget)
-	r.baseDir = "/tmp/xx/base"
-	r.baseFile = "/home/xx/set/base.xx"
-	if r.buildEnv == "base" || r.buildEnv == "musl_base" {
-		r.baseEnv = true
-	}
-	if str.HasPrefix(r.buildEnv, "musl_") {
-		r.muslEnv = true
-		r.baseDir = "/tmp/xx/musl_base"
-		r.baseFile = "/home/xx/set/musl_base.xx"
-	}
-
-	if str.HasPrefix(r.buildEnv, "init_") {
-		r.isInit = true
-	}
-
-	// this file shows that the base pkgs are currently being bootstrapped
-	if !r.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
-		r.isInit = true
-	}
-
-	r.rootDir = getRootDir(args, r.buildEnv)
-
-	if !isPkgString(r.actionTarget) {
-		r.setFileName = fp.Base(r.actionTarget)
-	}
-
-	if *args.set != "std" {
-		r.fixedSet = *args.set
-	}
-
-	if *args.Ver != "latest" {
-		r.fixedVer = *args.Ver
-	}
-
-	t := time.Now()
-	fStr := "%d-%.2d-%.2d"
-	r.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
-
-	r.sysCfgDir = fp.Clean(*args.c)
-	r.forceAll = *args.forceAll
-
-	r.toInstPerms = *args.P
-	r.toInstSysCfg = *args.C
-	r.verbose = *args.v
-
-	h, err := strconv.Atoi(*args.hours)
-	errExit(err, "can't convert hours parameter to integer: "+*args.hours)
-	r.diffHours = int64(h)
-	r.diffBuild = *args.b
-
-	r.infoDeps = *args.d
-	r.infoInteg = *args.i
-
-	if !isPkgString(r.actionTarget) {
-		r.runDeps = r.readDeps("run")
-		r.buildDeps = r.readDeps("build")
-	}
-
-	return r
 }
 
 func (r *runT) getPkgList() ([]pkgT, []pkgCfgT) {
@@ -621,25 +453,6 @@ func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
 	return pkgC
 }
 
-func getRootDir(args argsT, buildEnv string) string {
-	var rootDir string
-
-	if *args.rootDir == "" {
-		rootDir = fp.Join("/tmp/xx/", buildEnv)
-	} else if str.Contains(*args.rootDir, ":/") {
-		// just clean up the path when the host is remote
-		split := str.Split(*args.rootDir, ":")
-		host := split[0]
-		path := split[1]
-		path = fp.Clean(path)
-		rootDir = host + ":" + path
-	} else {
-		rootDir = fp.Clean(*args.rootDir)
-	}
-
-	return rootDir
-}
-
 func printUsage() {
 	fmt.Println(`usage: xx <action> [parameters] <xx set file or a program>
 
@@ -675,7 +488,7 @@ general parameters:
 -v		verbose messages`)
 }
 
-func testTools(args argsT) {
+func testTools() {
 
 	var r runT
 	r.rootDir = "/tmp/xx/tools_test"

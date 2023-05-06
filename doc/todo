@@ -81,8 +81,6 @@ fix checksec /bin/bash with musl
 
 xx command to list not used pkg sets
 
-args check: root dir parameter must be an absolute path
-
 move ld-linux-x86-64.so.2 linking to the pkg from xx/*.go
 
 subpkg can't end in _cross and _init
