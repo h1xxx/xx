@@ -19,12 +19,8 @@ func (r *runT) getRunVars() {
 		r.setFileName = fp.Base(r.actionTarget)
 	}
 
-	r.prDebug("getting run-time dependencies...")
 	r.runDeps = r.readDeps("run")
-
-	r.prDebug("getting build-time dependencies...")
 	r.buildDeps = r.readDeps("build")
-
 	r.world = make(map[string]worldT)
 }
 

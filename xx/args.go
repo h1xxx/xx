@@ -96,9 +96,6 @@ func (r *runT) parseBuildArgs(args []string) {
 		case "-V", "--pkg-version":
 			r.fixedVer, shift = getNextArg(args[i:])
 
-		case "-d", "--debug":
-			r.debug = true
-
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -146,9 +143,6 @@ func (r *runT) parseInstallArgs(args []string) {
 		case "-C", "--Config":
 			r.toInstSysCfg = true
 
-		case "-d", "--debug":
-			r.debug = true
-
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -187,9 +181,6 @@ func (r *runT) parseSourceArgs(args []string) {
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
 
-		case "-d", "--debug":
-			r.debug = true
-
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -227,9 +218,6 @@ func (r *runT) parseDiffArgs(args []string) {
 
 			r.diffHours = int64(hoursInt)
 
-		case "-d", "--debug":
-			r.debug = true
-
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -264,9 +252,6 @@ func (r *runT) parseInfoArgs(args []string) {
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
 
-		case "-d", "--debug":
-			r.debug = true
-
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -292,9 +277,6 @@ func (r *runT) parseUpdateArgs(args []string) {
 		switch arg {
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
-
-		case "-d", "--debug":
-			r.debug = true
 
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")

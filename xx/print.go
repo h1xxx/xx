@@ -24,7 +24,6 @@ func (r *runT) printRunParams() {
 
 	prBool("only install perms", r.toInstPerms)
 	prBool("only install sys config", r.toInstSysCfg)
-	prBool("verbose", r.verbose)
 	br()
 
 	prBool("show diff to prev. build", r.diffBuild)
@@ -56,16 +55,8 @@ func pr(formatS string, a ...any) {
 	fmt.Printf(formatS+"\n", a...)
 }
 
-func (r *runT) prDebug(formatS string, a ...any) {
-	if r.debug {
-		fmt.Printf("debug: "+formatS+"\n", a...)
-	}
-}
-
-func prDebug(debug bool, formatS string, a ...any) {
-	if debug {
-		fmt.Printf("debug: "+formatS+"\n", a...)
-	}
+func prDebug(formatS string, a ...any) {
+	fmt.Printf("debug: "+formatS+"\n", a...)
 }
 
 func br() {

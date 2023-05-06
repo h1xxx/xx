@@ -78,7 +78,7 @@ func (r *runT) installBase() {
 		pkgC := pkgCfgs[i]
 
 		if !fileExists(pkg.pkgDir) {
-			pkg = getPkgPrevVer(pkg, r.debug)
+			pkg = getPkgPrevVer(pkg)
 			pkgC = r.getPkgCfg(pkg, "")
 		}
 
@@ -89,7 +89,7 @@ func (r *runT) installBase() {
 
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		instPkg(pkg, pkgC, r.baseDir)
-		instPkgCfg(pkgC.cfgFiles, r.baseDir, r.verbose)
+		instPkgCfg(pkgC.cfgFiles, r.baseDir)
 		r.addPkgToWorldT(pkg, "/")
 
 		// double check if shared libraries are ok
@@ -136,10 +136,9 @@ func (r *runT) buildInstPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			// get the latest subpkg release in case when the main
 			// pkg was rebuilt
 			pkg.setVerRel = ""
-			pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg,
-				r.debug)
-			pkg = getPkgSetVers(pkg, r.debug)
-			pkg = getPkgDirs(pkg, r.debug)
+			pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+			pkg = getPkgSetVers(pkg)
+			pkg = getPkgDirs(pkg)
 		} else {
 			pkg = r.createPkg(pkg, pkgC)
 		}
@@ -152,7 +151,7 @@ func (r *runT) buildInstPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			continue
 		} else {
 			instPkg(pkg, pkgC, r.rootDir)
-			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, r.verbose)
+			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
 
 			loc := "/"
 			if pkgC.cnt {
@@ -315,11 +314,7 @@ func createBinLinks(pkgDir, instDir string) {
 }
 
 // installs config files for the pkg
-func instPkgCfg(cfgFiles map[string]string, instDir string, verbose bool) {
-	if verbose && len(cfgFiles) > 0 {
-		fmt.Println("  installing config files...")
-	}
-
+func instPkgCfg(cfgFiles map[string]string, instDir string) {
 	var files []string
 	for file := range cfgFiles {
 		files = append(files, file)
@@ -329,9 +324,6 @@ func instPkgCfg(cfgFiles map[string]string, instDir string, verbose bool) {
 	for _, file := range files {
 		src := cfgFiles[file]
 		dest := fp.Join(instDir, file)
-		if verbose {
-			fmt.Printf("    %s\n", file)
-		}
 		Cp(src, dest)
 	}
 }

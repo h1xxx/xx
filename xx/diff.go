@@ -71,12 +71,12 @@ func (r *runT) getPkgPrev(pkg pkgT) pkgT {
 		fmt.Printf("\n\n+ %-32s %s => %s\n", pkg.name,
 			pkg.setVerPrevRel, pkg.setVerRel)
 	} else {
-		return getPkgPrevVer(pkg, r.debug)
+		return getPkgPrevVer(pkg)
 	}
 	return pkgPrev
 }
 
-func getPkgPrevVer(pkg pkgT, debug bool) pkgT {
+func getPkgPrevVer(pkg pkgT) pkgT {
 	var versions []string
 
 	dirs, err := os.ReadDir(fp.Join(pkg.progDir, "pkg"))
@@ -116,9 +116,9 @@ func getPkgPrevVer(pkg pkgT, debug bool) pkgT {
 
 	pkg.ver = strings.Replace(versions[verIdx], " ", "", -1)
 	pkg.verShort = getVerShort(pkg.ver)
-	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg, debug)
-	pkg = getPkgSetVers(pkg, debug)
-	pkg = getPkgDirs(pkg, debug)
+	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
+	pkg = getPkgSetVers(pkg)
+	pkg = getPkgDirs(pkg)
 
 	return pkg
 }

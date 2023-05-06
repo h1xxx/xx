@@ -68,7 +68,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 				depCfgFiles := r.getPkgCfgFiles(dep)
 
 				instPkg(dep, pkgC, r.rootDir)
-				instPkgCfg(depCfgFiles, pkgC.instDir, r.verbose)
+				instPkgCfg(depCfgFiles, pkgC.instDir)
 
 				r.addPkgToWorldT(dep, loc)
 			}
@@ -77,7 +77,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
 		if !r.worldPkgExists(pkg, pkgC) && !pkgC.force {
 			instPkg(pkg, pkgC, r.rootDir)
-			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, r.verbose)
+			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
 
 			r.addPkgToWorldT(pkg, loc)
 		}
@@ -154,6 +154,6 @@ func (r *runT) instTargetCfg(instDir string, worldPkgs map[pkgT]bool) {
 
 		// install configs
 		cfgFiles := r.getPkgCfgFiles(pkg)
-		instPkgCfg(cfgFiles, instDir, r.verbose)
+		instPkgCfg(cfgFiles, instDir)
 	}
 }

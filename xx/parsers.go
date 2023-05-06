@@ -43,8 +43,6 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	var flags string
 	err := errors.New("")
 
-	r.prDebug("parsing %v...", fields)
-
 	switch {
 	case len == 4:
 		flags = fields[3]
