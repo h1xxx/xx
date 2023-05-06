@@ -234,6 +234,10 @@ func main() {
 	pkgs, pkgCfgs := r.getPkgList()
 	world := r.getWorld(pkgCfgs)
 
+	if r.fixedSet != "xx_tools_cross" {
+		testTools()
+	}
+
 	switch {
 	case r.action == "build":
 		r.actionBuild(world, pkgs, pkgCfgs)
