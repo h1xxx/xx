@@ -12,19 +12,6 @@ import (
 	str "strings"
 )
 
-// worldT stores information on all files and packages installed in the env;
-//
-// files	map files -> pkgs
-// fileHash	map file -> hash
-// pkgFiles	map pkgs -> []files
-// pkgs		map pkgs -> true
-type worldT struct {
-	files    map[string]pkgT
-	fileHash map[string]string
-	pkgFiles map[pkgT][]string
-	pkgs     map[pkgT]bool
-}
-
 // runT stores global variables for each run of the command
 //
 // rootDir	root system dir:		/, /mnt/xx, /tmp/xx/media
@@ -54,8 +41,6 @@ type worldT struct {
 //
 // infoDeps	show info on dependencies	false, true
 // infoInteg	check system integrity		false, true
-//
-// actionArgs
 type runT struct {
 	rootDir     string
 	sysCfgDir   string
@@ -88,8 +73,24 @@ type runT struct {
 	infoDeps  bool
 	infoInteg bool
 
+	pkgs      []pkgT
+	pkgCfgs   []pkgCfgT
+	world     map[string]worldT
 	buildDeps map[pkgT][]pkgT
 	runDeps   map[pkgT][]pkgT
+}
+
+// worldT stores information on all files and packages installed in the env;
+//
+// files	map files -> pkgs
+// fileHash	map file -> hash
+// pkgFiles	map pkgs -> []files
+// pkgs		map pkgs -> true
+type worldT struct {
+	files    map[string]pkgT
+	fileHash map[string]string
+	pkgFiles map[pkgT][]string
+	pkgs     map[pkgT]bool
 }
 
 // pkgT stores common variables to uniquely identify a package
@@ -233,11 +234,10 @@ type reT struct {
 func main() {
 	r := parseArgs()
 	r.getRunVars()
+	r.getPkgList()
+	r.getWorld(r.pkgCfgs)
 
 	r.printRunParams()
-
-	pkgs, pkgCfgs := r.getPkgList()
-	world := r.getWorld(pkgCfgs)
 
 	if r.fixedSet != "xx_tools_cross" {
 		testTools()
@@ -245,43 +245,30 @@ func main() {
 
 	switch {
 	case r.action == "build":
-		r.actionBuild(world, pkgs, pkgCfgs)
-
-	case r.action == "diff":
-		r.actionDiff(pkgs, pkgCfgs)
+		r.actionBuild()
 
 	case r.action == "install":
-		r.actionInst(world, pkgs, pkgCfgs)
+		r.actionInst()
 
-	//case r.action == "remove":
-	//	r.actionInst(pkg, pkgCfgs)
+	case r.action == "diff":
+		r.actionDiff()
 
 	case r.action == "update":
-		r.actionUpdate(pkgs, pkgCfgs)
+		r.actionUpdate()
 
 	case r.action == "source":
-		r.actionSource(pkgs, pkgCfgs)
+		r.actionSource()
 
 	case r.action == "check":
 		r.actionCheck()
 
 	case r.action == "info":
-		r.actionInfo(pkgs, pkgCfgs)
-
-	case r.action == "--help" || r.action == "-h" || r.action == "help":
-		printUsage()
-
-	default:
-		errExit(errors.New(""), "unrecognized action\n"+
-			"  first parameter must be one of: "+
-			"(b)uild, (d)iff, (i)nstall, (r)emove, "+
-			"(u)pdate, (s)ource, (c)heck, i(n)fo")
+		r.actionInfo()
 	}
 }
 
-func (r *runT) getWorld(pkgCfgs []pkgCfgT) map[string]worldT {
-	world := make(map[string]worldT)
-	initWorldEntry(world, "/")
+func (r *runT) getWorld(pkgCfgs []pkgCfgT) {
+	r.initWorldEntry("/")
 	worldPkgs := r.getWorldPkgs(r.rootDir)
 	if r.action == "build" && !r.baseEnv {
 		basePkgs := r.getWorldPkgs(r.baseDir)
@@ -289,7 +276,7 @@ func (r *runT) getWorld(pkgCfgs []pkgCfgT) map[string]worldT {
 	}
 
 	for _, pkg := range worldPkgs {
-		addPkgToWorldT(world, pkg, "/")
+		r.addPkgToWorldT(pkg, "/")
 	}
 
 	cntDir := fp.Join(r.rootDir, "/cnt/rootfs")
@@ -301,7 +288,7 @@ func (r *runT) getWorld(pkgCfgs []pkgCfgT) map[string]worldT {
 	}
 
 	for _, cntProg := range cntList {
-		initWorldEntry(world, cntProg)
+		r.initWorldEntry(cntProg)
 	}
 
 	for _, cntProg := range cntList {
@@ -309,15 +296,13 @@ func (r *runT) getWorld(pkgCfgs []pkgCfgT) map[string]worldT {
 		cntWorldPkgs := r.getWorldPkgs(cntRootDir)
 
 		for _, pkg := range cntWorldPkgs {
-			addPkgToWorldT(world, pkg, cntProg)
+			r.addPkgToWorldT(pkg, cntProg)
 		}
 	}
-
-	return world
 }
 
-func initWorldEntry(world map[string]worldT, entry string) {
-	world[entry] = worldT{
+func (r *runT) initWorldEntry(entry string) {
+	r.world[entry] = worldT{
 		files:    make(map[string]pkgT),
 		fileHash: make(map[string]string),
 		pkgFiles: make(map[pkgT][]string),
@@ -325,13 +310,10 @@ func initWorldEntry(world map[string]worldT, entry string) {
 	}
 }
 
-func (r *runT) getPkgList() ([]pkgT, []pkgCfgT) {
-	var pkgs []pkgT
-	var pkgCfgs []pkgCfgT
-
+func (r *runT) getPkgList() {
 	// process a pkg env file
 	if !r.targetIsSinglePkg {
-		pkgs, pkgCfgs = r.parseBuildEnvFile(r.actionTarget)
+		r.pkgs, r.pkgCfgs = r.parseBuildEnvFile(r.actionTarget)
 	}
 
 	// process a single package
@@ -340,11 +322,9 @@ func (r *runT) getPkgList() ([]pkgT, []pkgCfgT) {
 		pkg := r.getPkg(r.actionTarget, "std", "latest")
 		pkgC := r.getPkgCfg(pkg, "")
 
-		pkgs = append(pkgs, pkg)
-		pkgCfgs = append(pkgCfgs, pkgC)
+		r.pkgs = append(r.pkgs, pkg)
+		r.pkgCfgs = append(r.pkgCfgs, pkgC)
 	}
-
-	return pkgs, pkgCfgs
 }
 
 func (r *runT) getPkg(name, pkgSet, ver string) pkgT {

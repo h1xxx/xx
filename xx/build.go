@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func (r *runT) actionBuild(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) actionBuild() {
 	// todo: move this to a central createBuildDirs function
 	err := os.MkdirAll("/tmp/xx/build", 0700)
 	errExit(err, "can't create dir: /tmp/xx/build/")
@@ -21,17 +21,17 @@ func (r *runT) actionBuild(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCf
 	case r.isInit:
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			r.setFileName)
-		r.buildInstPkgs(world, pkgs, pkgCfgs)
+		r.buildInstPkgs(r.pkgs, r.pkgCfgs)
 	default:
-		r.buildSetFile(world, pkgs, pkgCfgs)
+		r.buildSetFile(r.pkgs, r.pkgCfgs)
 	}
 }
 
-func (r *runT) buildSetFile(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) buildSetFile(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	if len(pkgs) == 1 && strings.HasSuffix(pkgs[0].set, "_cross") {
 		fmt.Printf("\033[01m* processing %s...\033[00m\n",
 			r.setFileName)
-		r.buildInstPkgs(world, pkgs, pkgCfgs)
+		r.buildInstPkgs(pkgs, pkgCfgs)
 
 		return
 	}
@@ -50,7 +50,7 @@ func (r *runT) buildSetFile(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgC
 	// base env must exist first, copy it if it's not in place
 	if !baseOk && !r.isInit {
 		fmt.Println("\033[01m* copying base.xx...\033[00m")
-		r.installBase(world)
+		r.installBase()
 	}
 
 	if !baseLinked && !r.baseEnv && !alpineBuild {
@@ -58,7 +58,7 @@ func (r *runT) buildSetFile(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgC
 	}
 
 	fmt.Printf("\033[01m* processing %s...\033[00m\n", r.setFileName)
-	r.buildInstPkgs(world, pkgs, pkgCfgs)
+	r.buildInstPkgs(pkgs, pkgCfgs)
 
 	if r.baseEnv {
 		_, _ = os.Create(baseOkFile)
@@ -66,7 +66,7 @@ func (r *runT) buildSetFile(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgC
 	}
 }
 
-func (r *runT) installBase(world map[string]worldT) {
+func (r *runT) installBase() {
 	baseRunCfg := *r
 	baseRunCfg.rootDir = r.baseDir
 
@@ -90,11 +90,11 @@ func (r *runT) installBase(world map[string]worldT) {
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		instPkg(pkg, pkgC, r.baseDir)
 		instPkgCfg(pkgC.cfgFiles, r.baseDir, r.verbose)
-		addPkgToWorldT(world, pkg, "/")
+		r.addPkgToWorldT(pkg, "/")
 
 		// double check if shared libraries are ok
 		if !r.isInit && !pkgC.muslBuild {
-			r.selfLibsExist(world, pkg)
+			r.selfLibsExist(pkg)
 		}
 	}
 
@@ -127,7 +127,7 @@ func protectBaseDir(baseDir string) {
 	errExit(err, "can't remove write permissions in "+baseDir)
 }
 
-func (r *runT) buildInstPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) buildInstPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		pkgC := pkgCfgs[i]
@@ -141,12 +141,12 @@ func (r *runT) buildInstPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkg
 			pkg = getPkgSetVers(pkg, r.debug)
 			pkg = getPkgDirs(pkg, r.debug)
 		} else {
-			pkg = r.createPkg(world, pkg, pkgC)
+			pkg = r.createPkg(pkg, pkgC)
 		}
 
 		if strings.HasSuffix(pkg.set, "_tools_cross") {
 			continue
-		} else if r.worldPkgExists(world, pkg, pkgC) && !pkgC.force {
+		} else if r.worldPkgExists(pkg, pkgC) && !pkgC.force {
 			continue
 		} else if pkg.categ == "alpine" && !pkgC.cnt {
 			continue
@@ -158,11 +158,11 @@ func (r *runT) buildInstPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkg
 			if pkgC.cnt {
 				loc = pkgC.cntProg
 			}
-			addPkgToWorldT(world, pkg, loc)
+			r.addPkgToWorldT(pkg, loc)
 
 			// double check if shared libraries are ok
 			if !r.isInit && !pkgC.muslBuild {
-				r.selfLibsExist(world, pkg)
+				r.selfLibsExist(pkg)
 			}
 		}
 	}
@@ -170,9 +170,9 @@ func (r *runT) buildInstPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkg
 
 // checks if the built pkg contains self-referencing shared libraries;
 // these are assigned by defult so a check is necessary
-func (r *runT) selfLibsExist(world map[string]worldT, pkg pkgT) {
+func (r *runT) selfLibsExist(pkg pkgT) {
 	depLibs, _ := r.getPkgLibDeps(pkg)
-	files := world["/"].pkgFiles[pkg]
+	files := r.world["/"].pkgFiles[pkg]
 	for _, lib := range depLibs[pkg] {
 		var found bool
 		for _, file := range files {
@@ -356,18 +356,19 @@ func addPkgToWorldDir(pkg pkgT, instDir string) {
 	}
 }
 
-func addPkgToWorldT(world map[string]worldT, pkg pkgT, loc string) {
+func (r *runT) addPkgToWorldT(pkg pkgT, loc string) {
 	// todo: read file from world dir not from /home/xx
 	files, fileHash := getPkgFiles(pkg)
 	for file, hash := range fileHash {
-		world[loc].files[file] = pkg
-		world[loc].fileHash[file] = hash
+		r.world[loc].files[file] = pkg
+		r.world[loc].fileHash[file] = hash
 	}
-	world[loc].pkgFiles[pkg] = files
-	world[loc].pkgs[pkg] = true
+
+	r.world[loc].pkgFiles[pkg] = files
+	r.world[loc].pkgs[pkg] = true
 }
 
-func (r *runT) worldPkgExists(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) bool {
+func (r *runT) worldPkgExists(pkg pkgT, pkgC pkgCfgT) bool {
 	// todo: try to simplify this by making instDir == rootDir
 	worldDir := fp.Join(r.rootDir, "/var/xx")
 	if pkgC.cnt {
@@ -381,12 +382,13 @@ func (r *runT) worldPkgExists(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) b
 	if pkgC.cnt {
 		loc = pkgC.cntProg
 	}
-	_, pkgInWorldT := world[loc].pkgs[pkg]
+	_, pkgInWorldT := r.world[loc].pkgs[pkg]
 
 	if pkgInWorldDir && !pkgInWorldT {
 		fmt.Println(pkg.name, pkg.setVerRel, "not consistent in the world")
 		fmt.Println("in world dir:", pkgInWorldDir, f)
-		fmt.Println("in world var, loc, len(deps):", pkgInWorldT, loc, len(world[loc].pkgs))
+		fmt.Println("in world var, loc, len(deps):", pkgInWorldT, loc,
+			len(r.world[loc].pkgs))
 	}
 
 	return pkgInWorldDir && pkgInWorldT

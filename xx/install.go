@@ -11,7 +11,7 @@ import (
 	fp "path/filepath"
 )
 
-func (r *runT) actionInst(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) actionInst() {
 
 	switch {
 
@@ -31,18 +31,18 @@ func (r *runT) actionInst(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfg
 
 	case r.toInstSysCfg:
 		fmt.Println("* installing config files...")
-		r.instSysCfg(world)
+		r.instSysCfg()
 		fmt.Println("\n* setting system permissions...")
 		setSysPerm(r.rootDir)
 
 	default:
-		r.checkPkgAvail(pkgs, pkgCfgs)
-		r.instDefPkgs(world, pkgs, pkgCfgs)
+		r.checkPkgAvail(r.pkgs, r.pkgCfgs)
+		r.instDefPkgs(r.pkgs, r.pkgCfgs)
 		fmt.Println("\n* installation complete.")
 	}
 }
 
-func (r *runT) instDefPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	for i, pkg := range pkgs {
 		var cntInfo string
 		pkgC := pkgCfgs[i]
@@ -64,22 +64,22 @@ func (r *runT) instDefPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkgCf
 
 		for _, dep := range deps {
 			fmt.Printf("%-34s %s\n", dep.name, dep.setVerRel)
-			if !r.worldPkgExists(world, dep, pkgC) && !pkgC.force {
+			if !r.worldPkgExists(dep, pkgC) && !pkgC.force {
 				depCfgFiles := r.getPkgCfgFiles(dep)
 
 				instPkg(dep, pkgC, r.rootDir)
 				instPkgCfg(depCfgFiles, pkgC.instDir, r.verbose)
 
-				addPkgToWorldT(world, dep, loc)
+				r.addPkgToWorldT(dep, loc)
 			}
 		}
 
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
-		if !r.worldPkgExists(world, pkg, pkgC) && !pkgC.force {
+		if !r.worldPkgExists(pkg, pkgC) && !pkgC.force {
 			instPkg(pkg, pkgC, r.rootDir)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir, r.verbose)
 
-			addPkgToWorldT(world, pkg, loc)
+			r.addPkgToWorldT(pkg, loc)
 		}
 		fmt.Println()
 	}
@@ -138,13 +138,13 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	return files, fileHash
 }
 
-func (r *runT) instSysCfg(world map[string]worldT) {
-	r.instTargetCfg(r.rootDir, world["/"].pkgs)
+func (r *runT) instSysCfg() {
+	r.instTargetCfg(r.rootDir, r.world["/"].pkgs)
 
 	cntDir := fp.Join(r.rootDir, "/cnt/rootfs/")
 	cntList := getCntList(cntDir)
 	for _, cntName := range cntList {
-		r.instTargetCfg("/cnt/rootfs/"+cntName, world[cntName].pkgs)
+		r.instTargetCfg("/cnt/rootfs/"+cntName, r.world[cntName].pkgs)
 	}
 }
 

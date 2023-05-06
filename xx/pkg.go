@@ -22,7 +22,7 @@ import (
 	"unicode/utf8"
 )
 
-func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
+func (r *runT) createPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
 	if pkg.newRel != "00" && !pkgC.force || pkgC.src.srcType == "files" {
 		return pkg
 	}
@@ -55,10 +55,10 @@ func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 	}
 
 	// remove old pkg from world
-	delete(world["/"].pkgs, pkg)
+	delete(r.world["/"].pkgs, pkg)
 	for _, s := range pkgC.steps.subPkgs {
 		subPkg := getSubPkg(pkg, s.suffix, r.debug)
-		delete(world["/"].pkgs, subPkg)
+		delete(r.world["/"].pkgs, subPkg)
 	}
 
 	// get new release info after the build
@@ -69,20 +69,20 @@ func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 
 	// add a new pkg and all subpkgs to root of the world;
 	// no cnt here as only build step executes this
-	addPkgToWorldT(world, pkg, "/")
+	r.addPkgToWorldT(pkg, "/")
 	for _, s := range pkgC.steps.subPkgs {
 		subPkg := getSubPkg(pkg, s.suffix, r.debug)
-		addPkgToWorldT(world, subPkg, "/")
+		r.addPkgToWorldT(subPkg, "/")
 	}
 
 	// dump shared libs for main pkg and for subpkgs
 	if !pkgC.crossBuild {
-		r.dumpSharedLibs(world, pkg)
+		r.dumpSharedLibs(pkg)
 	}
 	for _, s := range pkgC.steps.subPkgs {
 		subPkg := getSubPkg(pkg, s.suffix, r.debug)
-		r.dumpSharedLibs(world, subPkg)
-		r.selfLibsExist(world, subPkg)
+		r.dumpSharedLibs(subPkg)
+		r.selfLibsExist(subPkg)
 	}
 
 	return pkg
@@ -850,7 +850,7 @@ func getSharedLibs(file string) []string {
 }
 
 // used only during build step
-func (r *runT) dumpSharedLibs(world map[string]worldT, pkg pkgT) {
+func (r *runT) dumpSharedLibs(pkg pkgT) {
 	files, err := walkDir(pkg.pkgDir, "files")
 
 	sharedLibs := make(map[string]bool)
@@ -876,8 +876,8 @@ func (r *runT) dumpSharedLibs(world map[string]worldT, pkg pkgT) {
 			continue
 		}
 
-		libPath := r.findLibPath(world, lib)
-		dep := world["/"].files[libPath]
+		libPath := r.findLibPath(lib)
+		dep := r.world["/"].files[libPath]
 		if libPath == "" {
 			dep = pkg
 		}
@@ -886,7 +886,7 @@ func (r *runT) dumpSharedLibs(world map[string]worldT, pkg pkgT) {
 }
 
 // used only during pkg build
-func (r *runT) findLibPath(world map[string]worldT, lib string) string {
+func (r *runT) findLibPath(lib string) string {
 	ldSoConf := fp.Join(r.rootDir, "/etc/ld.so.conf")
 	if !fileExists(ldSoConf) {
 		return ""
@@ -900,7 +900,7 @@ func (r *runT) findLibPath(world map[string]worldT, lib string) string {
 	for input.Scan() {
 		ldLibraryPath := input.Text()
 		libPath := fp.Join(ldLibraryPath, lib)
-		_, found := world["/"].files[libPath]
+		_, found := r.world["/"].files[libPath]
 		if found {
 			return libPath
 		}

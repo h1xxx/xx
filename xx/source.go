@@ -6,8 +6,8 @@ import (
 	fp "path/filepath"
 )
 
-func (r *runT) actionSource(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	r.getAllSrc(pkgs, pkgCfgs)
+func (r *runT) actionSource() {
+	r.getAllSrc(r.pkgs, r.pkgCfgs)
 }
 
 func (r *runT) getAllSrc(pkgs []pkgT, pkgCfgs []pkgCfgT) {

@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func (r *runT) actionInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
+func (r *runT) actionInfo() {
 
 	switch {
 	// todo: move to argsCheck
@@ -20,10 +20,10 @@ func (r *runT) actionInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		errExit(errors.New(""), "root dir argument (-r) missing")
 
 	case r.infoDeps:
-		r.printDepsInfo(pkgs, pkgCfgs)
+		r.printDepsInfo(r.pkgs, r.pkgCfgs)
 
 	case r.infoInteg:
-		r.sysVerify(pkgs, pkgCfgs)
+		r.sysVerify(r.pkgs, r.pkgCfgs)
 	}
 }
 

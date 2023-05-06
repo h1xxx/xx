@@ -24,6 +24,8 @@ func (r *runT) getRunVars() {
 
 	r.prDebug("getting build-time dependencies...")
 	r.buildDeps = r.readDeps("build")
+
+	r.world = make(map[string]worldT)
 }
 
 func (r *runT) getBuildEnv() {

@@ -22,8 +22,8 @@ type repolPkgT struct {
 	Maintainers string `json:"maintainers"`
 }
 
-func (r *runT) actionUpdate(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	showUpdateInfo(pkgs, pkgCfgs)
+func (r *runT) actionUpdate() {
+	showUpdateInfo(r.pkgs, r.pkgCfgs)
 }
 
 func showUpdateInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {

@@ -12,8 +12,8 @@ import (
 	"time"
 )
 
-func (r *runT) actionDiff(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	r.diffPkgs(pkgs, pkgCfgs)
+func (r *runT) actionDiff() {
+	r.diffPkgs(r.pkgs, r.pkgCfgs)
 }
 
 func (r *runT) diffPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
