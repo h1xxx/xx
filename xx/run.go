@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	fp "path/filepath"
 	str "strings"
@@ -12,23 +11,13 @@ func (r *runT) getRunVars() {
 	r.getBuildEnv()
 	r.getBaseInfo()
 	r.getRootDir()
+	r.detectInit()
 
-	if str.HasPrefix(r.buildEnv, "init_") {
-		r.isInit = true
-	}
-
-	// this file shows that the base pkgs are currently being bootstrapped
-	if !r.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
-		r.isInit = true
-	}
+	r.date = getCurrentDate()
 
 	if !r.targetIsSinglePkg {
 		r.setFileName = fp.Base(r.actionTarget)
 	}
-
-	t := time.Now()
-	fStr := "%d-%.2d-%.2d"
-	r.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
 
 	r.runDeps = r.readDeps("run")
 	r.buildDeps = r.readDeps("build")
@@ -61,6 +50,13 @@ func (r *runT) getBaseInfo() {
 
 	if str.HasPrefix(r.buildEnv, "musl_") {
 		r.muslEnv = true
+	}
+
+	if str.HasPrefix(r.fixedSet, "musl") {
+		r.muslEnv = true
+	}
+
+	if r.muslEnv {
 		r.baseDir = "/tmp/xx/musl_base"
 		r.baseFile = "/home/xx/set/musl_base.xx"
 	}
@@ -85,5 +81,16 @@ func (r *runT) getRootDir() {
 
 	default:
 		r.rootDir = fp.Clean(r.rootDir)
+	}
+}
+
+func (r *runT) detectInit() {
+	if str.HasPrefix(r.buildEnv, "init_") {
+		r.isInit = true
+	}
+
+	// this file shows that the base pkgs are currently being bootstrapped
+	if !r.muslEnv && fileExists("/tmp/xx/base/bootstrap") {
+		r.isInit = true
 	}
 }

@@ -329,12 +329,13 @@ func (r *runT) getPkgList() ([]pkgT, []pkgCfgT) {
 	var pkgCfgs []pkgCfgT
 
 	// process a pkg env file
-	if r.setFileName != "" {
+	if !r.targetIsSinglePkg {
 		pkgs, pkgCfgs = r.parseBuildEnvFile(r.actionTarget)
 	}
 
 	// process a single package
-	if r.setFileName == "" {
+	// todo: add deps
+	if r.targetIsSinglePkg {
 		pkg := r.getPkg(r.actionTarget, "std", "latest")
 		pkgC := r.getPkgCfg(pkg, "")
 

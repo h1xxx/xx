@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"sort"
 	"strings"
+	"time"
 	"unicode"
 
 	fp "path/filepath"
@@ -227,6 +228,11 @@ func strDigitsOnly(s string) bool {
 		}
 	}
 	return true
+}
+
+func getCurrentDate() string {
+	t := time.Now()
+	return fmt.Sprintf("%d-%.2d-%.2d", t.Year(), t.Month(), t.Day())
 }
 
 func errExit(err error, msg string) {
