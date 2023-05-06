@@ -73,29 +73,6 @@ func isGitVer(ver string) bool {
 	return re.MatchString(ver)
 }
 
-func getBuildEnv(actionTarget string) string {
-	if !isPkgString(actionTarget) {
-		file := fp.Base(actionTarget)
-		fields := strings.Split(file, ".")
-		buildEnv := strings.Join(fields[:len(fields)-1], ".")
-		if buildEnv == "init_glibc_cp" {
-			buildEnv = "init_glibc"
-		}
-		if buildEnv == "" {
-			msg := "can't find build env in %s"
-			errExit(fmt.Errorf(msg, actionTarget), "")
-		}
-		return buildEnv
-	} else {
-		fields := strings.Split(actionTarget, "/")
-		if len(fields) == 1 {
-			msg := "incorrect pkg name: %s"
-			errExit(fmt.Errorf(msg, actionTarget), "")
-		}
-		return fields[1]
-	}
-}
-
 // get new release from pkg dir if pkg.setVerRel is empty;
 // get a release from setVerRel otherwise
 func getPkgRels(pkg pkgT) (string, string, string) {

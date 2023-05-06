@@ -7,11 +7,11 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
-	fp "path/filepath"
-	"regexp"
 	"sort"
 	"strings"
 	"unicode"
+
+	fp "path/filepath"
 )
 
 // type can be: "all", "files", "sysfiles", "dirs"
@@ -135,11 +135,6 @@ func dirIsEmpty(dir string) bool {
 	errExit(err, "can't read dir content: "+dir)
 
 	return false
-}
-
-func isPkgString(pkgString string) bool {
-	re := regexp.MustCompile(`^[a-z0-9_]+/[\w-+]+$`)
-	return re.MatchString(pkgString)
 }
 
 func max(a, b int) int {

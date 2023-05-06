@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	fp "path/filepath"
+	str "strings"
 )
 
 type argsT struct {
@@ -310,14 +311,16 @@ func (r *runT) checkTarget() {
 			msg := "no version or pkg set defined"
 			errExit(fmt.Errorf(msg), "")
 		}
+
+		r.targetIsSinglePkg = true
 		return
 	}
 
-	if fileExists(r.actionTarget) {
+	if fileExists(r.actionTarget) && str.HasSuffix(r.actionTarget, ".xx") {
 		return
 	}
 
-	errExit(fmt.Errorf("no target file '%s'", r.actionTarget), "")
+	errExit(fmt.Errorf("not an action target: '%s'", r.actionTarget), "")
 }
 
 func getNextArg(args []string) (string, bool) {

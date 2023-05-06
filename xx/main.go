@@ -56,18 +56,21 @@ type worldT struct {
 //
 // actionArgs
 type runT struct {
-	rootDir      string
-	sysCfgDir    string
-	setFileName  string
-	buildEnv     string
-	baseDir      string
-	baseFile     string
-	baseEnv      bool
-	muslEnv      bool
-	isInit       bool
-	actionTarget string
-	action       string
-	date         string
+	rootDir     string
+	sysCfgDir   string
+	setFileName string
+	buildEnv    string
+	baseDir     string
+	baseFile    string
+	baseEnv     bool
+	muslEnv     bool
+	isInit      bool
+
+	actionTarget      string
+	action            string
+	targetIsSinglePkg bool
+
+	date string
 
 	forceAll bool
 	fixedSet string
@@ -227,6 +230,7 @@ type reT struct {
 
 func main() {
 	r := parseArgs()
+	r.getRunVars()
 
 	r.printRunParams()
 

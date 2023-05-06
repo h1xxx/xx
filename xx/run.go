@@ -8,21 +8,10 @@ import (
 	str "strings"
 )
 
-func getRunVars() runT {
-	var args argsT
-	var r runT
-
-	r.buildEnv = getBuildEnv(r.actionTarget)
-	r.baseDir = "/tmp/xx/base"
-	r.baseFile = "/home/xx/set/base.xx"
-	if r.buildEnv == "base" || r.buildEnv == "musl_base" {
-		r.baseEnv = true
-	}
-	if str.HasPrefix(r.buildEnv, "musl_") {
-		r.muslEnv = true
-		r.baseDir = "/tmp/xx/musl_base"
-		r.baseFile = "/home/xx/set/musl_base.xx"
-	}
+func (r *runT) getRunVars() {
+	r.getBuildEnv()
+	r.getBaseInfo()
+	r.getRootDir()
 
 	if str.HasPrefix(r.buildEnv, "init_") {
 		r.isInit = true
@@ -33,56 +22,68 @@ func getRunVars() runT {
 		r.isInit = true
 	}
 
-	r.rootDir = getRootDir(args, r.buildEnv)
-
-	if !isPkgString(r.actionTarget) {
+	if !r.targetIsSinglePkg {
 		r.setFileName = fp.Base(r.actionTarget)
-	}
-
-	if *args.set != "std" {
-		r.fixedSet = *args.set
-	}
-
-	if *args.Ver != "latest" {
-		r.fixedVer = *args.Ver
 	}
 
 	t := time.Now()
 	fStr := "%d-%.2d-%.2d"
 	r.date = fmt.Sprintf(fStr, t.Year(), t.Month(), t.Day())
 
-	r.sysCfgDir = fp.Clean(*args.c)
-
-	r.toInstPerms = *args.P
-	r.toInstSysCfg = *args.C
-	r.verbose = *args.v
-
-	r.infoDeps = *args.d
-	r.infoInteg = *args.i
-
-	//if !isPkgString(r.actionTarget) {
-	//	r.runDeps = r.readDeps("run")
-	//	r.buildDeps = r.readDeps("build")
-	//}
-
-	return r
+	r.runDeps = r.readDeps("run")
+	r.buildDeps = r.readDeps("build")
 }
 
-func getRootDir(args argsT, buildEnv string) string {
-	var rootDir string
+func (r *runT) getBuildEnv() {
+	if r.targetIsSinglePkg {
+		r.buildEnv = fp.Base(r.actionTarget)
+		return
+	}
 
-	if *args.rootDir == "" {
-		rootDir = fp.Join("/tmp/xx/", buildEnv)
-	} else if str.Contains(*args.rootDir, ":/") {
-		// just clean up the path when the host is remote
-		split := str.Split(*args.rootDir, ":")
+	file := fp.Base(r.actionTarget)
+	fields := str.Split(file, ".")
+
+	r.buildEnv = str.Join(fields[:len(fields)-1], ".")
+
+	if r.buildEnv == "init_glibc_cp" {
+		r.buildEnv = "init_glibc"
+	}
+
+	if r.buildEnv == "" {
+		msg := "can't find build env in %s"
+		errExit(fmt.Errorf(msg, r.actionTarget), "")
+	}
+}
+
+func (r *runT) getBaseInfo() {
+	r.baseDir = "/tmp/xx/base"
+	r.baseFile = "/home/xx/set/base.xx"
+
+	if str.HasPrefix(r.buildEnv, "musl_") {
+		r.muslEnv = true
+		r.baseDir = "/tmp/xx/musl_base"
+		r.baseFile = "/home/xx/set/musl_base.xx"
+	}
+
+	if r.buildEnv == "base" || r.buildEnv == "musl_base" {
+		r.baseEnv = true
+	}
+}
+
+func (r *runT) getRootDir() {
+	switch {
+	case r.rootDir == "":
+		r.rootDir = fp.Join("/tmp/xx/", r.buildEnv)
+
+	case str.Contains(r.rootDir, ":/"):
+		// clean the path component when the host is remote
+		split := str.Split(r.rootDir, ":")
 		host := split[0]
 		path := split[1]
 		path = fp.Clean(path)
-		rootDir = host + ":" + path
-	} else {
-		rootDir = fp.Clean(*args.rootDir)
-	}
+		r.rootDir = host + ":" + path
 
-	return rootDir
+	default:
+		r.rootDir = fp.Clean(r.rootDir)
+	}
 }
