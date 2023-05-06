@@ -5,7 +5,6 @@ import "fmt"
 func (r *runT) printRunParams() {
 	prStr("install root dir", r.rootDir)
 	prStr("config dir", r.sysCfgDir)
-	prStr("set file", r.setFileName)
 	prStr("build environment", r.buildEnv)
 	prStr("base dir", r.baseDir)
 	prStr("base set file", r.baseFile)
@@ -54,6 +53,10 @@ func prBool(title string, b bool) {
 
 func pr(formatS string, a ...any) {
 	fmt.Printf(formatS+"\n", a...)
+}
+
+func prHigh(formatS string, a ...any) {
+	fmt.Printf("\033[01m* "+formatS+"\033[00m\n", a...)
 }
 
 func prDebug(formatS string, a ...any) {

@@ -15,10 +15,6 @@ func (r *runT) getRunVars() {
 
 	r.date = getCurrentDate()
 
-	if !r.targetIsSinglePkg {
-		r.setFileName = fp.Base(r.actionTarget)
-	}
-
 	r.runDeps = r.readDeps("run")
 	r.buildDeps = r.readDeps("build")
 	r.world = make(map[string]worldT)

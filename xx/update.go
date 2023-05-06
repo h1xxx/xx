@@ -44,7 +44,6 @@ func showUpdateInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 }
 
 func getRepolInfo(pkg pkgT) []repolPkgT {
-
 	prog := strings.Split(pkg.name, "/")[1]
 	url := "https://repology.org/api/v1/project/" + prog
 	resp, err := http.Get(url)

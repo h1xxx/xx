@@ -20,8 +20,7 @@ func (r *runT) actionBuild() {
 
 	switch {
 	case r.isInit:
-		fmt.Printf("\033[01m* processing %s...\033[00m\n",
-			r.setFileName)
+		prHigh("processing %s...", r.buildEnv)
 		r.buildInstPkgs()
 	default:
 		r.buildSetFile()
@@ -30,8 +29,7 @@ func (r *runT) actionBuild() {
 
 func (r *runT) buildSetFile() {
 	if len(r.pkgs) == 1 && str.HasSuffix(r.pkgs[0].set, "_cross") {
-		fmt.Printf("\033[01m* processing %s...\033[00m\n",
-			r.setFileName)
+		prHigh("processing %s...", r.buildEnv)
 		r.buildInstPkgs()
 
 		return
@@ -50,7 +48,7 @@ func (r *runT) buildSetFile() {
 
 	// base env must exist first, copy it if it's not in place
 	if !baseOk && !r.isInit {
-		fmt.Println("\033[01m* copying base.xx...\033[00m")
+		prHigh("copying base.xx...")
 		r.installBase()
 	}
 
@@ -58,7 +56,7 @@ func (r *runT) buildSetFile() {
 		linkBaseDir(r.rootDir, r.baseDir)
 	}
 
-	fmt.Printf("\033[01m* processing %s...\033[00m\n", r.setFileName)
+	prHigh("processing %s...", r.buildEnv)
 	r.buildInstPkgs()
 
 	if r.baseEnv {
@@ -327,64 +325,6 @@ func instPkgCfg(cfgFiles map[string]string, instDir string) {
 		dest := fp.Join(instDir, file)
 		Cp(src, dest)
 	}
-}
-
-func addPkgToWorldDir(pkg pkgT, instDir string) {
-	worldDir := fp.Join(instDir, "/var/xx")
-
-	// todo: add remote host handling
-
-	dest := fp.Join(worldDir, pkg.name, pkg.setVerRel)
-	err := os.MkdirAll(dest, 0700)
-	errExit(err, "couldn't create "+dest)
-
-	src := fp.Join(pkg.progDir, "log", pkg.setVerRel, "sha256.log")
-	if fileExists(src) {
-		Cp(src, dest)
-	}
-
-	src = fp.Join(pkg.progDir, "log", pkg.setVerRel, "shared_libs")
-	if fileExists(src) {
-		Cp(src, dest)
-	}
-}
-
-func (r *runT) addPkgToWorldT(pkg pkgT, loc string) {
-	// todo: read file from world dir not from /home/xx
-	files, fileHash := getPkgFiles(pkg)
-	for file, hash := range fileHash {
-		r.world[loc].files[file] = pkg
-		r.world[loc].fileHash[file] = hash
-	}
-
-	r.world[loc].pkgFiles[pkg] = files
-	r.world[loc].pkgs[pkg] = true
-}
-
-func (r *runT) worldPkgExists(pkg pkgT, pkgC pkgCfgT) bool {
-	// todo: try to simplify this by making instDir == rootDir
-	worldDir := fp.Join(r.rootDir, "/var/xx")
-	if pkgC.cnt {
-		worldDir = fp.Join(pkgC.instDir, "/var/xx")
-	}
-	// todo: add remote host handling
-	f := fp.Join(worldDir, pkg.name, pkg.setVerRel)
-
-	pkgInWorldDir := fileExists(f)
-	loc := "/"
-	if pkgC.cnt {
-		loc = pkgC.cntProg
-	}
-	_, pkgInWorldT := r.world[loc].pkgs[pkg]
-
-	if pkgInWorldDir && !pkgInWorldT {
-		fmt.Println(pkg.name, pkg.setVerRel, "not consistent in the world")
-		fmt.Println("in world dir:", pkgInWorldDir, f)
-		fmt.Println("in world var, loc, len(deps):", pkgInWorldT, loc,
-			len(r.world[loc].pkgs))
-	}
-
-	return pkgInWorldDir && pkgInWorldT
 }
 
 func createRootDirs(rootDir string) {

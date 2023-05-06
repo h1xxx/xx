@@ -16,7 +16,6 @@ import (
 //
 // rootDir	root system dir:		/, /mnt/xx, /tmp/xx/media
 // sysCfgDir	dir with system config:		/home/xx/conf/<machine>
-// setFileName	build env definition file:	[empty], base.xx, media.xx
 // buildEnv	name of the build environment:	base, init_musl, net, media
 // baseDir	dir with installed base pkgs:	/tmp/xx/musl_base, /tmp/xx/base
 // baseFile	file with a list of base pkgs:	/home/xx/set/base.xx
@@ -40,15 +39,14 @@ import (
 // infoDeps	show info on dependencies	false, true
 // infoInteg	check system integrity		false, true
 type runT struct {
-	rootDir     string
-	sysCfgDir   string
-	setFileName string
-	buildEnv    string
-	baseDir     string
-	baseFile    string
-	baseEnv     bool
-	muslEnv     bool
-	isInit      bool
+	rootDir   string
+	sysCfgDir string
+	buildEnv  string
+	baseDir   string
+	baseFile  string
+	baseEnv   bool
+	muslEnv   bool
+	isInit    bool
 
 	actionTarget      string
 	action            string
@@ -260,49 +258,6 @@ func main() {
 
 	case r.action == "info":
 		r.actionInfo()
-	}
-}
-
-func (r *runT) getWorld(pkgCfgs []pkgCfgT) {
-	r.initWorldEntry("/")
-	worldPkgs := r.getWorldPkgs(r.rootDir)
-	if r.action == "build" && !r.baseEnv {
-		basePkgs := r.getWorldPkgs(r.baseDir)
-		worldPkgs = append(worldPkgs, basePkgs...)
-	}
-
-	for _, pkg := range worldPkgs {
-		r.addPkgToWorldT(pkg, "/")
-	}
-
-	cntDir := fp.Join(r.rootDir, "/cnt/rootfs")
-	cntList := getCntList(cntDir)
-	for _, pkgC := range pkgCfgs {
-		if pkgC.cnt && !stringExists(pkgC.cntProg, cntList) {
-			cntList = append(cntList, pkgC.cntProg)
-		}
-	}
-
-	for _, cntProg := range cntList {
-		r.initWorldEntry(cntProg)
-	}
-
-	for _, cntProg := range cntList {
-		cntRootDir := fp.Join(r.rootDir, "/cnt/rootfs/", cntProg)
-		cntWorldPkgs := r.getWorldPkgs(cntRootDir)
-
-		for _, pkg := range cntWorldPkgs {
-			r.addPkgToWorldT(pkg, cntProg)
-		}
-	}
-}
-
-func (r *runT) initWorldEntry(entry string) {
-	r.world[entry] = worldT{
-		files:    make(map[string]pkgT),
-		fileHash: make(map[string]string),
-		pkgFiles: make(map[pkgT][]string),
-		pkgs:     make(map[pkgT]bool),
 	}
 }
 
