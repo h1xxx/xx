@@ -75,9 +75,11 @@ func isGitVer(ver string) bool {
 
 // get new release from pkg dir if pkg.setVerRel is empty;
 // get a release from setVerRel otherwise
-func getPkgRels(pkg pkgT) (string, string, string) {
+func getPkgRels(pkg pkgT, debug bool) (string, string, string) {
 	var id int64
 	progPkgDir := fp.Join(pkg.progDir, "pkg")
+
+	prDebug(debug, "getting pkg release in %s...", progPkgDir)
 
 	// return "00" if the pkg dir is empty
 	if !fileExists(progPkgDir) || dirIsEmpty(progPkgDir) {
@@ -85,7 +87,7 @@ func getPkgRels(pkg pkgT) (string, string, string) {
 	}
 
 	if pkg.setVerRel == "" {
-		id = getLastRel(progPkgDir, pkg.set+"-"+pkg.ver+"-")
+		id = getLastRel(progPkgDir, pkg.set+"-"+pkg.ver+"-", debug)
 	} else {
 		var err error
 		idSplit := strings.Split(pkg.setVerRel, "-")
@@ -110,11 +112,15 @@ func getPkgRels(pkg pkgT) (string, string, string) {
 	return pkgRel, pkgPrevRel, pkgNewRel
 }
 
-func getLastRel(pkgDir, dirPrefix string) int64 {
+func getLastRel(pkgDir, dirPrefix string, debug bool) int64 {
 	var id int64
 
+	prDebug(debug, "getting last pkg release in %s...", pkgDir)
+
 	dirs, err := os.ReadDir(pkgDir)
-	errExit(err, "can't open package dir")
+	if err != nil {
+		return id
+	}
 
 	for _, dir := range dirs {
 		if strings.HasPrefix(dir.Name(), dirPrefix) {

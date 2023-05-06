@@ -351,6 +351,8 @@ func (r *runT) getPkg(name, pkgSet, ver string) pkgT {
 	var pkg pkgT
 	fields := str.Split(name, "/")
 
+	r.prDebug("getting package struct for %s %s %s...", name, pkgSet, ver)
+
 	pkg.name = name
 	pkg.categ = fields[0]
 	pkg.prog = fields[1]
@@ -367,14 +369,16 @@ func (r *runT) getPkg(name, pkgSet, ver string) pkgT {
 	}
 	pkg.verShort = getVerShort(pkg.ver)
 
-	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-	pkg = getPkgSetVers(pkg)
-	pkg = getPkgDirs(pkg)
+	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg, r.debug)
+	pkg = getPkgSetVers(pkg, r.debug)
+	pkg = getPkgDirs(pkg, r.debug)
 
 	return pkg
 }
 
-func getPkgSetVers(pkg pkgT) pkgT {
+func getPkgSetVers(pkg pkgT, debug bool) pkgT {
+	prDebug(debug, "getting pkg versions for %s...", pkg.name)
+
 	setVer := pkg.set + "-" + pkg.ver
 	pkg.setVerRel = setVer + "-" + pkg.rel
 	pkg.setVerPrevRel = setVer + "-" + pkg.prevRel
@@ -383,7 +387,9 @@ func getPkgSetVers(pkg pkgT) pkgT {
 	return pkg
 }
 
-func getPkgDirs(pkg pkgT) pkgT {
+func getPkgDirs(pkg pkgT, debug bool) pkgT {
+	prDebug(debug, "getting pkg dirs for %s...", pkg.name)
+
 	pkg.patchDir = fp.Join(pkg.progDir, "patch", pkg.ver)
 	pkg.pkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerRel)
 	pkg.newPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerNewRel)
@@ -416,6 +422,8 @@ func findCfgDir(searchDir string, pkg pkgT) string {
 }
 
 func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
+	r.prDebug("getting package config for %s...", pkg.name)
+
 	var pkgC pkgCfgT
 	pkgC.force, pkgC.cnt = parsePkgFlags(flags, pkg.name)
 
@@ -433,7 +441,8 @@ func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
 	}
 
 	buildPath := "/tmp/xx/build/" + pkg.prog + "-" + pkg.ver + "_build-"
-	buildID := getLastRel("/tmp/xx/build/", pkg.prog+"-"+pkg.ver+"_build-")
+	buildID := getLastRel("/tmp/xx/build/",
+		pkg.prog+"-"+pkg.ver+"_build-", r.debug)
 	if fileExists(buildPath + "00") {
 		buildID += 1
 	}

@@ -6,10 +6,10 @@ import (
 	"os"
 	"path"
 	"sort"
-	"strings"
 	"unicode"
 
 	fp "path/filepath"
+	str "strings"
 )
 
 // returns a list of dependencies
@@ -82,7 +82,7 @@ func (r *runT) getPkgLibDeps(pkg pkgT) (map[pkgT][]string, []pkgT) {
 
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		fields := strings.Split(input.Text(), "\t")
+		fields := str.Split(input.Text(), "\t")
 		if len(fields) <= 1 {
 			continue
 		}
@@ -129,7 +129,7 @@ func pkgHasLib(pkg pkgT, libName string) bool {
 
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		fields := strings.Split(input.Text(), "\t")
+		fields := str.Split(input.Text(), "\t")
 		fileName := path.Base(fields[1])
 		if fileName == libName {
 			return true
@@ -163,15 +163,15 @@ func (r *runT) readDeps(depType string) map[pkgT][]pkgT {
 		line := input.Text()
 
 		switch {
-		case line == "" || rune(line[0]) == '#' || rune(line[1]) == '#':
+		case line == "" || line[0] == '#' || line[1] == '#':
 			continue
 
 		case unicode.IsLetter(rune(line[0])):
 			currentPkg, _ = r.parseSetLine(line, re)
 			deps[currentPkg] = []pkgT{}
 
-		case rune(line[0]) == '\t':
-			line = strings.Trim(line, "\t")
+		case line[0] == '\t':
+			line = str.Trim(line, "\t")
 			dep, _ := r.parseSetLine(line, re)
 			deps[currentPkg] = append(deps[currentPkg], dep)
 		}

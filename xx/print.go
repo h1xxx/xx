@@ -56,8 +56,16 @@ func pr(formatS string, a ...any) {
 	fmt.Printf(formatS+"\n", a...)
 }
 
-func prD(formatS string, a ...any) {
-	fmt.Printf("debug: "+formatS+"\n", a...)
+func (r *runT) prDebug(formatS string, a ...any) {
+	if r.debug {
+		fmt.Printf("debug: "+formatS+"\n", a...)
+	}
+}
+
+func prDebug(debug bool, formatS string, a ...any) {
+	if debug {
+		fmt.Printf("debug: "+formatS+"\n", a...)
+	}
 }
 
 func br() {

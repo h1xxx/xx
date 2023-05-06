@@ -78,7 +78,7 @@ func (r *runT) installBase(world map[string]worldT) {
 		pkgC := pkgCfgs[i]
 
 		if !fileExists(pkg.pkgDir) {
-			pkg = getPkgPrevVer(pkg)
+			pkg = getPkgPrevVer(pkg, r.debug)
 			pkgC = r.getPkgCfg(pkg, "")
 		}
 
@@ -136,9 +136,10 @@ func (r *runT) buildInstPkgs(world map[string]worldT, pkgs []pkgT, pkgCfgs []pkg
 			// get the latest subpkg release in case when the main
 			// pkg was rebuilt
 			pkg.setVerRel = ""
-			pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-			pkg = getPkgSetVers(pkg)
-			pkg = getPkgDirs(pkg)
+			pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg,
+				r.debug)
+			pkg = getPkgSetVers(pkg, r.debug)
+			pkg = getPkgDirs(pkg, r.debug)
 		} else {
 			pkg = r.createPkg(world, pkg, pkgC)
 		}

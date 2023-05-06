@@ -49,7 +49,7 @@ func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 	}
 
 	for _, s := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, s.suffix)
+		subPkg := getSubPkg(pkg, s.suffix, r.debug)
 		fmt.Printf("  creating subpkg %s...\n", subPkg.set)
 		createSubPkg(pkg, subPkg, s.files)
 	}
@@ -57,21 +57,21 @@ func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 	// remove old pkg from world
 	delete(world["/"].pkgs, pkg)
 	for _, s := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, s.suffix)
+		subPkg := getSubPkg(pkg, s.suffix, r.debug)
 		delete(world["/"].pkgs, subPkg)
 	}
 
 	// get new release info after the build
 	pkg.setVerRel = ""
-	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-	pkg = getPkgSetVers(pkg)
-	pkg = getPkgDirs(pkg)
+	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg, r.debug)
+	pkg = getPkgSetVers(pkg, r.debug)
+	pkg = getPkgDirs(pkg, r.debug)
 
 	// add a new pkg and all subpkgs to root of the world;
 	// no cnt here as only build step executes this
 	addPkgToWorldT(world, pkg, "/")
 	for _, s := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, s.suffix)
+		subPkg := getSubPkg(pkg, s.suffix, r.debug)
 		addPkgToWorldT(world, subPkg, "/")
 	}
 
@@ -80,7 +80,7 @@ func (r *runT) createPkg(world map[string]worldT, pkg pkgT, pkgC pkgCfgT) pkgT {
 		r.dumpSharedLibs(world, pkg)
 	}
 	for _, s := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, s.suffix)
+		subPkg := getSubPkg(pkg, s.suffix, r.debug)
 		r.dumpSharedLibs(world, subPkg)
 		r.selfLibsExist(world, subPkg)
 	}
@@ -178,11 +178,12 @@ func binHasWeirdInterpreter(file string) bool {
 	return false
 }
 
-func getSubPkg(pkg pkgT, suffix string) pkgT {
+func getSubPkg(pkg pkgT, suffix string, debug bool) pkgT {
 	subPkg := pkg
 	subPkg.set = pkg.set + "_" + suffix
-	subPkg = getPkgSetVers(subPkg)
-	subPkg = getPkgDirs(subPkg)
+	subPkg = getPkgSetVers(subPkg, debug)
+	subPkg = getPkgDirs(subPkg, debug)
+
 	return subPkg
 }
 
