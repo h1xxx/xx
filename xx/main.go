@@ -47,6 +47,7 @@ type worldT struct {
 // toInstPerms	only install sys permissions:	false, true
 // toInstSysCfg	only install system config:	false, true
 // verbose	verbose messages:		false, true
+// debug	debug messages:	        	false, true
 //
 // diffBuild	show diff to previous build:	false, true
 // diffHours	show diff within X last hours:	24, 30, 48
@@ -79,6 +80,7 @@ type runT struct {
 	toInstPerms  bool
 	toInstSysCfg bool
 	verbose      bool
+	debug        bool
 
 	diffBuild bool
 	diffHours int64
@@ -234,7 +236,6 @@ func main() {
 
 	r.printRunParams()
 
-	os.Exit(1)
 	pkgs, pkgCfgs := r.getPkgList()
 	world := r.getWorld(pkgCfgs)
 
@@ -480,20 +481,20 @@ actions/parameters:
 -C		only install configs from the system config dir
 
 (s)ource	download and verify source files
--d		download source files
 
 (d)iff		show diff between pkg builds
 -h		time horizon in hours to search for diffs (default: 24)
 -b		show diff against previous build (default: previous version)
 
 i(n)fo		show additional information on xx system
--d		information on dependencies
+-a		information on all package, incl. dependencies
 -i		verify system integrity
 
 (u)pdate	update ini files
 -i		get information on latest packages available
 
-general parameters:
+common parameters:
+-d		print debug messages
 -v		verbose messages`)
 }
 

@@ -10,21 +10,6 @@ import (
 	str "strings"
 )
 
-type argsT struct {
-	rootDir *string
-	set     *string
-	Ver     *string
-	hours   *string
-	c       *string
-	b       *bool
-	B       *bool
-	d       *bool
-	P       *bool
-	C       *bool
-	i       *bool
-	v       *bool
-}
-
 func parseArgs() runT {
 	var r runT
 
@@ -111,6 +96,9 @@ func (r *runT) parseBuildArgs(args []string) {
 		case "-V", "--pkg-version":
 			r.fixedVer, shift = getNextArg(args[i:])
 
+		case "-d", "--debug":
+			r.debug = true
+
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -158,6 +146,9 @@ func (r *runT) parseInstallArgs(args []string) {
 		case "-C", "--Config":
 			r.toInstSysCfg = true
 
+		case "-d", "--debug":
+			r.debug = true
+
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -196,6 +187,9 @@ func (r *runT) parseSourceArgs(args []string) {
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
 
+		case "-d", "--debug":
+			r.debug = true
+
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -233,6 +227,9 @@ func (r *runT) parseDiffArgs(args []string) {
 
 			r.diffHours = int64(hoursInt)
 
+		case "-d", "--debug":
+			r.debug = true
+
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
 		}
@@ -258,7 +255,7 @@ func (r *runT) parseInfoArgs(args []string) {
 		}
 
 		switch arg {
-		case "-d", "--deps":
+		case "-a", "--all":
 			r.infoDeps = true
 
 		case "-i", "--integrity":
@@ -266,6 +263,9 @@ func (r *runT) parseInfoArgs(args []string) {
 
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
+
+		case "-d", "--debug":
+			r.debug = true
 
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
@@ -292,6 +292,9 @@ func (r *runT) parseUpdateArgs(args []string) {
 		switch arg {
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
+
+		case "-d", "--debug":
+			r.debug = true
 
 		default:
 			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
@@ -331,11 +334,11 @@ func getNextArg(args []string) (string, bool) {
 	return args[1], true
 }
 
+/*
 func argsCheck(args argsT) {
 	// todo: errExit(errors.New(""), "no xx file or pkg name provided")
 
 	// checks for when the final arg is a pkg env file
-	/*
 		if !isPkgString(args.actionTarget) {
 			path := args.actionTarget
 			stat, err := os.Stat(path)
@@ -353,7 +356,6 @@ func argsCheck(args argsT) {
 				errExit(err, msg)
 			}
 		}
-	*/
 
 	// todo: add checks per action
 	//if *args.rootDir == "" && (args.action == "install" || args.action == "i") {
@@ -362,3 +364,4 @@ func argsCheck(args argsT) {
 
 	// args check: root dir parameter must be an absolute path
 }
+*/
