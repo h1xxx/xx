@@ -29,6 +29,7 @@ func (r *runT) actionBuild() {
 		r.installBase()
 	}
 
+	// create links in root dir to base dir
 	if !r.baseLinked && !r.baseEnv && !r.isSepSys {
 		linkBaseDir(r.rootDir, r.baseDir)
 	}
@@ -49,15 +50,14 @@ func (r *runT) installBase() {
 	createRootDirs(r.baseDir)
 	pkgs, pkgCfgs := baseRunCfg.parseBuildEnvFile(r.baseFile)
 
-	// find the latest built pkg, don't build anything new
 	for i, pkg := range pkgs {
 		pkgC := pkgCfgs[i]
 
+		// find the latest built pkg, don't build anything new
 		if !fileExists(pkg.pkgDir) {
 			pkg = getPkgPrevVer(pkg)
 			pkgC = r.getPkgCfg(pkg, "")
 		}
-
 		if !fileExists(pkg.pkgDir) {
 			msg := "can't find previous pkg version for %s %s"
 			errExit(fmt.Errorf(msg, pkg.name, pkg.ver), "")

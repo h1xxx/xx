@@ -66,48 +66,48 @@ func createRootDirs(rootDir string) {
 }
 
 func (r *runT) createBuildDirs() {
-        err := os.MkdirAll("/tmp/xx/build", 0700)
-        errExit(err, "can't create dir: /tmp/xx/build/")
+	err := os.MkdirAll("/tmp/xx/build", 0700)
+	errExit(err, "can't create dir: /tmp/xx/build/")
 
 	err = os.MkdirAll(r.rootDir, 0700)
-        errExit(err, "can't create dir: "+r.rootDir)
+	errExit(err, "can't create dir: "+r.rootDir)
 }
 
 func createPkgDirs(pkg pkgT, pkgC pkgCfgT) {
-        dirs := []string{pkgC.tmpDir, pkgC.tmpLogDir}
-        for _, d := range dirs {
-                err := os.MkdirAll(d, 0700)
-                errExit(err, "can't create tmp dir: "+d)
-        }
+	dirs := []string{pkgC.tmpDir, pkgC.tmpLogDir}
+	for _, d := range dirs {
+		err := os.MkdirAll(d, 0700)
+		errExit(err, "can't create tmp dir: "+d)
+	}
 
-        dirs = []string{"pkg", "src", "log"}
-        for _, d := range dirs {
-                dir := fp.Join(pkg.progDir, d)
-                err := os.MkdirAll(dir, 0700)
-                errExit(err, "can't create pkg dir: "+dir)
-        }
+	dirs = []string{"pkg", "src", "log"}
+	for _, d := range dirs {
+		dir := fp.Join(pkg.progDir, d)
+		err := os.MkdirAll(dir, 0700)
+		errExit(err, "can't create pkg dir: "+dir)
+	}
 }
 
 func linkBaseDir(rootDir, baseDir string) {
-        bb := "/home/xx/bin/busybox"
-        c := bb + " cp -al " + baseDir + "/* " + rootDir + "/"
-        cmd := exec.Command(bb, "sh", "-c", c)
-        err := cmd.Run()
-        errExit(err, "can't create link to "+baseDir+" in:\n  "+rootDir)
+	bb := "/home/xx/bin/busybox"
+	c := bb + " cp -al " + baseDir + "/* " + rootDir + "/"
+	cmd := exec.Command(bb, "sh", "-c", c)
+	err := cmd.Run()
+	errExit(err, "can't create link to "+baseDir+" in:\n  "+rootDir)
 
-        // remove the link to world dir in base system
-        os.RemoveAll(rootDir + "/var/xx")
+	// remove the link to world dir in base system
+	os.RemoveAll(rootDir + "/var/xx")
 
-        baseLinkFile := fp.Join(rootDir, "base_linked")
-        _, err = os.Create(baseLinkFile)
-        errExit(err, "can't create base_linked file in "+baseLinkFile)
+	baseLinkFile := fp.Join(rootDir, "base_linked")
+	_, err = os.Create(baseLinkFile)
+	errExit(err, "can't create base_linked file in "+baseLinkFile)
 }
 
 func protectBaseDir(baseDir string) {
-        cmd := exec.Command("/home/xx/bin/busybox", "find", baseDir,
-                "-type", "f", "-exec", "chmod", "a-w", "{}", "+")
-        err := cmd.Run()
-        errExit(err, "can't remove write permissions in "+baseDir)
+	cmd := exec.Command("/home/xx/bin/busybox", "find", baseDir,
+		"-type", "f", "-exec", "chmod", "a-w", "{}", "+")
+	err := cmd.Run()
+	errExit(err, "can't remove write permissions in "+baseDir)
 }
 
 func createBinLinks(pkgDir, instDir string) {

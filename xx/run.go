@@ -80,8 +80,8 @@ func (r *runT) getBaseInfo() {
 		r.baseEnv = true
 	}
 
-	 r.baseLinked = fileExists(fp.Join(r.rootDir, "base_linked"))
-	 r.baseOk = fileExists(fp.Join(r.baseDir, "base_ok"))
+	r.baseLinked = fileExists(fp.Join(r.rootDir, "base_linked"))
+	r.baseOk = fileExists(fp.Join(r.baseDir, "base_ok"))
 }
 
 func (r *runT) detectInit() {
@@ -98,4 +98,3 @@ func (r *runT) detectInit() {
 func (r *runT) detectSeparateSys() {
 	r.isSepSys = r.pkgs[0].categ == "alpine"
 }
-

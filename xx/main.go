@@ -27,8 +27,8 @@ import (
 // action	action to perform:		build, install, update, diff
 // date		current calendar date:		2002-05-13
 //
-// baseOk       base dir is ready for use       false, true 
-// baseLinked   base dir is linked to root dir  false, true 
+// baseOk       base dir is ready for use       false, true
+// baseLinked   base dir is linked to root dir  false, true
 //
 // forceAll	force action on all packages:	false, true
 // fixedSet	fixed pkg set for all packages:	[empty], std, musl
@@ -51,10 +51,10 @@ type runT struct {
 	baseEnv   bool
 	muslEnv   bool
 	isInit    bool
-	isSepSys    bool
+	isSepSys  bool
 
-	baseOk    bool
-	baseLinked    bool
+	baseOk     bool
+	baseLinked bool
 
 	actionTarget      string
 	action            string
