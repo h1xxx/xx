@@ -68,6 +68,7 @@ type runT struct {
 
 	toInstPerms  bool
 	toInstSysCfg bool
+	installCnt   bool
 
 	diffBuild bool
 	diffHours int64

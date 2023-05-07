@@ -29,6 +29,9 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 		}
 
 		pkg, pkgC := r.parseSetLine(line, re)
+		if pkgC.cnt {
+			r.installCnt = true
+		}
 
 		pkgs = append(pkgs, pkg)
 		pkgCfgs = append(pkgCfgs, pkgC)

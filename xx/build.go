@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -47,7 +46,7 @@ func (r *runT) installBase() {
 	baseRunCfg := *r
 	baseRunCfg.rootDir = r.baseDir
 
-	createRootDirs(r.baseDir)
+	r.createRootDirs()
 	pkgs, pkgCfgs := baseRunCfg.parseBuildEnvFile(r.baseFile)
 
 	for i, pkg := range pkgs {
@@ -64,7 +63,7 @@ func (r *runT) installBase() {
 		}
 
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
-		instPkg(pkg, pkgC, r.baseDir)
+		r.instPkg(pkg, pkgC)
 		instPkgCfg(pkgC.cfgFiles, r.baseDir)
 		r.addPkgToWorldT(pkg, "/")
 
@@ -104,7 +103,7 @@ func (r *runT) buildInstPkgs() {
 		} else if pkg.categ == "alpine" && !pkgC.cnt {
 			continue
 		} else {
-			instPkg(pkg, pkgC, r.rootDir)
+			r.instPkg(pkg, pkgC)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
 
 			loc := "/"
@@ -142,68 +141,16 @@ func (r *runT) selfLibsExist(pkg pkgT) {
 	}
 }
 
-func instPkg(pkg pkgT, pkgC pkgCfgT, rootDir string) {
+func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
 	// todo: can be removed once init of cnt dir is done elsewhere
 	if pkgC.cnt {
-		var dirsToCreate = map[string]fs.FileMode{
-			fp.Join(pkgC.instDir, "/mnt"):                0777,
-			fp.Join(rootDir, "/cnt/bin"):                 0755,
-			fp.Join(rootDir, "/cnt/home/", pkgC.cntProg): 0755,
-		}
-
-		topDirs := []string{"/home/cnt", "/var/xx", "/mnt/shared",
-			"/dev", "/proc", "/run", "/sys", "/tmp",
-			"/files"}
-
-		for _, dir := range topDirs {
-			dirsToCreate[fp.Join(pkgC.instDir, dir)] = 0755
-		}
-
-		for dir, perm := range dirsToCreate {
-			err := os.MkdirAll(dir, perm)
-			errExit(err, "can't create dir: "+dir)
-		}
-
-		fd, _ := os.Create(pkgC.instDir + "/config")
-		fd.Close()
-
-		var symLinks = map[string]string{
-			"/cnt/bin/" + pkg.prog: "cntrun",
-		}
-
-		for symlink, target := range symLinks {
-			l := fp.Join(pkgC.instDir, symlink)
-			_ = os.Symlink(target, l)
-		}
-
-		// create symlinks to containers
-		binCnt, _ := parseCntConf(rootDir + "/etc/cnt.conf")
-		for bin, cnt := range binCnt {
-			if cnt == pkg.prog {
-				l := pkgC.instDir + "/../../bin/" + bin
-				_ = os.Symlink("cntrun", l)
-			}
-		}
-
-		cmd := exec.Command("/home/xx/bin/busybox", "cp",
-			"/home/xx/xx/cntrun/cntrun", pkgC.instDir+"/../../bin/")
-		if str.Contains(pkgC.instDir, ":/") {
-			cmd = exec.Command("scp", "-q",
-				"/home/xx/xx/cntrun/cntrun",
-				pkgC.instDir+"/../../bin/")
-		}
-
-		err := cmd.Run()
-		errExit(err, "can't copy cntrun file")
-
-		// install default system files
-		Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
+		r.createCntDirs(pkgC.cntProg, pkgC.instDir)
 	}
 
 	fmt.Printf("  installing...\n")
 
 	// todo: move this out of this function
-	createRootDirs(rootDir)
+	r.createRootDirs()
 
 	// install default system files
 	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")

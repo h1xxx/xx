@@ -163,7 +163,7 @@ func Cp(src, dest string) {
 		c = "scp -q " + src + " " + dest
 	}
 
-	cmd := exec.Command(bb, "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/bash", "-c", c)
 	out, err := cmd.CombinedOutput()
 
 	errExit(err, "can't copy "+src+" to "+dest+
@@ -178,11 +178,36 @@ func Mv(src, dest string) {
 	bb := "/home/xx/bin/busybox"
 	c := bb + " mv -f " + src + " " + dest
 
-	cmd := exec.Command(bb, "sh", "-c", c)
+	cmd := exec.Command("/home/xx/bin/bash", "-c", c)
 	out, err := cmd.CombinedOutput()
 
 	errExit(err, "can't move "+src+" to "+dest+
 		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+}
+
+func Symlink(src, dest string) {
+	destDir := fp.Dir(dest)
+	err := os.MkdirAll(destDir, 0750)
+	errExit(err, "can't create dest dir: "+destDir)
+
+	bb := "/home/xx/bin/busybox"
+	c := bb + " ln -sf " + src + " " + dest
+
+	cmd := exec.Command("/home/xx/bin/bash", "-c", c)
+	out, err := cmd.CombinedOutput()
+
+	errExit(err, "can't symlink "+dest+" to "+src+
+		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+}
+
+func Mkdir(dir string) {
+	bb := "/home/xx/bin/busybox"
+	c := bb + " mkdir -p " + dir
+
+	cmd := exec.Command("/home/xx/bin/bash", "-c", c)
+	out, err := cmd.CombinedOutput()
+
+	errExit(err, "can't create dir\n  "+string(out))
 }
 
 func RemEmptyDirs(dir string) {

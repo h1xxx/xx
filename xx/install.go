@@ -53,7 +53,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			if !r.worldPkgExists(dep, pkgC) && !pkgC.force {
 				depCfgFiles := r.getPkgCfgFiles(dep)
 
-				instPkg(dep, pkgC, r.rootDir)
+				r.instPkg(dep, pkgC)
 				instPkgCfg(depCfgFiles, pkgC.instDir)
 
 				r.addPkgToWorldT(dep, loc)
@@ -62,7 +62,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
 		if !r.worldPkgExists(pkg, pkgC) && !pkgC.force {
-			instPkg(pkg, pkgC, r.rootDir)
+			r.instPkg(pkg, pkgC)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
 
 			r.addPkgToWorldT(pkg, loc)

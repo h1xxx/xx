@@ -1,20 +1,20 @@
 package main
 
 import (
+	"io/fs"
 	"os"
 	"os/exec"
-	"path"
 
 	fp "path/filepath"
 	str "strings"
 )
 
-func createRootDirs(rootDir string) {
+func (r *runT) createRootDirs() {
 	var dirs = []string{
 		"/root",
 		"/{dev,proc,sys,run,tmp}",
 		"/home/{x,xx}",
-		"/cnt/{bin,home,rootfs/common}",
+		"/cnt/{bin,home,rootfs}",
 		"/mnt/{misc,shared}",
 		"/run/{lock,pid}",
 		"/var/{cache,empty,xx,log,spool,tmp}",
@@ -22,10 +22,7 @@ func createRootDirs(rootDir string) {
 	}
 
 	for _, dir := range dirs {
-		c := "mkdir -p " + rootDir + dir
-		cmd := exec.Command("/home/xx/bin/bash", "-c", c)
-		out, err := cmd.CombinedOutput()
-		errExit(err, "can't create dirs\n  "+string(out))
+		Mkdir(fp.Join(r.rootDir, dir))
 	}
 
 	var modDirs = []string{
@@ -40,29 +37,64 @@ func createRootDirs(rootDir string) {
 		mod := s[0]
 		dir := s[1]
 		cmd := exec.Command("/home/xx/bin/busybox", "chmod", mod,
-			rootDir+dir)
+			r.rootDir+dir)
 		out, err := cmd.CombinedOutput()
 		errExit(err, "can't change mode:\n  "+string(out))
 	}
 
-	var lnDirs = []string{
-		"../run /var/",
-		"../run/lock /var",
+	var lnDirs = map[string]string{
+		"../run":      fp.Join(r.rootDir, "/var/run"),
+		"../run/lock": fp.Join(r.rootDir, "/var/lock"),
 	}
 
-	for _, lnDir := range lnDirs {
-		d := str.Split(lnDir, " ")
-		cmd := exec.Command("/home/xx/bin/busybox", "ln", "-s", d[0],
-			rootDir+d[1])
-		_, _ = cmd.Output()
+	for target, dest := range lnDirs {
+		Symlink(target, dest)
 	}
 
 	if fileExists("/mnt/xx/boot") {
-		err := os.MkdirAll(rootDir+"/mnt/xx/boot", 0700)
-		errExit(err, "couldn't create "+rootDir+"/mnt/xx/boot")
+		err := os.MkdirAll(r.rootDir+"/mnt/xx/boot", 0700)
+		errExit(err, "couldn't create "+r.rootDir+"/mnt/xx/boot")
 	}
 
-	_, _ = os.Create(fp.Join(rootDir, "/var/log/init.log"))
+	_, _ = os.Create(fp.Join(r.rootDir, "/var/log/init.log"))
+}
+
+func (r *runT) createCntDirs(cntProg, instDir string) {
+	var dirsToCreate = map[string]fs.FileMode{
+		fp.Join(instDir, "/mnt"):                  0777,
+		fp.Join(r.rootDir, "/cnt/bin"):            0755,
+		fp.Join(r.rootDir, "/cnt/home/", cntProg): 0755,
+	}
+
+	topDirs := []string{"/home/cnt", "/var/xx", "/mnt/shared",
+		"/dev", "/proc", "/run", "/sys", "/tmp",
+		"/files"}
+
+	for _, dir := range topDirs {
+		dirsToCreate[fp.Join(instDir, dir)] = 0755
+	}
+
+	for dir, perm := range dirsToCreate {
+		err := os.MkdirAll(dir, perm)
+		errExit(err, "can't create dir: "+dir)
+	}
+
+	fd, _ := os.Create(instDir + "/config")
+	fd.Close()
+
+	cmd := exec.Command("/home/xx/bin/busybox", "cp",
+		"/home/xx/bin/crun", instDir+"/../../bin/")
+
+	if str.Contains(instDir, ":/") {
+		cmd = exec.Command("scp", "-q", "/home/xx/bin/crun",
+			instDir+"/../../bin/")
+	}
+
+	err := cmd.Run()
+	errExit(err, "can't copy crun file")
+
+	// install default system files
+	Cp("/home/xx/cfg/sys/*", instDir+"/")
 }
 
 func (r *runT) createBuildDirs() {
@@ -128,19 +160,11 @@ func createBinLinks(pkgDir, instDir string) {
 	}
 
 	for _, file := range files {
-		f := str.TrimPrefix(file, pkgDir+"/usr")
-		dest := fp.Join(instDir, f)
+		target := str.TrimPrefix(file, pkgDir+"/usr")
+		dest := fp.Join(instDir, target)
 
-		destDir := path.Dir(dest)
-		err := os.MkdirAll(destDir, 0755)
-		errExit(err, "can't create dest dir "+destDir)
-
-		busybox := "/home/xx/bin/busybox"
-		c := busybox + " ln -fs ../usr" + f + " " + dest
-
-		cmd := exec.Command(busybox, "sh", "-c", c)
-		out, err := cmd.CombinedOutput()
-		errExit(err, "can't create links in "+dest+"\n"+string(out))
+		target = "../usr" + target
+		Symlink(target, dest)
 	}
 
 	// todo: also handle remote hosts
