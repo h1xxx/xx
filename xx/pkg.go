@@ -27,7 +27,7 @@ func (r *runT) createPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
 		return pkg
 	}
 
-	makeBuildDirs(pkg, pkgC)
+	createPkgDirs(pkg, pkgC)
 	r.getSrc(pkg, pkgC)
 
 	r.execStep("prepare", pkg, pkgC)
@@ -555,21 +555,6 @@ func getAlpinePkgNameVer(pkg string) (string, string) {
 	name := strings.Join(split[:len(split)-2], "-")
 	ver := strings.Join(split[len(split)-2:], "-")
 	return name, ver
-}
-
-func makeBuildDirs(pkg pkgT, pkgC pkgCfgT) {
-	dirs := []string{pkgC.tmpDir, pkgC.tmpLogDir}
-	for _, d := range dirs {
-		err := os.MkdirAll(d, 0700)
-		errExit(err, "can't create tmp dir: "+d)
-	}
-
-	dirs = []string{"pkg", "src", "log"}
-	for _, d := range dirs {
-		dir := fp.Join(pkg.progDir, d)
-		err := os.MkdirAll(dir, 0700)
-		errExit(err, "can't create pkg dir: "+dir)
-	}
 }
 
 func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
