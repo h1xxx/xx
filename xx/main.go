@@ -22,9 +22,13 @@ import (
 // baseEnv	if build environment is base:	false, true
 // muslEnv	use musl build environment:	false, true
 // isInit	bootstrapping the build env:	false, true
+// isSepSys	build for non-xx system:	false, true
 // actionTarget	package name or pkg env file:	sys/lvm2, base.xx, media.xx
 // action	action to perform:		build, install, update, diff
 // date		current calendar date:		2002-05-13
+//
+// baseOk       base dir is ready for use       false, true 
+// baseLinked   base dir is linked to root dir  false, true 
 //
 // forceAll	force action on all packages:	false, true
 // fixedSet	fixed pkg set for all packages:	[empty], std, musl
@@ -47,6 +51,10 @@ type runT struct {
 	baseEnv   bool
 	muslEnv   bool
 	isInit    bool
+	isSepSys    bool
+
+	baseOk    bool
+	baseLinked    bool
 
 	actionTarget      string
 	action            string
@@ -230,6 +238,7 @@ func main() {
 	r.getRunVars()
 	r.getPkgList()
 	r.getWorld(r.pkgCfgs)
+	r.detectSeparateSys()
 
 	r.printRunParams()
 

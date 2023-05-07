@@ -16,38 +16,20 @@ import (
 func (r *runT) actionBuild() {
 	r.createBuildDirs()
 
-	switch {
-	case r.isInit:
-		prHigh("processing %s...", r.buildEnv)
+	// boostrap base packages and exit
+	if r.isInit {
+		prHigh("bootstrapping %s...", r.buildEnv)
 		r.buildInstPkgs()
-	default:
-		r.buildSetFile()
-	}
-}
-
-func (r *runT) buildSetFile() {
-	if len(r.pkgs) == 1 && str.HasSuffix(r.pkgs[0].set, "_cross") {
-		prHigh("processing %s...", r.buildEnv)
-		r.buildInstPkgs()
-
 		return
 	}
 
-	baseLinkFile := fp.Join(r.rootDir, "base_linked")
-	baseLinked := fileExists(baseLinkFile)
-	baseOkFile := fp.Join(r.baseDir, "base_ok")
-	baseOk := fileExists(baseOkFile)
-
-	// todo: move this to runT, maybe name as r.isSepEnv
-	alpineBuild := r.pkgs[0].categ == "alpine"
-
 	// base env must exist first, copy it if it's not in place
-	if !baseOk && !r.isInit {
-		prHigh("copying base.xx...")
+	if !r.baseOk {
+		prHigh("copying base dir...")
 		r.installBase()
 	}
 
-	if !baseLinked && !r.baseEnv && !alpineBuild {
+	if !r.baseLinked && !r.baseEnv && !r.isSepSys {
 		linkBaseDir(r.rootDir, r.baseDir)
 	}
 
@@ -55,7 +37,7 @@ func (r *runT) buildSetFile() {
 	r.buildInstPkgs()
 
 	if r.baseEnv {
-		_, _ = os.Create(baseOkFile)
+		_, _ = os.Create(fp.Join(r.baseDir, "base_ok"))
 		protectBaseDir(r.baseDir)
 	}
 }

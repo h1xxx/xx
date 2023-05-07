@@ -33,9 +33,8 @@ func (r *runT) printRunParams() {
 	prBool("check system integryity", r.infoInteg)
 	br()
 
+	prInt("count of pkgs", len(r.pkgs))
 	prInt("count of world pkgs", len(r.world["/"].pkgs))
-	prInt("count of build deps", len(r.buildDeps))
-	prInt("count of run deps", len(r.runDeps))
 	br()
 }
 

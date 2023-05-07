@@ -9,8 +9,8 @@ import (
 
 func (r *runT) getRunVars() {
 	r.getBuildEnv()
-	r.getBaseInfo()
 	r.getRootDir()
+	r.getBaseInfo()
 	r.detectInit()
 
 	r.date = getCurrentDate()
@@ -41,6 +41,24 @@ func (r *runT) getBuildEnv() {
 	}
 }
 
+func (r *runT) getRootDir() {
+	switch {
+	case r.rootDir == "":
+		r.rootDir = fp.Join("/tmp/xx/", r.buildEnv)
+
+	case str.Contains(r.rootDir, ":/"):
+		// clean the path component when the host is remote
+		split := str.Split(r.rootDir, ":")
+		host := split[0]
+		path := split[1]
+		path = fp.Clean(path)
+		r.rootDir = host + ":" + path
+
+	default:
+		r.rootDir = fp.Clean(r.rootDir)
+	}
+}
+
 func (r *runT) getBaseInfo() {
 	r.baseDir = "/tmp/xx/base"
 	r.baseFile = "/home/xx/set/base.xx"
@@ -61,24 +79,9 @@ func (r *runT) getBaseInfo() {
 	if r.buildEnv == "base" || r.buildEnv == "musl_base" {
 		r.baseEnv = true
 	}
-}
 
-func (r *runT) getRootDir() {
-	switch {
-	case r.rootDir == "":
-		r.rootDir = fp.Join("/tmp/xx/", r.buildEnv)
-
-	case str.Contains(r.rootDir, ":/"):
-		// clean the path component when the host is remote
-		split := str.Split(r.rootDir, ":")
-		host := split[0]
-		path := split[1]
-		path = fp.Clean(path)
-		r.rootDir = host + ":" + path
-
-	default:
-		r.rootDir = fp.Clean(r.rootDir)
-	}
+	 r.baseLinked = fileExists(fp.Join(r.rootDir, "base_linked"))
+	 r.baseOk = fileExists(fp.Join(r.baseDir, "base_ok"))
 }
 
 func (r *runT) detectInit() {
@@ -91,3 +94,8 @@ func (r *runT) detectInit() {
 		r.isInit = true
 	}
 }
+
+func (r *runT) detectSeparateSys() {
+	r.isSepSys = r.pkgs[0].categ == "alpine"
+}
+
