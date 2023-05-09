@@ -75,29 +75,6 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	r.setSysPerm()
 }
 
-func pkgExists(pkg pkgT, pkgs []pkgT) bool {
-	for _, p := range pkgs {
-		if p.name == pkg.name && p.set == pkg.set {
-			return true
-		}
-	}
-	return false
-}
-
-func pkgCntExists(pkg pkgT, pkgCfg pkgCfgT, pkgs []pkgT,
-	pkgCfgs []pkgCfgT) bool {
-
-	for i, p := range pkgs {
-		if p.name == pkg.name && p.set == pkg.set &&
-			pkgCfg.cnt == pkgCfgs[i].cnt &&
-			pkgCfg.cntPkg == pkgCfgs[i].cntPkg {
-
-			return true
-		}
-	}
-	return false
-}
-
 // return a list of files and map of sha256 hashes for each file in the pkg
 func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	var files []string
@@ -123,6 +100,42 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	fd.Close()
 
 	return files, fileHash
+}
+
+func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
+	fmt.Printf("  installing...\n")
+
+	// install default system files
+	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
+
+	// don't install dummy pkg creating temporary links during bootstrap
+	if str.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
+		return
+	}
+
+	Cp(pkg.pkgDir+"/*", pkgC.instDir+"/")
+
+	if !pkgC.muslBuild {
+		createBinLinks(pkg.pkgDir, pkgC.instDir)
+	}
+
+	// todo: move this outside
+	addPkgToWorldDir(pkg, pkgC.instDir)
+}
+
+// installs config files for the pkg
+func instPkgCfg(cfgFiles map[string]string, instDir string) {
+	var files []string
+	for file := range cfgFiles {
+		files = append(files, file)
+	}
+	sort.Strings(files)
+
+	for _, file := range files {
+		src := cfgFiles[file]
+		dest := fp.Join(instDir, file)
+		Cp(src, dest+"/")
+	}
 }
 
 func (r *runT) instSysCfg() {

@@ -4,9 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
 	"path"
-	"sort"
 
 	fp "path/filepath"
 	str "strings"
@@ -37,6 +35,7 @@ func (r *runT) actionBuild() {
 	r.createRootDirs()
 	r.buildInstPkgs()
 
+	// if base environment is built protect it from further changes
 	if r.baseEnv {
 		_, _ = os.Create(fp.Join(r.baseDir, "base_ok"))
 		protectBaseDir(r.baseDir)
@@ -102,7 +101,7 @@ func (r *runT) buildInstPkgs() {
 			continue
 		} else if r.worldPkgExists(pkg, pkgC) && !pkgC.force {
 			continue
-		} else if pkg.categ == "alpine" && !pkgC.cnt {
+		} else if r.isSepSys && !pkgC.cnt {
 			continue
 		} else {
 			r.instPkg(pkg, pkgC)
@@ -140,49 +139,5 @@ func (r *runT) selfLibsExist(pkg pkgT) {
 			errExit(errors.New(""),
 				"can't find shared lib assigned to pkg: "+lib)
 		}
-	}
-}
-
-func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
-	fmt.Printf("  installing...\n")
-
-	// install default system files
-	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
-
-	// don't install dummy pkg creating temporary links during bootstrap
-	if str.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
-		return
-	}
-
-	busybox := "/home/xx/bin/busybox"
-	c := busybox + " cp -rf " + pkg.pkgDir + "/* " + pkgC.instDir
-	if str.Contains(pkgC.instDir, ":/") {
-		c = "scp -q " + pkg.pkgDir + "/* " + pkgC.instDir
-	}
-	cmd := exec.Command(busybox, "sh", "-c", c)
-	out, err := cmd.Output()
-	errExit(err, "can't copy "+pkg.pkgDir+" to "+pkgC.instDir+
-		"\n"+string(out)+"\n"+str.Join(cmd.Args, " "))
-
-	if !pkgC.muslBuild {
-		createBinLinks(pkg.pkgDir, pkgC.instDir)
-	}
-
-	// todo: move this outside
-	addPkgToWorldDir(pkg, pkgC.instDir)
-}
-
-// installs config files for the pkg
-func instPkgCfg(cfgFiles map[string]string, instDir string) {
-	var files []string
-	for file := range cfgFiles {
-		files = append(files, file)
-	}
-	sort.Strings(files)
-
-	for _, file := range files {
-		src := cfgFiles[file]
-		dest := fp.Join(instDir, file)
-		Cp(src, dest)
 	}
 }

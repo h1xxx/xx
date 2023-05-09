@@ -96,6 +96,29 @@ func walkDir(rootDir, fType string) ([]string, error) {
 	return names, err
 }
 
+func pkgExists(pkg pkgT, pkgs []pkgT) bool {
+	for _, p := range pkgs {
+		if p.name == pkg.name && p.set == pkg.set {
+			return true
+		}
+	}
+	return false
+}
+
+func pkgCntExists(pkg pkgT, pkgCfg pkgCfgT, pkgs []pkgT,
+	pkgCfgs []pkgCfgT) bool {
+
+	for i, p := range pkgs {
+		if p.name == pkg.name && p.set == pkg.set &&
+			pkgCfg.cnt == pkgCfgs[i].cnt &&
+			pkgCfg.cntPkg == pkgCfgs[i].cntPkg {
+
+			return true
+		}
+	}
+	return false
+}
+
 func stringExists(s string, slice []string) bool {
 	idx := sort.SearchStrings(slice, s)
 	if idx < len(slice) && slice[idx] == s {
