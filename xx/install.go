@@ -133,8 +133,7 @@ func instPkgCfg(cfgFiles map[string]string, instDir string) {
 
 	for _, file := range files {
 		src := cfgFiles[file]
-		dest := fp.Join(instDir, file)
-		Cp(src, dest+"/")
+		Cp(src, instDir+"/")
 	}
 }
 
