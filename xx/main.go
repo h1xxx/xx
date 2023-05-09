@@ -36,6 +36,7 @@ import (
 //
 // toInstPerms	only install sys permissions:	false, true
 // toInstSysCfg	only install system config:	false, true
+// installCnt	install pkgs have containers:	false, true
 //
 // diffBuild	show diff to previous build:	false, true
 // diffHours	show diff within X last hours:	24, 30, 48
@@ -78,6 +79,7 @@ type runT struct {
 
 	pkgs      []pkgT
 	pkgCfgs   []pkgCfgT
+	cnts      []string
 	world     map[string]worldT
 	buildDeps map[pkgT][]pkgT
 	runDeps   map[pkgT][]pkgT
@@ -367,8 +369,7 @@ func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
 	if pkgC.cnt {
 		pkgC.cntPkg = pkg
 		pkgC.cntProg = pkg.prog
-		pkgC.instDir = fp.Join(r.rootDir, "/cnt/rootfs/",
-			pkgC.cntProg)
+		pkgC.instDir = fp.Join(r.rootDir, "/cnt/rootfs/", pkgC.cntProg)
 	} else {
 		pkgC.instDir = r.rootDir
 	}

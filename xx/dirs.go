@@ -14,7 +14,6 @@ func (r *runT) createRootDirs() {
 		"/root",
 		"/{dev,proc,sys,run,tmp}",
 		"/home/{x,xx}",
-		"/cnt/{bin,home,rootfs}",
 		"/mnt/{misc,shared}",
 		"/run/{lock,pid}",
 		"/var/{cache,empty,xx,log,spool,tmp}",
@@ -51,30 +50,39 @@ func (r *runT) createRootDirs() {
 		Symlink(target, dest)
 	}
 
+	if r.installCnt {
+		Mkdir(fp.Join(r.rootDir, "/cnt/{bin,home,rootfs}"))
+		Cp("/home/xx/bin/crun", fp.Join(r.rootDir, "/bin"))
+		for _, cntProg := range r.cnts {
+			r.createCntDirs(cntProg)
+		}
+	}
+
 	if fileExists("/mnt/xx/boot") {
 		err := os.MkdirAll(r.rootDir+"/mnt/xx/boot", 0700)
 		errExit(err, "couldn't create "+r.rootDir+"/mnt/xx/boot")
 	}
 
-	_, _ = os.Create(fp.Join(r.rootDir, "/var/log/init.log"))
+	fd, _ := os.Create(fp.Join(r.rootDir, "/var/log/init.log"))
+	fd.Close()
 }
 
-func (r *runT) createCntDirs(cntProg, instDir string) {
-	var dirsToCreate = map[string]fs.FileMode{
-		fp.Join(instDir, "/mnt"):                  0777,
-		fp.Join(r.rootDir, "/cnt/bin"):            0755,
-		fp.Join(r.rootDir, "/cnt/home/", cntProg): 0755,
-	}
+func (r *runT) createCntDirs(cntProg string) {
+	dirs := make(map[string]fs.FileMode)
 
-	topDirs := []string{"/home/cnt", "/var/xx", "/mnt/shared",
-		"/dev", "/proc", "/run", "/sys", "/tmp",
-		"/files"}
+	instDir := fp.Join(r.rootDir, "/cnt/rootfs/", cntProg)
+
+	dirs[fp.Join(instDir, "/mnt/shared")] = 0770
+	dirs[fp.Join(r.rootDir, "/cnt/home/", cntProg, "work_dir")] = 0750
+
+	topDirs := []string{"/var/xx", "/bind", "/home/cnt",
+		"/dev", "/proc", "/run", "/sys", "/tmp"}
 
 	for _, dir := range topDirs {
-		dirsToCreate[fp.Join(instDir, dir)] = 0755
+		dirs[fp.Join(instDir, dir)] = 0750
 	}
 
-	for dir, perm := range dirsToCreate {
+	for dir, perm := range dirs {
 		err := os.MkdirAll(dir, perm)
 		errExit(err, "can't create dir: "+dir)
 	}
@@ -82,19 +90,12 @@ func (r *runT) createCntDirs(cntProg, instDir string) {
 	fd, _ := os.Create(instDir + "/config")
 	fd.Close()
 
-	cmd := exec.Command("/home/xx/bin/busybox", "cp",
-		"/home/xx/bin/crun", instDir+"/../../bin/")
-
-	if str.Contains(instDir, ":/") {
-		cmd = exec.Command("scp", "-q", "/home/xx/bin/crun",
-			instDir+"/../../bin/")
-	}
-
-	err := cmd.Run()
-	errExit(err, "can't copy crun file")
-
 	// install default system files
 	Cp("/home/xx/cfg/sys/*", instDir+"/")
+
+	fd, _ = os.Create(fp.Join(r.rootDir, "/cnt/home", cntProg, ".profile"))
+	fd.WriteString("cd /home/cnt/work_dir\n")
+	fd.Close()
 }
 
 func (r *runT) createBuildDirs() {

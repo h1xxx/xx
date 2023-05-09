@@ -14,6 +14,7 @@ import (
 func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 	var pkgs []pkgT
 	var pkgCfgs []pkgCfgT
+	var cnts = make(map[string]bool)
 
 	re := getRegexes()
 
@@ -31,11 +32,17 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 		pkg, pkgC := r.parseSetLine(line, re)
 		if pkgC.cnt {
 			r.installCnt = true
+			cnts[pkgC.cntProg] = true
 		}
 
 		pkgs = append(pkgs, pkg)
 		pkgCfgs = append(pkgCfgs, pkgC)
 	}
+
+	for cnt, _ := range cnts {
+		r.cnts = append(r.cnts, cnt)
+	}
+
 	return pkgs, pkgCfgs
 }
 

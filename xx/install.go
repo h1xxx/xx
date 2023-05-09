@@ -24,6 +24,7 @@ func (r *runT) actionInst() {
 
 	default:
 		r.checkPkgAvail(r.pkgs, r.pkgCfgs)
+		r.createRootDirs()
 		r.instDefPkgs(r.pkgs, r.pkgCfgs)
 		fmt.Println("\n* installation complete.")
 	}

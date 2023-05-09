@@ -34,6 +34,7 @@ func (r *runT) actionBuild() {
 	}
 
 	prHigh("processing %s...", r.buildEnv)
+	r.createRootDirs()
 	r.buildInstPkgs()
 
 	if r.baseEnv {
@@ -43,11 +44,12 @@ func (r *runT) actionBuild() {
 }
 
 func (r *runT) installBase() {
-	baseRunCfg := *r
-	baseRunCfg.rootDir = r.baseDir
+	baseRun := *r
+	baseRun.rootDir = r.baseDir
+	baseRun.installCnt = false
 
-	r.createRootDirs()
-	pkgs, pkgCfgs := baseRunCfg.parseBuildEnvFile(r.baseFile)
+	baseRun.createRootDirs()
+	pkgs, pkgCfgs := baseRun.parseBuildEnvFile(r.baseFile)
 
 	for i, pkg := range pkgs {
 		pkgC := pkgCfgs[i]
@@ -142,15 +144,7 @@ func (r *runT) selfLibsExist(pkg pkgT) {
 }
 
 func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
-	// todo: can be removed once init of cnt dir is done elsewhere
-	if pkgC.cnt {
-		r.createCntDirs(pkgC.cntProg, pkgC.instDir)
-	}
-
 	fmt.Printf("  installing...\n")
-
-	// todo: move this out of this function
-	r.createRootDirs()
 
 	// install default system files
 	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
