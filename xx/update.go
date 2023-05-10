@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
+
+	str "strings"
 )
 
 type repolPkgT struct {
@@ -44,7 +45,7 @@ func showUpdateInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 }
 
 func getRepolInfo(pkg pkgT) []repolPkgT {
-	prog := strings.Split(pkg.name, "/")[1]
+	prog := str.Split(pkg.name, "/")[1]
 	url := "https://repology.org/api/v1/project/" + prog
 	resp, err := http.Get(url)
 	errExit(err, "can't get info from repol on pkg:\n  "+url)

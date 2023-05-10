@@ -7,9 +7,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"path/filepath"
 	"sort"
-	"strings"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 func (r *runT) actionInfo() {
@@ -148,7 +149,7 @@ func (r *runT) sysVerify(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 		sum := getFileHash(file)
 		if r.rootDir != "/" {
-			file = "/" + strings.TrimPrefix(file, r.rootDir)
+			file = "/" + str.TrimPrefix(file, r.rootDir)
 		}
 
 		_, keyExists := fileHash[file]
@@ -163,7 +164,7 @@ func (r *runT) sysVerify(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 	fmt.Println("looking for the missing files...")
 	for f, pkg := range filePkg {
-		sysFile := filepath.Clean(r.rootDir + "/" + f)
+		sysFile := fp.Clean(r.rootDir + "/" + f)
 		idx := sort.SearchStrings(sysFiles, sysFile)
 
 		if idx > len(sysFiles)-1 || sysFiles[idx] != sysFile {
@@ -217,7 +218,7 @@ func (r *runT) getFileMaps(pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]string, m
 
 			for _, f := range cfgFiles {
 				h := getFileHash(f)
-				f = strings.TrimPrefix(f, pkg.cfgDir)
+				f = str.TrimPrefix(f, pkg.cfgDir)
 				fh[f] = h
 			}
 		}
@@ -238,7 +239,7 @@ func (r *runT) getFileMaps(pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]string, m
 
 			for _, f := range cfgFiles {
 				h := getFileHash(f)
-				f = strings.TrimPrefix(f, cfgSysPkgDir)
+				f = str.TrimPrefix(f, cfgSysPkgDir)
 				fh[f] = h
 			}
 		}
@@ -248,7 +249,7 @@ func (r *runT) getFileMaps(pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]string, m
 			if pkgCfgs[i].cnt {
 				f = "/cnt/rootfs/" + pkg.prog + "/" + f
 			}
-			f = filepath.Clean(f)
+			f = fp.Clean(f)
 
 			_, keyExists := fileHash[f]
 			if keyExists {

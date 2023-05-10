@@ -4,17 +4,18 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	fp "path/filepath"
 	"regexp"
 	"runtime"
 	"sort"
 	"strconv"
-	"strings"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 // replaces a string with another one in-place
 func repl(s *string, a string, b string) {
-	*s = strings.Replace(*s, a, b, -1)
+	*s = str.Replace(*s, a, b, -1)
 }
 
 func getVer(pkg pkgT, fixedVer string) string {
@@ -27,10 +28,10 @@ func getVer(pkg pkgT, fixedVer string) string {
 	errExit(err, "can't open prog dir")
 
 	for _, file := range files {
-		if strings.HasSuffix(file.Name(), ".ini") {
+		if str.HasSuffix(file.Name(), ".ini") {
 			var ver, sep string
-			verRaw := strings.Split(file.Name(), ".ini")[0]
-			verFields := strings.Split(verRaw, ".")
+			verRaw := str.Split(file.Name(), ".ini")[0]
+			verFields := str.Split(verRaw, ".")
 			for _, v := range verFields {
 				ver += fmt.Sprintf("%s%32s", sep, v)
 				sep = "."
@@ -44,12 +45,12 @@ func getVer(pkg pkgT, fixedVer string) string {
 		errExit(errors.New(""), "no ini file available for "+pkg.name)
 	}
 
-	return strings.Replace(versions[len(versions)-1], " ", "", -1)
+	return str.Replace(versions[len(versions)-1], " ", "", -1)
 }
 
 func getVerShort(ver string) string {
 	var verShort string
-	fields := strings.Split(ver, ".")
+	fields := str.Split(ver, ".")
 	l := len(fields)
 
 	switch {
@@ -88,7 +89,7 @@ func getPkgRels(pkg pkgT) (string, string, string) {
 		id = getLastRel(progPkgDir, pkg.set+"-"+pkg.ver+"-")
 	} else {
 		var err error
-		idSplit := strings.Split(pkg.setVerRel, "-")
+		idSplit := str.Split(pkg.setVerRel, "-")
 		id, err = strconv.ParseInt(idSplit[len(idSplit)-1], 16, 64)
 		errExit(err, "unable to convert pkg release: "+pkg.name)
 	}
@@ -119,8 +120,8 @@ func getLastRel(pkgDir, dirPrefix string) int64 {
 	}
 
 	for _, dir := range dirs {
-		if strings.HasPrefix(dir.Name(), dirPrefix) {
-			s := strings.Split(dir.Name(), "-")
+		if str.HasPrefix(dir.Name(), dirPrefix) {
+			s := str.Split(dir.Name(), "-")
 			idStr := s[len(s)-1]
 			id, err = strconv.ParseInt(idStr, 16, 64)
 			errExit(err, "unable to convert pkg release: "+pkgDir)
@@ -187,12 +188,12 @@ func (r *runT) prepareEnv(envIn []string, pkg pkgT, pkgC pkgCfgT) []string {
 
 	for _, e := range envIn {
 		var add bool
-		s := strings.Split(e, "=")
-		key, val := s[0], strings.Join(s[1:], "=")
-		val = strings.Trim(val, "\"")
-		val = strings.Trim(val, "'")
-		if strings.HasSuffix(key, "+") {
-			key = strings.TrimSuffix(key, "+")
+		s := str.Split(e, "=")
+		key, val := s[0], str.Join(s[1:], "=")
+		val = str.Trim(val, "\"")
+		val = str.Trim(val, "'")
+		if str.HasSuffix(key, "+") {
+			key = str.TrimSuffix(key, "+")
 			add = true
 		}
 		if val == "" {

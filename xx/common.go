@@ -8,11 +8,11 @@ import (
 	"os"
 	"os/exec"
 	"sort"
-	"strings"
 	"time"
 	"unicode"
 
 	fp "path/filepath"
+	str "strings"
 )
 
 // type can be: "all", "files", "sysfiles", "dirs"
@@ -39,25 +39,25 @@ func walkDir(rootDir, fType string) ([]string, error) {
 	err := fp.Walk(rootDir,
 		func(path string, linfo os.FileInfo, err error) error {
 			switch {
-			case strings.HasPrefix(path, "/proc/"):
+			case str.HasPrefix(path, "/proc/"):
 				return nil
 
-			case strings.HasPrefix(path, "/sys/"):
+			case str.HasPrefix(path, "/sys/"):
 				return nil
 
-			case strings.HasPrefix(path, "/dev/"):
+			case str.HasPrefix(path, "/dev/"):
 				return nil
 
-			case strings.HasPrefix(path, "/run/"):
+			case str.HasPrefix(path, "/run/"):
 				return nil
 
-			case sysFiles && strings.HasPrefix(path, "/root/"):
+			case sysFiles && str.HasPrefix(path, "/root/"):
 				return nil
 
-			case sysFiles && strings.HasPrefix(path, "/mnt/"):
+			case sysFiles && str.HasPrefix(path, "/mnt/"):
 				return nil
 
-			case sysFiles && strings.HasPrefix(path, "/home/"):
+			case sysFiles && str.HasPrefix(path, "/home/"):
 				return nil
 			}
 
@@ -128,8 +128,8 @@ func stringExists(s string, slice []string) bool {
 }
 
 func fileExists(fPath string) bool {
-	if strings.Contains(fPath, ":/") {
-		split := strings.Split(fPath, ":")
+	if str.Contains(fPath, ":/") {
+		split := str.Split(fPath, ":")
 		host := split[0]
 		path := split[1]
 		c := "ssh " + host + " stat " + path
@@ -182,7 +182,7 @@ func Cp(src, dest string) {
 
 	bb := "/home/xx/bin/busybox"
 	c := bb + " cp -rf " + src + " " + dest
-	if strings.Contains(dest, ":/") {
+	if str.Contains(dest, ":/") {
 		c = "scp -q " + src + " " + dest
 	}
 
@@ -190,7 +190,7 @@ func Cp(src, dest string) {
 	out, err := cmd.CombinedOutput()
 
 	errExit(err, "can't copy "+src+" to "+dest+
-		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+		"\n"+string(out)+"\n"+str.Join(cmd.Args, " "))
 }
 
 func Mv(src, dest string) {
@@ -205,7 +205,7 @@ func Mv(src, dest string) {
 	out, err := cmd.CombinedOutput()
 
 	errExit(err, "can't move "+src+" to "+dest+
-		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+		"\n"+string(out)+"\n"+str.Join(cmd.Args, " "))
 }
 
 func Symlink(src, dest string) {
@@ -220,7 +220,7 @@ func Symlink(src, dest string) {
 	out, err := cmd.CombinedOutput()
 
 	errExit(err, "can't symlink "+dest+" to "+src+
-		"\n"+string(out)+"\n"+strings.Join(cmd.Args, " "))
+		"\n"+string(out)+"\n"+str.Join(cmd.Args, " "))
 }
 
 func Mkdir(dir string) {

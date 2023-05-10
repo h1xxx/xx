@@ -8,10 +8,11 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	fp "path/filepath"
-	"strings"
 	"unicode"
 	"unicode/utf8"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 func (r *runT) actionSource() {
@@ -46,12 +47,12 @@ func (r *runT) getSrc(pkg pkgT, pkgC pkgCfgT) {
 }
 
 func getSrcTar(pkg pkgT, pkgC pkgCfgT) {
-	urls := strings.Split(pkgC.src.url, " ")
+	urls := str.Split(pkgC.src.url, " ")
 
 	for _, url := range urls {
 		var fName string
-		if strings.Contains(url, "::") {
-			split := strings.Split(url, "::")
+		if str.Contains(url, "::") {
+			split := str.Split(url, "::")
 			url = split[1]
 			fName = split[0]
 		} else {
@@ -180,7 +181,7 @@ func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
 
 	var uri string
 	// todo: find a better way to determine golib version type
-	if strings.Contains(pkg.ver, "-") {
+	if str.Contains(pkg.ver, "-") {
 		uri = pkgC.src.url + "@v0.0.0-" + pkg.ver
 	} else {
 		uri = pkgC.src.url + "@v" + pkg.ver

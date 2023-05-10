@@ -8,7 +8,8 @@ import (
 	"io/ioutil"
 	"os"
 	"os/user"
-	"strings"
+
+	str "strings"
 
 	ssh "golang.org/x/crypto/ssh"
 	kh "golang.org/x/crypto/ssh/knownhosts"
@@ -90,9 +91,9 @@ func parseSshConfig(host, homeDir string) sshCfgT {
 		}
 
 		line = re.wSpaces.ReplaceAllString(line, " ")
-		line = strings.Trim(line, " ")
-		fields := strings.Split(line, " ")
-		key := strings.ToLower(fields[0])
+		line = str.Trim(line, " ")
+		fields := str.Split(line, " ")
+		key := str.ToLower(fields[0])
 
 		if len(fields) == 1 {
 			continue
@@ -108,7 +109,7 @@ func parseSshConfig(host, homeDir string) sshCfgT {
 			continue
 
 		case hostFound && key == "identityfile":
-			k := strings.Replace(fields[1], "~", homeDir, -1)
+			k := str.Replace(fields[1], "~", homeDir, -1)
 			sshConfig.privKey = k
 			continue
 

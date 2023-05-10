@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	fp "path/filepath"
 	"sort"
 	"strconv"
-	"strings"
 	"time"
+
+	fp "path/filepath"
+	str "strings"
 )
 
 func (r *runT) actionDiff() {
@@ -83,17 +84,17 @@ func getPkgPrevVer(pkg pkgT) pkgT {
 	errExit(err, "can't open package dir")
 
 	for _, dir := range dirs {
-		if strings.HasPrefix(dir.Name(), pkg.set+"-") {
+		if str.HasPrefix(dir.Name(), pkg.set+"-") {
 			var ver, sep string
 
-			fields := strings.Split(dir.Name(), "-")
+			fields := str.Split(dir.Name(), "-")
 			if len(fields) < 3 {
 				msg := "can't extract ver from %s"
 				errExit(fmt.Errorf(msg, dir.Name()), "")
 			}
 
-			verRaw := strings.Join(fields[1:len(fields)-1], "-")
-			verFields := strings.Split(verRaw, ".")
+			verRaw := str.Join(fields[1:len(fields)-1], "-")
+			verFields := str.Split(verRaw, ".")
 			for _, v := range verFields {
 				ver += fmt.Sprintf("%s%32s", sep, v)
 				sep = "."
@@ -114,7 +115,7 @@ func getPkgPrevVer(pkg pkgT) pkgT {
 		verIdx = len(versions) - 2
 	}
 
-	pkg.ver = strings.Replace(versions[verIdx], " ", "", -1)
+	pkg.ver = str.Replace(versions[verIdx], " ", "", -1)
 	pkg.verShort = getVerShort(pkg.ver)
 	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
 	pkg = getPkgSetVers(pkg)
@@ -137,8 +138,8 @@ func getRes(fileHash, fileHashPrev map[string]string) (map[string][]string,
 		}
 		if hash != prevHash {
 			res["changed"] = append(res["changed"], file)
-			if strings.Contains(file, "/etc/") ||
-				strings.HasSuffix(file, ".conf") {
+			if str.Contains(file, "/etc/") ||
+				str.HasSuffix(file, ".conf") {
 
 				etcFiles = append(etcFiles, file)
 			}
@@ -179,7 +180,7 @@ func getDiff(file1, file2 string) ([]string, bool) {
 	default:
 		errExit(errors.New(""), "can't get a diff")
 	}
-	diff := strings.Split(string(diffOut), "\n")
+	diff := str.Split(string(diffOut), "\n")
 
 	return diff, change
 }
@@ -205,7 +206,7 @@ func skipLine(line string) bool {
 		"\033[1mnew mode ", "\033[1mindex "}
 
 	for _, p := range prefixes {
-		if strings.HasPrefix(line, p) {
+		if str.HasPrefix(line, p) {
 			return true
 		}
 	}
@@ -285,9 +286,9 @@ func getDirStats(dirStat, dirCount, changeCount map[string]int64,
 
 	for _, file := range files {
 		fullDir := fp.Dir(file)
-		dir := "/" + strings.TrimPrefix(fullDir, pkg.pkgDir)
-		dirS := strings.Split(dir, "/")
-		d := strings.Join(dirS[:min(4, len(dirS))], "/")
+		dir := "/" + str.TrimPrefix(fullDir, pkg.pkgDir)
+		dirS := str.Split(dir, "/")
+		d := str.Join(dirS[:min(4, len(dirS))], "/")
 
 		dirCount[d] += 1
 		if fileIsChanged(dir+"/"+fp.Base(file), res) {
@@ -307,21 +308,21 @@ func getDirStats(dirStat, dirCount, changeCount map[string]int64,
 func getLibsDiff(pkg, pkgPrev pkgT, pkgC, pkgCPrev pkgCfgT, fileHash, fileHashPrev map[string]string, res map[string][]string) {
 	var files, filesPrev []string
 	for file := range fileHash {
-		if strings.HasPrefix(file, "/usr/include") ||
-			strings.HasPrefix(file, "/usr/share/terminfo") ||
-			strings.HasPrefix(file, "/usr/share/man") ||
-			strings.HasPrefix(file, "/usr/share/doc") ||
-			strings.HasPrefix(file, "/usr/share/locale") {
+		if str.HasPrefix(file, "/usr/include") ||
+			str.HasPrefix(file, "/usr/share/terminfo") ||
+			str.HasPrefix(file, "/usr/share/man") ||
+			str.HasPrefix(file, "/usr/share/doc") ||
+			str.HasPrefix(file, "/usr/share/locale") {
 			continue
 		}
 		files = append(files, file)
 	}
 	for file := range fileHashPrev {
-		if strings.HasPrefix(file, "/usr/include") ||
-			strings.HasPrefix(file, "/usr/share/terminfo") ||
-			strings.HasPrefix(file, "/usr/share/man") ||
-			strings.HasPrefix(file, "/usr/share/doc") ||
-			strings.HasPrefix(file, "/usr/share/locale") {
+		if str.HasPrefix(file, "/usr/include") ||
+			str.HasPrefix(file, "/usr/share/terminfo") ||
+			str.HasPrefix(file, "/usr/share/man") ||
+			str.HasPrefix(file, "/usr/share/doc") ||
+			str.HasPrefix(file, "/usr/share/locale") {
 			continue
 		}
 		filesPrev = append(filesPrev, file)
@@ -375,36 +376,36 @@ func dirSize(path string) int64 {
 func printDiffRes(res map[string][]string) {
 	fmt.Println("\n\t\t\t\tfile count\t\t  size (KB)")
 	fmt.Println("\t\t      previous\tcurrent\t changed     previous  current")
-	fmt.Println(strings.Join(res["dir_status"], "\n"), "\n")
+	fmt.Println(str.Join(res["dir_status"], "\n"), "\n")
 
 	if len(res["new"]) > 0 {
 		fmt.Printf("new:\n%s\n\n",
-			strings.Join(res["new"], "\n"))
+			str.Join(res["new"], "\n"))
 	}
 
 	if len(res["removed"]) > 0 {
 		fmt.Printf("removed:\n%s\n\n",
-			strings.Join(res["removed"], "\n"))
+			str.Join(res["removed"], "\n"))
 	}
 
 	if len(res["new_libs"]) > 0 {
 		fmt.Printf("new libs:\n%s\n\n",
-			strings.Join(res["new_libs"], "\n"))
+			str.Join(res["new_libs"], "\n"))
 	}
 
 	if len(res["removed_libs"]) > 0 {
 		fmt.Printf("removed libs:\n%s\n\n",
-			strings.Join(res["removed_libs"], "\n"))
+			str.Join(res["removed_libs"], "\n"))
 	}
 
 	if len(res["config"]) > 0 {
 		fmt.Println("diff of configure help:\n")
-		fmt.Println(strings.Join(res["config"], ""))
+		fmt.Println(str.Join(res["config"], ""))
 	}
 
 	if len(res["etc"]) > 0 {
 		fmt.Println("diff of files in '/etc/':\n")
-		fmt.Println(strings.Join(res["etc"], ""))
+		fmt.Println(str.Join(res["etc"], ""))
 	}
 
 }
