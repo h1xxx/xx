@@ -24,7 +24,7 @@ func (r *runT) actionBuild() {
 	// boostrap base packages and exit
 	if r.isInit {
 		prHigh("bootstrapping %s...", r.buildEnv)
-		r.buildInstPkgs()
+		r.buildPkgs()
 		return
 	}
 
@@ -41,7 +41,7 @@ func (r *runT) actionBuild() {
 
 	prHigh("processing %s...", r.buildEnv)
 	r.createRootDirs()
-	r.buildInstPkgs()
+	r.buildPkgs()
 
 	// if base environment is built protect it from further changes
 	if r.baseEnv {
@@ -72,9 +72,8 @@ func (r *runT) installBase() {
 		}
 
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
-		r.instPkg(pkg, pkgC)
+		r.instPkg(pkg, pkgC, "/")
 		instPkgCfg(pkgC.cfgFiles, r.baseDir)
-		r.addPkgToWorldT(pkg, "/")
 
 		// double check if shared libraries are ok
 		if !r.isInit && !pkgC.muslBuild {
@@ -89,7 +88,7 @@ func (r *runT) installBase() {
 	protectBaseDir(r.baseDir)
 }
 
-func (r *runT) buildInstPkgs() {
+func (r *runT) buildPkgs() {
 	for i, pkg := range r.pkgs {
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		pkgC := r.pkgCfgs[i]
@@ -112,14 +111,8 @@ func (r *runT) buildInstPkgs() {
 		} else if r.isSepSys && !pkgC.cnt {
 			continue
 		} else {
-			r.instPkg(pkg, pkgC)
+			r.instPkg(pkg, pkgC, "/")
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
-
-			loc := "/"
-			if pkgC.cnt {
-				loc = pkgC.cntProg
-			}
-			r.addPkgToWorldT(pkg, loc)
 
 			// double check if shared libraries are ok
 			if !r.isInit && !pkgC.muslBuild {

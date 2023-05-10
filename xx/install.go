@@ -39,9 +39,9 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		}
 		fmt.Printf("+ %-32s %s\n", pkg.name+cntInfo, pkg.setVerRel)
 
-		loc := "/"
+		worldLoc := "/"
 		if pkgC.cnt {
-			loc = pkgC.cntProg
+			worldLoc = pkgC.cntProg
 		}
 
 		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{}, "all", 1)
@@ -54,19 +54,15 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			if !r.worldPkgExists(dep, pkgC) && !pkgC.force {
 				depCfgFiles := r.getPkgCfgFiles(dep)
 
-				r.instPkg(dep, pkgC)
+				r.instPkg(dep, pkgC, worldLoc)
 				instPkgCfg(depCfgFiles, pkgC.instDir)
-
-				r.addPkgToWorldT(dep, loc)
 			}
 		}
 
 		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
 		if !r.worldPkgExists(pkg, pkgC) && !pkgC.force {
-			r.instPkg(pkg, pkgC)
+			r.instPkg(pkg, pkgC, worldLoc)
 			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
-
-			r.addPkgToWorldT(pkg, loc)
 		}
 		fmt.Println()
 	}
@@ -102,7 +98,7 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	return files, fileHash
 }
 
-func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT, worldLoc string) {
 	fmt.Printf("  installing...\n")
 
 	// install default system files
@@ -119,8 +115,8 @@ func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT) {
 		createBinLinks(pkg.pkgDir, pkgC.instDir)
 	}
 
-	// todo: move this outside
 	addPkgToWorldDir(pkg, pkgC.instDir)
+	r.addPkgToWorldT(pkg, worldLoc)
 }
 
 // installs config files for the pkg
@@ -133,7 +129,7 @@ func instPkgCfg(cfgFiles map[string]string, instDir string) {
 
 	for _, file := range files {
 		src := cfgFiles[file]
-		Cp(src, instDir+"/")
+		Cp(src, fp.Join(instDir, file))
 	}
 }
 
