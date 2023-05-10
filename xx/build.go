@@ -282,6 +282,7 @@ func createSubPkg(pkg, subPkg pkgT, files []string) {
 		src := fp.Join(pkg.newPkgDir, f)
 		dest := fp.Join(subPkg.newPkgDir, f)
 		Mv(src, dest)
+
 		RemEmptyDirs(fp.Dir(src))
 		MoveShaInfo(pkg, subPkg, f)
 	}
@@ -291,9 +292,7 @@ func MoveShaInfo(pkg, subPkg pkgT, file string) {
 	src := fp.Join(pkg.progDir, "log", pkg.setVerNewRel, "sha256.log")
 	dest := fp.Join(subPkg.progDir, "log", subPkg.setVerNewRel, "sha256.log")
 	file = str.Replace(file, "*", ".*", -1)
-
-	err := os.MkdirAll(fp.Dir(dest), 0750)
-	errExit(err, "can't create dest dir: "+fp.Dir(dest))
+	Mkdir(fp.Dir(dest))
 
 	bb := "/home/xx/bin/busybox"
 	c := bb + " grep \t" + file + " " + src + " > " + dest
@@ -395,7 +394,6 @@ func getSharedLibs(file string) []string {
 	return libs
 }
 
-// used only during build step
 func (r *runT) dumpSharedLibs(pkg pkgT) {
 	files, err := walkDir(pkg.pkgDir, "files")
 
@@ -427,7 +425,8 @@ func (r *runT) dumpSharedLibs(pkg pkgT) {
 		if libPath == "" {
 			dep = pkg
 		}
-		fmt.Fprintf(fOut, "%s\t%s\t%s\t%s\t%s\n", lib, dep.name, dep.set, dep.ver, dep.rel)
+		fmt.Fprintf(fOut, "%s\t%s\t%s\t%s\t%s\n",
+			lib, dep.name, dep.set, dep.ver, dep.rel)
 	}
 }
 
@@ -496,7 +495,7 @@ func (r *runT) saveHelp(pkg pkgT, pkgC pkgCfgT) {
 
 	case fileExists(pkgC.steps.buildDir + "/CMakeLists.txt"):
 		helpType = "command"
-		c = "cd build && cmake -LAH . | grep -v " + pkgC.tmpDir + " ||:"
+		c = "cd build && cmake -LAH . | grep -v " + pkgC.tmpDir + "||:"
 
 	case fileExists(pkgC.steps.buildDir + "/wscript"):
 		helpType = "command"
