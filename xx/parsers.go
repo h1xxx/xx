@@ -16,8 +16,6 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 	var pkgCfgs []pkgCfgT
 	var cnts = make(map[string]bool)
 
-	re := getRegexes()
-
 	f, err := os.Open(xxFile)
 	errExit(err, "can't open file: "+xxFile)
 	defer f.Close()
@@ -29,7 +27,7 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 			continue
 		}
 
-		pkg, pkgC := r.parseSetLine(line, re)
+		pkg, pkgC := r.parseSetLine(line, r.re)
 		if pkgC.cnt {
 			r.installCnt = true
 			cnts[pkgC.cntProg] = true
@@ -100,48 +98,6 @@ func parsePkgFlags(flags, pkgName string) (bool, bool) {
 	return force, cnt
 }
 
-func parseCntConf(cntConf string) (map[string]string, map[string]string) {
-	binCnt := make(map[string]string)
-	cntIP := make(map[string]string)
-
-	re := getRegexes()
-
-	f, err := os.Open(cntConf)
-	errExit(err, "can't open file: "+cntConf)
-	defer f.Close()
-
-	input := bufio.NewScanner(f)
-	for input.Scan() {
-		line := input.Text()
-
-		if line == "" || string(line[0]) == "#" {
-			continue
-		}
-
-		line = re.wSpaces.ReplaceAllString(line, "\t")
-		fields := str.Split(line, "\t")
-		len := len(fields)
-
-		switch {
-		case len < 3:
-			errExit(errors.New(""),
-				"too few fields in line:\n  "+line)
-		case len > 4:
-			errExit(errors.New(""),
-				"too many fields in line:\n  "+line)
-		}
-
-		bin := fields[0]
-		cntName := fields[1]
-		ip := fields[2]
-
-		binCnt[bin] = cntName
-		cntIP[cntName] = ip
-	}
-
-	return binCnt, cntIP
-}
-
 // returns src, steps and isSubPkg
 func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	var steps stepsT
@@ -168,8 +124,6 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		"nonEmptyPkgCreate": false,
 	}
 
-	re := getRegexes()
-
 	iniFile := fp.Join(pkg.progDir, pkg.ver+".ini")
 	f, err := os.Open(iniFile)
 	errExit(err, "can't open file: "+iniFile)
@@ -180,7 +134,7 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	for input.Scan() {
 		i++
 		line := input.Text()
-		line = re.wSpaces.ReplaceAllString(line, " ")
+		line = r.re.wSpaces.ReplaceAllString(line, " ")
 		line = str.Trim(line, " ")
 
 		if line == "" || string(line[0]) == "#" {

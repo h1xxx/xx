@@ -14,6 +14,7 @@ func (r *runT) getRunVars() {
 	r.detectInit()
 
 	r.date = getCurrentDate()
+	r.re = getRegexes()
 
 	r.runDeps = r.readDeps("run")
 	r.buildDeps = r.readDeps("build")

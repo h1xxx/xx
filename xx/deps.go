@@ -152,8 +152,6 @@ func (r *runT) readDeps(depType string) map[pkgT][]pkgT {
 		file = "/home/xx/set/deps_build"
 	}
 
-	re := getRegexes()
-
 	fd, err := os.Open(file)
 	errExit(err, "can't open file: "+file)
 	defer fd.Close()
@@ -167,12 +165,12 @@ func (r *runT) readDeps(depType string) map[pkgT][]pkgT {
 			continue
 
 		case unicode.IsLetter(rune(line[0])):
-			currentPkg, _ = r.parseSetLine(line, re)
+			currentPkg, _ = r.parseSetLine(line, r.re)
 			deps[currentPkg] = []pkgT{}
 
 		case line[0] == '\t':
 			line = str.Trim(line, "\t")
-			dep, _ := r.parseSetLine(line, re)
+			dep, _ := r.parseSetLine(line, r.re)
 			deps[currentPkg] = append(deps[currentPkg], dep)
 		}
 	}

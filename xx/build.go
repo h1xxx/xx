@@ -184,8 +184,6 @@ func (r *runT) pkgBuildCheck(pkg pkgT, pkgC pkgCfgT) {
 	var noNoDirs []string
 	var noNoLibRe *regexp.Regexp
 
-	re := getRegexes()
-
 	muslNoNo := []string{"/usr", "/lib64", "/local", "/opt"}
 	glibcNoNo := []string{"/bin", "/sbin", "/lib", "/lib64", "/opt",
 		"/include", "/share", "/usr/lib64", "/usr/local"}
@@ -195,10 +193,10 @@ func (r *runT) pkgBuildCheck(pkg pkgT, pkgC pkgCfgT) {
 		return
 	case pkgC.muslBuild:
 		noNoDirs = muslNoNo
-		noNoLibRe = re.noNoSharedLib
+		noNoLibRe = r.re.noNoSharedLib
 	default:
 		noNoDirs = glibcNoNo
-		noNoLibRe = re.noNoStaticLib
+		noNoLibRe = r.re.noNoStaticLib
 	}
 
 	dirs, err := walkDir(pkg.newPkgDir, "dirs")
@@ -225,13 +223,13 @@ func (r *runT) pkgBuildCheck(pkg pkgT, pkgC pkgCfgT) {
 			fmt.Printf(msg, f)
 		}
 
-		isStaticBin := re.staticBin.MatchString(f)
+		isStaticBin := r.re.staticBin.MatchString(f)
 		if isStaticBin && binHasInterpreter(file) {
 			msg := "WARNING! non static bin: %s\n"
 			fmt.Printf(msg, f)
 		}
 
-		isGlibcBin := re.glibcBin.MatchString(f)
+		isGlibcBin := r.re.glibcBin.MatchString(f)
 		if isGlibcBin && binHasWeirdInterpreter(file) {
 			msg := "WARNING! incorrect interpreter: %s\n"
 			fmt.Printf(msg, f)

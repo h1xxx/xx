@@ -62,6 +62,7 @@ type runT struct {
 	targetIsSinglePkg bool
 
 	date string
+	re reT
 
 	forceAll bool
 	fixedSet string
