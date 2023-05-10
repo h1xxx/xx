@@ -60,6 +60,7 @@ func (r *runT) installBase() {
 
 	for i, pkg := range pkgs {
 		pkgC := pkgCfgs[i]
+		pkgC.instDir = r.baseDir
 
 		// find the latest built pkg, don't build anything new
 		if !fileExists(pkg.pkgDir) {
@@ -73,7 +74,6 @@ func (r *runT) installBase() {
 
 		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
 		r.instPkg(pkg, pkgC, "/")
-		instPkgCfg(pkgC.cfgFiles, r.baseDir)
 
 		// double check if shared libraries are ok
 		if !r.isInit && !pkgC.muslBuild {
@@ -101,7 +101,7 @@ func (r *runT) buildPkgs() {
 			pkg = getPkgSetVers(pkg)
 			pkg = getPkgDirs(pkg)
 		} else {
-			pkg = r.createPkg(pkg, pkgC)
+			pkg = r.buildPkg(pkg, pkgC)
 		}
 
 		if str.HasSuffix(pkg.set, "_tools_cross") {
@@ -112,7 +112,10 @@ func (r *runT) buildPkgs() {
 			continue
 		} else {
 			r.instPkg(pkg, pkgC, "/")
-			instPkgCfg(pkgC.cfgFiles, pkgC.instDir)
+			for _, s := range pkgC.steps.subPkgs {
+				subPkg := getSubPkg(pkg, s.suffix)
+				r.instPkg(subPkg, pkgC, "/")
+			}
 
 			// double check if shared libraries are ok
 			if !r.isInit && !pkgC.muslBuild {
@@ -122,7 +125,7 @@ func (r *runT) buildPkgs() {
 	}
 }
 
-func (r *runT) createPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
+func (r *runT) buildPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
 	if pkg.newRel != "00" && !pkgC.force || pkgC.src.srcType == "files" {
 		return pkg
 	}
@@ -133,9 +136,6 @@ func (r *runT) createPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
 	r.execStep("prepare", pkg, pkgC)
 	r.execStep("configure", pkg, pkgC)
 	r.execStep("build", pkg, pkgC)
-
-	err := os.MkdirAll(pkg.newPkgDir, 0700)
-	errExit(err, "couldn't create dir: "+pkg.newPkgDir)
 	r.execStep("pkg_create", pkg, pkgC)
 
 	r.pkgBuildCheck(pkg, pkgC)
@@ -166,14 +166,6 @@ func (r *runT) createPkg(pkg pkgT, pkgC pkgCfgT) pkgT {
 	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
 	pkg = getPkgSetVers(pkg)
 	pkg = getPkgDirs(pkg)
-
-	// add a new pkg and all subpkgs to root of the world;
-	// no cnt here as only build step executes this
-	r.addPkgToWorldT(pkg, "/")
-	for _, s := range pkgC.steps.subPkgs {
-		subPkg := getSubPkg(pkg, s.suffix)
-		r.addPkgToWorldT(subPkg, "/")
-	}
 
 	// dump shared libs for main pkg and for subpkgs
 	if !pkgC.crossBuild {

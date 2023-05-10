@@ -107,7 +107,7 @@ func (r *runT) createBuildDirs() {
 }
 
 func createPkgDirs(pkg pkgT, pkgC pkgCfgT) {
-	dirs := []string{pkgC.tmpDir, pkgC.tmpLogDir}
+	dirs := []string{pkg.newPkgDir, pkgC.tmpDir, pkgC.tmpLogDir}
 	for _, d := range dirs {
 		err := os.MkdirAll(d, 0700)
 		errExit(err, "can't create tmp dir: "+d)
