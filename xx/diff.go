@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"sort"
 	"strconv"
 	"time"
@@ -14,12 +15,8 @@ import (
 )
 
 func (r *runT) actionDiff() {
-	r.diffPkgs(r.pkgs, r.pkgCfgs)
-}
-
-func (r *runT) diffPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, p := range pkgs {
-		r.diffPkg(p, pkgCfgs[i])
+	for i, p := range r.pkgs {
+		r.diffPkg(p, r.pkgCfgs[i])
 	}
 }
 
@@ -72,12 +69,12 @@ func (r *runT) getPkgPrev(p pkgT) pkgT {
 		fmt.Printf("\n\n+ %-32s %s => %s\n", p.name,
 			p.setVerPrevRel, p.setVerRel)
 	} else {
-		return getPkgPrevVer(p)
+		return getPkgPrevVer(p, r.re.gitVer)
 	}
 	return pkgPrev
 }
 
-func getPkgPrevVer(p pkgT) pkgT {
+func getPkgPrevVer(p pkgT, reGitVer *regexp.Regexp) pkgT {
 	var versions []string
 
 	dirs, err := os.ReadDir(fp.Join(p.progDir, "pkg"))
@@ -116,7 +113,7 @@ func getPkgPrevVer(p pkgT) pkgT {
 	}
 
 	p.ver = str.Replace(versions[verIdx], " ", "", -1)
-	p.verShort = getVerShort(p.ver)
+	p.verShort = getVerShort(p.ver, reGitVer)
 	p.rel, p.prevRel, p.newRel = getPkgRels(p)
 	p = getPkgSetVers(p)
 	p = getPkgDirs(p)

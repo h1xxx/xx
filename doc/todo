@@ -80,17 +80,13 @@ move ld-linux-x86-64.so.2 linking to the pkg from xx/*.go
 
 subpkg can't end in _cross and _init
 
-design methods around worldT struct
-move genC params into worldT
-rename pkg to p, pkgC to pc, and world to w
-
 check for unpacked directories in src/
 
 when downloading go vendor pkgs check how popular are they or if they come from
 reputable source or what are the new deps compared to previous versions
 
 add correct cfg perms during deployment
-deployCfg and deployPkg may use install with perms per file instead of cp 
+deployCfg and deployPkg may use install with perms per file instead of cp
 make sure that suid bits are cleared
 
 save xx command config to a file and use it for the next run on the root dir
@@ -125,7 +121,6 @@ force during install not working
 speed up powering down by checking if all processes are killed
 
 create a dir with links to all config files in sysconf 
-
 
 cntrun: if cnt is running attach, instead of execute
 
@@ -481,5 +476,5 @@ this is already mounted
 check https://fedoraproject.org/wiki/Security_Features_Matrix
 
 make lxc config support \040 as a space  in lxc.mount.entry
-
 musl: add handling of spaces in getmntent to mount files with spaces in lxc
+

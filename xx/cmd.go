@@ -196,9 +196,8 @@ func getMountDev(mountPoint string) string {
 	if err == nil {
 		var result findMntT
 		err := json.Unmarshal(out, &result)
-		if err != nil {
-			os.Exit(1)
-		}
+		errExit(err, "")
+
 		return result.Filesystems[0].Source
 	}
 	return ""

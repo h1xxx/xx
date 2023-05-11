@@ -431,12 +431,18 @@ func getPkgSpecVer(p pkgT) string {
 
 func getRegexes() reT {
 	var re reT
+
 	re.wSpaces = regexp.MustCompile(`\s+`)
 	re.pkgName = regexp.MustCompile(`^[a-z0-9_]+/[\w-+]+$`)
+
+	r := `^[0-9]{4}-[0-9]{2}-[0-9]{2}\.[a-z0-9]{8}$`
+	re.gitVer = regexp.MustCompile(r)
+
 	re.noNoSharedLib = regexp.MustCompile(`^/lib/lib.*\.so.*$`)
 	re.noNoStaticLib = regexp.MustCompile(`^/usr/lib/lib.*\.a$`)
 	re.staticBin = regexp.MustCompile(`^/s*bin/`)
-	r := `(^/usr/s*bin/|^/usr/lib/lib.*\.so.*|^/usr/libexec)`
+
+	r = `(^/usr/s*bin/|^/usr/lib/lib.*\.so.*|^/usr/libexec)`
 	re.glibcBin = regexp.MustCompile(r)
 
 	return re

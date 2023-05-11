@@ -85,9 +85,7 @@ func getPkgFiles(p pkgT) ([]string, map[string]string) {
 
 	input := bufio.NewScanner(fd)
 	for input.Scan() {
-		split := str.Split(input.Text(), "\t")
-		file := split[1]
-		hash := split[0]
+		hash, file, _ := str.Cut(input.Text(), "\t")
 
 		fileHash[file] = hash
 		files = append(files, file)

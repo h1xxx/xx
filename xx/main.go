@@ -231,6 +231,7 @@ type subPkgT struct {
 type reT struct {
 	wSpaces       *regexp.Regexp
 	pkgName       *regexp.Regexp
+	gitVer        *regexp.Regexp
 	noNoSharedLib *regexp.Regexp
 	noNoStaticLib *regexp.Regexp
 	staticBin     *regexp.Regexp
@@ -309,7 +310,7 @@ func (r *runT) getPkg(name, pkgSet, ver string) pkgT {
 	if r.fixedVer != "" && r.fixedVer != "latest" {
 		p.ver = r.fixedVer
 	}
-	p.verShort = getVerShort(p.ver)
+	p.verShort = getVerShort(p.ver, r.re.gitVer)
 
 	p.rel, p.prevRel, p.newRel = getPkgRels(p)
 	p = getPkgSetVers(p)

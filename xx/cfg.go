@@ -30,7 +30,7 @@ func getVer(p pkgT, fixedVer string) string {
 	for _, file := range files {
 		if str.HasSuffix(file.Name(), ".ini") {
 			var ver, sep string
-			verRaw := str.Split(file.Name(), ".ini")[0]
+			verRaw, _, _ := str.Cut(file.Name(), ".ini")
 			verFields := str.Split(verRaw, ".")
 			for _, v := range verFields {
 				ver += fmt.Sprintf("%s%32s", sep, v)
@@ -48,13 +48,13 @@ func getVer(p pkgT, fixedVer string) string {
 	return str.Replace(versions[len(versions)-1], " ", "", -1)
 }
 
-func getVerShort(ver string) string {
+func getVerShort(ver string, re *regexp.Regexp) string {
 	var verShort string
 	fields := str.Split(ver, ".")
 	l := len(fields)
 
 	switch {
-	case isGitVer(ver):
+	case isGitVer(ver, re):
 		verShort = fields[1]
 	case l == 4:
 		verShort = fields[0] + "." + fields[1] + "." + fields[2]
@@ -69,8 +69,7 @@ func getVerShort(ver string) string {
 	return verShort
 }
 
-func isGitVer(ver string) bool {
-	re := regexp.MustCompile(`^[0-9]{4}-[0-9]{2}-[0-9]{2}\.[a-z0-9]{8}$`)
+func isGitVer(ver string, re *regexp.Regexp) bool {
 	return re.MatchString(ver)
 }
 

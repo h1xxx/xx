@@ -64,7 +64,7 @@ func (r *runT) installBase() {
 
 		// find the latest built pkg, don't build anything new
 		if !fileExists(p.pkgDir) {
-			p = getPkgPrevVer(p)
+			p = getPkgPrevVer(p, r.re.gitVer)
 			pc = r.getPkgCfg(p, "")
 		}
 		if !fileExists(p.pkgDir) {
