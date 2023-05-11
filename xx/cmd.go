@@ -14,27 +14,27 @@ import (
 	str "strings"
 )
 
-func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) execStep(step string, p pkgT, pc pkgCfgT) {
 	var command string
-	pwd := pkgC.steps.buildDir
+	pwd := pc.steps.buildDir
 
-	pathOut := pkgC.tmpLogDir + "stdout-" + step + ".log"
-	pathErr := pkgC.tmpLogDir + "stderr-" + step + ".log"
+	pathOut := pc.tmpLogDir + "stdout-" + step + ".log"
+	pathErr := pc.tmpLogDir + "stderr-" + step + ".log"
 
 	switch step {
 	case "prepare":
 		fmt.Println("  preparing...")
-		command = pkgC.steps.prepare
-		pwd = pkgC.tmpDir
+		command = pc.steps.prepare
+		pwd = pc.tmpDir
 	case "configure":
 		fmt.Println("  configuring...")
-		command = pkgC.steps.configure
+		command = pc.steps.configure
 	case "build":
-		fmt.Printf("  building %s...\n", pkg.setVerNewRel)
-		command = pkgC.steps.build
+		fmt.Printf("  building %s...\n", p.setVerNewRel)
+		command = pc.steps.build
 	case "pkg_create":
 		fmt.Println("  creating pkg...")
-		command = pkgC.steps.pkg_create
+		command = pc.steps.pkg_create
 	}
 
 	if command == "" {
@@ -49,8 +49,8 @@ func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
 	errExit(err, "can't create log file")
 	defer fErr.Close()
 
-	r.instLxcConfig(pkg, pkgC)
-	cmd := r.prepareCmd(pkg, pkgC, step, command, pwd, fOut, fErr)
+	r.instLxcConfig(p, pc)
+	cmd := r.prepareCmd(p, pc, step, command, pwd, fOut, fErr)
 	err = cmd.Run()
 	if err != nil {
 		// print error log when a step fails
@@ -63,7 +63,7 @@ func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
 		}
 
 		// meson for some reason prints errors to stdout
-		if str.Contains(pkgC.steps.configure, "meson") {
+		if str.Contains(pc.steps.configure, "meson") {
 			fd, _ = os.Open(pathOut)
 			defer fd.Close()
 			print := false
@@ -82,17 +82,17 @@ func (r *runT) execStep(step string, pkg pkgT, pkgC pkgCfgT) {
 
 		// clean the new pkg dir on pkg_create error
 		if step == "pkg_create" {
-			remNewPkg(pkg, errors.New(""))
+			remNewPkg(p, errors.New(""))
 		}
 		errExit(err, "can't execute command; stderr dump:\n\n"+stderr)
 	}
 }
 
-func (r *runT) prepareCmd(pkg pkgT, pkgC pkgCfgT, step, command, pwd string, fOut, fErr *os.File) *exec.Cmd {
+func (r *runT) prepareCmd(p pkgT, pc pkgCfgT, step, command, pwd string, fOut, fErr *os.File) *exec.Cmd {
 
 	shCmd := "lxc-execute"
 	shCmdP := []string{"-n", "xx", "-P", "/tmp/xx/../"}
-	for _, s := range pkgC.steps.env {
+	for _, s := range pc.steps.env {
 		envVar := str.Split(s, "=")[0]
 		shCmdP = append(shCmdP, "-s")
 		shCmdP = append(shCmdP, "lxc.environment="+envVar)
@@ -100,7 +100,7 @@ func (r *runT) prepareCmd(pkg pkgT, pkgC pkgCfgT, step, command, pwd string, fOu
 	shCmdP = append(shCmdP, []string{"--", "/home/xx/bin/bash", "-c",
 		"cd " + pwd + " && " + command}...)
 
-	if pkgC.crossBuild {
+	if pc.crossBuild {
 		shCmd = "/bin/sh"
 		shCmdP = []string{"-c", command}
 	}
@@ -114,14 +114,14 @@ func (r *runT) prepareCmd(pkg pkgT, pkgC pkgCfgT, step, command, pwd string, fOu
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = fOut
 	cmd.Stderr = fErr
-	cmd.Env = pkgC.steps.env
+	cmd.Env = pc.steps.env
 	cmd.Dir = pwd
-	logCmd(pkg, pkgC, cmd, step)
+	logCmd(p, pc, cmd, step)
 
 	return cmd
 }
 
-func (r *runT) instLxcConfig(pkg pkgT, pkgC pkgCfgT) {
+func (r *runT) instLxcConfig(p pkgT, pc pkgCfgT) {
 	var config string
 
 	user, err := user.Current()
@@ -140,10 +140,10 @@ func (r *runT) instLxcConfig(pkg pkgT, pkgC pkgCfgT) {
 	}
 	fd.Close()
 
-	replMap := r.setReplMap(pkg, pkgC, pkgC.src, pkgC.steps)
+	replMap := r.setReplMap(p, pc, pc.src, pc.steps)
 	for k, v := range replMap {
-		if k == "<root_dir>" && pkgC.src.srcType == "alpine" {
-			v = pkgC.steps.buildDir + "/rootfs"
+		if k == "<root_dir>" && pc.src.srcType == "alpine" {
+			v = pc.steps.buildDir + "/rootfs"
 		}
 		repl(&config, k, v)
 	}
@@ -204,17 +204,17 @@ func getMountDev(mountPoint string) string {
 	return ""
 }
 
-func remNewPkg(pkg pkgT, err error) {
+func remNewPkg(p pkgT, err error) {
 	if err != nil {
-		errRem := os.RemoveAll(pkg.newPkgDir)
+		errRem := os.RemoveAll(p.newPkgDir)
 		if errRem != nil {
 			fmt.Fprintln(os.Stderr, "error: can't remove ", errRem)
 		}
 	}
 }
 
-func logCmd(pkg pkgT, pkgC pkgCfgT, cmd *exec.Cmd, step string) {
-	path := fp.Join(pkgC.tmpLogDir, "cmd.log")
+func logCmd(p pkgT, pc pkgCfgT, cmd *exec.Cmd, step string) {
+	path := fp.Join(pc.tmpLogDir, "cmd.log")
 
 	fOpts := os.O_CREATE | os.O_APPEND | os.O_WRONLY
 	fd, err := os.OpenFile(path, fOpts, 0644)
@@ -225,7 +225,7 @@ func logCmd(pkg pkgT, pkgC pkgCfgT, cmd *exec.Cmd, step string) {
 	cmdStr = str.Replace(cmdStr, " -- ", " -- \n\n", -1)
 	cmdStr = str.Replace(cmdStr, "&& ", "&& \n\n", -1)
 
-	envStr := str.Join(pkgC.steps.env, "\n")
+	envStr := str.Join(pc.steps.env, "\n")
 
 	fmt.Fprintf(fd, "[ %s ]\n\n%+s\n\n%s\n\n\n", step, envStr, cmdStr)
 }

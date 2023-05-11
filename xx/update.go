@@ -28,24 +28,24 @@ func (r *runT) actionUpdate() {
 }
 
 func showUpdateInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
-		pkgC := pkgCfgs[i]
-		repolPkgs := getRepolInfo(pkg)
+	for i, p := range pkgs {
+		pc := pkgCfgs[i]
+		repolPkgs := getRepolInfo(p)
 		latestVer := getLatestVer(repolPkgs)
-		if pkgC.src.srcType != "tar" {
+		if pc.src.srcType != "tar" {
 			continue
 		}
 		fmtStr := "%-30s %15s %15s\n"
-		if pkg.ver < latestVer {
+		if p.ver < latestVer {
 			latestVer = "\033[1m" + latestVer + "\033[0m"
 			fmtStr = "%-30s %15s %23s\n"
 		}
-		fmt.Printf(fmtStr, pkg.name, pkg.ver, latestVer)
+		fmt.Printf(fmtStr, p.name, p.ver, latestVer)
 	}
 }
 
-func getRepolInfo(pkg pkgT) []repolPkgT {
-	prog := str.Split(pkg.name, "/")[1]
+func getRepolInfo(p pkgT) []repolPkgT {
+	prog := str.Split(p.name, "/")[1]
 	url := "https://repology.org/api/v1/project/" + prog
 	resp, err := http.Get(url)
 	errExit(err, "can't get info from repol on pkg:\n  "+url)
@@ -55,7 +55,7 @@ func getRepolInfo(pkg pkgT) []repolPkgT {
 	json.NewDecoder(resp.Body).Decode(&repolPkgs)
 
 	for i := range repolPkgs {
-		(&repolPkgs[i]).Name = pkg.name
+		(&repolPkgs[i]).Name = p.name
 	}
 
 	return repolPkgs

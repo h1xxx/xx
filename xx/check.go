@@ -25,8 +25,8 @@ func checkFileDupes(filePkg map[string][]pkgT) {
 		fmt.Println("* duplicated files:\n")
 		for file, pkgs := range dupes {
 			fmt.Println(" ", file)
-			for _, pkg := range pkgs {
-				fmt.Println(" ", pkg.name)
+			for _, p := range pkgs {
+				fmt.Println(" ", p.name)
 			}
 		}
 		fmt.Println()

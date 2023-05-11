@@ -31,37 +31,37 @@ func (r *runT) actionInst() {
 }
 
 func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
+	for i, p := range pkgs {
 		var cntInfo string
-		pkgC := pkgCfgs[i]
-		if pkgC.cnt {
+		pc := pkgCfgs[i]
+		if pc.cnt {
 			cntInfo = " (cnt)"
 		}
-		fmt.Printf("+ %-32s %s\n", pkg.name+cntInfo, pkg.setVerRel)
+		fmt.Printf("+ %-32s %s\n", p.name+cntInfo, p.setVerRel)
 
 		worldLoc := "/"
-		if pkgC.cnt {
-			worldLoc = pkgC.cntProg
+		if pc.cnt {
+			worldLoc = pc.cntProg
 		}
 
-		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{}, "all", 1)
+		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{}, "all", 1)
 		sort.Slice(deps, func(i, j int) bool {
 			return deps[i].name <= deps[j].name
 		})
 
 		for _, dep := range deps {
 			fmt.Printf("%-34s %s\n", dep.name, dep.setVerRel)
-			if !r.worldPkgExists(dep, pkgC) && !pkgC.force {
-				depCfg := pkgC
+			if !r.worldPkgExists(dep, pc) && !pc.force {
+				depCfg := pc
 				depCfg.cfgFiles = r.getPkgCfgFiles(dep)
 
 				r.instPkg(dep, depCfg, worldLoc)
 			}
 		}
 
-		fmt.Printf("%-34s %s\n", pkg.name, pkg.setVerRel)
-		if !r.worldPkgExists(pkg, pkgC) && !pkgC.force {
-			r.instPkg(pkg, pkgC, worldLoc)
+		fmt.Printf("%-34s %s\n", p.name, p.setVerRel)
+		if !r.worldPkgExists(p, pc) && !pc.force {
+			r.instPkg(p, pc, worldLoc)
 		}
 		fmt.Println()
 	}
@@ -71,11 +71,11 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 }
 
 // return a list of files and map of sha256 hashes for each file in the pkg
-func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
+func getPkgFiles(p pkgT) ([]string, map[string]string) {
 	var files []string
 	fileHash := make(map[string]string)
 
-	shaLog := fp.Join(pkg.progDir, "log", pkg.setVerRel, "sha256.log")
+	shaLog := fp.Join(p.progDir, "log", p.setVerRel, "sha256.log")
 	if !fileExists(shaLog) {
 		return files, fileHash
 	}
@@ -97,40 +97,40 @@ func getPkgFiles(pkg pkgT) ([]string, map[string]string) {
 	return files, fileHash
 }
 
-func (r *runT) instPkg(pkg pkgT, pkgC pkgCfgT, worldLoc string) {
+func (r *runT) instPkg(p pkgT, pc pkgCfgT, worldLoc string) {
 	fmt.Printf("  installing...\n")
 
 	// install default system files
-	Cp("/home/xx/cfg/sys/*", pkgC.instDir+"/")
+	Cp("/home/xx/cfg/sys/*", pc.instDir+"/")
 
 	// don't install dummy pkg creating temporary links during bootstrap
-	if str.HasSuffix(pkg.set, "_init") && pkgC.src.srcType == "files" {
+	if str.HasSuffix(p.set, "_init") && pc.src.srcType == "files" {
 		return
 	}
 
-	Cp(pkg.pkgDir+"/*", pkgC.instDir+"/")
+	Cp(p.pkgDir+"/*", pc.instDir+"/")
 
-	if !pkgC.muslBuild {
-		createBinLinks(pkg.pkgDir, pkgC.instDir)
+	if !pc.muslBuild {
+		createBinLinks(p.pkgDir, pc.instDir)
 	}
 
-	instPkgCfg(pkgC)
+	instPkgCfg(pc)
 
-	addPkgToWorldDir(pkg, pkgC.instDir)
-	r.addPkgToWorldT(pkg, worldLoc)
+	addPkgToWorldDir(p, pc.instDir)
+	r.addPkgToWorldT(p, worldLoc)
 }
 
 // installs config files for the pkg
-func instPkgCfg(pkgC pkgCfgT) {
+func instPkgCfg(pc pkgCfgT) {
 	var files []string
-	for file := range pkgC.cfgFiles {
+	for file := range pc.cfgFiles {
 		files = append(files, file)
 	}
 	sort.Strings(files)
 
 	for _, file := range files {
-		src := pkgC.cfgFiles[file]
-		Cp(src, fp.Join(pkgC.instDir, file))
+		src := pc.cfgFiles[file]
+		Cp(src, fp.Join(pc.instDir, file))
 	}
 }
 
@@ -145,13 +145,13 @@ func (r *runT) instSysCfg() {
 }
 
 func (r *runT) instTargetCfg(instDir string, worldPkgs map[pkgT]bool) {
-	for pkg, _ := range worldPkgs {
-		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.set)
+	for p, _ := range worldPkgs {
+		fmt.Printf("+ %-32s %s\n", p.name, p.set)
 
-		var pkgC pkgCfgT
-		pkgC.cfgFiles = r.getPkgCfgFiles(pkg)
-		pkgC.instDir = instDir
+		var pc pkgCfgT
+		pc.cfgFiles = r.getPkgCfgFiles(p)
+		pc.instDir = instDir
 
-		instPkgCfg(pkgC)
+		instPkgCfg(pc)
 	}
 }

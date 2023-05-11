@@ -106,8 +106,8 @@ func (r *runT) createBuildDirs() {
 	errExit(err, "can't create dir: "+r.rootDir)
 }
 
-func createPkgDirs(pkg pkgT, pkgC pkgCfgT) {
-	dirs := []string{pkg.newPkgDir, pkgC.tmpDir, pkgC.tmpLogDir}
+func createPkgDirs(p pkgT, pc pkgCfgT) {
+	dirs := []string{p.newPkgDir, pc.tmpDir, pc.tmpLogDir}
 	for _, d := range dirs {
 		err := os.MkdirAll(d, 0700)
 		errExit(err, "can't create tmp dir: "+d)
@@ -115,7 +115,7 @@ func createPkgDirs(pkg pkgT, pkgC pkgCfgT) {
 
 	dirs = []string{"pkg", "src", "log"}
 	for _, d := range dirs {
-		dir := fp.Join(pkg.progDir, d)
+		dir := fp.Join(p.progDir, d)
 		err := os.MkdirAll(dir, 0700)
 		errExit(err, "can't create pkg dir: "+dir)
 	}

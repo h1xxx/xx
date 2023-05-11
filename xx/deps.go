@@ -14,8 +14,8 @@ import (
 
 // returns a list of dependencies
 // depType possible vaules: "all", "run", "lib", "build"
-func (r *runT) getAllDeps(pkg pkgT, deps, res []pkgT, depType string, depth int) []pkgT {
-	if pkgExists(pkg, res) && len(deps) == 0 {
+func (r *runT) getAllDeps(p pkgT, deps, res []pkgT, depType string, depth int) []pkgT {
+	if pkgExists(p, res) && len(deps) == 0 {
 		return res
 	}
 
@@ -46,11 +46,11 @@ func (r *runT) getAllDeps(pkg pkgT, deps, res []pkgT, depType string, depth int)
 }
 
 func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
-		pkgCheck(pkg)
+	for i, p := range pkgs {
+		pkgCheck(p)
 
-		pkgC := pkgCfgs[i]
-		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{},
+		pc := pkgCfgs[i]
+		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{},
 			"all", 1)
 		for _, dep := range deps {
 			pkgCheck(dep)
@@ -58,19 +58,19 @@ func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	}
 }
 
-func pkgCheck(pkg pkgT) {
-	if !fileExists(pkg.pkgDir) || dirIsEmpty(pkg.pkgDir) {
-		msg := "package not built: " + pkg.name + " " + pkg.setVerRel
+func pkgCheck(p pkgT) {
+	if !fileExists(p.pkgDir) || dirIsEmpty(p.pkgDir) {
+		msg := "package not built: " + p.name + " " + p.setVerRel
 		errExit(errors.New(""), msg)
 	}
 }
 
 // return a map of pkgs and list of lib names, and a list of packages
 // containing needed shared libraries
-func (r *runT) getPkgLibDeps(pkg pkgT) (map[pkgT][]string, []pkgT) {
+func (r *runT) getPkgLibDeps(p pkgT) (map[pkgT][]string, []pkgT) {
 	var deps []pkgT
 	depLibs := make(map[pkgT][]string)
-	file := fp.Join(pkg.progDir, "log", pkg.setVerRel, "shared_libs")
+	file := fp.Join(p.progDir, "log", p.setVerRel, "shared_libs")
 
 	if !fileExists(file) {
 		return depLibs, deps
@@ -103,7 +103,7 @@ func (r *runT) getPkgLibDeps(pkg pkgT) (map[pkgT][]string, []pkgT) {
 		if dep != depLatest && pkgHasLib(depLatest, libName) {
 			dep = depLatest
 		}
-		if !pkgExists(dep, deps) && pkg.name != dep.name {
+		if !pkgExists(dep, deps) && p.name != dep.name {
 			deps = append(deps, dep)
 		}
 		depLibs[dep] = append(depLibs[dep], libName)
@@ -116,9 +116,9 @@ func (r *runT) getPkgLibDeps(pkg pkgT) (map[pkgT][]string, []pkgT) {
 	return depLibs, deps
 }
 
-func pkgHasLib(pkg pkgT, libName string) bool {
+func pkgHasLib(p pkgT, libName string) bool {
 	// todo: if package is somewhere in world, lookup in there from a map
-	file := fp.Join(pkg.progDir, "log", pkg.setVerRel, "sha256.log")
+	file := fp.Join(p.progDir, "log", p.setVerRel, "sha256.log")
 	if !fileExists(file) {
 		return false
 	}

@@ -20,34 +20,34 @@ func (r *runT) actionSource() {
 }
 
 func (r *runT) getAllSrc(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
-		pkgC := pkgCfgs[i]
+	for i, p := range pkgs {
+		pc := pkgCfgs[i]
 
-		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.ver)
+		fmt.Printf("+ %-32s %s\n", p.name, p.ver)
 
-		srcDir := fp.Join(pkg.progDir, "src")
+		srcDir := fp.Join(p.progDir, "src")
 		err := os.MkdirAll(srcDir, 0700)
 		errExit(err, "couldn't create dir: "+srcDir)
 
-		r.getSrc(pkg, pkgC)
+		r.getSrc(p, pc)
 	}
 }
 
-func (r *runT) getSrc(pkg pkgT, pkgC pkgCfgT) {
-	switch pkgC.src.srcType {
+func (r *runT) getSrc(p pkgT, pc pkgCfgT) {
+	switch pc.src.srcType {
 	case "tar":
-		getSrcTar(pkg, pkgC)
+		getSrcTar(p, pc)
 	case "git":
-		getSrcGitMaster(pkg, pkgC)
+		getSrcGitMaster(p, pc)
 	case "go-mod":
-		getViaGoMod(pkg, pkgC)
+		getViaGoMod(p, pc)
 	case "alpine":
-		r.getAlpinePkgs(pkg, pkgC)
+		r.getAlpinePkgs(p, pc)
 	}
 }
 
-func getSrcTar(pkg pkgT, pkgC pkgCfgT) {
-	urls := str.Split(pkgC.src.url, " ")
+func getSrcTar(p pkgT, pc pkgCfgT) {
+	urls := str.Split(pc.src.url, " ")
 
 	for _, url := range urls {
 		var fName string
@@ -58,7 +58,7 @@ func getSrcTar(pkg pkgT, pkgC pkgCfgT) {
 		} else {
 			fName = path.Base(url)
 		}
-		fPath := fp.Join(pkg.progDir, "src", fName)
+		fPath := fp.Join(p.progDir, "src", fName)
 		if fileExists(fPath) {
 			return
 		}
@@ -143,13 +143,13 @@ func setHeaders(req *http.Request) {
 	req.Header.Set("Connection", "Keep-Alive")
 }
 
-func getSrcGitMaster(pkg pkgT, pkgC pkgCfgT) {
-	cloneDir := fp.Join(pkg.progDir, "src", pkg.prog)
-	c := "git clone " + pkgC.src.url + " " + cloneDir
+func getSrcGitMaster(p pkgT, pc pkgCfgT) {
+	cloneDir := fp.Join(p.progDir, "src", p.prog)
+	c := "git clone " + pc.src.url + " " + cloneDir
 
 	if !fileExists(cloneDir) {
 		fmt.Println("  git clone...")
-	} else if !gitCommitExists(cloneDir, pkg.verShort) {
+	} else if !gitCommitExists(cloneDir, p.verShort) {
 		fmt.Println("  git pull...")
 		c = "cd " + cloneDir + " && git pull"
 	} else {
@@ -158,7 +158,7 @@ func getSrcGitMaster(pkg pkgT, pkgC pkgCfgT) {
 
 	cmd := exec.Command("/home/xx/bin/busybox", "sh", "-c", c)
 	err := cmd.Run()
-	errExit(err, "can't get source from git server: "+pkgC.src.url)
+	errExit(err, "can't get source from git server: "+pc.src.url)
 }
 
 func gitCommitExists(gitRoot, commit string) bool {
@@ -173,18 +173,18 @@ func gitCommitExists(gitRoot, commit string) bool {
 	return true
 }
 
-func getViaGoMod(pkg pkgT, pkgC pkgCfgT) {
-	srcDir := fp.Join(pkg.progDir, "src", pkg.ver)
+func getViaGoMod(p pkgT, pc pkgCfgT) {
+	srcDir := fp.Join(p.progDir, "src", p.ver)
 	if fileExists(srcDir) {
 		return
 	}
 
 	var uri string
 	// todo: find a better way to determine golib version type
-	if str.Contains(pkg.ver, "-") {
-		uri = pkgC.src.url + "@v0.0.0-" + pkg.ver
+	if str.Contains(p.ver, "-") {
+		uri = pc.src.url + "@v0.0.0-" + p.ver
 	} else {
-		uri = pkgC.src.url + "@v" + pkg.ver
+		uri = pc.src.url + "@v" + p.ver
 	}
 
 	c := "go mod download " + uri

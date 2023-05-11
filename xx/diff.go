@@ -18,41 +18,41 @@ func (r *runT) actionDiff() {
 }
 
 func (r *runT) diffPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
-		r.diffPkg(pkg, pkgCfgs[i])
+	for i, p := range pkgs {
+		r.diffPkg(p, pkgCfgs[i])
 	}
 }
 
-func (r *runT) diffPkg(pkg pkgT, pkgC pkgCfgT) {
-	if r.isOldBuild(pkg) {
+func (r *runT) diffPkg(p pkgT, pc pkgCfgT) {
+	if r.isOldBuild(p) {
 		return
 	}
 
-	pkgPrev := r.getPkgPrev(pkg)
+	pkgPrev := r.getPkgPrev(p)
 	pkgCPrev := r.getPkgCfg(pkgPrev, "")
 
-	if pkg == pkgPrev {
+	if p == pkgPrev {
 		return
 	}
 
-	_, fileHash := getPkgFiles(pkg)
+	_, fileHash := getPkgFiles(p)
 	_, fileHashPrev := getPkgFiles(pkgPrev)
 
 	// results map: map[<category>][]<list of files>
 	// categories:  "changed", "new", "removed", "etc", "config",
 	// 		"removed_libs", "new_libs"
 	res, etcFiles := getRes(fileHash, fileHashPrev)
-	getEtcDiff(etcFiles, pkg, res)
-	getConfigDiff(pkg, res)
-	getDirStatus(pkg, pkgPrev, res)
-	getLibsDiff(pkg, pkgPrev, pkgC, pkgCPrev, fileHash, fileHashPrev, res)
+	getEtcDiff(etcFiles, p, res)
+	getConfigDiff(p, res)
+	getDirStatus(p, pkgPrev, res)
+	getLibsDiff(pc, pkgCPrev, fileHash, fileHashPrev, res)
 
 	printDiffRes(res)
 }
 
-func (r *runT) isOldBuild(pkg pkgT) bool {
+func (r *runT) isOldBuild(p pkgT) bool {
 	// time since last build in hours
-	shaLog := fp.Join(pkg.progDir, "log", pkg.setVerRel, "sha256.log")
+	shaLog := fp.Join(p.progDir, "log", p.setVerRel, "sha256.log")
 	stats, err := os.Stat(shaLog)
 	if err != nil {
 		return false
@@ -62,29 +62,29 @@ func (r *runT) isOldBuild(pkg pkgT) bool {
 	return timeDiff > r.diffHours
 }
 
-func (r *runT) getPkgPrev(pkg pkgT) pkgT {
-	pkgPrev := pkg
+func (r *runT) getPkgPrev(p pkgT) pkgT {
+	pkgPrev := p
 	if r.diffBuild {
-		pkgPrev.setVerRel = pkg.setVerPrevRel
-		if pkg.setVerRel == pkg.setVerPrevRel {
+		pkgPrev.setVerRel = p.setVerPrevRel
+		if p.setVerRel == p.setVerPrevRel {
 			return pkgPrev
 		}
-		fmt.Printf("\n\n+ %-32s %s => %s\n", pkg.name,
-			pkg.setVerPrevRel, pkg.setVerRel)
+		fmt.Printf("\n\n+ %-32s %s => %s\n", p.name,
+			p.setVerPrevRel, p.setVerRel)
 	} else {
-		return getPkgPrevVer(pkg)
+		return getPkgPrevVer(p)
 	}
 	return pkgPrev
 }
 
-func getPkgPrevVer(pkg pkgT) pkgT {
+func getPkgPrevVer(p pkgT) pkgT {
 	var versions []string
 
-	dirs, err := os.ReadDir(fp.Join(pkg.progDir, "pkg"))
+	dirs, err := os.ReadDir(fp.Join(p.progDir, "pkg"))
 	errExit(err, "can't open package dir")
 
 	for _, dir := range dirs {
-		if str.HasPrefix(dir.Name(), pkg.set+"-") {
+		if str.HasPrefix(dir.Name(), p.set+"-") {
 			var ver, sep string
 
 			fields := str.Split(dir.Name(), "-")
@@ -107,7 +107,7 @@ func getPkgPrevVer(pkg pkgT) pkgT {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(errors.New(""), "no pkg dirs available for "+pkg.name)
+		errExit(errors.New(""), "no pkg dirs available for "+p.name)
 	}
 
 	verIdx := len(versions) - 1
@@ -115,13 +115,13 @@ func getPkgPrevVer(pkg pkgT) pkgT {
 		verIdx = len(versions) - 2
 	}
 
-	pkg.ver = str.Replace(versions[verIdx], " ", "", -1)
-	pkg.verShort = getVerShort(pkg.ver)
-	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-	pkg = getPkgSetVers(pkg)
-	pkg = getPkgDirs(pkg)
+	p.ver = str.Replace(versions[verIdx], " ", "", -1)
+	p.verShort = getVerShort(p.ver)
+	p.rel, p.prevRel, p.newRel = getPkgRels(p)
+	p = getPkgSetVers(p)
+	p = getPkgDirs(p)
 
-	return pkg
+	return p
 }
 
 func getRes(fileHash, fileHashPrev map[string]string) (map[string][]string,
@@ -185,10 +185,10 @@ func getDiff(file1, file2 string) ([]string, bool) {
 	return diff, change
 }
 
-func getEtcDiff(etcFiles []string, pkg pkgT, res map[string][]string) {
+func getEtcDiff(etcFiles []string, p pkgT, res map[string][]string) {
 	for i, f := range etcFiles {
-		diff, _ := getDiff(fp.Join(pkg.prevPkgDir, f),
-			fp.Join(pkg.pkgDir, f))
+		diff, _ := getDiff(fp.Join(p.prevPkgDir, f),
+			fp.Join(p.pkgDir, f))
 
 		res["etc"] = append(res["etc"], f+"\n")
 		for _, line := range diff {
@@ -214,10 +214,10 @@ func skipLine(line string) bool {
 	return false
 }
 
-func getConfigDiff(pkg pkgT, res map[string][]string) {
-	configPrevLog := fp.Join(pkg.progDir, "log", pkg.setVerPrevRel,
+func getConfigDiff(p pkgT, res map[string][]string) {
+	configPrevLog := fp.Join(p.progDir, "log", p.setVerPrevRel,
 		"config-help.log")
-	configLog := fp.Join(pkg.progDir, "log", pkg.setVerRel,
+	configLog := fp.Join(p.progDir, "log", p.setVerRel,
 		"config-help.log")
 
 	if !fileExists(configPrevLog) || !fileExists(configLog) {
@@ -237,7 +237,7 @@ func getConfigDiff(pkg pkgT, res map[string][]string) {
 	}
 }
 
-func getDirStatus(pkg, pkgPrev pkgT, res map[string][]string) {
+func getDirStatus(p, pkgPrev pkgT, res map[string][]string) {
 	dirStat := make(map[string]int64)
 	dirStatPrev := make(map[string]int64)
 
@@ -246,13 +246,13 @@ func getDirStatus(pkg, pkgPrev pkgT, res map[string][]string) {
 	changeCount := make(map[string]int64)
 	changeCountPrev := make(map[string]int64)
 
-	files, err := walkDir(pkg.pkgDir, "files")
-	errExit(err, "can't get a list of files in: "+pkg.pkgDir)
+	files, err := walkDir(p.pkgDir, "files")
+	errExit(err, "can't get a list of files in: "+p.pkgDir)
 
 	filesPrev, err := walkDir(pkgPrev.pkgDir, "files")
 	errExit(err, "can't get a list of files in: "+pkgPrev.pkgDir)
 
-	getDirStats(dirStat, dirCount, changeCount, files, pkg, res)
+	getDirStats(dirStat, dirCount, changeCount, files, p, res)
 	getDirStats(dirStatPrev, dirCountPrev, changeCountPrev, filesPrev,
 		pkgPrev, res)
 
@@ -282,11 +282,11 @@ func getDirStatus(pkg, pkgPrev pkgT, res map[string][]string) {
 }
 
 func getDirStats(dirStat, dirCount, changeCount map[string]int64,
-	files []string, pkg pkgT, res map[string][]string) {
+	files []string, p pkgT, res map[string][]string) {
 
 	for _, file := range files {
 		fullDir := fp.Dir(file)
-		dir := "/" + str.TrimPrefix(fullDir, pkg.pkgDir)
+		dir := "/" + str.TrimPrefix(fullDir, p.pkgDir)
 		dirS := str.Split(dir, "/")
 		d := str.Join(dirS[:min(4, len(dirS))], "/")
 
@@ -305,7 +305,7 @@ func getDirStats(dirStat, dirCount, changeCount map[string]int64,
 	}
 }
 
-func getLibsDiff(pkg, pkgPrev pkgT, pkgC, pkgCPrev pkgCfgT, fileHash, fileHashPrev map[string]string, res map[string][]string) {
+func getLibsDiff(pc, pkgCPrev pkgCfgT, fileHash, fileHashPrev map[string]string, res map[string][]string) {
 	var files, filesPrev []string
 	for file := range fileHash {
 		if str.HasPrefix(file, "/usr/include") ||
@@ -328,7 +328,7 @@ func getLibsDiff(pkg, pkgPrev pkgT, pkgC, pkgCPrev pkgCfgT, fileHash, fileHashPr
 		filesPrev = append(filesPrev, file)
 	}
 
-	pkgDeps := pkgC.libDeps
+	pkgDeps := pc.libDeps
 	pkgDepsPrev := pkgCPrev.libDeps
 
 	for _, libPkg := range pkgDeps {

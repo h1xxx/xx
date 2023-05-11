@@ -27,14 +27,14 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 			continue
 		}
 
-		pkg, pkgC := r.parseSetLine(line, r.re)
-		if pkgC.cnt {
+		p, pc := r.parseSetLine(line, r.re)
+		if pc.cnt {
 			r.installCnt = true
-			cnts[pkgC.cntProg] = true
+			cnts[pc.cntProg] = true
 		}
 
-		pkgs = append(pkgs, pkg)
-		pkgCfgs = append(pkgCfgs, pkgC)
+		pkgs = append(pkgs, p)
+		pkgCfgs = append(pkgCfgs, pc)
 	}
 
 	for cnt, _ := range cnts {
@@ -70,14 +70,14 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 		errExit(err, "incorrect pkg name:\n  "+name)
 	}
 
-	pkg := r.getPkg(name, pkgSet, ver)
-	pkgC := r.getPkgCfg(pkg, flags)
+	p := r.getPkg(name, pkgSet, ver)
+	pc := r.getPkgCfg(p, flags)
 
 	// todo: implement check pkg and pkgC functions
 	// e.g. (*args.ver != "latest" || *args.set != "std")
 	// e.g. non-empty fields, match predefined regexes etc.
 
-	return pkg, pkgC
+	return p, pc
 }
 
 func parsePkgFlags(flags, pkgName string) (bool, bool) {
@@ -99,14 +99,14 @@ func parsePkgFlags(flags, pkgName string) (bool, bool) {
 }
 
 // returns src, steps and isSubPkg
-func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
+func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 	var steps stepsT
 	var stepsMap = make(map[string]string)
 	var src srcT
 	var section, step, varsVar string
 	var subPkgList []string
 	vars := make(map[string]string)
-	set := pkg.set
+	set := p.set
 
 	check := map[string]bool{
 		"hasSrc":            false,
@@ -124,7 +124,7 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		"nonEmptyPkgCreate": false,
 	}
 
-	iniFile := fp.Join(pkg.progDir, pkg.ver+".ini")
+	iniFile := fp.Join(p.progDir, p.ver+".ini")
 	f, err := os.Open(iniFile)
 	errExit(err, "can't open file: "+iniFile)
 	defer f.Close()
@@ -142,7 +142,7 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		}
 
 		// replace predefined variables
-		line = r.replaceIniVars(line, pkg, pkgC, src, steps)
+		line = r.replaceIniVars(line, p, pc, src, steps)
 
 		switch {
 		// start of the new section
@@ -172,7 +172,7 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 		case section == "src" && str.HasPrefix(line, "url ="):
 			src.url = str.TrimPrefix(line, "url = ")
 			fileBase := path.Base(str.Split(src.url, " ")[0])
-			src.file = fp.Join(pkg.progDir, "src", fileBase)
+			src.file = fp.Join(p.progDir, "src", fileBase)
 			step = "url"
 			if src.url != "" || src.srcType == "files" {
 				check["hasUrl"] = true
@@ -234,7 +234,7 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 
 	if !check["hasSet"] {
 		msg := "config set '%s' missing in %s"
-		errExit(fmt.Errorf(msg, pkg.set, iniFile), "")
+		errExit(fmt.Errorf(msg, p.set, iniFile), "")
 	}
 
 	if src.srcType != "" {
@@ -265,12 +265,12 @@ func (r *runT) parsePkgIni(pkg pkgT, pkgC pkgCfgT) (srcT, stepsT, bool) {
 	env, err := getIniEnv(stepsMap["env"])
 	errExit(err, fmt.Sprintf("incorrect env %s", iniFile))
 
-	steps.env = r.prepareEnv(env, pkg, pkgC)
-	steps.buildDir = fp.Join(pkgC.tmpDir, src.dirName)
+	steps.env = r.prepareEnv(env, p, pc)
+	steps.buildDir = fp.Join(pc.tmpDir, src.dirName)
 
 	// replace distro defined vars in each step (replaces <build_dir>)
 	for step, val := range stepsMap {
-		stepsMap[step] = r.replaceIniVars(val, pkg, pkgC, src, steps)
+		stepsMap[step] = r.replaceIniVars(val, p, pc, src, steps)
 	}
 
 	steps.prepare = stepsMap["prepare"]
@@ -359,9 +359,9 @@ func startStepLine(line string) bool {
 	return false
 }
 
-func (r *runT) replaceIniVars(s string, pkg pkgT, pkgC pkgCfgT, src srcT,
+func (r *runT) replaceIniVars(s string, p pkgT, pc pkgCfgT, src srcT,
 	steps stepsT) string {
-	replMap := r.setReplMap(pkg, pkgC, src, steps)
+	replMap := r.setReplMap(p, pc, src, steps)
 
 	for k, v := range replMap {
 		if v != "" {
@@ -372,58 +372,58 @@ func (r *runT) replaceIniVars(s string, pkg pkgT, pkgC pkgCfgT, src srcT,
 	return s
 }
 
-func (r *runT) setReplMap(pkg pkgT, pkgC pkgCfgT, src srcT, steps stepsT) map[string]string {
+func (r *runT) setReplMap(p pkgT, pc pkgCfgT, src srcT, steps stepsT) map[string]string {
 	return map[string]string{
 		"<root_dir>":    r.rootDir,
-		"<prog>":        pkg.prog,
-		"<ver>":         pkg.ver,
-		"<ver_short>":   pkg.verShort,
-		"<pkg_rel>":     pkg.newRel,
-		"<set_ver_rel>": pkg.setVerNewRel,
-		"<pkg_dir>":     pkg.newPkgDir,
-		"<prog_dir>":    pkg.progDir,
-		"<patch_dir>":   pkg.patchDir,
-		"<src_dir>":     fp.Join(pkg.progDir, "src"),
-		"<ver_pkgspec>": getPkgSpecVer(pkg),
+		"<prog>":        p.prog,
+		"<ver>":         p.ver,
+		"<ver_short>":   p.verShort,
+		"<pkg_rel>":     p.newRel,
+		"<set_ver_rel>": p.setVerNewRel,
+		"<pkg_dir>":     p.newPkgDir,
+		"<prog_dir>":    p.progDir,
+		"<patch_dir>":   p.patchDir,
+		"<src_dir>":     fp.Join(p.progDir, "src"),
+		"<ver_pkgspec>": getPkgSpecVer(p),
 		"<src_path>":    src.file,
-		"<tmp_dir>":     pkgC.tmpDir,
+		"<tmp_dir>":     pc.tmpDir,
 		"<build_dir>":   steps.buildDir,
 	}
 }
 
-func getPkgSpecVer(pkg pkgT) string {
+func getPkgSpecVer(p pkgT) string {
 	var v string
 
-	switch pkg.prog {
+	switch p.prog {
 	case "sqlite":
-		v = str.Replace(pkg.ver, ".", "", -1) + "000"
+		v = str.Replace(p.ver, ".", "", -1) + "000"
 	case "libnl":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	case "cdrtools":
-		v = str.Split(pkg.ver, "a")[0]
+		v = str.Split(p.ver, "a")[0]
 	case "c-ares":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	case "doxygen":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	case "libcdio-paranoia":
-		v = str.Replace(pkg.ver, "+", "-", -1)
+		v = str.Replace(p.ver, "+", "-", -1)
 	case "boost":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	case "libexif":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	case "vim":
-		vSplit := str.Split(pkg.ver, ".")
+		vSplit := str.Split(p.ver, ".")
 		v = vSplit[0] + vSplit[1]
 	case "w3m":
-		v = str.Replace(pkg.ver, "+git", "-git", -1)
+		v = str.Replace(p.ver, "+git", "-git", -1)
 	case "unzip":
-		v = str.Replace(pkg.ver, ".", "", -1)
+		v = str.Replace(p.ver, ".", "", -1)
 	case "fetchmail":
-		v = str.Replace(pkg.ver, ".", "-", -1)
+		v = str.Replace(p.ver, ".", "-", -1)
 	case "zip":
-		v = str.Replace(pkg.ver, ".", "", -1)
+		v = str.Replace(p.ver, ".", "", -1)
 	case "tinyxml":
-		v = str.Replace(pkg.ver, ".", "_", -1)
+		v = str.Replace(p.ver, ".", "_", -1)
 	}
 
 	return v
@@ -490,9 +490,9 @@ func (r *runT) getWorldPkgs(instDir string) []pkgT {
 		fields := str.Split(nameSet, "\t")
 		name := fields[0]
 		set := fields[1]
-		pkg := r.getPkg(name, set, ver)
+		p := r.getPkg(name, set, ver)
 
-		worldPkgs = append(worldPkgs, pkg)
+		worldPkgs = append(worldPkgs, p)
 	}
 
 	return worldPkgs
@@ -543,15 +543,15 @@ func getCntList(cntDir string) []string {
 
 // returns a map of config files to be installed with a pkg
 // file in root dir -> location of the file
-func (r *runT) getPkgCfgFiles(pkg pkgT) map[string]string {
+func (r *runT) getPkgCfgFiles(p pkgT) map[string]string {
 	cfgFiles := make(map[string]string)
 
 	// get files from pkg cfg dir
-	if fileExists(pkg.cfgDir) {
-		files, err := walkDir(pkg.cfgDir, "files")
-		errExit(err, "can't walk pkg cfg dir: "+pkg.cfgDir)
+	if fileExists(p.cfgDir) {
+		files, err := walkDir(p.cfgDir, "files")
+		errExit(err, "can't walk pkg cfg dir: "+p.cfgDir)
 		for _, file := range files {
-			rootFile := str.TrimPrefix(file, pkg.cfgDir)
+			rootFile := str.TrimPrefix(file, p.cfgDir)
 			if file == rootFile {
 				errExit(errors.New(""),
 					"file can't be copied from root dir")
@@ -561,7 +561,7 @@ func (r *runT) getPkgCfgFiles(pkg pkgT) map[string]string {
 	}
 
 	// get files from system cfg dir for the pkg
-	pkgSysCfgDir := findCfgDir(fp.Join(r.sysCfgDir, pkg.prog), pkg)
+	pkgSysCfgDir := findCfgDir(fp.Join(r.sysCfgDir, p.prog), p)
 	if fileExists(pkgSysCfgDir) {
 		files, err := walkDir(pkgSysCfgDir, "files")
 		errExit(err, "can't walk sys cfg dir: "+pkgSysCfgDir)

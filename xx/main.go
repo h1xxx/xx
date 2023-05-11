@@ -283,66 +283,67 @@ func (r *runT) getPkgList() {
 	// process a single package
 	// todo: add deps
 	if r.targetIsSinglePkg {
-		pkg := r.getPkg(r.actionTarget, "std", "latest")
-		pkgC := r.getPkgCfg(pkg, "")
+		p := r.getPkg(r.actionTarget, "std", "latest")
+		pc := r.getPkgCfg(p, "")
 
-		r.pkgs = append(r.pkgs, pkg)
-		r.pkgCfgs = append(r.pkgCfgs, pkgC)
+		r.pkgs = append(r.pkgs, p)
+		r.pkgCfgs = append(r.pkgCfgs, pc)
 	}
 }
 
 func (r *runT) getPkg(name, pkgSet, ver string) pkgT {
-	var pkg pkgT
+	var p pkgT
 	fields := str.Split(name, "/")
 
-	pkg.name = name
-	pkg.categ = fields[0]
-	pkg.prog = fields[1]
+	p.name = name
+	p.categ = fields[0]
+	p.prog = fields[1]
 
-	pkg.set = pkgSet
+	p.set = pkgSet
 	if r.fixedSet != "" && r.fixedSet != "std" {
-		pkg.set = r.fixedSet
+		p.set = r.fixedSet
 	}
 
-	pkg.progDir = fp.Join("/home/xx/prog", pkg.name)
-	pkg.ver = getVer(pkg, ver)
+	p.progDir = fp.Join("/home/xx/prog", p.name)
+	p.ver = getVer(p, ver)
 	if r.fixedVer != "" && r.fixedVer != "latest" {
-		pkg.ver = r.fixedVer
+		p.ver = r.fixedVer
 	}
-	pkg.verShort = getVerShort(pkg.ver)
+	p.verShort = getVerShort(p.ver)
 
-	pkg.rel, pkg.prevRel, pkg.newRel = getPkgRels(pkg)
-	pkg = getPkgSetVers(pkg)
-	pkg = getPkgDirs(pkg)
+	p.rel, p.prevRel, p.newRel = getPkgRels(p)
+	p = getPkgSetVers(p)
+	p = getPkgDirs(p)
 
-	return pkg
+	return p
 }
 
-func getPkgSetVers(pkg pkgT) pkgT {
-	setVer := pkg.set + "-" + pkg.ver
-	pkg.setVerRel = setVer + "-" + pkg.rel
-	pkg.setVerPrevRel = setVer + "-" + pkg.prevRel
-	pkg.setVerNewRel = setVer + "-" + pkg.newRel
+func getPkgSetVers(p pkgT) pkgT {
+	setVer := p.set + "-" + p.ver
+	p.setVerRel = setVer + "-" + p.rel
+	p.setVerPrevRel = setVer + "-" + p.prevRel
+	p.setVerNewRel = setVer + "-" + p.newRel
 
-	return pkg
+	return p
 }
 
-func getPkgDirs(pkg pkgT) pkgT {
-	pkg.patchDir = fp.Join(pkg.progDir, "patch", pkg.ver)
-	pkg.pkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerRel)
-	pkg.newPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerNewRel)
-	pkg.prevPkgDir = fp.Join(pkg.progDir, "pkg", pkg.setVerPrevRel)
-	pkg.cfgDir = findCfgDir(fp.Join(pkg.progDir, "cfg"), pkg)
+func getPkgDirs(p pkgT) pkgT {
+	p.patchDir = fp.Join(p.progDir, "patch", p.ver)
+	p.pkgDir = fp.Join(p.progDir, "pkg", p.setVerRel)
+	p.newPkgDir = fp.Join(p.progDir, "pkg", p.setVerNewRel)
+	p.prevPkgDir = fp.Join(p.progDir, "pkg", p.setVerPrevRel)
+	p.cfgDir = findCfgDir(fp.Join(p.progDir, "cfg"), p)
 
-	return pkg
+	return p
 }
 
 // searches for the best directory in program configs dir
-func findCfgDir(searchDir string, pkg pkgT) string {
+func findCfgDir(searchDir string, p pkgT) string {
 	var res string
-	cfgDir := fp.Join(searchDir, pkg.set+"-"+pkg.ver)
-	cfgLatestDir := fp.Join(searchDir, pkg.set+"-latest")
-	cfgAllSetsDir := fp.Join(searchDir, "all-"+pkg.ver)
+
+	cfgDir := fp.Join(searchDir, p.set+"-"+p.ver)
+	cfgLatestDir := fp.Join(searchDir, p.set+"-latest")
+	cfgAllSetsDir := fp.Join(searchDir, "all-"+p.ver)
 	cfgAllSetsLatestDir := fp.Join(searchDir, "all-latest")
 
 	switch {
@@ -359,52 +360,51 @@ func findCfgDir(searchDir string, pkg pkgT) string {
 	return res
 }
 
-func (r *runT) getPkgCfg(pkg pkgT, flags string) pkgCfgT {
-	var pkgC pkgCfgT
-	pkgC.force, pkgC.cnt = parsePkgFlags(flags, pkg.name)
+func (r *runT) getPkgCfg(p pkgT, flags string) pkgCfgT {
+	var pc pkgCfgT
+	pc.force, pc.cnt = parsePkgFlags(flags, p.name)
 
 	if r.forceAll {
-		pkgC.force = true
+		pc.force = true
 	}
 
-	if pkgC.cnt {
-		pkgC.cntPkg = pkg
-		pkgC.cntProg = pkg.prog
-		pkgC.instDir = fp.Join(r.rootDir, "/cnt/rootfs/", pkgC.cntProg)
+	if pc.cnt {
+		pc.cntPkg = p
+		pc.cntProg = p.prog
+		pc.instDir = fp.Join(r.rootDir, "/cnt/rootfs/", pc.cntProg)
 	} else {
-		pkgC.instDir = r.rootDir
+		pc.instDir = r.rootDir
 	}
 
-	buildPath := "/tmp/xx/build/" + pkg.prog + "-" + pkg.ver + "_build-"
-	buildID := getLastRel("/tmp/xx/build/",
-		pkg.prog+"-"+pkg.ver+"_build-")
+	buildPath := "/tmp/xx/build/" + p.prog + "-" + p.ver + "_build-"
+	buildID := getLastRel("/tmp/xx/build/", p.prog+"-"+p.ver+"_build-")
 	if fileExists(buildPath + "00") {
 		buildID += 1
 	}
-	pkgC.tmpDir = buildPath + fmt.Sprintf("%0.2x", buildID)
-	pkgC.tmpLogDir = pkgC.tmpDir + "/log/"
+	pc.tmpDir = buildPath + fmt.Sprintf("%0.2x", buildID)
+	pc.tmpLogDir = pc.tmpDir + "/log/"
 
-	if str.HasSuffix(pkg.set, "_cross") {
-		pkgC.crossBuild = true
+	if str.HasSuffix(p.set, "_cross") {
+		pc.crossBuild = true
 	}
 
-	if str.HasPrefix(pkg.set, "musl") {
-		pkgC.muslBuild = true
+	if str.HasPrefix(p.set, "musl") {
+		pc.muslBuild = true
 	}
 
-	pkgC.src, pkgC.steps, pkgC.subPkg = r.parsePkgIni(pkg, pkgC)
-	pkgC.cfgFiles = r.getPkgCfgFiles(pkg)
+	pc.src, pc.steps, pc.subPkg = r.parsePkgIni(p, pc)
+	pc.cfgFiles = r.getPkgCfgFiles(p)
 
-	_, pkgC.libDeps = r.getPkgLibDeps(pkg)
-	pkgC.runDeps = r.runDeps[pkg]
-	pkgC.buildDeps = r.buildDeps[pkg]
-	pkgC.allRunDeps = append(pkgC.libDeps, pkgC.runDeps...)
+	_, pc.libDeps = r.getPkgLibDeps(p)
+	pc.runDeps = r.runDeps[p]
+	pc.buildDeps = r.buildDeps[p]
+	pc.allRunDeps = append(pc.libDeps, pc.runDeps...)
 
-	sort.Slice(pkgC.allRunDeps, func(i, j int) bool {
-		return pkgC.allRunDeps[i].name <= pkgC.allRunDeps[j].name
+	sort.Slice(pc.allRunDeps, func(i, j int) bool {
+		return pc.allRunDeps[i].name <= pc.allRunDeps[j].name
 	})
 
-	return pkgC
+	return pc
 }
 
 func testTools() {

@@ -11,20 +11,20 @@ import (
 	str "strings"
 )
 
-func (r *runT) getAlpinePkgs(pkg pkgT, pkgC pkgCfgT) {
-	repos := r.getAlpineRepos(pkg, pkgC)
-	rootFile := getAlpineRoot(pkg)
-	createApkRoot(rootFile, pkgC.steps.buildDir, repos)
+func (r *runT) getAlpinePkgs(p pkgT, pc pkgCfgT) {
+	repos := r.getAlpineRepos(p, pc)
+	rootFile := getAlpineRoot(p)
+	createApkRoot(rootFile, pc.steps.buildDir, repos)
 
-	r.instLxcConfig(pkg, pkgC)
+	r.instLxcConfig(p, pc)
 
-	pkgMap := makeAlpinePkgMap(pkg, pkgC, repos)
+	pkgMap := makeAlpinePkgMap(p, pc, repos)
 	for repoName, url := range pkgMap {
 		repo := str.Split(repoName, "/")[0]
 		repoDir := fp.Dir(repos[repo])
 
 		fName := path.Base(url)
-		fPath := fp.Join(pkg.progDir, "src", fName)
+		fPath := fp.Join(p.progDir, "src", fName)
 		if !fileExists(fPath) {
 			fmt.Printf("  downloading %s...\n", fName)
 			downloadToFile(url, fPath)
@@ -57,11 +57,11 @@ func createApkRoot(rootFile, buildDir string, repos map[string]string) {
 	errExit(err, "can't create apk root: "+buildDir+"\n"+string(out))
 }
 
-func getAlpineRoot(pkg pkgT) string {
+func getAlpineRoot(p pkgT) string {
 	url := "http://dl-cdn.alpinelinux.org/alpine/edge/releases/x86_64/"
 	file := "alpine-minirootfs-20220328-x86_64.tar.gz"
 
-	fPath := fp.Join(pkg.progDir, "src", file)
+	fPath := fp.Join(p.progDir, "src", file)
 	if !fileExists(fPath) {
 		fmt.Printf("  downloading %s...\n", file)
 		downloadToFile(url+file, fPath)
@@ -70,8 +70,8 @@ func getAlpineRoot(pkg pkgT) string {
 	return fPath
 }
 
-func (r *runT) getAlpineRepos(pkg pkgT, pkgC pkgCfgT) map[string]string {
-	urls := str.Split(pkgC.src.url, " ")
+func (r *runT) getAlpineRepos(p pkgT, pc pkgCfgT) map[string]string {
+	urls := str.Split(pc.src.url, " ")
 	repos := make(map[string]string)
 
 	for i, url := range urls {
@@ -81,7 +81,7 @@ func (r *runT) getAlpineRepos(pkg pkgT, pkgC pkgCfgT) map[string]string {
 		}
 
 		repoName := urlSplit[len(urlSplit)-3]
-		repoDir := fp.Join(pkg.progDir, "src/repo_"+r.date,
+		repoDir := fp.Join(p.progDir, "src/repo_"+r.date,
 			repoName, "x86_64")
 
 		err := os.MkdirAll(repoDir, 0755)
@@ -99,11 +99,11 @@ func (r *runT) getAlpineRepos(pkg pkgT, pkgC pkgCfgT) map[string]string {
 	return repos
 }
 
-func makeAlpinePkgMap(pkg pkgT, pkgC pkgCfgT, repos map[string]string) map[string]string {
+func makeAlpinePkgMap(p pkgT, pc pkgCfgT, repos map[string]string) map[string]string {
 	fmt.Printf("  making deps list...\n")
-	apkDot := getAlpinePkgVer(pkg.prog)
-	apkDot += " " + runApkDot(pkg.prog)
-	for _, s := range pkgC.steps.env {
+	apkDot := getAlpinePkgVer(p.prog)
+	apkDot += " " + runApkDot(p.prog)
+	for _, s := range pc.steps.env {
 		split := str.Split(s, "=")
 		envVar := split[0]
 		if envVar != "ADD_PROGS" {
@@ -172,10 +172,10 @@ func getAlpinePkgRepo(name, ver string, repos map[string]string) string {
 	return ""
 }
 
-func getAlpinePkgNameVer(pkg string) (string, string) {
-	split := str.Split(pkg, "-")
+func getAlpinePkgNameVer(pkgName string) (string, string) {
+	split := str.Split(pkgName, "-")
 	if len(split) < 3 {
-		errExit(errors.New(""), "incorrect alpine pkg name: "+pkg)
+		errExit(errors.New(""), "incorrect alpine pkg name: "+pkgName)
 	}
 	name := str.Join(split[:len(split)-2], "-")
 	ver := str.Join(split[len(split)-2:], "-")

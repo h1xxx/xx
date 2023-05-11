@@ -29,39 +29,39 @@ func (r *runT) actionInfo() {
 }
 
 func (r *runT) printDepsInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
-	for i, pkg := range pkgs {
-		fmt.Printf("+ %-32s %s\n", pkg.name, pkg.setVerRel)
-		pkgC := pkgCfgs[i]
+	for i, p := range pkgs {
+		fmt.Printf("+ %-32s %s\n", p.name, p.setVerRel)
+		pc := pkgCfgs[i]
 
-		if len(pkgC.runDeps) > 0 {
+		if len(pc.runDeps) > 0 {
 			fmt.Println("\nrun-time dependencies:")
 		}
-		for _, d := range pkgC.runDeps {
+		for _, d := range pc.runDeps {
 			fmt.Printf("  %-32s %s\n", d.name, d.setVerRel)
 		}
 
-		if len(pkgC.libDeps) > 0 {
+		if len(pc.libDeps) > 0 {
 			fmt.Println("\nshared libs:")
 		}
-		for _, dep := range pkgC.libDeps {
+		for _, dep := range pc.libDeps {
 			fmt.Printf("  %-32s %s\n", dep.name, dep.setVerRel)
 		}
 
 		// todo : add flags to activate this
 		/*
 			fmt.Println("\nrun-time dependencies tree:")
-			r.printPkgDepsTree(pkg, pkgC.runDeps, []pkgT{}, "run", 1)
+			r.printPkgDepsTree(p, pc.runDeps, []pkgT{}, "run", 1)
 
 			fmt.Println("\nshared libs tree:")
-			r.printPkgDepsTree(pkg, pkgC.libDeps, []pkgT{}, "lib", 1)
+			r.printPkgDepsTree(p, pc.libDeps, []pkgT{}, "lib", 1)
 
 			fmt.Println("\nfull dependency tree:")
-			r.printPkgDepsTree(pkg, pkgC.allRunDeps, []pkgT{}, "all", 1)
+			r.printPkgDepsTree(p, pc.allRunDeps, []pkgT{}, "all", 1)
 		*/
 
 		// todo: add build deps
 
-		deps := r.getAllDeps(pkg, pkgC.allRunDeps, []pkgT{},
+		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{},
 			"all", 1)
 		sort.Slice(deps, func(i, j int) bool {
 			return deps[i].name <= deps[j].name
@@ -79,12 +79,12 @@ func (r *runT) printDepsInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 // prints recursively all pkg dependencies
 // depType possible vaules: "all", "run", "lib", "build"
-func (r *runT) printPkgDepsTree(pkg pkgT, deps, topPkgs []pkgT, depType string, depth int) {
-	if pkgExists(pkg, topPkgs) {
+func (r *runT) printPkgDepsTree(p pkgT, deps, topPkgs []pkgT, depType string, depth int) {
+	if pkgExists(p, topPkgs) {
 		return
 	}
 
-	topPkgs = append(topPkgs, pkg)
+	topPkgs = append(topPkgs, p)
 
 	indent := "  "
 	for i := 1; i < depth; i++ {
@@ -114,7 +114,7 @@ func (r *runT) printPkgDepsTree(pkg pkgT, deps, topPkgs []pkgT, depType string, 
 			depDeps = depC.buildDeps
 		}
 
-		if pkg.name != dep.name {
+		if p.name != dep.name {
 			r.printPkgDepsTree(dep, depDeps, topPkgs, depType, depth+1)
 		}
 	}
@@ -132,7 +132,7 @@ func (r *runT) sysVerify(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		return sysFiles[i] <= sysFiles[j]
 	})
 
-	fmt.Println("getting a list of files for each pkg...")
+	fmt.Println("getting a list of files for each p...")
 	fileHash, filePkg, dupes := r.getFileMaps(pkgs, pkgCfgs)
 
 	// make sure that there are no duplicate files
@@ -163,12 +163,12 @@ func (r *runT) sysVerify(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 	}
 
 	fmt.Println("looking for the missing files...")
-	for f, pkg := range filePkg {
+	for f, p := range filePkg {
 		sysFile := fp.Clean(r.rootDir + "/" + f)
 		idx := sort.SearchStrings(sysFiles, sysFile)
 
 		if idx > len(sysFiles)-1 || sysFiles[idx] != sysFile {
-			filesMissing = append(filesMissing, pkg.name+"\t"+f)
+			filesMissing = append(filesMissing, p.name+"\t"+f)
 		}
 	}
 
@@ -206,30 +206,30 @@ func (r *runT) getFileMaps(pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]string, m
 	filePkg := make(map[string]pkgT)
 	var dupes []string
 
-	for i, pkg := range pkgs {
+	for i, p := range pkgs {
 		// get hashes for each file in the pkg from the logs
-		_, fh := getPkgFiles(pkg)
+		_, fh := getPkgFiles(p)
 
 		// add hashes of pkg config files
-		if fileExists(pkg.cfgDir) {
-			cfgFiles, err := walkDir(pkg.cfgDir, "files")
+		if fileExists(p.cfgDir) {
+			cfgFiles, err := walkDir(p.cfgDir, "files")
 			errExit(err, "couldn't list all files in:\n  "+
 				r.rootDir)
 
 			for _, f := range cfgFiles {
 				h := getFileHash(f)
-				f = str.TrimPrefix(f, pkg.cfgDir)
+				f = str.TrimPrefix(f, p.cfgDir)
 				fh[f] = h
 			}
 		}
 
 		// add hashes of system config files
-		cfgSysPkgDir := r.sysCfgDir + "/" + pkg.prog + "/" +
-			pkg.set + "-" + pkg.ver
+		cfgSysPkgDir := r.sysCfgDir + "/" + p.prog + "/" +
+			p.set + "-" + p.ver
 
 		if !fileExists(cfgSysPkgDir) {
-			cfgSysPkgDir = r.sysCfgDir + "/" + pkg.prog + "/" +
-				pkg.set + "-latest"
+			cfgSysPkgDir = r.sysCfgDir + "/" + p.prog + "/" +
+				p.set + "-latest"
 		}
 
 		if r.sysCfgDir != "" && fileExists(cfgSysPkgDir) {
@@ -247,18 +247,18 @@ func (r *runT) getFileMaps(pkgs []pkgT, pkgCfgs []pkgCfgT) (map[string]string, m
 		// store files and hashes in maps for all packages
 		for f, h := range fh {
 			if pkgCfgs[i].cnt {
-				f = "/cnt/rootfs/" + pkg.prog + "/" + f
+				f = "/cnt/rootfs/" + p.prog + "/" + f
 			}
 			f = fp.Clean(f)
 
 			_, keyExists := fileHash[f]
 			if keyExists {
-				dup := f + "\n\t" + pkg.name +
+				dup := f + "\n\t" + p.name +
 					"\n\t" + filePkg[f].name
 				dupes = append(dupes, dup)
 			}
 			fileHash[f] = h
-			filePkg[f] = pkg
+			filePkg[f] = p
 		}
 	}
 

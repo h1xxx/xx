@@ -18,13 +18,13 @@ func repl(s *string, a string, b string) {
 	*s = str.Replace(*s, a, b, -1)
 }
 
-func getVer(pkg pkgT, fixedVer string) string {
+func getVer(p pkgT, fixedVer string) string {
 	if fixedVer != "" && fixedVer != "latest" {
 		return fixedVer
 	}
 
 	var versions []string
-	files, err := os.ReadDir(pkg.progDir)
+	files, err := os.ReadDir(p.progDir)
 	errExit(err, "can't open prog dir")
 
 	for _, file := range files {
@@ -42,7 +42,7 @@ func getVer(pkg pkgT, fixedVer string) string {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(errors.New(""), "no ini file available for "+pkg.name)
+		errExit(errors.New(""), "no ini file available for "+p.name)
 	}
 
 	return str.Replace(versions[len(versions)-1], " ", "", -1)
@@ -74,24 +74,24 @@ func isGitVer(ver string) bool {
 	return re.MatchString(ver)
 }
 
-// get new release from pkg dir if pkg.setVerRel is empty;
+// get new release from pkg dir if p.setVerRel is empty;
 // get a release from setVerRel otherwise
-func getPkgRels(pkg pkgT) (string, string, string) {
+func getPkgRels(p pkgT) (string, string, string) {
 	var id int64
-	progPkgDir := fp.Join(pkg.progDir, "pkg")
+	progPkgDir := fp.Join(p.progDir, "pkg")
 
 	// return "00" if the pkg dir is empty
 	if !fileExists(progPkgDir) || dirIsEmpty(progPkgDir) {
 		return "00", "00", "00"
 	}
 
-	if pkg.setVerRel == "" {
-		id = getLastRel(progPkgDir, pkg.set+"-"+pkg.ver+"-")
+	if p.setVerRel == "" {
+		id = getLastRel(progPkgDir, p.set+"-"+p.ver+"-")
 	} else {
 		var err error
-		idSplit := str.Split(pkg.setVerRel, "-")
+		idSplit := str.Split(p.setVerRel, "-")
 		id, err = strconv.ParseInt(idSplit[len(idSplit)-1], 16, 64)
-		errExit(err, "unable to convert pkg release: "+pkg.name)
+		errExit(err, "unable to convert pkg release: "+p.name)
 	}
 
 	pkgRel := fmt.Sprintf("%0.2x", id)
@@ -103,7 +103,7 @@ func getPkgRels(pkg pkgT) (string, string, string) {
 	}
 
 	// return "00" if dir of the pkg to build doesn't exist
-	pkgToBuild := fp.Join(progPkgDir, pkg.set+"-"+pkg.ver+"-"+pkgRel)
+	pkgToBuild := fp.Join(progPkgDir, p.set+"-"+p.ver+"-"+pkgRel)
 	if !fileExists(pkgToBuild) {
 		return "00", "00", "00"
 	}
@@ -130,36 +130,36 @@ func getLastRel(pkgDir, dirPrefix string) int64 {
 	return id
 }
 
-func (r *runT) prepareEnv(envIn []string, pkg pkgT, pkgC pkgCfgT) []string {
+func (r *runT) prepareEnv(envIn []string, p pkgT, pc pkgCfgT) []string {
 	var envOut []string
 	envMap := make(map[string]string)
 
 	switch {
-	case !pkgC.muslBuild && pkgC.crossBuild:
+	case !pc.muslBuild && pc.crossBuild:
 		envMap["PATH"] = r.rootDir
 		envMap["PATH"] += "/tools/bin:/bin:/sbin:/usr/bin:/usr/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-gnu"
 
-	case !pkgC.muslBuild:
+	case !pc.muslBuild:
 		envMap["PATH"] = "/bin:/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-gnu"
 
-	case r.buildEnv == "init_musl" && pkgC.crossBuild:
+	case r.buildEnv == "init_musl" && pc.crossBuild:
 		envMap["PATH"] = r.rootDir + "/tools/bin"
 		envMap["PATH"] += ":" + r.rootDir + "/cross_tools/bin"
 		envMap["PATH"] += ":/bin:/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-xx-linux-musl"
 
-	case r.buildEnv == "init_musl" && !pkgC.crossBuild:
+	case r.buildEnv == "init_musl" && !pc.crossBuild:
 		envMap["PATH"] = "/bin:/sbin:/tools/bin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-musl"
 
-	case pkgC.muslBuild:
+	case pc.muslBuild:
 		envMap["PATH"] = "/bin:/sbin"
 		envMap["TARGET_TRIPLET"] = "x86_64-pc-linux-musl"
 	}
 
-	if !pkgC.crossBuild || pkgC.muslBuild {
+	if !pc.crossBuild || pc.muslBuild {
 		envMap["CFLAGS"] = "-O2 -pipe -fPIE " +
 			"-fstack-protector-strong " +
 			"-fstack-clash-protection -Wformat " +
@@ -167,7 +167,7 @@ func (r *runT) prepareEnv(envIn []string, pkg pkgT, pkgC pkgCfgT) []string {
 		envMap["LDFLAGS"] += "-Wl,-z,now -Wl,-z,relro -Wl,-z,noexecstack "
 	}
 
-	if pkgC.muslBuild && !pkgC.crossBuild {
+	if pc.muslBuild && !pc.crossBuild {
 		envMap["CFLAGS"] += "-fPIC -static-pie -I/include -Wl,-static "
 		envMap["LDFLAGS"] += "-Wl,-static "
 	}
@@ -175,9 +175,9 @@ func (r *runT) prepareEnv(envIn []string, pkg pkgT, pkgC pkgCfgT) []string {
 	envMap["CFLAGS"] += "-Wl,--verbose "
 	envMap["CXXFLAGS"] = envMap["CFLAGS"]
 
-	if pkgC.muslBuild && !pkgC.crossBuild {
+	if pc.muslBuild && !pc.crossBuild {
 		envMap["PKG_CONFIG_PATH"] = "/lib/pkgconfig"
-	} else if !pkgC.crossBuild {
+	} else if !pc.crossBuild {
 		envMap["PKG_CONFIG_PATH"] = "/usr/lib/pkgconfig"
 	}
 
