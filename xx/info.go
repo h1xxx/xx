@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -18,7 +17,7 @@ func (r *runT) actionInfo() {
 	switch {
 	// todo: move to argsCheck
 	case r.rootDir == "":
-		errExit(errors.New(""), "root dir argument (-r) missing")
+		errExit(nil, "root dir argument (-r) missing")
 
 	case r.infoDeps:
 		r.printDepsInfo(r.pkgs, r.pkgCfgs)
@@ -141,7 +140,7 @@ func (r *runT) sysVerify(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		for _, dup := range dupes {
 			fmt.Println(dup)
 		}
-		errExit(errors.New(""), "duplicate files in pkgs need fixing")
+		errExit(nil, "duplicate files in pkgs need fixing")
 	}
 
 	fmt.Println("looking for new and changed files...")

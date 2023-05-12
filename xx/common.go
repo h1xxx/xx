@@ -33,7 +33,7 @@ func walkDir(rootDir, fType string) ([]string, error) {
 	}
 
 	if !fileExists(rootDir) {
-		errExit(errors.New(""), "dir doesn't exist:\n  "+rootDir)
+		errExit(nil, "dir doesn't exist:", rootDir)
 	}
 
 	err := fp.Walk(rootDir,
@@ -283,10 +283,20 @@ func getCurrentDate() string {
 	return fmt.Sprintf("%d-%.2d-%.2d", t.Year(), t.Month(), t.Day())
 }
 
-func errExit(err error, msg string) {
+func errExit(err error, msgs ...string) {
+	var exit bool
+
+	if len(msgs) > 0 {
+		fmt.Fprintln(os.Stderr, str.Join(msgs, " "))
+		exit = true
+	}
+
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "\n  error: "+msg)
-		fmt.Fprintf(os.Stderr, "  %s\n", err)
+		fmt.Fprintln(os.Stderr, err)
+		exit = true
+	}
+
+	if exit {
 		os.Exit(1)
 	}
 }

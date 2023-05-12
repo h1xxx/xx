@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -98,7 +97,7 @@ func downloadToFile(url, fPath string) {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != 200 {
-			errExit(errors.New("non-200 response code"), url)
+			errExit(nil, "non-200 response code for:", url)
 		}
 	}
 
@@ -111,8 +110,7 @@ func downloadToFile(url, fPath string) {
 	resp.Body.Close()
 
 	if fileIsText(fPath) {
-		errExit(errors.New(""),
-			"downloaded tar is a text file:\n  "+fPath)
+		errExit(nil, "downloaded tarball is a text file:", fPath)
 	}
 }
 

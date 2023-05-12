@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-	"fmt"
 	"os"
 	"strconv"
 
@@ -61,7 +59,7 @@ func getAction(args []string) string {
 		}
 	}
 
-	errExit(errors.New(""), "unrecognized action\n"+
+	errExit(nil, "unrecognized action\n"+
 		"  first parameter must be one of: "+
 		"(b)uild, (d)iff, (i)nstall, (r)emove, "+
 		"(u)pdate, (s)ource, (c)heck, i(n)fo")
@@ -71,8 +69,7 @@ func getAction(args []string) string {
 
 func (r *runT) parseBuildArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -97,7 +94,7 @@ func (r *runT) parseBuildArgs(args []string) {
 			r.fixedVer, shift = getNextArg(args[i:])
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
@@ -106,8 +103,7 @@ func (r *runT) parseBuildArgs(args []string) {
 
 func (r *runT) parseInstallArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -144,41 +140,40 @@ func (r *runT) parseInstallArgs(args []string) {
 			r.toInstSysCfg = true
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
 	r.checkTarget()
 
 	if r.sysCfgDir != "" && !fileExists(r.sysCfgDir) {
-		errExit(fmt.Errorf("dir doesn't exist: %s", r.sysCfgDir), "")
+		errExit(nil, "dir doesn't exist:", r.sysCfgDir)
 	}
 
 	if r.toInstPerms && r.sysCfgDir == "" {
-		errExit(fmt.Errorf("missing system config dir"), "")
+		errExit(nil, "missing system config dir")
 	}
 
 	if r.toInstSysCfg && r.sysCfgDir == "" {
-		errExit(fmt.Errorf("missing system config dir"), "")
+		errExit(nil, "missing system config dir")
 	}
 
 	if r.rootDir == "" {
-		errExit(fmt.Errorf("root dir not defined"), "")
+		errExit(nil, "root dir not defined")
 	}
 
 	if r.rootDir[0] != '/' {
-		errExit(fmt.Errorf("root dir must be an absolute path"), "")
+		errExit(nil, "root dir must be an absolute path")
 	}
 
 	if !fileExists(r.rootDir) {
-		errExit(fmt.Errorf("root dir doesn't exist"), "")
+		errExit(nil, "root dir doesn't exist")
 	}
 }
 
 func (r *runT) parseSourceArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -194,7 +189,7 @@ func (r *runT) parseSourceArgs(args []string) {
 			r.actionTarget, shift = getNextArg(args[i:])
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
@@ -203,8 +198,7 @@ func (r *runT) parseSourceArgs(args []string) {
 
 func (r *runT) parseDiffArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -231,7 +225,7 @@ func (r *runT) parseDiffArgs(args []string) {
 			r.diffHours = int64(hoursInt)
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
@@ -242,8 +236,7 @@ func (r *runT) parseDiffArgs(args []string) {
 
 func (r *runT) parseInfoArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -265,7 +258,7 @@ func (r *runT) parseInfoArgs(args []string) {
 			r.actionTarget, shift = getNextArg(args[i:])
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
@@ -274,8 +267,7 @@ func (r *runT) parseInfoArgs(args []string) {
 
 func (r *runT) parseUpdateArgs(args []string) {
 	if len(os.Args) < 4 {
-		msg := "missing action target (set file or a program)"
-		errExit(fmt.Errorf(msg), "")
+		errExit(nil, "missing action target (set file or a program)")
 	}
 
 	var shift bool
@@ -291,7 +283,7 @@ func (r *runT) parseUpdateArgs(args []string) {
 			r.actionTarget, shift = getNextArg(args[i:])
 
 		default:
-			errExit(fmt.Errorf("unknown argument '%s'", arg), "")
+			errExit(nil, "unknown argument:", arg)
 		}
 	}
 
@@ -300,13 +292,12 @@ func (r *runT) parseUpdateArgs(args []string) {
 
 func (r *runT) checkTarget() {
 	if r.actionTarget == "" {
-		errExit(fmt.Errorf("target not defined"), "")
+		errExit(nil, "target not defined")
 	}
 
 	if fileExists(fp.Join("/home/xx/prog", r.actionTarget)) {
 		if r.fixedSet == "" || r.fixedVer == "" {
-			msg := "no version or pkg set defined"
-			errExit(fmt.Errorf(msg), "")
+			errExit(nil, "no version or pkg set defined")
 		}
 
 		r.targetIsSinglePkg = true
@@ -317,12 +308,12 @@ func (r *runT) checkTarget() {
 		return
 	}
 
-	errExit(fmt.Errorf("not an action target: '%s'", r.actionTarget), "")
+	errExit(nil, "not an action target:", r.actionTarget)
 }
 
 func getNextArg(args []string) (string, bool) {
 	if len(args) < 2 || args[1][0] == '-' {
-		errExit(fmt.Errorf("missing argument after %s", args[0]), "")
+		errExit(nil, "missing argument after:", args[0])
 	}
 
 	return args[1], true
@@ -330,7 +321,7 @@ func getNextArg(args []string) (string, bool) {
 
 /*
 func argsCheck(args argsT) {
-	// todo: errExit(errors.New(""), "no xx file or pkg name provided")
+	// todo: errExit(nil, "no xx file or pkg name provided")
 
 	// checks for when the final arg is a pkg env file
 		if !isPkgString(args.actionTarget) {
@@ -353,7 +344,7 @@ func argsCheck(args argsT) {
 
 	// todo: add checks per action
 	//if *args.rootDir == "" && (args.action == "install" || args.action == "i") {
-	//	errExit(errors.New(""), "root dir argument (-r) missing")
+	//	errExit(nil, "root dir argument (-r) missing")
 	//}
 
 	// args check: root dir parameter must be an absolute path

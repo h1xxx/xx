@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -77,7 +76,7 @@ func (r *runT) getAlpineRepos(p pkgT, pc pkgCfgT) map[string]string {
 	for i, url := range urls {
 		urlSplit := str.Split(url, "/")
 		if len(urlSplit) < 3 {
-			errExit(errors.New(""), "incorrect repo url")
+			errExit(nil, "incorrect repo url")
 		}
 
 		repoName := urlSplit[len(urlSplit)-3]
@@ -168,14 +167,14 @@ func getAlpinePkgRepo(name, ver string, repos map[string]string) string {
 			return repo
 		}
 	}
-	errExit(errors.New(""), "repo not found for pkg: "+name+"-"+ver)
+	errExit(nil, "repo not found for pkg:", name+"-"+ver)
 	return ""
 }
 
 func getAlpinePkgNameVer(pkgName string) (string, string) {
 	split := str.Split(pkgName, "-")
 	if len(split) < 3 {
-		errExit(errors.New(""), "incorrect alpine pkg name: "+pkgName)
+		errExit(nil, "incorrect alpine pkg name:", pkgName)
 	}
 	name := str.Join(split[:len(split)-2], "-")
 	ver := str.Join(split[len(split)-2:], "-")

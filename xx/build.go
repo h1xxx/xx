@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"debug/elf"
 	"encoding/hex"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -69,7 +68,7 @@ func (r *runT) installBase() {
 		}
 		if !fileExists(p.pkgDir) {
 			msg := "can't find previous pkg version for %s %s"
-			errExit(fmt.Errorf(msg, p.name, p.ver), "")
+			errExit(fmt.Errorf(msg, p.name, p.ver))
 		}
 
 		fmt.Printf("+ %-32s %s\n", p.name, p.setVerRel)
@@ -327,8 +326,7 @@ func (r *runT) selfLibsExist(p pkgT) {
 			}
 		}
 		if !found {
-			errExit(errors.New(""),
-				"can't find shared lib assigned to pkg: "+lib)
+			errExit(nil, "can't find shared lib for pkg: "+lib)
 		}
 	}
 }
@@ -340,7 +338,7 @@ func dumpSHA256(p pkgT) {
 	errExit(err, "can't get file list for: "+p.name)
 
 	if len(files) == 0 {
-		errExit(errors.New(""), "no files in pkg dir: "+p.newPkgDir)
+		errExit(nil, "no files in pkg dir: "+p.newPkgDir)
 	}
 
 	var hashes string

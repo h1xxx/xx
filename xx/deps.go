@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"os"
 	"path"
 	"sort"
@@ -61,7 +60,7 @@ func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 func pkgCheck(p pkgT) {
 	if !fileExists(p.pkgDir) || dirIsEmpty(p.pkgDir) {
 		msg := "package not built: " + p.name + " " + p.setVerRel
-		errExit(errors.New(""), msg)
+		errExit(nil, msg)
 	}
 }
 
@@ -87,7 +86,7 @@ func (r *runT) getPkgLibDeps(p pkgT) (map[pkgT][]string, []pkgT) {
 			continue
 		}
 		if len(fields) != 5 {
-			errExit(errors.New(""), "malformed file: "+file)
+			errExit(nil, "malformed file:", file)
 		}
 		libName := fields[0]
 		name := fields[1]

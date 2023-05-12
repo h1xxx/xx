@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -86,8 +85,7 @@ func getPkgPrevVer(p pkgT, reGitVer *regexp.Regexp) pkgT {
 
 			fields := str.Split(dir.Name(), "-")
 			if len(fields) < 3 {
-				msg := "can't extract ver from %s"
-				errExit(fmt.Errorf(msg, dir.Name()), "")
+				errExit(nil, "can't get version:", dir.Name())
 			}
 
 			verRaw := str.Join(fields[1:len(fields)-1], "-")
@@ -104,7 +102,7 @@ func getPkgPrevVer(p pkgT, reGitVer *regexp.Regexp) pkgT {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(errors.New(""), "no pkg dirs available for "+p.name)
+		errExit(nil, "no pkg dirs available for", p.name)
 	}
 
 	verIdx := len(versions) - 1
@@ -175,7 +173,7 @@ func getDiff(file1, file2 string) ([]string, bool) {
 	case exitErr.ExitCode() == 1:
 		change = true
 	default:
-		errExit(errors.New(""), "can't get a diff")
+		errExit(nil, "can't get a diff")
 	}
 	diff := str.Split(string(diffOut), "\n")
 

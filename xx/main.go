@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -446,7 +445,7 @@ func testTools() {
 	for _, dir := range homeDirs {
 		if !str.Contains(outStr, dir) {
 			msg := "/home/xx in the container is mounted correctly"
-			errExit(errors.New(""), msg)
+			errExit(nil, msg)
 		}
 	}
 

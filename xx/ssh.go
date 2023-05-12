@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -127,7 +126,7 @@ func parseSshConfig(host, homeDir string) sshCfgT {
 	}
 
 	if sshConfig.address == "" {
-		errExit(errors.New(""), "unable to locate host address")
+		errExit(nil, "unable to locate host address")
 	}
 
 	return sshConfig

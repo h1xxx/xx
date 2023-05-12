@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	fp "path/filepath"
 	str "strings"
 )
@@ -37,8 +35,7 @@ func (r *runT) getBuildEnv() {
 	}
 
 	if r.buildEnv == "" {
-		msg := "can't find build env in %s"
-		errExit(fmt.Errorf(msg, r.actionTarget), "")
+		errExit(nil, "can't find build env in", r.actionTarget)
 	}
 }
 

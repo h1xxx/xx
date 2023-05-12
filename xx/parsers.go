@@ -17,7 +17,7 @@ func (r *runT) parseBuildEnvFile(xxFile string) ([]pkgT, []pkgCfgT) {
 	var cnts = make(map[string]bool)
 
 	f, err := os.Open(xxFile)
-	errExit(err, "can't open file: "+xxFile)
+	errExit(err, "can't open file:", xxFile)
 	defer f.Close()
 
 	input := bufio.NewScanner(f)
@@ -49,15 +49,14 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	fields := str.Split(line, "\t")
 	len := len(fields)
 	var flags string
-	err := errors.New("")
 
 	switch {
 	case len == 4:
 		flags = fields[3]
 	case len < 3:
-		errExit(err, "too few fields in line:\n  "+line)
+		errExit(nil, "too few fields in line:", line)
 	case len > 4:
-		errExit(err, "too many fields in line:\n  "+line)
+		errExit(nil, "too many fields in line:", line)
 	}
 
 	name := fields[0]
@@ -67,7 +66,7 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	// todo: move this to some central pkg checking place
 	correctPkgName := re.pkgName.MatchString(name)
 	if !correctPkgName {
-		errExit(err, "incorrect pkg name:\n  "+name)
+		errExit(nil, "incorrect pkg name:", name)
 	}
 
 	p := r.getPkg(name, pkgSet, ver)
@@ -92,7 +91,7 @@ func parsePkgFlags(flags, pkgName string) (bool, bool) {
 		flags = str.Replace(flags, "c", "", 1)
 	}
 	if flags != "" {
-		errExit(errors.New(""), "unknown flags in:\n  "+pkgName)
+		errExit(nil, "unknown flags in:", pkgName)
 	}
 
 	return force, cnt
@@ -151,7 +150,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 			section = str.TrimSuffix(section, " ]")
 			if str.Contains(section, " ") {
 				msg := "name has a space in line %d of %s"
-				errExit(fmt.Errorf(msg, i, iniFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile))
 			}
 			step, varsVar = "", ""
 			switch section {
@@ -202,7 +201,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 			vars[varsVar] = after
 			if !found {
 				msg := "incorrect var name in line %d of %s"
-				errExit(fmt.Errorf(msg, i, iniFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile))
 			}
 
 		case section == "vars":
@@ -215,7 +214,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 			stepsMap[step] = val
 			if !found {
 				msg := "incorrect step in line %d of %s"
-				errExit(fmt.Errorf(msg, i, iniFile), "")
+				errExit(fmt.Errorf(msg, i, iniFile))
 			}
 			check["has_"+step] = true
 			if str.HasPrefix(step, "subpkg_") {
@@ -233,8 +232,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 	}
 
 	if !check["hasSet"] {
-		msg := "config set '%s' missing in %s"
-		errExit(fmt.Errorf(msg, p.set, iniFile), "")
+		errExit(nil, "config set", p.set, "missing in", iniFile)
 	}
 
 	if src.srcType != "" {
@@ -248,8 +246,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 	// check if all's ok
 	for c, val := range check {
 		if !val {
-			msg := "check %s failed in %s"
-			errExit(fmt.Errorf(msg, c, iniFile), "")
+			errExit(nil, "check", c, "failed in", iniFile)
 		}
 	}
 
@@ -481,7 +478,7 @@ func (r *runT) getWorldPkgs(instDir string) []pkgT {
 		name, pkgSetVerRel := fields[0]+"/"+fields[1], fields[2]
 		fields = str.Split(pkgSetVerRel, "-")
 		if len(fields) < 3 {
-			errExit(errors.New(""), "can't parse line: "+d)
+			errExit(nil, "can't parse line:", d)
 		}
 
 		set := fields[0]
@@ -559,8 +556,7 @@ func (r *runT) getPkgCfgFiles(p pkgT) map[string]string {
 		for _, file := range files {
 			rootFile := str.TrimPrefix(file, p.cfgDir)
 			if file == rootFile {
-				errExit(errors.New(""),
-					"file can't be copied from root dir")
+				errExit(nil, "can't copy from root dir")
 			}
 			cfgFiles[rootFile] = file
 		}
@@ -574,8 +570,7 @@ func (r *runT) getPkgCfgFiles(p pkgT) map[string]string {
 		for _, file := range files {
 			rootFile := str.TrimPrefix(file, pkgSysCfgDir)
 			if file == rootFile {
-				errExit(errors.New(""),
-					"file can't be copied from root dir")
+				errExit(nil, "can't copy from root dir")
 			}
 			cfgFiles[rootFile] = file
 		}
