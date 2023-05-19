@@ -45,7 +45,7 @@ vm_size=4G
 
 # default paths
 root_dir=/mnt/xx
-xx_bin=/home/xx/xx/xx
+xx_bin=/home/xx/bin/xx
 
 # path to the default initramfs file
 initramfs_file='/home/xx/initramfs/build/initramfs.cpio.zst'
@@ -611,7 +611,7 @@ echo -e '\n* mounting partitions...'
 mount_partitions
 
 echo -e '\n* installing...'
-"${xx_bin}" install "${cfg_arg}" "${cfg_dir}" -r "${root_dir}" "${xx_set}"
+"${xx_bin}" install "${cfg_arg}" "${cfg_dir}" -r "${root_dir}" -t "${xx_set}"
 
 echo -e '\n* syncing disk...'
 sync "${boot_part}" "${root_part}"

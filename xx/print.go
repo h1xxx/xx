@@ -67,7 +67,7 @@ func br() {
 }
 
 func printUsage() {
-	fmt.Println(`usage: xx <action> [parameters] <xx set file or a program>
+	fmt.Println(`usage: xx <action> [parameters]
 
 actions/parameters:
 
@@ -75,15 +75,20 @@ actions/parameters:
 -f              force build of all packages
 -s              build set to build for a single package (default: std)
 -V              version to build for a single package
+-t              build target (xx set file or a program)
 
 (i)nstall       install already built packages
 -f              force installation of all packages
 -r              root dir to install packages to
 -c              system config dir
+-s              fixed package set to install for all packages
+-V              fixed version to install for all packages
 -P              only set system permissions
 -C              only install configs from the system config dir
+-t              install target (xx set file or a program)
 
 (s)ource        download and verify source files
+-t              package target (xx set file or a program)
 
 (d)iff          show diff between pkg builds
 -h              time horizon in hours to search for diffs (default: 24)
@@ -92,8 +97,10 @@ actions/parameters:
 i(n)fo          show additional information on xx system
 -a              information on all package, incl. dependencies
 -i              verify system integrity
+-t              package target (xx set file or a program)
 
 (u)pdate        update ini files
 -i              get information on latest packages available
+-t              package target (xx set file or a program)
 `)
 }

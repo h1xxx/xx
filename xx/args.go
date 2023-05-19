@@ -11,7 +11,7 @@ import (
 func parseArgs() runT {
 	var r runT
 
-	if len(os.Args) < 2 {
+	if len(os.Args) < 2 || str.Contains(os.Args[1], "-h") {
 		printUsage()
 		os.Exit(1)
 	}
