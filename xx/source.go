@@ -97,7 +97,7 @@ func downloadToFile(url, fPath string) {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != 200 {
-			errExit(nil, "non-200 response code for:", url)
+			errExit(ERR, "non-200 response code for:", url)
 		}
 	}
 
@@ -110,7 +110,7 @@ func downloadToFile(url, fPath string) {
 	resp.Body.Close()
 
 	if fileIsText(fPath) {
-		errExit(nil, "downloaded tarball is a text file:", fPath)
+		errExit(ERR, "downloaded tarball is a text file:", fPath)
 	}
 }
 

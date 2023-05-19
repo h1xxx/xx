@@ -326,7 +326,7 @@ func (r *runT) selfLibsExist(p pkgT) {
 			}
 		}
 		if !found {
-			errExit(nil, "can't find shared lib for pkg: "+lib)
+			errExit(ERR, "can't find shared lib for pkg: "+lib)
 		}
 	}
 }
@@ -338,7 +338,7 @@ func dumpSHA256(p pkgT) {
 	errExit(err, "can't get file list for: "+p.name)
 
 	if len(files) == 0 {
-		errExit(nil, "no files in pkg dir: "+p.newPkgDir)
+		errExit(ERR, "no files in pkg dir: "+p.newPkgDir)
 	}
 
 	var hashes string

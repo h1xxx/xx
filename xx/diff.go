@@ -85,7 +85,7 @@ func getPkgPrevVer(p pkgT, reGitVer *regexp.Regexp) pkgT {
 
 			fields := str.Split(dir.Name(), "-")
 			if len(fields) < 3 {
-				errExit(nil, "can't get version:", dir.Name())
+				errExit(ERR, "can't get version:", dir.Name())
 			}
 
 			verRaw := str.Join(fields[1:len(fields)-1], "-")
@@ -102,7 +102,7 @@ func getPkgPrevVer(p pkgT, reGitVer *regexp.Regexp) pkgT {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(nil, "no pkg dirs available for", p.name)
+		errExit(ERR, "no pkg dirs available for", p.name)
 	}
 
 	verIdx := len(versions) - 1
@@ -173,7 +173,7 @@ func getDiff(file1, file2 string) ([]string, bool) {
 	case exitErr.ExitCode() == 1:
 		change = true
 	default:
-		errExit(nil, "can't get a diff")
+		errExit(ERR, "can't get a diff")
 	}
 	diff := str.Split(string(diffOut), "\n")
 

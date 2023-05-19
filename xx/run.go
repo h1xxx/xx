@@ -35,7 +35,7 @@ func (r *runT) getBuildEnv() {
 	}
 
 	if r.buildEnv == "" {
-		errExit(nil, "can't find build env in", r.actionTarget)
+		errExit(ERR, "can't find build env in", r.actionTarget)
 	}
 }
 

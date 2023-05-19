@@ -126,7 +126,7 @@ func parseSshConfig(host, homeDir string) sshCfgT {
 	}
 
 	if sshConfig.address == "" {
-		errExit(nil, "unable to locate host address")
+		errExit(ERR, "unable to locate host address")
 	}
 
 	return sshConfig

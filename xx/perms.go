@@ -254,7 +254,7 @@ func getMode(fullPath, rootDir string, permsMap map[string]string) os.FileMode {
 	case '7':
 		return mode | os.ModeSticky | os.ModeSetgid | os.ModeSetuid
 	default:
-		errExit(nil, "incorrect mode:", perms)
+		errExit(ERR, "incorrect mode:", perms)
 	}
 
 	return mode
@@ -339,7 +339,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 	line = re.wSpaces.ReplaceAllString(line, "\t")
 	fields := str.Split(line, "\t")
 	if len(fields) != 2 {
-		errExit(nil, "incorrect permissions:", line)
+		errExit(ERR, "incorrect permissions:", line)
 	}
 	definedMsg := "permission already defined:\n" + line
 
@@ -373,7 +373,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 					cnt, path)
 				_, pathExists := owners[cntPath+slashTrail]
 				if pathExists {
-					errExit(nil, definedMsg)
+					errExit(ERR, definedMsg)
 				}
 				owners[cntPath+slashTrail] = perm
 			}
@@ -381,7 +381,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 			path = fp.Join(rootDir, path)
 			_, pathExists := owners[path+slashTrail]
 			if pathExists {
-				errExit(nil, definedMsg)
+				errExit(ERR, definedMsg)
 			}
 			owners[path+slashTrail] = perm
 		}
@@ -390,7 +390,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 	case strDigitsOnly(perm):
 		pType, path, found := str.Cut(path, ":")
 		if !found || (pType[0] != 'f' && pType[0] != 'd') {
-			errExit(nil, "incorrect permissions:", line)
+			errExit(ERR, "incorrect permissions:", line)
 		}
 
 		// exclude "c" in "fc:" and "dc:"
@@ -403,7 +403,7 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 					"/cnt/rootfs", cnt, path)
 				_, pathExists := perms[cntPath+slashTrail]
 				if pathExists {
-					errExit(nil, definedMsg)
+					errExit(ERR, definedMsg)
 				}
 				perms[cntPath+slashTrail] = perm
 			}
@@ -411,13 +411,13 @@ func parsePermLine(line, rootDir string, perms, owners map[string]string,
 			path = pType + ":" + fp.Join(rootDir, path)
 			_, pathExists := perms[path+slashTrail]
 			if pathExists {
-				errExit(nil, definedMsg)
+				errExit(ERR, definedMsg)
 			}
 			perms[path+slashTrail] = perm
 		}
 
 	// no other case allowed
 	default:
-		errExit(nil, "incorrect permissions: "+line)
+		errExit(ERR, "incorrect permissions: "+line)
 	}
 }

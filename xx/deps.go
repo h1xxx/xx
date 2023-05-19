@@ -60,7 +60,7 @@ func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 func pkgCheck(p pkgT) {
 	if !fileExists(p.pkgDir) || dirIsEmpty(p.pkgDir) {
 		msg := "package not built: " + p.name + " " + p.setVerRel
-		errExit(nil, msg)
+		errExit(ERR, msg)
 	}
 }
 
@@ -86,7 +86,7 @@ func (r *runT) getPkgLibDeps(p pkgT) (map[pkgT][]string, []pkgT) {
 			continue
 		}
 		if len(fields) != 5 {
-			errExit(nil, "malformed file:", file)
+			errExit(ERR, "malformed file:", file)
 		}
 		libName := fields[0]
 		name := fields[1]

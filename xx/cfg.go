@@ -41,7 +41,7 @@ func getVer(p pkgT, fixedVer string) string {
 	sort.Strings(versions)
 
 	if len(versions) == 0 {
-		errExit(nil, "no ini file available for", p.name)
+		errExit(ERR, "no ini file available for", p.name)
 	}
 
 	return str.Replace(versions[len(versions)-1], " ", "", -1)
@@ -97,7 +97,7 @@ func getPkgRels(p pkgT) (string, string, string) {
 	pkgNewRel := fmt.Sprintf("%0.2x", id+1)
 
 	if id+1 > 255 {
-		errExit(nil, "max pkgRel reached")
+		errExit(ERR, "max pkgRel reached")
 	}
 
 	// return "00" if dir of the pkg to build doesn't exist

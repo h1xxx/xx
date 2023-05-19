@@ -54,9 +54,9 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	case len == 4:
 		flags = fields[3]
 	case len < 3:
-		errExit(nil, "too few fields in line:", line)
+		errExit(ERR, "too few fields in line:", line)
 	case len > 4:
-		errExit(nil, "too many fields in line:", line)
+		errExit(ERR, "too many fields in line:", line)
 	}
 
 	name := fields[0]
@@ -66,7 +66,7 @@ func (r *runT) parseSetLine(line string, re reT) (pkgT, pkgCfgT) {
 	// todo: move this to some central pkg checking place
 	correctPkgName := re.pkgName.MatchString(name)
 	if !correctPkgName {
-		errExit(nil, "incorrect pkg name:", name)
+		errExit(ERR, "incorrect pkg name:", name)
 	}
 
 	p := r.getPkg(name, pkgSet, ver)
@@ -91,7 +91,7 @@ func parsePkgFlags(flags, pkgName string) (bool, bool) {
 		flags = str.Replace(flags, "c", "", 1)
 	}
 	if flags != "" {
-		errExit(nil, "unknown flags in:", pkgName)
+		errExit(ERR, "unknown flags in:", pkgName)
 	}
 
 	return force, cnt
@@ -232,7 +232,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 	}
 
 	if !check["hasSet"] {
-		errExit(nil, "config set", p.set, "missing in", iniFile)
+		errExit(ERR, "config set", p.set, "missing in", iniFile)
 	}
 
 	if src.srcType != "" {
@@ -246,7 +246,7 @@ func (r *runT) parsePkgIni(p pkgT, pc pkgCfgT) (srcT, stepsT, bool) {
 	// check if all's ok
 	for c, val := range check {
 		if !val {
-			errExit(nil, "check", c, "failed in", iniFile)
+			errExit(ERR, "check", c, "failed in", iniFile)
 		}
 	}
 
@@ -478,7 +478,7 @@ func (r *runT) getWorldPkgs(instDir string) []pkgT {
 		name, pkgSetVerRel := fields[0]+"/"+fields[1], fields[2]
 		fields = str.Split(pkgSetVerRel, "-")
 		if len(fields) < 3 {
-			errExit(nil, "can't parse line:", d)
+			errExit(ERR, "can't parse line:", d)
 		}
 
 		set := fields[0]
@@ -556,7 +556,7 @@ func (r *runT) getPkgCfgFiles(p pkgT) map[string]string {
 		for _, file := range files {
 			rootFile := str.TrimPrefix(file, p.cfgDir)
 			if file == rootFile {
-				errExit(nil, "can't copy from root dir")
+				errExit(ERR, "can't copy from root dir")
 			}
 			cfgFiles[rootFile] = file
 		}
@@ -570,7 +570,7 @@ func (r *runT) getPkgCfgFiles(p pkgT) map[string]string {
 		for _, file := range files {
 			rootFile := str.TrimPrefix(file, pkgSysCfgDir)
 			if file == rootFile {
-				errExit(nil, "can't copy from root dir")
+				errExit(ERR, "can't copy from root dir")
 			}
 			cfgFiles[rootFile] = file
 		}

@@ -237,6 +237,8 @@ type reT struct {
 	glibcBin      *regexp.Regexp
 }
 
+var ERR error
+
 func main() {
 	r := parseArgs()
 	r.getRunVars()
@@ -445,7 +447,7 @@ func testTools() {
 	for _, dir := range homeDirs {
 		if !str.Contains(outStr, dir) {
 			msg := "/home/xx in the container is mounted correctly"
-			errExit(nil, msg)
+			errExit(ERR, msg)
 		}
 	}
 
