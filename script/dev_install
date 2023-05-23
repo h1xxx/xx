@@ -179,7 +179,7 @@ syslinux_dir="$(dirname "$(find /home/xx/prog/sys/syslinux/pkg/musl-* \
 	tail -n1)")"
 mbr="${syslinux_dir}/gptmbr.bin"
 
-[ ${uefi} == true ] && uuid_p1="0000$(od -N2 -tx1 -An /dev/random | tr -d \ )"
+[ ${uefi} == true ] && uuid_p1="0000-$(od -N2 -tx1 -An /dev/random | tr -d \ )"
 
 if [ ${dev_type} == 'device' ]; then
 	boot_part="${dev}1"
@@ -358,7 +358,7 @@ function create_filesystems() {
 		mkfs.ext4 -U "${uuid_p1}" -I 256 "${boot_part}"
 		resize2fs -s "${boot_part}"
 	else
-		mkfs.fat -i "${uuid_p1}" -F32 "${boot_part}"
+		mkfs.fat -i "$(sed 's|-||' <<< "${uuid_p1}")" -F32 "${boot_part}"
 	fi
 
 	# create root partition fs
@@ -593,6 +593,15 @@ fi
 
 unset cfg_file
 
+# ssh
+
+ssh_host_file="${cfg_dir}/openssh/all-latest/etc/ssh/ssh_host_ed25519_key"
+if [[ ! -f "${ssh_host_file}" ]]; then
+  mkdir -p "$(dirname "${ssh_host_file}")"
+  ssh-keygen -t ed25519 -P '' -f "${ssh_host_file}"
+fi
+
+unset ssh_host_file
 
 
 # actions
