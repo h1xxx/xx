@@ -672,6 +672,16 @@ text/texinfo				std			latest
 	dev/gettext			std			latest
 	text/help2man			std			latest
 
+net/nfs-utils				musl			latest
+	net/libtirpc			musl			latest
+	sys/lvm2			musl			latest
+	sys/keyutils			musl			latest
+
+net/libtirpc				musl			latest
+	dev/musl-glibc-headers		musl			latest
+
+
+
 ### deprecated
 
 #net/libidn2				std			latest
@@ -695,3 +705,4 @@ text/texinfo				std			latest
 
 # nvidia requires
 # CONFIG_X86_PAT=y
+

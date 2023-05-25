@@ -54,7 +54,10 @@ net/tor				musl			latest
 lang/lua			musl			5.4.3
 net/diod			musl			latest
 
+dev/musl-glibc-headers		musl			latest
 net/libtirpc			musl			latest
+sys/lvm2			musl			latest
+sys/keyutils			musl			latest
 net/nfs-utils			musl			latest
 
 net/mblaze			musl			latest
@@ -63,6 +66,7 @@ net/fetchmail			musl			latest
 crypt/libotr			musl			latest
 dev/glib			musl			latest
 net/irssi			musl			latest
+net/ngircd			musl			latest
 net/mktorrent			musl			latest
 net/transmission		musl			latest
 net/lftp			musl			latest
