@@ -7,7 +7,7 @@ initramfs:
 	mkdir -p build/ramfs_root/{dev,proc,run,sys,tmp}
 
 	# install pkgs to a temporary dir
-	../xx/xx install -r /home/xx/initramfs/build/tmp initramfs.xx
+	../bin/xx install -r /home/xx/initramfs/build/tmp -t initramfs.xx
 
 	# create a final initramfs system from tmp dir
 	cd build/tmp && cp bin/busybox \
@@ -38,7 +38,12 @@ initramfs:
 		sbin/switch_root \
 		sbin/uuidd \
 		../../build/ramfs_root/bin
-	cp -a build/tmp/etc build/ramfs_root/
+	cp -a build/tmp/etc/ build/ramfs_root/
+
+	install -dm755 build/ramfs_root/lib
+	install -dm755 build/ramfs_root/var/empty
+	install -dm777 build/ramfs_root/var/lib/dhcpcd
+	cp -a build/tmp/lib/dhcpcd/ build/ramfs_root/lib/
 
 	cd build/ramfs_root/bin && ./busybox --install .
 	ln -sf busybox build/ramfs_root/bin/sh
@@ -49,8 +54,6 @@ initramfs:
 
 	[ -f /home/xx/cfg/user_initramfs/authorized_keys ] && \
 	install -dm700 build/ramfs_root/root/.ssh/ && \
-	install -dm700 build/ramfs_root/var/empty/ && \
-	install -dm700 build/ramfs_root/var/run/dhcpcd/ && \
 	chmod 700 build/ramfs_root/root && \
 	install -m600 /home/xx/cfg/user_initramfs/authorized_keys \
 		build/ramfs_root/root/.ssh && \
