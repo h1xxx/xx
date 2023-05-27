@@ -32,6 +32,8 @@ tar pkgs:
 allow to search for files in all pkgs
 view text files e.g. pkg::/etc/config.conf
 
+refactor diff, count of changed files not working, add verbose
+
 check for a /bin /lib dir in glibc pkgs and for musl for /usr
 
 cnt: add cnt-mpv command to start a shell with all devices mounted in the cnt

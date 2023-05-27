@@ -49,7 +49,6 @@ sys/tmux			musl			latest
 text/vim			musl			latest
 text/dos2unix			musl			latest
 sys/ncdu			musl			latest
-sys/testdisk			musl			latest
 sys/fdupes			musl			latest
 sys/vifm			musl			latest
 sys/rsync			musl			latest
@@ -98,9 +97,10 @@ sys/hplip			musl			latest
 dev/autoconf-archive		musl			latest
 media/sane-backends		musl			latest
 
+dev/checksec			musl			latest
+sys/testdisk			musl			latest
 text/nawk			musl			latest
 text/task			musl			latest
-dev/checksec			musl			latest
 
 
 

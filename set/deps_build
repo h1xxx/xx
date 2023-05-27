@@ -188,6 +188,7 @@ sys/usbutils				std			latest
 	sys/libusb			std			latest
 
 sys/testdisk				musl			latest
+	media/libjpeg-turbo		musl			latest
 	sys/ntfs-3g			musl			latest
 
 emu/qemu				std			latest
