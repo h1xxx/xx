@@ -62,6 +62,9 @@ func (r *runT) getPkgPrev(p pkgT) pkgT {
 	pkgPrev := p
 	if r.diffBuild {
 		pkgPrev.setVerRel = p.setVerPrevRel
+		pkgPrev.rel, pkgPrev.prevRel, _ = getPkgRels(pkgPrev)
+		pkgPrev = getPkgDirs(pkgPrev)
+
 		if p.setVerRel == p.setVerPrevRel {
 			return pkgPrev
 		}

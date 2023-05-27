@@ -237,7 +237,7 @@ type reT struct {
 	glibcBin      *regexp.Regexp
 }
 
-var ERR error
+var ERR = fmt.Errorf("")
 
 func main() {
 	r := parseArgs()

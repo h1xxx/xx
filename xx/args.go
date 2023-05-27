@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strconv"
 
@@ -224,7 +225,11 @@ func (r *runT) parseDiffArgs(args []string) {
 
 			r.diffHours = int64(hoursInt)
 
+		case "-t", "--target":
+			r.actionTarget, shift = getNextArg(args[i:])
+
 		default:
+			fmt.Println(arg)
 			errExit(ERR, "unknown argument:", arg)
 		}
 	}
