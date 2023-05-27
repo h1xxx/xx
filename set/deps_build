@@ -187,11 +187,8 @@ net/prosody				std			latest
 sys/usbutils				std			latest
 	sys/libusb			std			latest
 
-sys/ntfs3g				std			latest
-	sys/fuse2			std			latest
-
-sys/testdisk				std			latest
-	sys/ntfs3g			std			latest
+sys/testdisk				musl			latest
+	sys/ntfs-3g			musl			latest
 
 emu/qemu				std			latest
 	dev/glib			std			latest

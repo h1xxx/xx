@@ -10,6 +10,7 @@ sys/input-utils			musl			latest
 sys/libcgroup			musl			latest
 sys/lsof			musl			latest
 sys/parallel			musl			latest
+sys/pv				musl			latest
 sys/rsyslog			musl			latest
 sys/vlock			musl			latest
 sys/which			musl			latest
@@ -19,6 +20,8 @@ crypt/argon2			musl			latest
 sys/cryptsetup			musl			latest
 sys/dosfstools			musl			latest
 sys/e2fsprogs			musl			latest
+sys/ntfs-3g			musl			latest
+sys/ntfs-3g			musl_lib		latest
 sys/syslinux			musl			latest
 sys/memtest86plus		musl			latest
 net/dhcpcd			musl			latest
