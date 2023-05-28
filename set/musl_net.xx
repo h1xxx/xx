@@ -41,6 +41,7 @@ net/iftop			musl			latest
 net/nethogs			musl			latest
 
 net/acme-sh			musl			latest
+net/acmetool			musl			latest
 
 net/vsftpd			musl			latest
 net/libidn			musl			latest
@@ -75,10 +76,9 @@ net/geoip			musl			latest
 net/geoip-database		musl			latest
 net/libmaxminddb		musl			latest
 
-net/libnetfilter_queue		musl			latest
-libgo/sys			musl			latest
-libgo/gatt			musl			latest
-libgo/bettercap			musl			latest
+#net/libnetfilter_queue		musl			latest
+#libgo/gatt			musl			latest
+#libgo/bettercap			musl			latest
 
 # todo: needs more work, not working currently
 #net/bettercap			musl			latest

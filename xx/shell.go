@@ -34,15 +34,6 @@ func (r *runT) actionShell() {
 	for i, p := range r.pkgs {
 		pc := r.pkgCfgs[i]
 
-		if r.shellInstall {
-			fmt.Printf("+ %-32s %s\n", p.name, p.setVerRel)
-			r.instPkg(p, pc, "/")
-			for _, s := range pc.steps.subPkgs {
-				subPkg := getSubPkg(p, s.suffix)
-				r.instPkg(subPkg, pc, "/")
-			}
-		}
-
 		if i == len(r.pkgs)-1 || p.name == r.shellPkgName {
 			if r.shellExtract {
 				fmt.Printf("+ %-32s %s\n", p.name, p.setVerRel)
@@ -56,6 +47,15 @@ func (r *runT) actionShell() {
 			r.instLxcConfig(p, pc)
 			startShell()
 			break
+		}
+
+		if r.shellInstall {
+			fmt.Printf("+ %-32s %s\n", p.name, p.setVerRel)
+			r.instPkg(p, pc, "/")
+			for _, s := range pc.steps.subPkgs {
+				subPkg := getSubPkg(p, s.suffix)
+				r.instPkg(subPkg, pc, "/")
+			}
 		}
 	}
 }

@@ -81,9 +81,8 @@ func (r *runT) execStep(step string, p pkgT, pc pkgCfgT) {
 		}
 
 		// clean the new pkg dir on build or pkg_create error
-		if step == "build" || step == "pkg_create" {
-			remNewPkg(p, errors.New(""))
-		}
+		remNewPkg(p, errors.New(""))
+
 		errExit(err, "can't execute command; stderr dump:\n\n"+stderr)
 	}
 }
