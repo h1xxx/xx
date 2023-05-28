@@ -78,12 +78,6 @@ dev/protobuf			musl			latest
 dev/gtest			musl			latest
 arch/brotli			musl			latest
 arch/lz4			musl			latest
-libgo/net			musl		20190404232315-eb5bcb51f2a3
-libgo/sys			musl		20190215142949-d0b11bdaac8a
-libgo/sys			musl		20190412213103-97732733099d
-libgo/crypto			musl		20190308221718-c2843e01d9a2
-libgo/text			musl			0.3.0
-libgo/crypto			musl		20200622213623-75b288015ac9
 sys/android-tools		musl			latest
 sys/android-file-transfer-linux	musl			latest
 

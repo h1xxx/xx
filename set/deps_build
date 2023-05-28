@@ -384,7 +384,6 @@ sys/android-tools			std			latest
 	dev/gtest			std			latest
 	arch/brotli			std			latest
 	arch/lz4			std			latest
-	libgo/crypto			std	20200622213623-75b288015ac9
 
 sys/hwinfo				std			latest
 	dev/libx86emu			std			latest
@@ -393,11 +392,6 @@ net/wireshark				std			latest
 	net/c-ares			std			latest
 	net/libpcap			std			latest
 	dev/glib			std			latest
-
-net/bettercap				std			2.31.1
-	libgo/bettercap			std	20210417153115-568c166fe1c9
-	libgo/gatt			std	20210514133428-df6e615f2f67
-	libgo/sys			std	20210514084401-e8d321eab015
 
 net/openvpn				std			latest
 	arch/lzo			std			latest
