@@ -72,35 +72,44 @@ func printUsage() {
 actions/parameters:
 
 (b)uild         build packages
--f              force build of all packages
--s              build set to build for a single package (default: std)
--V              version to build for a single package
--t              build target (xx set file or a program)
+-f, --force     force build of all packages
+-s, --pkg-set   build set to build for a single package (default: std)
+-v, --pkg-ver   version to build for a single package
+-t, --target    build target (xx set file or a program)
 
 (i)nstall       install already built packages
--f              force installation of all packages
--r              root dir to install packages to
--c              system config dir
--s              fixed package set to install for all packages
--V              fixed version to install for all packages
--P              only set system permissions
--C              only install configs from the system config dir
--t              install target (xx set file or a program)
+-f, --force     force installation of all packages
+-r, --root-dir  root dir to install packages to
+-c, --cfg-dir   system config dir
+-s, --pkg-set   fixed package set to install for all packages
+-v, --pkg-ver   fixed version to install for all packages
+-P, --Perms     only set system permissions
+-C, --Config    only install configs from the system config dir
+-t, --target    install target (xx set file or a program)
 
 (s)ource        download and verify source files
--t              package target (xx set file or a program)
+-t, --target    package target (xx set file or a program)
 
 (d)iff          show diff between pkg builds
--h              time horizon in hours to search for diffs (default: 24)
--b              show diff against previous build (default: previous version)
+-h, --hours     time horizon in hours to search for diffs (default: 24)
+-b, --build     show diff against previous build (default: previous version)
+-t, --target    diff target (xx set file or a program)
 
 i(n)fo          show additional information on xx system
--a              information on all package, incl. dependencies
--i              verify system integrity
--t              package target (xx set file or a program)
+-a, --all       information on all packages, incl. dependencies
+-i, --integrity verify system integrity
+-t, --target    package target (xx set file or a program)
 
 (u)pdate        update ini files
--i              get information on latest packages available
--t              package target (xx set file or a program)
+-i, --info      get information on latest packages available
+-t, --target    package target (xx set file or a program)
+
+(sh)ell         start a shell inside the build environment
+-p, --pkg-name  package to configure for shell
+-s, --pkg-set   fixed package set to configure for shell
+-v, --pkg-ver   fixed version to configure for shell
+-x, --extract   extract package source code to build dir
+-i, --install   install packages from the xx set file
+-t, --target    build target (xx set file or a program)
 `)
 }

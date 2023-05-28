@@ -77,6 +77,14 @@ type runT struct {
 	infoDeps  bool
 	infoInteg bool
 
+	updateInfo bool
+
+	shellPkgName string
+	shellPkgSet  string
+	shellPkgVer  string
+	shellExtract bool
+	shellInstall bool
+
 	pkgs      []pkgT
 	pkgCfgs   []pkgCfgT
 	cnts      []string
@@ -273,6 +281,9 @@ func main() {
 
 	case r.action == "info":
 		r.actionInfo()
+
+	case r.action == "shell":
+		r.actionShell()
 	}
 }
 

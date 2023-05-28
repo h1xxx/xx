@@ -37,6 +37,9 @@ func parseArgs() runT {
 
 	case "update":
 		r.parseUpdateArgs(os.Args)
+
+	case "shell":
+		r.parseShellArgs(os.Args)
 	}
 
 	return r
@@ -46,12 +49,13 @@ func getAction(args []string) string {
 	arg := os.Args[1]
 
 	actions := map[string]string{
-		"b": "build",
-		"i": "install",
-		"s": "source",
-		"d": "diff",
-		"n": "info",
-		"u": "update",
+		"b":  "build",
+		"i":  "install",
+		"s":  "source",
+		"d":  "diff",
+		"n":  "info",
+		"u":  "update",
+		"sh": "shell",
 	}
 
 	for abbr, action := range actions {
@@ -63,7 +67,7 @@ func getAction(args []string) string {
 	errExit(ERR, "unrecognized action\n"+
 		"  first parameter must be one of: "+
 		"(b)uild, (d)iff, (i)nstall, (r)emove, "+
-		"(u)pdate, (s)ource, (c)heck, i(n)fo")
+		"(u)pdate, (s)ource, (c)heck, i(n)fo, (sh)ell")
 
 	return "error"
 }
@@ -91,7 +95,7 @@ func (r *runT) parseBuildArgs(args []string) {
 		case "-s", "--pkg-set":
 			r.fixedSet, shift = getNextArg(args[i:])
 
-		case "-V", "--pkg-version":
+		case "-v", "--pkg-ver":
 			r.fixedVer, shift = getNextArg(args[i:])
 
 		default:
@@ -125,13 +129,13 @@ func (r *runT) parseInstallArgs(args []string) {
 		case "-s", "--pkg-set":
 			r.fixedSet, shift = getNextArg(args[i:])
 
-		case "-V", "--pkg-version":
+		case "-v", "--pkg-ver":
 			r.fixedVer, shift = getNextArg(args[i:])
 
 		case "-r", "--root-dir":
 			r.rootDir, shift = getNextArg(args[i:])
 
-		case "-c", "--config-dir":
+		case "-c", "--cfg-dir":
 			r.sysCfgDir, shift = getNextArg(args[i:])
 
 		case "-P", "--Perms":
@@ -284,6 +288,9 @@ func (r *runT) parseUpdateArgs(args []string) {
 		}
 
 		switch arg {
+		case "-i", "--info":
+			r.updateInfo = true
+
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
 
@@ -293,6 +300,67 @@ func (r *runT) parseUpdateArgs(args []string) {
 	}
 
 	r.checkTarget()
+}
+
+func (r *runT) parseShellArgs(args []string) {
+	if len(os.Args) < 4 {
+		errExit(ERR, "missing action target (set file or a program)")
+	}
+
+	var shift bool
+
+	for i, arg := range args {
+		if shift || arg == "" || i < 2 {
+			shift = false
+			continue
+		}
+
+		switch arg {
+		case "-p", "--pkg-name":
+			r.shellPkgName, shift = getNextArg(args[i:])
+
+		case "-s", "--pkg-set":
+			r.shellPkgSet, shift = getNextArg(args[i:])
+
+		case "-v", "--pkg-ver":
+			r.shellPkgVer, shift = getNextArg(args[i:])
+
+		case "-i", "--install":
+			r.shellInstall = true
+
+		case "-x", "--extract":
+			r.shellExtract = true
+
+		case "-t", "--target":
+			r.actionTarget, shift = getNextArg(args[i:])
+
+		default:
+			errExit(ERR, "unknown argument:", arg)
+		}
+	}
+
+	r.checkShellTarget()
+}
+
+func (r *runT) checkShellTarget() {
+	if r.actionTarget == "" {
+		errExit(ERR, "target not defined")
+	}
+
+	if fileExists(fp.Join("/home/xx/prog", r.actionTarget)) {
+		if r.shellPkgSet == "" || r.shellPkgVer == "" {
+			errExit(ERR, "no version or pkg set defined")
+		}
+
+		r.targetIsSinglePkg = true
+		return
+	}
+
+	if fileExists(r.actionTarget) && str.HasSuffix(r.actionTarget, ".xx") {
+		return
+	}
+
+	errExit(ERR, "not an action target:", r.actionTarget)
 }
 
 func (r *runT) checkTarget() {

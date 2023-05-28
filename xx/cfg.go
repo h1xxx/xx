@@ -179,6 +179,7 @@ func (r *runT) prepareEnv(envIn []string, p pkgT, pc pkgCfgT) []string {
 		envMap["PKG_CONFIG_PATH"] = "/usr/lib/pkgconfig"
 	}
 
+	envMap["PWD"] = r.rootDir
 	envMap["LC_ALL"] = "C"
 	envMap["HOME"] = "/home/xx"
 	envMap["USER"] = "xx"
