@@ -67,7 +67,7 @@ sys/alsa-utils			std			latest
 arch/zip			std			latest
 net/yt-dlp			std			latest
 dev/waf				std			latest
-lang/lua			std			5.2.4
+lang/lua-5_2			std			latest
 media/mpv			std			latest
 
 # misc

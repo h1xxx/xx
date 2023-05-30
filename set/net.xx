@@ -5,7 +5,7 @@ dev/glib			std			latest
 net/c-ares			std			latest
 net/wireshark			std			latest
 
-lang/lua			std			5.2.4
+lang/lua-5_2			std			latest
 net/libidn			std			latest
 net/prosody			std			latest
 

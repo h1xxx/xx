@@ -101,8 +101,7 @@ func (r *runT) worldPkgExists(p pkgT, pc pkgCfgT) bool {
 	if pkgInWorldDir && !pkgInWorldT {
 		fmt.Println(p.name, p.setVerRel, "not consistent in the world")
 		fmt.Println("in world dir:", pkgInWorldDir, f)
-		fmt.Println("in world var, loc, len(deps):", pkgInWorldT, loc,
-			len(r.world[loc].pkgs))
+		fmt.Println("in world var:", pkgInWorldT)
 	}
 
 	return pkgInWorldDir && pkgInWorldT

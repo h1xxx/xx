@@ -181,7 +181,7 @@ net/nmap				std			latest
 	net/libpcap			std			latest
 
 net/prosody				std			latest
-	lang/lua			std			5.2.4
+	lang/lua-5_2			std			latest
 	net/libidn			std			latest
 
 sys/usbutils				std			latest
@@ -224,7 +224,7 @@ x11/cairo				std			latest
 x11/gdk-pixbuf				std			latest
 	x11/shared-mime-info		std			latest
 	dev/itstool			std			latest
-	text/docbook-xml		std			4.3
+	text/docbook-xml-4_3		std			latest
 	media/libjpeg-turbo		std			latest
 	media/libpng			std			latest
 
@@ -241,14 +241,26 @@ text/xmlto				std			latest
 
 text/docbook-catalog			std			latest
 	text/libxml2			std			latest
-	text/docbook-xml		std			4.1.2
-	text/docbook-xml		std			4.2
-	text/docbook-xml		std			4.3
-	text/docbook-xml		std			4.4
-	text/docbook-xml		std			4.5
+	text/docbook-xml-4_1		std			latest
+	text/docbook-xml-4_2		std			latest
+	text/docbook-xml-4_3		std			latest
+	text/docbook-xml-4_4		std			latest
+	text/docbook-xml-4_5		std			latest
 	text/docbook-xsl		std			1.79.2
 
-text/docbook-xml			std			latest
+text/docbook-xml-4_1			std			latest
+	arch/unzip			std			latest
+
+text/docbook-xml-4_2			std			latest
+	arch/unzip			std			latest
+
+text/docbook-xml-4_3			std			latest
+	arch/unzip			std			latest
+
+text/docbook-xml-4_4			std			latest
+	arch/unzip			std			latest
+
+text/docbook-xml-4_5			std			latest
 	arch/unzip			std			latest
 
 x11/at-spi2-atk				std			latest

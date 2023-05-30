@@ -41,18 +41,17 @@ net/iftop			musl			latest
 net/nethogs			musl			latest
 
 net/acme-sh			musl			latest
-net/acmetool			musl			latest
 
 net/vsftpd			musl			latest
 net/libidn			musl			latest
-lang/lua			musl			5.2.4
+lang/lua-5_2			musl			latest
 net/nginx			musl			latest
 net/stunnel			musl			latest
 
 net/privoxy			musl			latest
 net/tor				musl			latest
 
-lang/lua			musl			5.4.3
+lang/lua-5_4			musl			latest
 net/diod			musl			latest
 
 dev/musl-glibc-headers		musl			latest
