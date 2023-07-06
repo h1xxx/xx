@@ -60,15 +60,10 @@ func (r *runT) printDepsInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 
 		// todo: add build deps
 
-		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{},
-			"all", 1)
-		sort.Slice(deps, func(i, j int) bool {
-			return deps[i].name <= deps[j].name
-		})
-		if len(deps) > 0 {
+		if len(pc.allRunDeps) > 0 {
 			fmt.Println("\nall deps:")
 		}
-		for _, dep := range deps {
+		for _, dep := range pc.allRunDeps {
 			fmt.Printf("  %-32s %s\n", dep.name, dep.setVerRel)
 		}
 
@@ -77,7 +72,7 @@ func (r *runT) printDepsInfo(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 }
 
 // prints recursively all pkg dependencies
-// depType possible vaules: "all", "run", "lib", "build"
+// depType possible vaules: "run", "lib", "build"
 func (r *runT) printPkgDepsTree(p pkgT, deps, topPkgs []pkgT, depType string, depth int) {
 	if pkgExists(p, topPkgs) {
 		return
@@ -103,8 +98,6 @@ func (r *runT) printPkgDepsTree(p pkgT, deps, topPkgs []pkgT, depType string, de
 		var depDeps []pkgT
 		depC := r.getPkgCfg(dep, "")
 		switch depType {
-		case "all":
-			depDeps = depC.allRunDeps
 		case "run":
 			depDeps = depC.runDeps
 		case "lib":

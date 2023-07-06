@@ -173,7 +173,7 @@ type pkgT struct {
 // libDeps	list of pkgs with shared libraries needed to run the program
 // runDeps	list of pkgs needed to run the program excl. shared libraries
 // buildDeps	list of pkgs needed to build the program
-// allRunDeps	list of all pkgs needed to run the program
+// allRunDeps   list of all pkgs needed to run the program
 type pkgCfgT struct {
 	instDir   string
 	tmpDir    string
@@ -251,6 +251,7 @@ func main() {
 	r := parseArgs()
 	r.getRunVars()
 	r.getPkgList()
+	r.getPkgListDeps()
 	r.getWorld(r.pkgCfgs)
 	r.detectSeparateSys()
 
@@ -301,6 +302,18 @@ func (r *runT) getPkgList() {
 
 		r.pkgs = append(r.pkgs, p)
 		r.pkgCfgs = append(r.pkgCfgs, pc)
+	}
+}
+
+func (r *runT) getPkgListDeps() {
+	for i, p := range r.pkgs {
+		var allRunDeps []pkgT
+		r.getAllRunDeps(p, &allRunDeps)
+		r.pkgCfgs[i].allRunDeps = allRunDeps
+
+		sort.Slice(allRunDeps, func(i, j int) bool {
+			return allRunDeps[i].name <= allRunDeps[j].name
+		})
 	}
 }
 
@@ -411,11 +424,6 @@ func (r *runT) getPkgCfg(p pkgT, flags string) pkgCfgT {
 	_, pc.libDeps = r.getPkgLibDeps(p)
 	pc.runDeps = r.runDeps[p]
 	pc.buildDeps = r.buildDeps[p]
-	pc.allRunDeps = append(pc.libDeps, pc.runDeps...)
-
-	sort.Slice(pc.allRunDeps, func(i, j int) bool {
-		return pc.allRunDeps[i].name <= pc.allRunDeps[j].name
-	})
 
 	return pc
 }

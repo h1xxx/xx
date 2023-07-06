@@ -93,6 +93,8 @@ actions/parameters:
 (d)iff          show diff between pkg builds
 -h, --hours     time horizon in hours to search for diffs (default: 24)
 -b, --build     show diff against previous build (default: previous version)
+-s, --pkg-set   build set to build for a single package (default: std)
+-v, --pkg-ver   version to build for a single package
 -t, --target    diff target (xx set file or a program)
 
 i(n)fo          show additional information on xx system

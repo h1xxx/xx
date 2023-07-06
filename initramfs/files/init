@@ -38,7 +38,7 @@ t=0
 while [ ! -e /dev/pts/ptmx ] || [ ! -e /proc/sys ] || [ ! -e /sys/dev ]; do 
 	sleep 0.01
 	t="$((t+1))"
-	[ "${t}" -gt 256 ] && err '/dev, /proc or /sys not mounted'
+	[ "${t}" -gt 500 ] && err '/dev, /proc or /sys not mounted'
 done
 
 # set console font
@@ -53,10 +53,10 @@ conf=/mnt/boot/boot.conf
 
 # wait for boot disk to show up
 t=0
-while ! blkid | grep -q "${bootdev}" ; do 
+while ! blkid | tr 'A-Z' 'a-z' | grep -q "${bootdev}" ; do 
 	sleep 0.01
 	t="$((t+1))"
-	[ "${t}" -gt 256 ] && err "boot disk not available: ${bootdev}"
+	[ "${t}" -gt 500 ] && err "boot disk not available: ${bootdev}"
 done
 sleep 0.1
 
@@ -68,12 +68,12 @@ for dev in /dev/[sv]d* /dev/nvme[0-9]*; do
 	ln -s "${dev}" "/dev/disk/by-uuid/${uuid}"
 done
 
-msg 'getting initramfs config...'
+msg 'getting initramfs config from boot partition...'
 # mount boot partition
 t=0
 while ! mount UUID="${bootdev}" /mnt/boot/ 2>/dev/null; do
 	sleep 0.01
-	t="$((t+1))" && [ "${t}" -gt 256 ] &&
+	t="$((t+1))" && [ "${t}" -gt 500 ] &&
 		err "${bootdev} not mounted"
 done
 
@@ -81,7 +81,7 @@ done
 t=0
 while [ ! -e ${conf} ]; do
 	sleep 0.01
-	t="$((t+1))" && [ "${t}" -gt 256 ] &&
+	t="$((t+1))" && [ "${t}" -gt 500 ] &&
 		err "${conf} not loaded"
 done
 . ${conf} && umount /mnt/boot || err "${conf} not loaded"

@@ -207,6 +207,7 @@ media/mesa				x11			latest
 
 
 sys/ansible				std			latest
+	lang/python			std			latest
 	dev/libffi			std			latest
 	dev/py-cparser			std			latest
 	dev/cffi			std			latest

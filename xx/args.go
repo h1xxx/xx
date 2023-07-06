@@ -263,6 +263,12 @@ func (r *runT) parseInfoArgs(args []string) {
 		case "-i", "--integrity":
 			r.infoInteg = true
 
+		case "-s", "--pkg-set":
+			r.fixedSet, shift = getNextArg(args[i:])
+
+		case "-v", "--pkg-ver":
+			r.fixedVer, shift = getNextArg(args[i:])
+
 		case "-t", "--target":
 			r.actionTarget, shift = getNextArg(args[i:])
 

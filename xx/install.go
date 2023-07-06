@@ -44,12 +44,7 @@ func (r *runT) instDefPkgs(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 			worldLoc = pc.cntProg
 		}
 
-		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{}, "all", 1)
-		sort.Slice(deps, func(i, j int) bool {
-			return deps[i].name <= deps[j].name
-		})
-
-		for _, dep := range deps {
+		for _, dep := range pc.allRunDeps {
 			fmt.Printf("%-34s %s\n", dep.name, dep.setVerRel)
 			if !r.worldPkgExists(dep, pc) && !pc.force {
 				depCfg := pc

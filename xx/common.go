@@ -96,20 +96,20 @@ func walkDir(rootDir, fType string) ([]string, error) {
 	return names, err
 }
 
-func pkgExists(p pkgT, pkgs []pkgT) bool {
+func pkgExists(pkg pkgT, pkgs []pkgT) bool {
 	for _, p := range pkgs {
-		if p.name == p.name && p.set == p.set {
+		if pkg.name == p.name && pkg.set == p.set {
 			return true
 		}
 	}
 	return false
 }
 
-func pkgCntExists(p pkgT, pkgCfg pkgCfgT, pkgs []pkgT,
+func pkgCntExists(pkg pkgT, pkgCfg pkgCfgT, pkgs []pkgT,
 	pkgCfgs []pkgCfgT) bool {
 
 	for i, p := range pkgs {
-		if p.name == p.name && p.set == p.set &&
+		if pkg.name == p.name && pkg.set == p.set &&
 			pkgCfg.cnt == pkgCfgs[i].cnt &&
 			pkgCfg.cntPkg == pkgCfgs[i].cntPkg {
 

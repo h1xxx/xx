@@ -11,37 +11,29 @@ import (
 	str "strings"
 )
 
-// returns a list of dependencies
-// depType possible vaules: "all", "run", "lib", "build"
-func (r *runT) getAllDeps(p pkgT, deps, res []pkgT, depType string, depth int) []pkgT {
-	if pkgExists(p, res) && len(deps) == 0 {
-		return res
+// returns a list of all run-time dependencies recursively
+func (r *runT) getAllRunDeps(p pkgT, res *[]pkgT) {
+	// todo: drop this once pkg[pkgCfg] map is implemented
+	// test if this speeds anything and what's the mem consumption
+	pc := r.getPkgCfg(p, "")
+
+	for _, dep := range pc.runDeps {
+		if !pkgExists(dep, *res) {
+			*res = append(*res, dep)
+			r.getAllRunDeps(dep, res)
+		}
 	}
 
-	for _, dep := range deps {
-		if pkgExists(dep, res) {
-			continue
+	for _, dep := range pc.libDeps {
+		if !pkgExists(dep, *res) {
+			*res = append(*res, dep)
+			r.getAllRunDeps(dep, res)
 		}
-
-		res = append(res, dep)
-
-		var depDeps []pkgT
-		depC := r.getPkgCfg(dep, "")
-		switch depType {
-		case "all":
-			depDeps = depC.allRunDeps
-		case "run":
-			depDeps = depC.runDeps
-		case "lib":
-			depDeps = depC.libDeps
-		case "build":
-			depDeps = depC.buildDeps
-		}
-
-		res = r.getAllDeps(dep, depDeps, res, depType, depth+1)
 	}
 
-	return res
+	if !pkgExists(p, *res) {
+		*res = append(*res, p)
+	}
 }
 
 func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
@@ -49,9 +41,7 @@ func (r *runT) checkPkgAvail(pkgs []pkgT, pkgCfgs []pkgCfgT) {
 		pkgCheck(p)
 
 		pc := pkgCfgs[i]
-		deps := r.getAllDeps(p, pc.allRunDeps, []pkgT{},
-			"all", 1)
-		for _, dep := range deps {
+		for _, dep := range pc.allRunDeps {
 			pkgCheck(dep)
 		}
 	}
