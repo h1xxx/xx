@@ -5,6 +5,7 @@ kvm_generic
 general
 general_cgroups
 general_expert
+general_expert_io-uring
 general_initramfs
 general_namespaces
 general_modules
@@ -123,5 +124,3 @@ alsa_hda-intel
 
 power
 power_acpi
-
-verify

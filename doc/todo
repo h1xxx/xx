@@ -4,6 +4,8 @@ UniqueSlice is not working on [xx, xx], returns empty slice
 
 cleanup after container kill
 
+enamble io_uring in qemu when no security is needed
+
 prepare rescue and add freedos and an example iso system to syslinux:
 # Hardware Detection Tool from iso image (with 'iso' parameter)
 LABEL hdt_iso

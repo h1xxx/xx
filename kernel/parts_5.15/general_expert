@@ -6,22 +6,32 @@ CONFIG_MULTIUSER=y
 CONFIG_FHANDLE=y
 CONFIG_POSIX_TIMERS=y
 CONFIG_PRINTK=y
-# todo: maybe disable?
-CONFIG_BUG=y
-CONFIG_BASE_FULL=y
-CONFIG_FUTEX=y
-CONFIG_EPOLL=y
-CONFIG_SIGNALFD=y
-CONFIG_TIMERFD=y
-CONFIG_EVENTFD=y
 CONFIG_SHMEM=y
-CONFIG_AIO=y
-CONFIG_IO_URING=y
+
+# required by glibc
+CONFIG_FUTEX=y
+
+# epoll syscalls, needed for udev, nginx
+CONFIG_EPOLL=y
+
+# required to showed kernel errors
+CONFIG_BUG=y
+
+# enable larger kernel data structures to boost performance
+CONFIG_BASE_FULL=y
+
+# enable syscall to allow receiving signals on file descriptors
+CONFIG_SIGNALFD=y
+
+# enable syscall to allow receiving timer events on file descriptors
+CONFIG_TIMERFD=y
+
+# enable syscall to receive kernel or userspace notifications
+CONFIG_EVENTFD=y
+
+# used by qemu
 CONFIG_ADVISE_SYSCALLS=y
 
-# possible deps
-#CONFIG_FUTEX_PI=y
-#CONFIG_PRINTK_NMI=y
-#CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT=13
-
+# might be needed for adb, if not can be removed
+#CONFIG_AIO=y
 

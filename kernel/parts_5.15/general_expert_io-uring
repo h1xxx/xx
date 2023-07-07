@@ -1,0 +1,6 @@
+# general -> expert
+# =================
+
+# insecure performance improvements for programs using this e.g. qemu
+CONFIG_IO_URING=y
+
