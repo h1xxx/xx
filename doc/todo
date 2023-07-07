@@ -18,6 +18,9 @@ LINUX memdisk
 INITRD dosboot.img
 APPEND raw
 
+add selinux
+search for pkgs with selinux support in config-help
+
 bump syslinux, maybe from debian? to fix hdt.c32
 move syslinux install files from dev_install to separate pkg also for uefi
 combine uefi with mbr
