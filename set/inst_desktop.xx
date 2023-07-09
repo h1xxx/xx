@@ -41,6 +41,7 @@ sys/iptables			musl			latest
 sys/openssh			musl			latest
 sys/rsync			musl			latest
 sys/rsnapshot			musl			latest
+sys/unison			musl			latest
 net/chrony			musl			latest
 net/curl			musl			latest
 net/wget			musl			latest
@@ -191,6 +192,7 @@ net/w3m				std			latest	c
 net/mutt			std			latest	c
 media/exiftool			std			latest	c
 sys/ansible			std			latest	c
+db/postgresql			std			latest	c
 
 x11/xorg-server			std			latest	c
 

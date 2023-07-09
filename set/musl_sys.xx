@@ -94,8 +94,9 @@ media/sane-backends		musl			latest
 dev/checksec			musl			latest
 sys/testdisk			musl			latest
 text/nawk			musl			latest
-text/task			musl			latest
 
+lang/ocaml			musl			latest
+sys/unison			musl			latest
 
 
 

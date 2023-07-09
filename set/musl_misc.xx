@@ -1,8 +1,10 @@
-dev/open-watcom			musl			latest
-sys/freedos			musl			latest
+text/task			musl			latest
 
-crypt/libsecp256k1		musl			latest
-dev/py-wheel			musl			latest
+#dev/open-watcom			musl			latest
+#sys/freedos			musl			latest
+
+#crypt/libsecp256k1		musl			latest
+#dev/py-wheel			musl			latest
 # ...
 # pandas
 
