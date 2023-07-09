@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo 'syncing...'
+sync
+
+echo 'waiting 3s...'
+sleep 3
+
+echo 'suspending...'
+echo mem  > /sys/power/state
+
+echo 'waking up...'
+
