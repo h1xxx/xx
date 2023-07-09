@@ -29,12 +29,6 @@ lang/perl				std			latest
 lang/perl				musl			latest
 	sys/gdbm			musl			latest
 
-sys/rsyslog				std			latest
-	text/libestr			std			latest
-	text/libfastjson		std			latest
-	crypt/libgcrypt			std			latest
-	crypt/openssl			std			latest
-
 crypt/libgcrypt				std			latest
 	crypt/libgpg-error		std			latest
 
@@ -656,6 +650,10 @@ sys/openssh				std			latest
 
 sys/openssh				musl			latest
 	crypt/libressl			musl			latest
+
+sys/syslog-ng				musl			latest
+	dev/glib			musl			latest
+	sys/ivykis			musl			latest
 
 dev/binutils				std			latest
 	text/texinfo			std			latest

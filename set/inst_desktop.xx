@@ -101,7 +101,8 @@ sys/tmux			musl			latest
 dev/ncurses			musl			latest
 dev/checksec			musl			latest
 sys/acpi			musl			latest
-sys/rsyslog			musl			latest
+sys/logrotate			musl			latest
+sys/syslog-ng			musl			latest
 sys/usbutils			musl			latest
 sys/linux			generic			latest
 sys/linux			custom			latest
