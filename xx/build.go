@@ -333,9 +333,12 @@ func (r *runT) selfLibsExist(p pkgT) {
 
 func dumpSHA256(p pkgT) {
 	files, err := walkDir(p.newPkgDir, "files")
-	sort.Strings(files)
-	remNewPkg(p, err)
+	if err != nil {
+		remNewPkg(p)
+	}
 	errExit(err, "can't get file list for: "+p.name)
+
+	sort.Strings(files)
 
 	if len(files) == 0 {
 		errExit(ERR, "no files in pkg dir: "+p.newPkgDir)
@@ -346,19 +349,25 @@ func dumpSHA256(p pkgT) {
 
 	for _, file := range files {
 		set, err := os.Stat(file)
-		remNewPkg(p, err)
+		if err != nil {
+			remNewPkg(p)
+		}
 		errExit(err, "can't get file stat (broken link?): "+file)
 		if set.IsDir() {
 			continue
 		}
 
 		fd, err := os.Open(file)
-		remNewPkg(p, err)
+		if err != nil {
+			remNewPkg(p)
+		}
 		errExit(err, "can't open file: "+file)
 
 		hash := sha256.New()
 		_, err = io.Copy(hash, fd)
-		remNewPkg(p, err)
+		if err != nil {
+			remNewPkg(p)
+		}
 		errExit(err, "can't read file: "+file)
 		fd.Close()
 

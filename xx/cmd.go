@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -81,7 +80,7 @@ func (r *runT) execStep(step string, p pkgT, pc pkgCfgT) {
 		}
 
 		// clean the new pkg dir on build or pkg_create error
-		remNewPkg(p, errors.New(""))
+		remNewPkg(p)
 
 		errExit(err, "can't execute command; stderr dump:\n\n"+stderr)
 	}
@@ -206,12 +205,10 @@ func getMountDev(mountPoint string) string {
 	return ""
 }
 
-func remNewPkg(p pkgT, err error) {
-	if err != nil {
-		errRem := os.RemoveAll(p.newPkgDir)
-		if errRem != nil {
-			fmt.Fprintln(os.Stderr, "error: can't remove ", errRem)
-		}
+func remNewPkg(p pkgT) {
+	errRem := os.RemoveAll(p.newPkgDir)
+	if errRem != nil {
+		fmt.Fprintln(os.Stderr, "error: can't remove ", errRem)
 	}
 }
 

@@ -84,7 +84,8 @@ func downloadToFile(url, fPath string) {
 	resp, err := client.Do(req)
 
 	if err != nil || resp.StatusCode != 200 {
-		fmt.Println("  download failed, getting tarball from gentoo...")
+		fmt.Println("  download failed", url)
+		fmt.Println("  getting tarball from gentoo...")
 
 		url = "https://distfiles.gentoo.org/distfiles/" + path.Base(url)
 		req, err = http.NewRequest("GET", url, nil)
