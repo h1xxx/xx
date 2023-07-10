@@ -126,6 +126,10 @@ net/w3m					std			latest
 	net/privoxy			musl			latest
 	net/tor				musl			latest
 
+media/fim				std			latest
+	sys/bash			musl			latest
+	sys/coreutils			musl			latest
+
 sys/kbd					std			latest
 	arch/gzip			std			latest
 

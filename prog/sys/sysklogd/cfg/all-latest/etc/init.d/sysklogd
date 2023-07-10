@@ -1,14 +1,7 @@
 #!/bin/busybox sh
 
-. /etc/rc.conf
-
-if [ ! -e /proc/sys/net/ipv4/conf/${WLAN_IFACE} ]; then
-        echo "error: iface ${WLAN_IFACE} from rc.conf not available"
-	exit 1
-fi
-
-bin='/bin/wpa_supplicant'
-opts="-B -c /etc/wpa_supplicant/wpa_supplicant.conf -s -P /run/pid/wpa_supplicant.pid -i ${WLAN_IFACE}"
+bin='/sbin/syslogd'
+opts='-4 -k -m 0 -P /run/pid/sysklogd.pid'
 
 sig_stop='TERM'
 sig_reload='HUP'
@@ -34,7 +27,7 @@ start)
 
 	exec ${bin} ${opts} > /dev/null 2>&1 &
 	pid="$(printf "${!}")"
-	sleep 0.3
+	sleep 0.2
 
 	if [ -n "${pid}" ] && [ "${write_pid}" == 'y' ]; then
 		printf '%s' "${pid}" > "${pidfile}"

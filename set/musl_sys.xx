@@ -9,6 +9,7 @@ sys/kbd				musl			latest
 sys/input-utils			musl			latest
 sys/libcgroup			musl			latest
 sys/logrotate			musl			latest
+sys/sysklogd			musl			latest
 sys/lsof			musl			latest
 sys/parallel			musl			latest
 sys/pv				musl			latest
@@ -26,9 +27,6 @@ sys/syslinux			musl			latest
 sys/memtest86plus		musl			latest
 net/dhcpcd			musl			latest
 
-dev/glib			musl			latest
-sys/ivykis			musl			latest
-sys/syslog-ng			musl			latest
 
 text/less			musl			latest
 text/man-pages			musl			latest

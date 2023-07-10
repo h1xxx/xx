@@ -651,10 +651,6 @@ sys/openssh				std			latest
 sys/openssh				musl			latest
 	crypt/libressl			musl			latest
 
-sys/syslog-ng				musl			latest
-	dev/glib			musl			latest
-	sys/ivykis			musl			latest
-
 dev/binutils				std			latest
 	text/texinfo			std			latest
 	arch/zlib			std			latest

@@ -73,7 +73,8 @@ arch/tar			musl			latest
 # monitoring/logging
 sys/sysstat			musl			latest
 sys/iotop			musl			latest
-sys/syslog-ng			musl			latest
+sys/logrotate			musl			latest
+sys/sysklogd			musl			latest
 
 # user
 sys/gnupg			musl			latest
