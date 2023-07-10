@@ -2,8 +2,8 @@
 # =========
 
 root:root	/boot/
-root:root	/cnt/
-cnt:cnt		/cnt/home/
+root:cnt	/cnt/
+x:cnt		/cnt/home/
 root:root	/etc/
 root:root	/root
 root:root	/var/
@@ -28,14 +28,15 @@ root:lxc	/bin/newgidmap
 
 0755	d:/bin/
 0700	d:/boot
-0755	d:/cnt/
 0700	d:/boot/
+0755	d:/cnt/
+0775	d:/cnt/home
+0775	d:/cnt/home/
 0755	d:/etc/
 0700	d:/etc/acpi
 0755	d:/include/
 0755	d:/mnt
 0777	d:/mnt/shared
-0700	d:/root
 0755	d:/sbin/
 0755	d:/share/
 0755	d:/lib/
@@ -46,9 +47,11 @@ root:lxc	/bin/newgidmap
 0777	d:/var/tmp
 0700	d:/var/lib/dhcpcd
 
+0700	d:/root
 0700	d:/root/.ssh
+
 0755	d:/home
-0700	d:/home/x
+0775	d:/home/x
 0700	d:/home/x/.ssh
 0700	d:/home/xx
 
@@ -101,9 +104,9 @@ root:lxc	/bin/newgidmap
 # these permissions are prefixed with /cnt/rootfs/<container_name> for all
 # containers in /cnt/rootfs
 
-x:x	c:/home
+x:cnt	c:/home
 x:x	c:/config
-cnt:x	c:/files
+cnt:x	c:/bind
 
 0755	dc:/bin/
 0755	dc:/etc/
@@ -114,14 +117,15 @@ cnt:x	c:/files
 0755	dc:/usr/
 0755	dc:/var/
 
+0775	dc:/
 0777	dc:/home
 0777	dc:/var/cache/fontconfig
 0777	dc:/var/cache/fontconfig/
 0777	dc:/tmp
 0777	dc:/var/log
 
-0777	dc:/files
-0777	dc:/files/
+0777	dc:/bind
+0777	dc:/bind/
 
 0644	fc:/etc/
 0444	fc:/etc/mtab

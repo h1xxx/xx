@@ -1,3 +1,5 @@
+add logcheck
+
 check CONFIG_CFG80211_CRDA_SUPPORT=y
 
 UniqueSlice is not working on [xx, xx], returns empty slice

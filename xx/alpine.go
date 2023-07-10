@@ -26,7 +26,7 @@ func (r *runT) getAlpinePkgs(p pkgT, pc pkgCfgT) {
 		fPath := fp.Join(p.progDir, "src", fName)
 		if !fileExists(fPath) {
 			fmt.Printf("  downloading %s...\n", fName)
-			downloadToFile(url, fPath)
+			downloadToFile(p, url, fPath)
 		}
 
 		link := repoDir + "/" + fName
@@ -63,7 +63,7 @@ func getAlpineRoot(p pkgT) string {
 	fPath := fp.Join(p.progDir, "src", file)
 	if !fileExists(fPath) {
 		fmt.Printf("  downloading %s...\n", file)
-		downloadToFile(url+file, fPath)
+		downloadToFile(p, url+file, fPath)
 	}
 
 	return fPath
@@ -92,7 +92,7 @@ func (r *runT) getAlpineRepos(p pkgT, pc pkgCfgT) map[string]string {
 
 		if !fileExists(fPath) {
 			fmt.Printf("  downloading %d: %s...\n", i, fName)
-			downloadToFile(url, fPath)
+			downloadToFile(p, url, fPath)
 		}
 	}
 	return repos

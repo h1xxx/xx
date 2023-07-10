@@ -63,11 +63,11 @@ func getSrcTar(p pkgT, pc pkgCfgT) {
 		}
 
 		fmt.Printf("  downloading %s...\n", fName)
-		downloadToFile(url, fPath)
+		downloadToFile(p, url, fPath)
 	}
 }
 
-func downloadToFile(url, fPath string) {
+func downloadToFile(p pkgT, url, fPath string) {
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request,
 			via []*http.Request) error {
@@ -98,6 +98,7 @@ func downloadToFile(url, fPath string) {
 		defer resp.Body.Close()
 
 		if resp.StatusCode != 200 {
+			remNewPkg(p)
 			errExit(ERR, "non-200 response code for:", url)
 		}
 	}
