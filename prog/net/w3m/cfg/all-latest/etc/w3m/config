@@ -25,7 +25,7 @@ view_unseenobject 1
 display_image 1
 pseudo_inlines 1
 auto_image 1
-max_load_image 4
+max_load_image 64
 ext_image_viewer 1
 image_scale 80
 imgdisplay /usr/libexec/w3m/w3mimgdisplay
@@ -73,10 +73,10 @@ urimethodmap /etc/w3m/urimethodmap, ~/.w3m/urimethodmap
 editor /usr/bin/vim
 mailto_options 1
 mailer /usr/bin/mail
-extbrowser transmission-remote localhost:9091 -a "$0"
-extbrowser2 wget -p -k -E -e robots=off 
-extbrowser3 mpv -vo drm --loop-file=inf
-extbrowser4 mpsyt url
+extbrowser mpv -vo drm --loop-file=inf
+extbrowser2 transmission-remote localhost:9091 -a "$0"
+extbrowser3 wget -p -k -E -e robots=off
+extbrowser4 
 extbrowser5
 extbrowser6 
 extbrowser7 

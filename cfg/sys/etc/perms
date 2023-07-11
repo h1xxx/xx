@@ -43,12 +43,12 @@ root:lxc	/bin/newgidmap
 0755	d:/share/
 0755	d:/lib/
 0755	d:/libexec/
+0777	d:/tmp
 0755	d:/var/
 0750	d:/var/log
-0750	d:/var/log/
-0700	d:/var/xx/
-0777	d:/var/tmp
+0700	d:/var/xx
 0700	d:/var/lib/dhcpcd
+0777	d:/var/tmp
 
 0700	d:/root
 0700	d:/root/.ssh
