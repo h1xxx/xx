@@ -9,6 +9,7 @@ root:root	/root
 root:root	/var/
 
 
+root:log	/var/log
 root:log	/var/log/
 root:wtmp	/var/log/wtmp
 xx:xx		/var/xx/
@@ -33,6 +34,7 @@ root:lxc	/bin/newgidmap
 0775	d:/cnt/home
 0775	d:/cnt/home/
 0755	d:/etc/
+0700	d:/etc/cron.d
 0700	d:/etc/acpi
 0755	d:/include/
 0755	d:/mnt
@@ -42,6 +44,7 @@ root:lxc	/bin/newgidmap
 0755	d:/lib/
 0755	d:/libexec/
 0755	d:/var/
+0750	d:/var/log
 0750	d:/var/log/
 0700	d:/var/xx/
 0777	d:/var/tmp
