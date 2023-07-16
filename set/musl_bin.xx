@@ -1,2 +1,3 @@
 lang/ghc-bin			musl			latest
 dev/cabal-bin			musl			latest
+text/pandoc-bin			musl			latest
