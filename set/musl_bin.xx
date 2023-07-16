@@ -1,4 +1,8 @@
 lang/ghc-bin			musl			latest
 dev/cabal-bin			musl			latest
 text/pandoc-bin			musl			latest
-dev/shellcheck-bin			musl			latest
+dev/shellcheck-bin		musl			latest
+
+# requires pandoc to build
+net/wget2			musl_man		latest
+

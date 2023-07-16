@@ -45,6 +45,7 @@ sys/unison			musl			latest
 net/chrony			musl			latest
 net/curl			musl			latest
 net/wget			musl			latest
+net/wget2			musl			latest
 sys/iproute2			musl			latest
 net/bind			tools			latest	c
 

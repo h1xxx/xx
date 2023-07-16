@@ -6,6 +6,7 @@ net/tcpdump			musl			latest
 net/whois			musl			latest
 net/inetutils			musl			latest
 net/wget			musl			latest
+net/wget2			musl			latest
 net/dhcpcd			musl			latest
 
 net/dnsmasq			musl			latest
