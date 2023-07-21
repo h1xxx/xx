@@ -1,1 +1,1 @@
-*/30 * * * * /sbin/logrotate -l syslog /etc/logrotate.conf
+*/30 * * * * root /sbin/logrotate -l syslog /etc/logrotate.conf

@@ -78,6 +78,7 @@ func (r *runT) writeLxcConfig() {
 
 	fd, err := os.OpenFile(f, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0600)
 	errExit(err)
+	defer fd.Close()
 
 	_, err = fmt.Fprintf(fd, r.lxcConfig)
 	errExit(err)

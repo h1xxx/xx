@@ -1,6 +1,16 @@
 add logcheck
 add 86Box
 
+when download src fails rm pkg dir
+
+check for binaries in source code, including those encoded in base64
+
+locale in musl
+
+add a pkg check if the manpages are pure txt
+
+cnt/home config is deployed in container rootfs not /cnt/home
+
 check CONFIG_CFG80211_CRDA_SUPPORT=y
 
 UniqueSlice is not working on [xx, xx], returns empty slice
@@ -10,6 +20,8 @@ add setsid to /etc/init.d/sysklogd
 cleanup after container kill
 
 enamble io_uring in qemu when no security is needed
+
+go through first line and add shebang line as a dep
 
 prepare rescue and add freedos and an example iso system to syslinux:
 # Hardware Detection Tool from iso image (with 'iso' parameter)

@@ -79,7 +79,8 @@ net/yt-dlp				std			latest
 crypt/openssl				std			latest
 	sys/ca-certificates		std			latest
 
-text/vim				std			latest
+text/vim				musl			latest
+	dev/ncurses			musl			latest
 	sys/bash			musl			latest
 
 sys/syslinux				musl			latest
@@ -201,6 +202,8 @@ emu/dosbox-staging			std			latest
 	dev/gcc-libstdc++		std			latest
 
 text/fbpdf				std			latest
+	sys/bash			musl			latest
+	sys/coreutils			musl			latest
 	media/msttcorefonts		std			latest
 
 media/mesa				std			latest
@@ -209,8 +212,28 @@ media/mesa				std			latest
 media/mesa				x11			latest
 	dev/llvm			std			latest
 
+sys/openssh				musl			latest
+	sys/busybox			musl			latest
+	sys/coreutils			musl			latest
+	text/grep			musl			latest
+	text/sed			musl			latest
 
 sys/ansible				std			latest
+	sys/bash			musl			latest
+	sys/iproute2			musl			latest
+	sys/openssh			musl			latest
+	sys/shadow			musl			latest
+	sys/file			musl			latest
+	sys/vifm			musl			latest
+	sys/which			musl			latest
+	dev/git				musl			latest
+	net/wget			musl			latest
+	net/curl			musl			latest
+	net/iputils			musl			latest
+	text/less			musl			latest
+	text/vim			musl			latest
+	text/man-pages			musl			latest
+	text/man-db			musl			latest
 	lang/python			std			latest
 	dev/libffi			std			latest
 	dev/py-cparser			std			latest

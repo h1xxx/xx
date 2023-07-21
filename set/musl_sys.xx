@@ -69,6 +69,7 @@ sys/smartmontools		musl			latest
 sys/hdparm			musl			latest
 dev/libx86emu			musl			latest
 sys/hwinfo			musl			latest
+sys/hwloc			musl			latest
 sys/lshw			musl			latest
 sys/powertop			musl			latest
 sys/iotop			musl			latest

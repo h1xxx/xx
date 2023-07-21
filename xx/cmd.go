@@ -161,6 +161,7 @@ func (r *runT) instLxcConfig(p pkgT, pc pkgCfgT) {
 			" none bind,create=file 0 0\n"
 		config += devCfg
 	}
+	config += "lxc.mount.entry = /dev/shm dev/shm none bind,optional,create=dir 0 0\n"
 
 	if fileExists(r.rootDir + "/mnt/xx/boot") {
 		config += "lxc.mount.entry = /mnt/xx mnt/xx none bind 0 0\n"

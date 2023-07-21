@@ -25,7 +25,7 @@ lxc.rootfs.path = dir:%s
 lxc.mount.auto = cgroup:ro proc:rw sys:ro
 lxc.autodev = 1
 
-lxc.environment = TERM=linux
+lxc.environment = TERM=screen
 lxc.environment = HOME=/home/cnt
 lxc.environment = PATH=/bin:/sbin
 lxc.environment = BASH_ENV=/home/cnt/.profile

@@ -47,6 +47,7 @@ func (r *runT) parseArgs() {
 				r.debug = true
 			case "-h", "--help":
 				printHelp()
+				os.Exit(0)
 			default:
 				msg := "undefined arg: %s"
 				errExit(fmt.Errorf(msg, arg))
@@ -86,6 +87,7 @@ func (r *runT) parseArgs() {
 				r.debug = true
 			case "+h", "++help":
 				printHelp()
+				os.Exit(0)
 			default:
 				msg := "undefined arg in crun: %s"
 				errExit(fmt.Errorf(msg, arg))

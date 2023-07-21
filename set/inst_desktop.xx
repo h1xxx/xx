@@ -46,6 +46,7 @@ net/chrony			musl			latest
 net/curl			musl			latest
 net/wget			musl			latest
 net/wget2			musl			latest
+net/wget2			musl_man		latest
 sys/iproute2			musl			latest
 net/bind			tools			latest	c
 
@@ -172,6 +173,7 @@ sys/fdupes			musl			latest
 sys/flashrom			musl			latest
 sys/hplip			musl			latest
 sys/lm-sensors			musl			latest
+sys/hwloc			musl			latest
 sys/lshw			musl			latest
 sys/mtools			musl			latest
 sys/powertop			musl			latest

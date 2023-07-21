@@ -3,7 +3,7 @@
 
 root:root	/boot/
 root:cnt	/cnt/
-x:cnt		/cnt/home/
+cnt:cnt		/cnt/home/
 root:root	/etc/
 root:root	/root
 root:root	/var/
@@ -31,8 +31,8 @@ root:lxc	/bin/newgidmap
 0700	d:/boot
 0700	d:/boot/
 0755	d:/cnt/
-0775	d:/cnt/home
-0775	d:/cnt/home/
+0777	d:/cnt/home
+0777	d:/cnt/home/
 0755	d:/etc/
 0700	d:/etc/cron.d
 0700	d:/etc/acpi

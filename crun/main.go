@@ -138,8 +138,16 @@ func main() {
 		argv = append(argv, []string{"--", "/bin/bash", "-l"}...)
 	}
 
-	err := syscall.Exec("/bin/lxc-execute", argv, env)
+	attr := os.ProcAttr{
+		Env:   env,
+		Files: []*os.File{os.Stdin, os.Stdout, os.Stderr},
+	}
+
+	proc, err := os.StartProcess("/bin/lxc-execute", argv, &attr)
 	errExit(err)
+
+	proc.Wait()
+	os.Exit(0)
 }
 
 func (r *runT) doChecks() {
