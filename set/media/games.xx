@@ -1,3 +1,49 @@
+# fonts
+media/freetype			std			latest
+
+# audio
+sys/alsa-ucm-conf		std			latest
+sys/alsa-topology-conf		std			latest
+sys/alsa-lib			std			latest
+media/flac			std			latest
+media/opus			std			latest
+media/libogg			std			latest
+media/opusfile			std			latest
+media/libsamplerate		std			latest
+
+# gfx
+media/libpng			std			latest
+
+# intel and nouveau hw accel
+x11/libpciaccess		std			latest
+x11/libdrm			std			latest
+x11/libva			std			latest
+x11/libva-intel-driver		std			latest
+media/libva-utils		std			latest
+
+# mesa
+x11/libpciaccess		std			latest
+media/mako			std			latest
+lang/ocaml			std			latest
+dev/llvm			std			latest
+media/mesa			std			latest
+
+# libraries
+media/libsdl2			std			latest
+media/sdl2-image		std			latest
+dev/fmt				std			latest
+
+# utils
+emu/dosbox-x			std			latest
+#emu/dosbox-staging		std			latest
+#emu/mednafen			std			latest
+
+games/devilutionx		std			latest
+
+
+# http://sc2.sourceforge.net/	The Ur-Quan Masters
+# prince of persia https://github.com/NagyD/SDLPoP
+# gameboy advanced? https://problemkaputt.github.io/gba-dev.htm
 # xbox
 # github.com/xenia-project/xenia
 # https://github.com/mborgerson/xemu

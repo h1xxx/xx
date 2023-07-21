@@ -678,6 +678,10 @@ net/nfs-utils				musl			latest
 net/libtirpc				musl			latest
 	dev/musl-glibc-headers		musl			latest
 
+games/devilutionx			std			latest
+	dev/fmt				std			latest
+	media/libsdl2			std			latest
+	media/sdl2-image		std			latest
 
 
 ### deprecated
