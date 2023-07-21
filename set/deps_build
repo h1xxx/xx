@@ -625,10 +625,6 @@ arch/cabextract				std			latest
 media/msttcorefonts			std			latest
 	arch/cabextract			std			latest
 
-emu/dosbox-staging			std			latest
-	media/opusfile			std			latest
-	media/libpng			std			latest
-
 media/opusfile				std			latest
 	media/opus			std			latest
 	media/libogg			std			latest

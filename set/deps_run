@@ -188,19 +188,6 @@ emu/dosbox-x				x11			latest
 	x11/libXi			std			latest
 	media/freeglut			std			latest
 
-emu/dosbox-staging			std			latest
-	sys/alsa-utils			std			latest
-	sys/shadow			std			latest
-	sys/eudev			std			latest
-	media/libsdl2			std			latest
-	media/opus			std			latest
-	media/opusfile			std			latest
-	media/libpng			std			latest
-	media/libogg			std			latest
-	sys/busybox			musl			latest
-	sys/bash			musl			latest
-	dev/gcc-libstdc++		std			latest
-
 text/fbpdf				std			latest
 	sys/bash			musl			latest
 	sys/coreutils			musl			latest

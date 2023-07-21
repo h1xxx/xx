@@ -1,0 +1,6 @@
+games/ppsspp			std			latest
+	CONFIG_INPUT_JOYDEV=y
+
+games/mednafen			std			latest
+	CONFIG_INPUT_JOYDEV=y
+
