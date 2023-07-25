@@ -87,17 +87,26 @@ media/chromaprint		std			latest
 # =====
 
 dev/fmt				std			latest
+dev/yaml-cpp			std			latest
 media/iir1			std			latest
 media/speexdsp			std			latest
 
 media/libsdl2			std			latest
 media/sdl2-image		std			latest
 
+media/sdl12-compat		std			latest
+media/sdl-gfx			std			latest
+media/sdl-image			std			latest
+media/sdl-mixer			std			latest
+
 # ms-dos
 emu/dosbox-x			std			latest
 
 # diablo
 games/devilutionx		std			latest
+
+# open x-com
+games/openxcom			std			latest
 
 # sony psx emulator
 games/duckstation		std			latest
@@ -107,6 +116,10 @@ games/mednafen			std			latest
 
 # sony psp emulator
 games/ppsspp			std			latest
+
+
+# todo/finish
+# ===========
 
 # gamecube emulator, todo: currently has some zlib linking issues
 #arch/zlib-ng			std			latest
