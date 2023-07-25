@@ -7,9 +7,6 @@ lxc.idmap = g 0 <group_id> 1
 lxc.init.uid = 0
 lxc.init.gid = 0
 
-lxc.tty.max = 4
-lxc.pty.max = 128
-
 lxc.net.0.type = empty
 
 lc.signal.halt = SIGUSR1

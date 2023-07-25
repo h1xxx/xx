@@ -163,11 +163,6 @@ func (r *runT) instLxcConfig(p pkgT, pc pkgCfgT) {
 	}
 	config += "lxc.mount.entry = /dev/shm dev/shm none bind,optional,create=dir 0 0\n"
 
-	if fileExists(r.rootDir + "/mnt/xx/boot") {
-		config += "lxc.mount.entry = /mnt/xx mnt/xx none bind 0 0\n"
-		config += "lxc.mount.entry = /mnt/xx/boot mnt/xx/boot none bind 0 0"
-	}
-
 	for _, envVar := range pc.steps.env {
 		config += "lxc.environment = " + envVar + "\n"
 	}

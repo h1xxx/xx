@@ -15,6 +15,7 @@ arch/bzip2			musl			latest
 arch/xz				musl			latest
 arch/zstd			musl			latest
 arch/tar			musl			latest
+
 #arch/zip			musl			latest
 #arch/unzip			musl			latest
 arch/unrar			musl			latest
@@ -27,6 +28,7 @@ text/nawk			musl			latest
 text/gawk			musl			latest
 text/grep			musl			latest
 text/sed			musl			latest
+sys/libcap			musl			latest
 sys/shadow			musl			latest
 sys/util-linux			musl			latest
 text/groff			musl			latest
@@ -95,8 +97,8 @@ sys/iotop			musl			latest
 #sys/efibootmgr			std			latest	c
 
 # misc
+dev/binutils			musl			latest
 sys/alsa-utils			musl			latest
-#sys/ca-certificates		musl			latest
 crypt/libressl 			cert_pem		latest
 sys/gnupg			musl			latest
 sys/tmux			musl			latest
@@ -104,6 +106,7 @@ dev/ncurses			musl			latest
 dev/checksec			musl			latest
 sys/acpi			musl			latest
 sys/logrotate			musl			latest
+sys/pciutils			musl			latest
 sys/sysklogd			musl			latest
 sys/usbutils			musl			latest
 sys/linux			generic			latest
@@ -199,8 +202,4 @@ sys/ansible			std			latest	c
 db/postgresql			std			latest	c
 
 x11/xorg-server			std			latest	c
-
-#emu/dosbox-x			std			latest	c
-#emu/dosbox-staging		std			latest	c
-#emu/mednafen			std			latest	c
 
