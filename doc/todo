@@ -1,5 +1,7 @@
 add logcheck
 add 86Box
+add lazygit
+add btop
 
 when download src fails rm pkg dir
 
@@ -218,7 +220,8 @@ and then to get unpackaged software
 add a check to dev_install script if initramfs is included in system cfg
 
 create a process to update pkgs versions
-	find cves for current versions
+	find cves for current versions and compare to epss scores
+		wget https://epss.cyentia.com/epss_scores-current.csv.gz
 	find new commits for git pkgs
 	update patch dir versions as well
 	update system config dir versions, even when the first time user forgot

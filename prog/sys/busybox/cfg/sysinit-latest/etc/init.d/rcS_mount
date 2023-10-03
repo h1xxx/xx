@@ -26,7 +26,8 @@ if ${BB} grep -q ' / ext4 ro' /proc/mounts; then
 fi
 
 # create dirs for other mount points
-${BB} mkdir -p -m 0755 /dev/pts /dev/shm  /run/lock /run/lvm /run/user /run/log
+${BB} mkdir -p -m 0755 /dev/pts /dev/shm  /run/lock /run/lvm /run/log
+${BB} mkdir -p -m 0777 /run/user
 ${BB} install -m 1770 -g daemon -d /run/pid
 
 # mount all the rest
