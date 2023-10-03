@@ -61,6 +61,9 @@ dev/git					std			latest
 	net/curl			std			latest
 	crypt/openssl			std			latest
 
+dev/jq					musl			latest
+	dev/oniguruma			musl			latest
+
 dev/automake				std			latest
 	dev/autoconf			std			latest
 

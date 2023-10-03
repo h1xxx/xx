@@ -27,6 +27,7 @@ net/arp-scan			musl			latest
 net/dnstracer			musl			latest
 net/httpie			musl			latest
 net/mitmproxy			musl			latest
+net/sipcalc			musl			latest
 
 net/macchanger			musl			latest
 net/socat			musl			latest

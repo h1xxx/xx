@@ -66,6 +66,7 @@ net/mtr				musl			latest
 net/iputils			musl			latest
 net/inetutils			musl			latest
 net/fping			musl			latest
+net/sipcalc			musl			latest
 net/tcpdump			musl			latest
 
 # system tools

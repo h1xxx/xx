@@ -1,4 +1,8 @@
+dev/oniguruma			musl			latest
+dev/jq				musl			latest
 text/task			musl			latest
+
+misc/sc-im			musl			latest
 
 #dev/open-watcom			musl			latest
 #sys/freedos			musl			latest
