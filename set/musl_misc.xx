@@ -1,3 +1,7 @@
+dev/libmd			musl			latest
+dev/libbsd			musl			latest
+crypt/signify			musl			latest
+
 dev/oniguruma			musl			latest
 dev/jq				musl			latest
 text/task			musl			latest
