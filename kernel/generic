@@ -85,6 +85,9 @@ drivers_virtio-net
 drivers_bluetooth
 drivers_rfkill
 
+drivers_edac
+drivers_edac_amd64
+
 drm
 
 net_netfilter

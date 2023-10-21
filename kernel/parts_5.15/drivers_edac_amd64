@@ -1,0 +1,6 @@
+# drivers -> edac
+# ===============
+
+# amd cpus up to and excluding family 0x17 (zen 2)
+CONFIG_EDAC_AMD64=y
+
