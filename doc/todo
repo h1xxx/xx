@@ -2,6 +2,7 @@ add logcheck
 add 86Box
 add lazygit
 add btop
+add cpuid2cpuflags
 
 when download src fails rm pkg dir
 
