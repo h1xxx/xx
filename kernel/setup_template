@@ -85,6 +85,7 @@ drivers_firmware
 drivers_i2c
 drivers_hwmon
 drivers_leds
+drivers_pc-speaker
 drivers_power
 drivers_rtc
 drivers_sensors

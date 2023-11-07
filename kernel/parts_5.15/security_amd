@@ -1,0 +1,7 @@
+# mitigations
+# ===========
+
+CONFIG_CPU_UNRET_ENTRY=y
+CONFIG_CPU_IBPB_ENTRY=y
+CONFIG_CPU_SRSO=y
+

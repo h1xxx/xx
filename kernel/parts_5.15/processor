@@ -22,6 +22,16 @@ CONFIG_ARCH_RANDOM=y
 # vsyscall table for legacy applications
 CONFIG_LEGACY_VSYSCALL_NONE=y
 
-# todo: ???
-#CONFIG_LEGACY_VSYSCALL_XONLY=n
+# check for low memory corruption
+CONFIG_X86_CHECK_BIOS_CORRUPTION=y
+CONFIG_X86_BOOTPARAM_MEMORY_CORRUPTION_CHECK=y
+
+# user mode instruction prevention
+CONFIG_X86_UMIP=y
+
+# scan for hardware quirks
+CONFIG_DMI=y
+CONFIG_DMIID=y
+CONFIG_DMI_SYSFS=y
+CONFIG_DMI_SCAN_MACHINE_NON_EFI_FALLBACK=y
 

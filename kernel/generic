@@ -13,6 +13,7 @@ general_taskstats
 
 debug
 security
+security_amd
 uefi
 
 exec-file-formats
@@ -64,6 +65,7 @@ drivers_firmware
 drivers_i2c
 drivers_hwmon
 drivers_leds
+drivers_pc-speaker
 drivers_power
 drivers_rtc
 drivers_sensors
@@ -87,6 +89,7 @@ drivers_rfkill
 
 drivers_edac
 drivers_edac_amd64
+drivers_edac_apei
 
 drm
 
