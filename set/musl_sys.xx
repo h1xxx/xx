@@ -75,6 +75,12 @@ sys/powertop			musl			latest
 sys/iotop			musl			latest
 sys/stress			musl			latest
 
+dev/argp-standalone		musl			latest
+dev/libtraceevent		musl			latest
+libperl/DBI			musl			latest
+libperl/DBD-SQLite		musl			latest
+sys/rasdaemon			musl			latest
+
 # android utils
 sys/libunwind			musl			latest
 dev/protobuf			musl			latest

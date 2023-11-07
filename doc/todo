@@ -3,6 +3,7 @@ add 86Box
 add lazygit
 add btop
 add cpuid2cpuflags
+add datamash
 
 when download src fails rm pkg dir
 
@@ -508,3 +509,5 @@ check https://fedoraproject.org/wiki/Security_Features_Matrix
 make lxc config support \040 as a space  in lxc.mount.entry
 musl: add handling of spaces in getmntent to mount files with spaces in lxc
 
+games:
+add fallout1-ce

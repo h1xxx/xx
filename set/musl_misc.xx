@@ -1,3 +1,5 @@
+arch/libzim			musl			latest
+
 dev/libmd			musl			latest
 dev/libbsd			musl			latest
 crypt/signify			musl			latest
