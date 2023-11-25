@@ -1,14 +1,100 @@
+" ---- function definitions
+
+" expand tab to spaces for text alignment, don't expand for indentation
+function! TabOnlyIndent()
+  if strpart(getline('.'), 0, col('.') - 1) =~ '^\s*$'
+    return "\<Tab>"
+  else
+    set expandtab
+    execute "normal! i\<Tab>"
+    execute "normal l"
+    set noexpandtab
+  endif
+  return ""
+endfunction
+
+" when editing a file, always jump to the last known cursor position;
+" don't do it when the position is invalid, when inside an event handler
+" and for a commit message (it's " likely a different one than last time)
+function! PrevPosition()
+  if line("'\"") >= 1 && line("'\"") <= line("$") && &ft !~# 'commit'
+    execute "normal! g`\""
+  endif
+endfunction
+
+" toggle pasting with a nice message on the current state
+function! PasteToggle()
+  if &paste
+    call feedkeys(":set nopaste\<CR>", "n")
+  else
+    call feedkeys(":set paste\<CR>", "n")
+  endif
+endfunction
+
+" toggle spell check - first to "en", then to "pl", then turn if off
+function! SpellToggle()
+  if &spell && &spelllang == "pl"
+    call feedkeys(":set nospell\<CR>", "n")
+  elseif &spell && &spelllang == "en"
+    call feedkeys(":set spelllang=pl\<CR>", "n")
+  else
+    set spell
+    call feedkeys(":set spelllang=en\<CR>", "n")
+  endif
+endfunction
+
+" toggle spell check in insert mode (doesn't print commands)
+function! SpellToggleInsert()
+  if &spell && &spelllang == "pl"
+    set nospell
+  elseif &spell && &spelllang == "en"
+    set spell
+    set spelllang=pl
+  else
+    set spell
+    set spelllang=en
+  endif
+endfunction
+
+" toggle syntax highlighting
+function! SyntaxToggle()
+  if exists("g:syntax_on")
+    call feedkeys(":syntax off\<CR>", "n")
+  else
+    call feedkeys(":syntax on\<CR>", "n")
+  endif
+endfunction
+
+" toggle syntax highlighting in insert mode
+function! SyntaxToggleInsert()
+  if exists("g:syntax_on")
+    syntax off
+  else
+    syntax on
+  endif
+endfunction
+
+" toggle highlighting the column just behind the text width
+function! ColorColumnToggle()
+  if &colorcolumn != ""
+    set colorcolumn=
+  else
+    set colorcolumn=+1
+    highlight colorcolumn ctermbg=lightgrey ctermfg=black
+  endif
+endfunction
+
+
 " ---- general settings
 
-" execute defaults.vim before /etc/vimrc
-source /share/vim/vim__vim_shortver__/defaults.vim
+" do not execute defaults.vim
 let skip_defaults_vim = 1
 
 " disable vi compatible mode (noop in most cases)
 set nocompatible
 
 " set filetype detection
-filetype off
+filetype on
 
 " dont' expand tabs
 set noexpandtab
@@ -19,35 +105,35 @@ set ts=8
 " when using the >> or << commands, shift lines by 8 spaces
 set shiftwidth=8
 
+" indent when moving to the next line while writing code
+set autoindent
+
 " disable syntax highlighting
 syntax off
 
 " set line numbers: nu/nonu (numbers/nonumbers)
 set nonu
 
-" indent when moving to the next line while writing code
-set autoindent
-
 " show the matching part of the pair for [] {} and ()
 set showmatch
 
 " limit number of characters in one line
-set textwidth=80
+set textwidth=79
 
 " always use 16 colors because linux console is the best
 set t_Co=16
 
-" set colors
+" set color scheme
 colorscheme industry
 
 " stop search at the end of the file
 set nowrapscan 
 
-" unset the "last search pattern" register by hitting return
+" unset the "last search pattern" register by hitting <Enter>
 nnoremap <CR> :noh<CR><CR>
 
 " command history buffer size
-set history=512
+set history=128
 
 " show cursor position
 set ruler
@@ -58,95 +144,110 @@ set nomodeline
 " disable backup files
 set nobackup nowritebackup
 
+" allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+
+" display incomplete commands
+set showcmd
+
+" display completion matches in a status line
+set wildmenu
+
+" time out for key codes - wait up to 100ms after Esc for special key
+set ttimeout
+set ttimeoutlen=100
+
+" show @@@ in the last line if it is truncated
+set display=truncate
+
+" always show a few lines of context around the cursor
+set scrolloff=5
+
+" do incremental searching
+set incsearch
+
+" when editing a file, always jump to the last known cursor position
+autocmd BufReadPost * call PrevPosition()
 
 
-" ---- mutt settings
+" ---- vim file settings
+
+" use common convention for tabs
+au FileType vim set expandtab ts=2 shiftwidth=2
+
+
+" ---- c file settings
+
+" expand tab to spaces for text alignment, don't expand for indentation
+au FileType c inoremap <Tab> <C-r>=TabOnlyIndent()<CR>
+
+" save, compile and run
+au FileType c nnoremap <silent> <F5> :w<CR>:!tcc -run %<CR>
+
+
+" ---- shell file settings
+
+" use google convention for tabs
+au FileType sh set expandtab ts=2 shiftwidth=2
+
+" save, compile and run
+au FileType sh nnoremap <silent> <F5> :w<CR>:!go run %<CR>
+
+
+" ---- go file settings
+
+" expand tab to spaces for text alignment, don't expand for indentation
+au FileType go inoremap <Tab> <C-r>=TabOnlyIndent()<CR>
+
+" save, compile and run
+au FileType go nnoremap <silent> <F5> :w<CR>:!go run %<CR>
+
+
+" ---- python file settings
+
+" disable all Python syntax highlighting features
+let python_highlight_all = 0
+
+" save and run the script
+au FileType python nnoremap <silent> <F5> :w<CR>:!python %<CR>
+
+" use common convention for tabs
+au FileType python set expandtab ts=4 shiftwidth=4
+
+
+" ---- yaml file settings
+
+" use common convention for tabs
+au FileType yaml set expandtab ts=2 shiftwidth=2
+
+
+" ---- mutt file settings
 
 " limit char size of line when editing in mutt
 au BufRead /tmp/mutt-* set tw=1024
 
 
+" ---- cheatsheet file settings
 
-" ---- c settings
-
-" disable converting tabs to spaces
-au FileType c set noexpandtab
-
-" when using the >> or << commands, shift lines by 8 spaces
-au FileType c set shiftwidth=8
-au FileType c set ts=8
-
-" assign keybindings
-au FileType c nnoremap <silent> <F5> :w<CR>:!tcc -run %<CR>
+" expand tab to spaces for text alignment, don't expand for indentation
+au BufRead /*/cheatsheets/* inoremap <Tab> <C-r>=TabOnlyIndent()<CR>
 
 
+" ---- key mappings
 
-" ---- python settings
+" toggle pasting
+set pastetoggle=<F1>
+nnoremap <silent> <F1> :call PasteToggle()<CR>
 
-" disable all Python syntax highlighting features
-" let python_highlight_all = 0
+" toggle spell check - first to "en", then to "pl", then turn if off
+nnoremap <silent> <F2> :call SpellToggle()<CR>
+inoremap <silent> <F2> <C-o>:call SpellToggleInsert()<CR>
 
-" assign keybindings
-au FileType python nnoremap <silent> <F5> :w<CR>:!python %<CR>
+" toggle syntax highlighting
+nnoremap <silent> <F3> :call SyntaxToggle()<CR>
+inoremap <silent> <F3> <C-o>:call SyntaxToggleInsert()<CR>
 
-" set tabs to have 4 spaces (tabstop)
-au FileType python set ts=4
-
-" don't expand tabs into spaces
-au FileType python set noexpandtab
-
-" when using the >> or << commands, shift lines by 4 spaces
-au FileType python set shiftwidth=4
-
-
-
-" ---- yaml settings
-
-" when using the >> or << commands, shift lines by 2 spaces
-au FileType yaml set shiftwidth=2
-au FileType yaml set ts=2
-
-
-
-" ---- url handling with w3m - eperimental and not working
-
-function! Browser ()
-  let line = getline (".")
-  let line = matchstr (line, "\%(http://\|www\.\)[^ ,;\t]*")
-  exec "!echo" .line
-  "exec 
-  "!w3m ".line
-endfunction
-map <Leader>w :call Browser ()<CR>
-
-function! HandleURL()
-  let s:uri = matchstr(getline("."), '[a-z]*:\/\/[^ >,;]*')
-  echo s:uri
-  if s:uri != ""
-    silent exec "!echo '".s:uri."'"
-  else
-    echo "No URI found in line."
-  endif
-endfunction
-map <leader>u :call HandleURL()<cr>
-
-
-
-" ---- not used settings
-
-" column highlighting
-
-"set colorcolumn=81
-"highlight ColorColumn ctermbg=7 ctermfg=7
-"highlight ColorColumn ctermbg=LightGrey guibg=LightGrey
-
-" change highlighting of bold and italic text in markdown
-"hi link htmlBold Storage
-"hi link htmlItalic Identifier
-
-" paste text as is in tmux buffer
-"set paste 
-
-" set a macro
-"let @a="iHello World!\<CR>bye\<Esc>"
+" toggle highlighting the column just behind the text width
+nnoremap <silent> <F4> :call ColorColumnToggle()<CR>
+inoremap <silent> <F4> <C-o>:call ColorColumnToggle()<CR>
 
