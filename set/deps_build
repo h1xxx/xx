@@ -682,6 +682,24 @@ games/devilutionx			std			latest
 	media/libsdl2			std			latest
 	media/sdl2-image		std			latest
 
+dev/py-setuptools			std			latest
+	dev/py-ordered-set		std			latest
+	dev/py-packaging		std			latest
+	dev/py-appdirs			std			latest
+	dev/py-parsing			std			latest
+
+text/py-lxml				std			latest
+	dev/py-setuptools		std			latest
+
+dev/py-libvirt				std			latest
+	text/py-lxml			std			latest
+	sys/libvirt			std			latest
+
+sys/libvirt				std			latest
+	x11/libpciaccess		std			latest
+	dev/rpcsvc-proto		std			latest
+	dev/glib			std			latest
+
 
 ### deprecated
 
@@ -706,4 +724,3 @@ games/devilutionx			std			latest
 
 # nvidia requires
 # CONFIG_X86_PAT=y
-

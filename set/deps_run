@@ -175,10 +175,11 @@ sys/ansible				std			latest
 	sys/coreutils			musl			latest
 	sys/iproute2			musl			latest
 	sys/openssh			musl			latest
+	sys/rsync			musl			latest
 	sys/vifm			musl			latest
 	dev/git				musl			latest
-	net/wget			musl			latest
 	net/curl			musl			latest
+	net/wget			musl			latest
 	net/iputils			musl			latest
 	text/vim			musl			latest
 	text/man-pages			musl			latest
@@ -186,6 +187,7 @@ sys/ansible				std			latest
 	lang/python			std			latest
 	dev/libffi			std			latest
 	dev/py-cparser			std			latest
+	dev/py-packaging		std			latest
 	dev/cffi			std			latest
 	dev/py-jinja2			std			latest
 	dev/py-markupsafe		std			latest
@@ -195,6 +197,10 @@ sys/ansible				std			latest
 	dev/py-pynacl			std			latest
 	dev/py-resolvelib		std			latest
 	sys/ansible-core		std			latest
+	dev/py-libvirt			std			latest
+
+dev/py-libvirt				std			latest
+	text/py-lxml			std			latest
 
 emu/dosbox-x				std			latest
 	sys/coreutils			musl			latest

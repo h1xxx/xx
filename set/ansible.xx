@@ -2,8 +2,22 @@
 #dev/py-wheel			std			latest
 dev/libffi			std			latest
 dev/py-cparser			std			latest
+dev/py-packaging		std			latest
 
-# tries to build shared lib
+dev/py-ordered-set		std			latest
+dev/py-parsing			std			latest
+dev/py-appdirs			std			latest
+dev/py-setuptools		std			latest
+text/py-lxml			std			latest
+
+# this needs to be built first somewhere else
+dev/glib			std			latest
+
+x11/libpciaccess		std			latest
+dev/rpcsvc-proto		std			latest
+sys/libvirt			std			latest
+dev/py-libvirt			std			latest
+
 dev/cffi			std			latest
 
 sys/ansible			std			latest
