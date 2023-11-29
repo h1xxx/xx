@@ -72,6 +72,7 @@ net/ngircd			musl			latest
 net/mktorrent			musl			latest
 net/transmission		musl			latest
 net/lftp			musl			latest
+net/aria2			musl			latest
 
 net/geoip			musl			latest
 net/geoip-database		musl			latest
