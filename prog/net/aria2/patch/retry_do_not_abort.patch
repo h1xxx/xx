@@ -1,0 +1,11 @@
+--- src/DownloadCommand.cc.orig	2023-11-15 10:49:41.000000000 +0100
++++ src/DownloadCommand.cc	2023-12-01 13:34:13.840544804 +0100
+@@ -306,7 +306,7 @@
+           startupIdleTime_) {
+     int nowSpeed = peerStat_->calculateDownloadSpeed();
+     if (nowSpeed <= lowestDownloadSpeedLimit_) {
+-      throw DL_ABORT_EX2(fmt(EX_TOO_SLOW_DOWNLOAD_SPEED, nowSpeed,
++      throw DL_RETRY_EX2(fmt(EX_TOO_SLOW_DOWNLOAD_SPEED, nowSpeed,
+                              lowestDownloadSpeedLimit_,
+                              getRequest()->getHost().c_str()),
+                          error_code::TOO_SLOW_DOWNLOAD_SPEED);
