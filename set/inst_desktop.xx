@@ -75,6 +75,7 @@ sys/kbd				musl			latest
 sys/vlock			musl			latest
 sys/syslinux			musl			6.04-pre1
 sys/gptfdisk			musl			latest
+sys/parted			musl			latest
 sys/cryptsetup			musl			latest
 sys/dosfstools			musl			latest
 sys/eudev			musl			latest
@@ -135,6 +136,7 @@ sys/ncdu			musl			latest
 
 emu/qemu			musl			latest
 
+net/aria2			musl			latest
 net/transmission		musl			latest
 net/geoip			musl			latest
 net/geoip-database		musl			latest

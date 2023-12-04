@@ -12,6 +12,7 @@ sys/logrotate			musl			latest
 sys/sysklogd			musl			latest
 sys/lsof			musl			latest
 sys/parallel			musl			latest
+sys/parted			musl			latest
 sys/pv				musl			latest
 sys/vlock			musl			latest
 sys/which			musl			latest
