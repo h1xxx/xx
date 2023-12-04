@@ -76,6 +76,7 @@ sys/lshw			musl			latest
 sys/powertop			musl			latest
 sys/iotop			musl			latest
 sys/stress			musl			latest
+sys/systester			musl			latest
 
 dev/argp-standalone		musl			latest
 dev/libtraceevent		musl			latest
