@@ -700,6 +700,8 @@ sys/libvirt				std			latest
 	dev/rpcsvc-proto		std			latest
 	dev/glib			std			latest
 
+sys/mprime				musl			latest
+	arch/unzip			musl			latest
 
 ### deprecated
 

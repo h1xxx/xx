@@ -62,6 +62,7 @@ sys/flashrom			musl			latest
 dev/inih			musl			latest
 sys/tio				musl			latest
 arch/unrar			musl			latest
+arch/unzip			musl			latest
 
 sys/dmidecode			musl			latest
 sys/lm-sensors			musl			latest
