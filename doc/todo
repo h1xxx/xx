@@ -5,6 +5,8 @@ add btop
 add cpuid2cpuflags
 add datamash
 
+move each package to a separate dir, and hardlink the /bin /sbin and /lib ???
+
 when download src fails rm pkg dir
 
 check for binaries in source code, including those encoded in base64
