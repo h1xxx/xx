@@ -8,6 +8,10 @@ dev/oniguruma			musl			latest
 dev/jq				musl			latest
 text/task			musl			latest
 
+text/emacs			musl			latest
+text/emacs-evil			musl			latest
+text/evil-org-mode		musl			latest
+
 misc/sc-im			musl			latest
 
 
@@ -23,3 +27,4 @@ misc/sc-im			musl			latest
 # github.com/VirusTotal/vt-cli
 
 #tinytex
+
