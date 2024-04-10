@@ -12,12 +12,15 @@
 (require 'evil-org-agenda)
 (evil-org-agenda-set-keys)
 
-; define keys for evil org-mode
+; define keys for evil org-mode normal mode
 (evil-define-key 'normal org-mode-map
   (kbd "TAB") 'org-cycle
   ">" 'org-shiftmetaright
   "<" 'org-shiftmetaleft
   (kbd "C-t") 'org-todo)
+
+; define keys for evil org-mode insert mode
+(define-key evil-insert-state-map (kbd "TAB") 'tab-to-tab-stop)
 
 ; set a key to open agenda
 (global-set-key (kbd "C-c a") 'org-agenda)
