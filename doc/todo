@@ -4,6 +4,7 @@ add lazygit
 add btop
 add cpuid2cpuflags
 add datamash
+add FiloSottile/age
 
 move each package to a separate dir, and hardlink the /bin /sbin and /lib ???
 

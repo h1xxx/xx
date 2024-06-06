@@ -13,6 +13,7 @@ text/emacs-evil			musl			latest
 text/evil-org-mode		musl			latest
 
 misc/sc-im			musl			latest
+text/libiconv			musl			latest
 
 
 

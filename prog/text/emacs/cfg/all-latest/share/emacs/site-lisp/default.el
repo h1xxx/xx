@@ -47,3 +47,6 @@
  '(org-level-6 ((t (:foreground "cyan"))))
  '(font-lock-comment-face ((t (:foreground "blue" :weight bold)))))
 
+; stop creating backup files (suffix ~)
+(setq make-backup-files nil)
+
