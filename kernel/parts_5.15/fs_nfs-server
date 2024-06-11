@@ -2,7 +2,6 @@
 # ==================================
 
 CONFIG_NFSD=y
-CONFIG_NFSD_V3=y
 CONFIG_NFSD_V4=y
 CONFIG_NFSD_BLOCKLAYOUT=y
 CONFIG_DNS_RESOLVER=y
