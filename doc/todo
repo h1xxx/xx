@@ -5,6 +5,7 @@ add btop
 add cpuid2cpuflags
 add datamash
 add FiloSottile/age
+add haampie/libtree
 
 move each package to a separate dir, and hardlink the /bin /sbin and /lib ???
 
